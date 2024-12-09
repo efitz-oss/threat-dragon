@@ -5,6 +5,7 @@
 import axios from 'axios';
 import env from '../env/Env.js';
 
+const Host = env.get().config.APP_HOSTNAME;
 const name = 'google';
 
 /**
@@ -31,7 +32,7 @@ const getOauthRedirectUrl = () => {
 const getOauthReturnUrl = (code) => {
     let returnUrl = `/#/oauth-return?code=${code}`;
     if (env.get().config.NODE_ENV === 'development') {
-        returnUrl = `http://localhost:8080${returnUrl}`;
+        returnUrl = `${Host}${returnUrl}`;
     }
     return returnUrl;
 };
