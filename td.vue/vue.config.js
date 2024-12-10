@@ -19,13 +19,6 @@ const devServerConfig = hasTlsCredentials
             cert: fs.readFileSync(process.env.APP_TLS_CERT_PATH),
         },
         port: process.env.APP_PORT,
-        client: {
-            webSocketURL: {
-                protocol: 'wss', // Use secure WebSocket protocol
-                hostname: appHostname,
-                port: process.env.APP_PORT, // HTTPS port
-            },
-        },
         proxy: {
             '^/api': {
                 target: `${serverApiProtocol}://localhost:${serverApiPort}`, // Backend server
