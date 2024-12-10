@@ -23,7 +23,7 @@ const devServerConfig = hasTlsCredentials
             webSocketURL: {
                 protocol: 'wss', // Use secure WebSocket protocol
                 hostname: appHostname,
-                port: 443, // HTTPS port
+                port: process.env.APP_PORT, // HTTPS port
             },
         },
         proxy: {
