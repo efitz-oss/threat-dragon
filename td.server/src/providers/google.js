@@ -30,10 +30,10 @@ const getOauthRedirectUrl = () => {
  * @returns {String}
  */
 const getOauthReturnUrl = (code) => {
-    let returnUrl = `/#/oauth-return?code=${code}`;
-    if (env.get().config.NODE_ENV === 'development') {
-        returnUrl = `${Host}${returnUrl}`;
-    }
+    let returnUrl = `${Host}/#/oauth-return?code=${code}`;
+    // if (env.get().config.NODE_ENV === 'development') {
+    //     returnUrl = `${Host}${returnUrl}`;
+    // }
     return returnUrl;
 };
 
