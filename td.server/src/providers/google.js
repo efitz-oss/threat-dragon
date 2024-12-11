@@ -5,7 +5,7 @@
 import axios from 'axios';
 import env from '../env/Env.js';
 
-const Host = process.env.APP_HOSTNAME;
+const Host = process.env.APP_REDIRECT_HOSTNAME;
 const name = 'google';
 
 /**
