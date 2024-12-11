@@ -5,7 +5,7 @@
 import axios from 'axios';
 import env from '../env/Env.js';
 
-const Host = process.env.APP_REDIRECT_HOSTNAME;
+// const Host = process.env.APP_REDIRECT_HOSTNAME;
 const name = 'google';
 
 /**
@@ -30,7 +30,7 @@ const getOauthRedirectUrl = () => {
  * @returns {String}
  */
 const getOauthReturnUrl = (code) => {
-    let returnUrl = `${Host}/#/oauth-return?code=${code}`;
+    let returnUrl = `https://td.devflovv.com/#/oauth-return?code=${code}`;
     // if (env.get().config.NODE_ENV === 'development') {
     //     returnUrl = `${Host}${returnUrl}`;
     // }
