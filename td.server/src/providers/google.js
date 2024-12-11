@@ -30,7 +30,7 @@ const getOauthRedirectUrl = () => {
  * @returns {String}
  */
 const getOauthReturnUrl = (code) => {
-    let returnUrl = `https://td.devflovv.com/#/oauth-return?code=${code}`;
+    let returnUrl = `${env.get().config.APP_REDIRECT_URL}/#/oauth-return?code=${code}`;
     // if (env.get().config.NODE_ENV === 'development') {
     //     returnUrl = `${Host}${returnUrl}`;
     // }
