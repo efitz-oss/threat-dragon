@@ -8,6 +8,7 @@ import env from '../env/Env.js';
 import repositories from "../repositories";
 
 const name = 'github';
+const Host = env.get().config.APP_HOSTNAME;
 
 /**
  * Determines if the GitHub provider is configured
@@ -46,7 +47,7 @@ const getOauthRedirectUrl = () => {
 const getOauthReturnUrl = (code) => {
     let returnUrl = `/#/oauth-return?code=${code}`;
     if (env.get().config.NODE_ENV === 'development') {
-        returnUrl = `http://localhost:8080${returnUrl}`;
+        returnUrl = `${Host}${returnUrl}`;
     }
     return returnUrl;
 };
