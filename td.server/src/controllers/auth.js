@@ -23,7 +23,7 @@ const oauthReturn = (req, res) => {
     logger.debug(`API oauthReturn request: ${logger.transformToString(req)}`);
 
     let returnUrl = `/#/oauth-return?code=${req.query.code}`;
-        returnUrl = `${env.get().config.APP_REDIRECT_URL}${returnUrl}`;
+        returnUrl = `http://localhost:8080${returnUrl}`;
 
     return res.redirect(returnUrl);
 };
