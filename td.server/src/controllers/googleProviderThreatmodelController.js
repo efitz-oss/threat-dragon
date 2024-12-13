@@ -5,7 +5,7 @@ import responseWrapper from './responseWrapper.js';
 const logger = loggerHelper.get('controllers/googleProviderThreatmodelController.js');
 
 const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
-    console.log('--------------hey hey hey----------', folderId);
+    console.log('--------------hey hey....... hey----------');
     const googleDrive = repositories.getSpecific('googledrive');
 
     console.log('Access Token:-------->', req.provider.access_token);
