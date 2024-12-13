@@ -79,9 +79,19 @@ const createClient = () => {
         // we could be stuck in an infinite loop
         try {
             console.log('--------did i reach here -------with token-', refreshToken);
-            const response = await axios.post('/api/token/refresh', { refreshToken });
-            console.log('--------andh here too --------');
-            const tokens = response.data.data;
+            // const response = await axios.post('/api/token/refresh', { refreshToken });
+            const response = await axios.post(
+                '/api/token/refresh',
+                { refreshToken }, 
+                {
+                    headers: {
+                        'Content-Type': 'application/json', // Explicitly set content type
+                        Authorization: `Bearer ${refreshToken}`, // Add authorization if required
+                    }
+                }
+            );
+            console.log('--------andh here too... --------');
+            const tokens = response.data;
             console.log('--------did i get this token...1 --------tokens', tokens);
             // console.log('--------did i get this token... --------', tokens);
             store.dispatch(AUTH_SET_JWT, tokens);
