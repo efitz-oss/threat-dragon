@@ -21,7 +21,7 @@ const createClient = () => {
     const client = axios.create();
     client.defaults.headers.common.Accept = 'application/json';
     client.defaults.headers.post['Content-Type'] = 'application/json';
-
+    console.log('--------aham aham aham--------');
     client.interceptors.request.use((config) => {
         const store = storeFactory.get();
         store.dispatch(LOADER_STARTED);
@@ -29,9 +29,10 @@ const createClient = () => {
         if (store.state.auth.jwt) {
             config.headers.authorization = `Bearer ${store.state.auth.jwt}`;
         }
-
+        console.log('--------config config config--------',config);
         return config;
     }, (err) => {
+        console.log('--------error error error--------');
         console.error(err);
         const store = storeFactory.get();
         store.dispatch(LOADER_FINISHED);
@@ -42,6 +43,7 @@ const createClient = () => {
     client.interceptors.response.use((resp) => {
         const store = storeFactory.get();
         store.dispatch(LOADER_FINISHED);
+        console.log('--------resp resp resp--------', resp);
         return resp;
     }, async (err) => {
         const store = storeFactory.get();
@@ -71,8 +73,10 @@ const createClient = () => {
             err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
             const retryResp = await axios.request(err.config);
             store.dispatch(LOADER_FINISHED);
+            console.log('--------retryResp retryResp retryResp--------', retryResp);
             return retryResp;
         } catch (retryError) {
+            console.log('--------Error retrying Error retrying rError retrying--------', retryResp);
             console.warn('Error retrying after refresh token update');
             console.warn(retryError);
             Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
