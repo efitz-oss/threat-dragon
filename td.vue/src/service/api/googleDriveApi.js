@@ -8,6 +8,7 @@ const resource = '/api/googleproviderthreatmodel';
  */
 const folderAsync = async (folderId = 'root', page = 1) => {
     try {
+        console.log("folderAsync called with:..................", { folderId, page });
         console.log ( "the issue could be here .....1")
         const response = await api.getAsync(`${resource}/folders`, { params: { page, folderId } });
         console.log ( "the issue could be here .....2")

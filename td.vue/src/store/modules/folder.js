@@ -31,13 +31,15 @@ const actions = {
     [FOLDER_CLEAR]: ({ commit }) => commit(FOLDER_CLEAR),
 
     [FOLDER_FETCH]: async ({ commit }, { folderId = 'root', page = 1 } = {}) => {
+        console.log("FOLDER_FETCH triggered with:.......................////", { folderId, page });
         if (!folderId) commit(FOLDER_CLEAR);
         const pageToken = state.pageTokens[page - 1] || '';
 
         try {
-            console.log('Fetching folders with params.....>:', { folderId, pageToken });
+            console.log('Fetching folders with params.....>:........', { folderId, pageToken });
             // Make sure the token is valid and passed in the API call
-            const resp = await googleDriveApi.folderAsync(folderId, 1);
+
+            const resp = await googleDriveApi.folderAsync(folderId, page);
             // console.log('Fetching folders with params.....>:', { folderId, pageToken });
             console.log('Google Drive API response:.....', resp);
 
