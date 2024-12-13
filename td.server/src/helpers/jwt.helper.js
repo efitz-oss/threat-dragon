@@ -23,8 +23,11 @@ const createAsync = async (providerName, providerOptions, user) => {
 
 const decodeProvider = (encodedProvider) => {
     const providerName = Object.keys(encodedProvider)[0];
+    console.log ('Refresh token decodedProvider.....   1  ---providerName---->',providerName )
     const decodedProvider = JSON.parse(Buffer.from(encodedProvider[providerName], 'base64').toString('utf-8'));
+    console.log ('Refresh token decodedProvider.....   2  ---providerName---->',decodedProvider )
     const provider = JSON.parse(encryptionHelper.decrypt(decodedProvider));
+    console.log ('Refresh token decodedProvider.....   3  ---providerName---->',provider )
     provider.name = providerName;
     return provider;
 };
@@ -32,6 +35,7 @@ const decodeProvider = (encodedProvider) => {
 const decode = (token, key) => {
     const { provider, user } = jsonwebtoken.verify(token, key);
     const decodedProvider = decodeProvider(provider);
+    console.log ('Refresh token decodedProvider.....   1.0  ----->----->' )
     return {
         provider: decodedProvider,
         user

@@ -42,7 +42,9 @@ const remove = (token) => {
  * @returns {Object} The decoded token
  */
 const verify = (token) => {
+    console.log ('..........Refresh token not found in token   1  ----->',token )
     if (refreshTokens.indexOf(token) === -1) {
+        console.log ('Refresh token not found intoken   2  ----->----->' )
         logger.audit('Refresh token not found in repository');
         return false;
     }
@@ -51,7 +53,10 @@ const verify = (token) => {
         // Refresh tokens are just JWTs.  The JWTs have a default expiration time
         // Ensure that it is a valid (signed) token, and that it is not expired
         logger.debug('Refresh token verified');
-        return jwtHelper.verifyRefresh(token);
+        console.log ('Refresh token not found in repository----->' )
+        const token= jwtHelper.verifyRefresh(token);
+        console.log ('Refresh token not found in repository----->' )
+        return token
     } catch (err) {
         logger.audit('Error verifying refresh token');
         logger.info(err);

@@ -71,9 +71,11 @@ const logout = (req, res) => responseWrapper.sendResponse(() => {
 }, req, res, logger);
 
 const refresh = (req, res) => {
+    console.log("the refresh comes from here--------")
     logger.debug(`API refresh request: ${logger.transformToString(req)}`);
 
     const tokenBody = tokenRepo.verify(req.body.refreshToken);
+    console.log("the refresh comes from here-hohohohoh-------,tokenBody", tokenBody)
     if (!tokenBody) {
         return errors.unauthorized(res, logger);
     }
