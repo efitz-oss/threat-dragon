@@ -8,6 +8,7 @@ import clientFactory from '../httpClient.js';
  */
 const getAsync = async (url, query) => {
     try {
+        console.log ( "the issue could be here .....11..hey + URL",url);
         const res = await clientFactory.get().get(url, query);
         console.log ( "the issue could be here .....11..hey");
         console.log ( "the issue could be here .....11..hi", res)
