@@ -5,7 +5,7 @@ import responseWrapper from './responseWrapper.js';
 const logger = loggerHelper.get('controllers/googleProviderThreatmodelController.js');
 
 const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
-    console.log('--------------hey hey....... hey----------');
+    console.log('--------------API route /folders has been called!----------');
     const googleDrive = repositories.getSpecific('googledrive');
 
     console.log('Access Token:-------->', req.provider.access_token);
@@ -26,6 +26,13 @@ const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
         foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
         console.log('Folders response-------->:', foldersResp);
         if (!foldersResp || !foldersResp.folders) {
+            console.error('Error in the try block:', error);
+            logger.error('Error in folders endpoint:---', {
+                message: error.message,
+                stack: error.stack,
+                folderId,
+                pageToken,
+            });
             throw new Error('Invalid response from Google Drive API');
         }
         folders = foldersResp.folders;
