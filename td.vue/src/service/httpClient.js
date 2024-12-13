@@ -82,14 +82,15 @@ const createClient = () => {
             // const response = await axios.post('/api/token/refresh', { refreshToken });
             const response = await axios.post(
                 '/api/token/refresh',
-                { refreshToken }, 
+                { refreshToken }, // Check if this is how the backend expects it
                 {
                     headers: {
-                        'Content-Type': 'application/json', // Explicitly set content type
-                        Authorization: `Bearer ${refreshToken}`, // Add authorization if required
-                    }
+                        'Content-Type': 'application/json',
+                        // Authorization: `Bearer ${refreshToken}`, // Remove if unnecessary
+                    },
                 }
             );
+            console.log('Response:', response.data);
             console.log('--------andh here too... --------');
             const tokens = response.data;
             console.log('--------did i get this token...1 --------tokens', tokens);
