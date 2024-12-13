@@ -78,13 +78,19 @@ const createClient = () => {
         // Should this request fail and we use the same instance,
         // we could be stuck in an infinite loop
         try {
+            console.log('--------did i reach here --------');
             const response = await axios.post('/api/token/refresh', { refreshToken });
+            console.log('--------andh here too --------');
             const tokens = response.data.data;
+            console.log('--------did i get this token...1 --------tokens', tokens);
+            // console.log('--------did i get this token... --------', tokens);
             store.dispatch(AUTH_SET_JWT, tokens);
+            console.log('--------did i get this token...2 --------AUTH_SET_JWT', AUTH_SET_JWT);
             err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
             const retryResp = await axios.request(err.config);
+            console.log('--------did i get this token...2 --------', retryResp);
             store.dispatch(LOADER_FINISHED);
-            console.log('--------retryResp retryResp retryResp--------', retryResp);
+            console.log('--------retryResp retryResp retryResp--------LOADER_FINISHED', LOADER_FINISHED);
             return retryResp;
         } catch (retryError) {
             console.log('--------Error retrying Error retrying rError retrying--------', retryResp);
