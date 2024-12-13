@@ -48,11 +48,11 @@ const createClient = () => {
     }, async (err) => {
         const store = storeFactory.get();
 
-        const logAndExit = () => {
-            console.error(err);
-            store.dispatch(LOADER_FINISHED);
-            return Promise.reject(err);
-        };
+        // const logAndExit = () => {
+        //     console.error(err);
+        //     store.dispatch(LOADER_FINISHED);
+        //     return Promise.reject(err);
+        // };
 
         if (err.response.status !== 401) {
             return logAndExit();
