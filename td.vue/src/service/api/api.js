@@ -9,11 +9,11 @@ import clientFactory from '../httpClient.js';
 const getAsync = async (url, query) => {
     try {
         const res = await clientFactory.get().get(url, query);
-        console.log ( "the issue could be here .....11..");
-        console.log ( "the issue could be here .....11..", res)
+        console.log ( "the issue could be here .....11..hey");
+        console.log ( "the issue could be here .....11..hi", res)
         return res.data;
     } catch (error) {
-        console.log ( "the issue could be here .....11..");
+        console.log ( "the issue could be here .....11..error");
         console.error('Error in getAsync:', error.message);
         throw error;
     }

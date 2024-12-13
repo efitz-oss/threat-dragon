@@ -14,7 +14,7 @@ const folderAsync = async (folderId = 'root', page = 1) => {
         console.log ( "the issue could be here .....3", response)
         return response;
     } catch (error) {
-        console.log ( "the issue could be here .....1....")
+        console.log ( "the issue could be here .....1....//")
         console.error('Error fetching folders:', error.message);
         throw error;
     }
