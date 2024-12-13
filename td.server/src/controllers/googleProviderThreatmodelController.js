@@ -7,6 +7,8 @@ const logger = loggerHelper.get('controllers/googleProviderThreatmodelController
 const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
 
+    console.log('Access Token:-------->', req.provider.access_token);
+
     const pageToken = req?.query?.page || null;
     const folderId = req?.query?.folderId || 'root';
     let foldersResp = {};
@@ -17,6 +19,7 @@ const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
 
     try {
         foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
+        console.log('Folders response-------->:', foldersResp);
         if (!foldersResp || !foldersResp.folders) {
             throw new Error('Invalid response from Google Drive API');
         }
@@ -29,6 +32,7 @@ const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
 
         if (folderId !== 'root') {
             parentId = await googleDrive.getFolderParentIdAsync(folderId, req.provider.access_token);
+            console.log('Parent ID:..........', parentId);
         }
 
         return {

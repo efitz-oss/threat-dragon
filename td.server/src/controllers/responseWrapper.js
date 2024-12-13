@@ -19,7 +19,7 @@ const sendResponse = (fn, req, res, logger) => {
     } catch (e) {
         logger.error(e);
         console.log ( "there is the error guys")
-        return errors.serverError('Internal Server Error', res, logger);
+        return errors.serverError('Internal Server Error..................', res, logger);
     }
 };
 
@@ -42,7 +42,7 @@ const sendResponseAsync = async (asyncFn, req, res, logger) => {
     } catch (e) {
         logger.error(e);
         console.log ( "there is the error guys 1")
-        return errors.serverError('Internal Server Error', res, logger);
+        return errors.serverError('Internal Server Error..............', res, logger);
     }
 };
 

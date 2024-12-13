@@ -35,9 +35,10 @@ const actions = {
         const pageToken = state.pageTokens[page - 1] || '';
 
         try {
+            console.log('Fetching folders with params.....>:', { folderId, pageToken });
             // Make sure the token is valid and passed in the API call
             const resp = await googleDriveApi.folderAsync(folderId, 1);
-            console.log('Fetching folders with params.....>:', { folderId, pageToken });
+            // console.log('Fetching folders with params.....>:', { folderId, pageToken });
             console.log('Google Drive API response:.....', resp);
 
 
@@ -54,7 +55,7 @@ const actions = {
                 'parentId': resp.data.parentId
             });
         } catch (error) {
-            console.error('Error fetching Google Drive folders:', {
+            console.error('Error fetching Google Drive folders:..............', {
                 message: error.message,
                 config: error.config,
                 response: error.response?.data,

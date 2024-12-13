@@ -29,7 +29,7 @@ const sendError = (error, code, message, res, logger) => {
  * @param {*} logger
  * @returns {Object}
  */
-export const serverError = (error, res, logger) => sendError(error, 500, 'Internal Server Error', res, logger);
+export const serverError = (error, res, logger) => sendError(error, 500, 'Internal Server Error..............', res, logger);
 
 /**
  * Returns a 404 status / error
