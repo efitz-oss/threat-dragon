@@ -41,7 +41,9 @@ const createClient = () => {
 
     // Any status within 2xx lies here
     client.interceptors.response.use((resp) => {
+        console.log('--------here i am--------');
         const store = storeFactory.get();
+        console.log('--------now here i am--------');
         store.dispatch(LOADER_FINISHED);
         console.log('--------resp resp resp--------', resp);
         return resp;
