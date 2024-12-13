@@ -22,7 +22,7 @@ const sendResponse = (fn, req, res, logger) => {
         console.log ( "there is the error guys in the----- sendResponseAsync", e?.message)
         console.log ( "there is the error guys")
         return errors.serverError('Internal Server Error..................', res, logger);
-    }
+    } 
 };
 
 /**
