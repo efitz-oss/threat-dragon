@@ -12,26 +12,39 @@ const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
     let foldersResp = {};
     let folders = [];
     let parentId = '';
-    
-    foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
-    folders = foldersResp.folders;
 
-    const pagination = {
-        nextPageToken: foldersResp.nextPageToken || null,
-        currentPageToken: pageToken || null
-    };
+    logger.info('Fetching folders for folderId:', folderId, 'with pageToken:', pageToken);
 
-    if (folderId == 'root') {
-        parentId = '';
-    } else {
-        parentId = await googleDrive.getFolderParentIdAsync(folderId, req.provider.access_token);
+    try {
+        foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
+        if (!foldersResp || !foldersResp.folders) {
+            throw new Error('Invalid response from Google Drive API');
+        }
+        folders = foldersResp.folders;
+
+        const pagination = {
+            nextPageToken: foldersResp.nextPageToken || null,
+            currentPageToken: pageToken || null
+        };
+
+        if (folderId !== 'root') {
+            parentId = await googleDrive.getFolderParentIdAsync(folderId, req.provider.access_token);
+        }
+
+        return {
+            folders: folders.map((folder) => ({ name: folder.name, id: folder.id, mimeType: folder.mimeType })),
+            pagination,
+            parentId,
+        };
+    } catch (error) {
+        logger.error('Error in folders endpoint:---', {
+            message: error.message,
+            stack: error.stack,
+            folderId,
+            pageToken,
+        });
+        throw error; // This propagates as a 500 response
     }
-
-    return {
-        folders: folders.map((folder) => ({name: folder.name, id: folder.id, mimeType: folder.mimeType})),
-        pagination: pagination,
-        parentId
-    };
 }, req, res, logger);
 
 const create = (req, res) => responseWrapper.sendResponseAsync(async () => {
