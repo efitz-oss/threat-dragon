@@ -10,14 +10,14 @@ const getAsync = async (url, query = {}) => {
     try {
         console.log ( "the issue could be here .....11..yoo + URL",url);
         console.log("Query Parameters:.......", query);
-        console.log("HTTP Client Configuration:.....", client.defaults);
+        // console.log("HTTP Client Configuration:.....", client.defaults);
         if (!query) {
             console.warn("Query is undefined or null.........");
         }
         console.log("Query object:.........", query);
         const res = await clientFactory.get().get(url, { params: query });
-        console.log ( "the issue could be here .....11..hey");
-        console.log ( "the issue could be here .....11..hi", res)
+        console.log ( "----------------------");
+        console.log ( "Response from API:", res)
         return res.data;
     } catch (error) {
         console.log ( "the issue could be here .....11..error");
