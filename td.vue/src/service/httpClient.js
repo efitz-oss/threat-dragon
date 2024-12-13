@@ -60,31 +60,32 @@ const createClient = () => {
 
         const refreshToken = store.state.auth.refreshToken;
         if (!refreshToken) {
-            return logAndExit();
+            return;
         }
 
         // Do not use this axios instance for the refresh token
         // Should this request fail and we use the same instance,
         // we could be stuck in an infinite loop
-        try {
-            const response = await axios.post('/api/token/refresh', { refreshToken });
-            const tokens = response.data.data;
-            store.dispatch(AUTH_SET_JWT, tokens);
-            err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            const retryResp = await axios.request(err.config);
-            store.dispatch(LOADER_FINISHED);
-            console.log('--------retryResp retryResp retryResp--------', retryResp);
-            return retryResp;
-        } catch (retryError) {
-            console.log('--------Error retrying Error retrying rError retrying--------', retryResp);
-            console.warn('Error retrying after refresh token update');
-            console.warn(retryError);
-            Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
-            router.get().push({ name: 'HomePage' });
-            return await logAndExit();
-        }
+        // try {
+        //     const response = await axios.post('/api/token/refresh', { refreshToken });
+        //     const tokens = response.data.data;
+        //     store.dispatch(AUTH_SET_JWT, tokens);
+        //     err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
+        //     const retryResp = await axios.request(err.config);
+        //     store.dispatch(LOADER_FINISHED);
+        //     console.log('--------retryResp retryResp retryResp--------', retryResp);
+        //     return retryResp;
+        // } catch (retryError) {
+        //     console.log('--------Error retrying Error retrying rError retrying--------', retryResp);
+        //     console.warn('Error retrying after refresh token update');
+        //     console.warn(retryError);
+        //     Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
+        //     router.get().push({ name: 'HomePage' });
+        //     return await logAndExit();
+        // }
     });
 
+    console.log( "client---------------", client)
     return client;
 };
 
