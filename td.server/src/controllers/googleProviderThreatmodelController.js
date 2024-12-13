@@ -4,64 +4,87 @@ import responseWrapper from './responseWrapper.js';
 
 const logger = loggerHelper.get('controllers/googleProviderThreatmodelController.js');
 
-const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
-    console.log('--------------API route /folders has been called!----------');
+// const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
+//     console.log('--------------API route /folders has been called!----------');
+//     const googleDrive = repositories.getSpecific('googledrive');
+
+//     console.log('Access Token:-------->', req.provider.access_token);
+
+//     const pageToken = req?.query?.page || null;
+//     const folderId = req?.query?.folderId || 'root';
+
+//     console.log('Received folderId:--------', folderId);  // Log received query params
+//     console.log('Received page:--------', pageToken); 
+
+//     let foldersResp = {};
+//     let folders = [];
+//     let parentId = '';
+
+//     logger.info('Fetching folders for folderId:', folderId, 'with pageToken:', pageToken);
+
+//     try {
+//         foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
+//         console.log('Folders response-------->:', foldersResp);
+//         if (!foldersResp || !foldersResp.folders) {
+//             console.error('Error in the try block:', error);
+//             logger.error('Error in folders endpoint:---', {
+//                 message: error.message,
+//                 stack: error.stack,
+//                 folderId,
+//                 pageToken,
+//             });
+//             throw new Error('Invalid response from Google Drive API');
+//         }
+//         folders = foldersResp.folders;
+
+//         const pagination = {
+//             nextPageToken: foldersResp.nextPageToken || null,
+//             currentPageToken: pageToken || null
+//         };
+
+//         if (folderId !== 'root') {
+//             parentId = await googleDrive.getFolderParentIdAsync(folderId, req.provider.access_token);
+//             console.log('Parent ID:..........', parentId);
+//         }
+
+//         return {
+//             folders: folders.map((folder) => ({ name: folder.name, id: folder.id, mimeType: folder.mimeType })),
+//             pagination,
+//             parentId,
+//         };
+//     } catch (error) {
+//         logger.error('Error in folders endpoint:---', {
+//             message: error.message,
+//             stack: error.stack,
+//             folderId,
+//             pageToken,
+//         });
+//         throw error; // This propagates as a 500 response
+//     }
+// }, req, res, logger);
+
+
+const folders = async (req, res) => {
     const googleDrive = repositories.getSpecific('googledrive');
-
-    console.log('Access Token:-------->', req.provider.access_token);
-
     const pageToken = req?.query?.page || null;
     const folderId = req?.query?.folderId || 'root';
 
-    console.log('Received folderId:--------', folderId);  // Log received query params
-    console.log('Received page:--------', pageToken); 
-
-    let foldersResp = {};
-    let folders = [];
-    let parentId = '';
-
-    logger.info('Fetching folders for folderId:', folderId, 'with pageToken:', pageToken);
+    console.log('Received folderId:--------.................', folderId);
+    console.log('Received page:--------...............', pageToken);
 
     try {
-        foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
-        console.log('Folders response-------->:', foldersResp);
+        const foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
+        console.log('Folders response-------->:..............', foldersResp);
         if (!foldersResp || !foldersResp.folders) {
-            console.error('Error in the try block:', error);
-            logger.error('Error in folders endpoint:---', {
-                message: error.message,
-                stack: error.stack,
-                folderId,
-                pageToken,
-            });
-            throw new Error('Invalid response from Google Drive API');
+            throw new Error('Invalid response from Google Drive API......');
         }
-        folders = foldersResp.folders;
-
-        const pagination = {
-            nextPageToken: foldersResp.nextPageToken || null,
-            currentPageToken: pageToken || null
-        };
-
-        if (folderId !== 'root') {
-            parentId = await googleDrive.getFolderParentIdAsync(folderId, req.provider.access_token);
-            console.log('Parent ID:..........', parentId);
-        }
-
-        return {
-            folders: folders.map((folder) => ({ name: folder.name, id: folder.id, mimeType: folder.mimeType })),
-            pagination,
-            parentId,
-        };
+        return res.json(foldersResp);
     } catch (error) {
-        logger.error('Error in folders endpoint:---', {
-            message: error.message,
-            stack: error.stack,
-            folderId,
-            pageToken,
-        });
-        throw error; // This propagates as a 500 response
+        console.error('Error in the catch block:.........', error);
+        res.status(500).json({ message: 'Internal Server Error.........' });
     }
-}, req, res, logger);
+};
+
 
 const create = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
