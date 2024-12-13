@@ -54,14 +54,14 @@ const createClient = () => {
         //     return Promise.reject(err);
         // };
 
-        if (err.response.status !== 401) {
-            return logAndExit();
-        }
+        // if (err.response.status !== 401) {
+        //     return logAndExit();
+        // }
 
-        const refreshToken = store.state.auth.refreshToken;
-        if (!refreshToken) {
-            return;
-        }
+        // const refreshToken = store.state.auth.refreshToken;
+        // if (!refreshToken) {
+        //     return;
+        // }
 
         // Do not use this axios instance for the refresh token
         // Should this request fail and we use the same instance,
