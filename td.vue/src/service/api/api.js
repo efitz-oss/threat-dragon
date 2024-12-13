@@ -6,7 +6,7 @@ import clientFactory from '../httpClient.js';
  * @param {String} url
  * @returns Promise
  */
-const getAsync = async (url, query) => {
+const getAsync = async (url, query = {}) => {
     try {
         console.log ( "the issue could be here .....11..yoo + URL",url);
         console.log("Query Parameters:.......", query);
@@ -15,7 +15,7 @@ const getAsync = async (url, query) => {
             console.warn("Query is undefined or null.........");
         }
         console.log("Query object:.........", query);
-        const res = await clientFactory.get().get(url, query);
+        const res = await clientFactory.get().get(url, { params: query });
         console.log ( "the issue could be here .....11..hey");
         console.log ( "the issue could be here .....11..hi", res)
         return res.data;
