@@ -51,12 +51,17 @@ const createClient = () => {
         const logAndExit = () => {
             console.log('--------logAndExit--------');
             console.error(err);
+            console.error('logAndExit---------e:---------', err.response);
             store.dispatch(LOADER_FINISHED);
             return Promise.reject(err);
         };
 
         if (err.response.status !== 401) {
             console.log('--------logAndExit-err--------');
+            console.error('Error details:-------------', err);  // Detailed error log
+        console.error('Error Response:---------1', err.response); 
+        console.error('Error Response:---------2', err.response?.message); 
+        console.error('Error Response:---------3', err.response?.body);
             return logAndExit();
         }
 
