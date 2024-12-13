@@ -5,12 +5,17 @@ import responseWrapper from './responseWrapper.js';
 const logger = loggerHelper.get('controllers/googleProviderThreatmodelController.js');
 
 const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
+    console.log('--------------hey hey hey----------', folderId);
     const googleDrive = repositories.getSpecific('googledrive');
 
     console.log('Access Token:-------->', req.provider.access_token);
 
     const pageToken = req?.query?.page || null;
     const folderId = req?.query?.folderId || 'root';
+
+    console.log('Received folderId:--------', folderId);  // Log received query params
+    console.log('Received page:--------', pageToken); 
+
     let foldersResp = {};
     let folders = [];
     let parentId = '';
