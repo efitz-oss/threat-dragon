@@ -78,7 +78,7 @@ const createClient = () => {
         // Should this request fail and we use the same instance,
         // we could be stuck in an infinite loop
         try {
-            console.log('--------did i reach here --------');
+            console.log('--------did i reach here -------with token-', refreshToken);
             const response = await axios.post('/api/token/refresh', { refreshToken });
             console.log('--------andh here too --------');
             const tokens = response.data.data;
