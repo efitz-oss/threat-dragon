@@ -24,7 +24,7 @@ const oauthReturn = (req, res) => {
 
     let returnUrl = `/#/oauth-return?code=${req.query.code}`;
     if (env.get().config.NODE_ENV === 'development') {
-        returnUrl = `http://localhost:8080${returnUrl}`;
+        returnUrl = `https://td.devflovv.com${returnUrl}`;
     }
     return res.redirect(returnUrl);
 };
