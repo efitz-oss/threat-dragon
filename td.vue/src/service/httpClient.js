@@ -104,6 +104,7 @@ const createClient = () => {
             console.log('--------retryResp retryResp retryResp--------LOADER_FINISHED', LOADER_FINISHED);
             return retryResp;
         } catch (retryError) {
+            console.error('Token refresh failed:', err.response?.data || error.message);
             console.log('--------Error retrying Error retrying rError retrying--------', retryResp);
             console.warn('Error retrying after refresh token update');
             console.warn(retryError);
