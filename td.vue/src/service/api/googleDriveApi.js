@@ -6,9 +6,16 @@ const resource = '/api/googleproviderthreatmodel';
  * Gets the google drive folders for the given user
  * @returns {Promise}
  */
-const folderAsync = (folderId='root', page = 1) => {
-    return api.getAsync(`${resource}/folders`, { params: { page: page, folderId: folderId } });
+const folderAsync = async (folderId = 'root', page = 1) => {
+    try {
+        const response = await api.getAsync(`${resource}/folders`, { params: { page, folderId } });
+        return response;
+    } catch (error) {
+        console.error('Error fetching folders:', error.message);
+        throw error;
+    }
 };
+
 
 const createAsync = (folder, fileContent, fileName) => {
     return api.postAsync(`${resource}/${folder}/create`, {fileContent, fileName});

@@ -7,8 +7,13 @@ import clientFactory from '../httpClient.js';
  * @returns Promise
  */
 const getAsync = async (url, query) => {
-    const res = await clientFactory.get().get(url, query);
-    return res.data;
+    try {
+        const res = await clientFactory.get().get(url, query);
+        return res.data;
+    } catch (error) {
+        console.error('Error in getAsync:', error.message);
+        throw error;
+    }
 };
 
 /**
