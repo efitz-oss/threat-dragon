@@ -86,7 +86,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
             nextPageToken: response.data.nextPageToken,
         };
     } catch (error) {
-        Console.log ( "hey hi hey")
+        // Console.log ( "hey hi hey")
         throw new Error(`Error fetching folder contents: ${error.response?.data?.error?.message || error.message}`);
     }
 };
