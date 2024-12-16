@@ -1,9 +1,19 @@
 import env from '../env/Env.js';
 import { google } from 'googleapis';
 
+// Define the scope for Google Drive access
+const SCOPES = ['https://www.googleapis.com/auth/drive'];
+
 const getClient = (accessToken) => {
-    const oauth2Client = new google.auth.OAuth2(env.get().config.GOOGLE_CLIENT_ID, env.get().config.GOOGLE_CLIENT_SECRET, env.get().config.GOOGLE_REDIRECT_URI);
+    const oauth2Client = new google.auth.OAuth2(
+        env.get().config.GOOGLE_CLIENT_ID,
+        env.get().config.GOOGLE_CLIENT_SECRET,
+        env.get().config.GOOGLE_REDIRECT_URI
+    );
+    
+    // Set the access token for the client
     oauth2Client.setCredentials({ access_token: accessToken });
+    
     return oauth2Client;
 };
 
