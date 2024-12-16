@@ -15,7 +15,34 @@ const get = () => {
     return cachedClient;
 };
 
-client.interceptors.response.use(
+const createClient = () => {
+    const client = axios.create();
+    
+    // Set default headers
+    client.defaults.headers.common.Accept = 'application/json';
+    client.defaults.headers.post['Content-Type'] = 'application/json';
+
+    // Request interceptor
+    client.interceptors.request.use(
+        (config) => {
+            const store = storeFactory.get();
+            store.dispatch(LOADER_STARTED);
+
+            if (store.state.auth.jwt) {
+                config.headers.authorization = `Bearer ${store.state.auth.jwt}`;
+            }
+            return config;
+        },
+        (error) => {
+            const store = storeFactory.get();
+            store.dispatch(LOADER_FINISHED);
+            return Promise.reject(error);
+        }
+    );
+
+    // Response interceptor
+   // Response interceptor
+   client.interceptors.response.use(
     (response) => {
         const store = storeFactory.get();
         store.dispatch(LOADER_FINISHED);
@@ -86,6 +113,9 @@ client.interceptors.response.use(
         }
     }
 );
+
+    return client;
+};
 
 export default {
     get,
