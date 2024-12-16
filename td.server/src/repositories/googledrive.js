@@ -19,22 +19,22 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
     return res.data;
 };
 
-const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
-    const auth = getClient(accessToken);
-    const driveClient = google.drive({ version: 'v3', auth });
+// const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
+//     const auth = getClient(accessToken);
+//     const driveClient = google.drive({ version: 'v3', auth });
 
-    const res = await driveClient.files.list({
-        q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
-        fields: 'nextPageToken, files(id, name, parents, mimeType)',
-        pageSize: 10,
-        ...(pageToken ? { pageToken } : {})
-    });
+//     const res = await driveClient.files.list({
+//         q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
+//         fields: 'nextPageToken, files(id, name, parents, mimeType)',
+//         pageSize: 10,
+//         ...(pageToken ? { pageToken } : {})
+//     });
 
-    return {
-        folders: res.data.files,
-        nextPageToken: res.data.nextPageToken,
-    };
-};
+//     return {
+//         folders: res.data.files,
+//         nextPageToken: res.data.nextPageToken,
+//     };
+// };
 
 const getFolderParentIdAsync = async (folderId, accessToken) => {
     const auth = getClient(accessToken);
