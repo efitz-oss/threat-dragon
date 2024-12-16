@@ -76,34 +76,27 @@ const createClient = () => {
 
             console.log('Token refresh response:', response.data);
             
-            // Verify token structure
-            const tokens = response.data;
-            if (!tokens || !tokens.accessToken) {
-                throw new Error('Invalid token response format');
+            // Handle the token response
+            const tokens = {
+                jwt: response.data.accessToken,        // Changed this
+                refreshToken: response.data.refreshToken  // Changed this
+            };
+
+            // Verify tokens exist
+            if (!tokens.jwt || !tokens.refreshToken) {
+                throw new Error('Missing tokens in response');
             }
 
-            // Log token structure before dispatch
-            console.log('Token structure:', {
-                hasAccessToken: !!tokens.accessToken,
-                hasRefreshToken: !!tokens.refreshToken,
-                tokenType: typeof tokens.accessToken
-            });
+            console.log('Dispatching tokens to store...');
+            await store.dispatch(AUTH_SET_JWT, tokens);
 
-            try {
-                await store.dispatch(AUTH_SET_JWT, {
-                    jwt: tokens.accessToken,
-                    refreshToken: tokens.refreshToken
-                });
-                
-                console.log("Tokens successfully set in store");
-
-                // Update request config with new token
-                error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-                return await axios.request(error.config);
-            } catch (dispatchError) {
-                console.error('Error dispatching AUTH_SET_JWT:', dispatchError);
-                throw dispatchError;
-            }
+            // Update the failed request config with new token
+            error.config.headers.authorization = `Bearer ${tokens.jwt}`;  // Changed this
+            
+            // Retry the original request
+            const retryResponse = await axios.request(error.config);
+            store.dispatch(LOADER_FINISHED);
+            return retryResponse;
 
         } catch (refreshError) {
             console.error('Refresh token error:', refreshError);
