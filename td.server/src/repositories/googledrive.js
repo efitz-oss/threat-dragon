@@ -2,7 +2,7 @@ import env from '../env/Env.js';
 import { google } from 'googleapis';
 
 // Define the scope for Google Drive access
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
 
 // OAuth client setup
 const oauth2Client = new google.auth.OAuth2(
