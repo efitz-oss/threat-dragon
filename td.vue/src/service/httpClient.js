@@ -83,6 +83,7 @@ const createClient = () => {
                 return await axios.request(error.config);
 
             } catch (refreshError) {
+                onsole.log ("refresh  tokens.........", refreshError)
                 // Handle refresh token failure
                 Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
                 router.get().push({ name: 'HomePage' });
