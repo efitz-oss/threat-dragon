@@ -39,16 +39,14 @@ const middleware = (req, res, next) => {
 
     try {
         console.log("Verifying token...");
-        const decodedToken = jwt.decode(token);  // This decodes the token without verifying the signature
-        console.log('Decoded token (without verification):', decodedToken);
-        // const { provider, user } = jwt.verifyToken(token);
+        const { provider, user } = jwt.verifyToken(token);
 
-        // if (!provider || !user) {
-        //     throw new Error("Decoded JWT is missing required fields (provider/user)");
-        // }
+        if (!provider || !user) {
+            throw new Error("Decoded JWT is missing required fields (provider/user)");
+        }
 
-        // req.provider = provider;
-        // req.user = user;
+        req.provider = provider;
+        req.user = user;
         console.log("Authenticated user:", req.user);
         console.log("Token provider:", req.provider);
 
