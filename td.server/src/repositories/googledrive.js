@@ -2,7 +2,7 @@ import env from '../env/Env.js';
 import { google } from 'googleapis';
 
 // Define the scope for Google Drive access
-const SCOPES = ['https://www.googleapis.com/auth/drive/v3/files']
+const SCOPES = ['https://www.googleapis.com/auth/drive']
 
 // OAuth client setup
 const oauth2Client = new google.auth.OAuth2(
@@ -55,27 +55,35 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
 };
 
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
-    console.log( "wowowowowowow1")
-    const auth = getClient(accessToken);
-    console.log( "this is the folder---->", folderId)
-    console.log( "this is the pageToken---->", pageToken)
-    console.log( "this is the access token for drive---->", accessToken)
-    console.log( "wowowowowowow2")
-    const driveClient = google.drive({ version: 'v3', auth });
-    console.log( "wowowowowowow3....", driveClient )
+    try {
+        const auth = getClient(accessToken);
+        const driveClient = google.drive({ version: 'v3', auth });
 
-    const res = await driveClient.files.list({
-        q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
-        fields: 'nextPageToken, files(id, name, parents, mimeType)',
-        pageSize: 10,
-        ...(pageToken ? { pageToken } : {})
-    });
-    console.log( "this is the response of the drive---->", res)
+        const res = await driveClient.files.list({
+            q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
+            fields: 'nextPageToken, files(id, name, parents, mimeType)',
+            pageSize: 10,
+            ...(pageToken ? { pageToken } : {})
+        });
 
-    return {
-        folders: res.data.files,
-        nextPageToken: res.data.nextPageToken,
-    };
+        return {
+            folders: res.data.files,
+            nextPageToken: res.data.nextPageToken,
+        };
+    } catch (error) {
+        console.error('Error in listFilesInFolderAsync:', {
+            message: error.message,
+            status: error.status,
+            errors: error.errors,
+            code: error.code
+        });
+
+        if (error.status === 403) {
+            throw new Error('Insufficient permissions to access Google Drive. Please check authentication and scope settings.');
+        }
+
+        throw new Error(`Failed to list files: ${error.message}`);
+    }
 };
 
 const getFolderParentIdAsync = async (folderId, accessToken) => {
