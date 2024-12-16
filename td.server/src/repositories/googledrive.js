@@ -3,10 +3,11 @@ import { google } from 'googleapis';
 
 // Define the scope for Google Drive access
 const SCOPES = [
-    'https://www.googleapis.com/auth/drive.file',      // Most important one
-    'https://www.googleapis.com/auth/drive.metadata',
+    'https://www.googleapis.com/auth/drive.file',
     'https://www.googleapis.com/auth/drive.metadata.readonly',
-    'https://www.googleapis.com/auth/drive.readonly'
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'openid'
 ];
 
 // OAuth client setup
@@ -20,10 +21,9 @@ const oauth2Client = new google.auth.OAuth2(
 const getAuthUrl = () => {
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        prompt: 'consent',
+        prompt: 'consent', // Forces consent screen to always appear
         scope: SCOPES,
-        include_granted_scopes: true,
-        response_type: 'code'
+        include_granted_scopes: true
     });
 };
 
