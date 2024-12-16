@@ -93,13 +93,17 @@ const createClient = () => {
 
             console.log('Dispatching tokens to store...');
             await store.dispatch(AUTH_SET_JWT, tokens);
+            console.log("Dispatched  tokens", AUTH_SET_JWT, tokens)
 
             // Update the failed request config with new token
             error.config.headers.authorization = `Bearer ${tokens.jwt}`;
+            console.log("Dispatched tokens.jwt..", tokens.jwt)
             
             // Retry the original request
             const retryResponse = await axios.request(error.config);
+            console.log("Dispatched tokens.jwt.. YOYOYOYo", tokens.jwt)
             store.dispatch(LOADER_FINISHED);
+            console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResponse)
             return retryResponse;
 
         } catch (refreshError) {
