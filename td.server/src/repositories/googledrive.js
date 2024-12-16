@@ -3,13 +3,10 @@ import { google } from 'googleapis';
 
 // Define the scope for Google Drive access
 const SCOPES = [
-    'https://www.googleapis.com/auth/drive',
-    'profile',
-    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive.file',      // Most important one
     'https://www.googleapis.com/auth/drive.metadata',
     'https://www.googleapis.com/auth/drive.metadata.readonly',
-    'https://www.googleapis.com/auth/drive.readonly',
-    'https://www.googleapis.com/auth/drive.appdata'
+    'https://www.googleapis.com/auth/drive.readonly'
 ];
 
 // OAuth client setup
@@ -25,7 +22,8 @@ const getAuthUrl = () => {
         access_type: 'offline',
         prompt: 'consent',
         scope: SCOPES,
-        include_granted_scopes: true
+        include_granted_scopes: true,
+        response_type: 'code'
     });
 };
 
@@ -64,7 +62,8 @@ const getClient = (accessToken) => {
     );
     
     oauth2Client.setCredentials({ 
-        access_token: accessToken
+        access_token: accessToken,
+        scope: SCOPES.join(' ')  // Add this line
     });
     
     return oauth2Client;
@@ -86,23 +85,15 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
 
     return res.data;
 };
-
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
-    console.log('pageToken........:', pageToken)
-    console.log('Environment check:', {
-        clientId: env.get().config.GOOGLE_CLIENT_ID?.substring(0, 10) + '...',
-        clientSecretExists: !!env.get().config.GOOGLE_CLIENT_SECRET,
-        redirectUri: env.get().config.GOOGLE_REDIRECT_URI
-    });
     try {
         if (!accessToken) {
             throw new Error('Access token is required');
         }
 
-        console.log('Setting up Drive client...');
         const auth = getClient(accessToken);
         
-        // Add this debug section
+        // Add token verification
         try {
             const tokenInfo = await auth.getTokenInfo(accessToken);
             console.log('Token Info:', {
@@ -117,19 +108,18 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         const driveClient = google.drive({ 
             version: 'v3', 
             auth,
-            timeout: 10000, // Increased timeout
+            timeout: 10000
         });
 
-        console.log(`Listing files for folder: ${folderId}`);
-        const query = `'${folderId}' in parents`;
+        const query = `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`;
         
         const res = await driveClient.files.list({
             q: query,
             fields: 'nextPageToken, files(id, name, parents, mimeType)',
             pageSize: 10,
-            ...(pageToken ? { pageToken } : {}),
-            supportsAllDrives: true,
-            includeItemsFromAllDrives: true
+            pageToken: pageToken || undefined,
+            supportsAllDrives: false,  // Change this to false if you're only accessing user's drive
+            includeItemsFromAllDrives: false
         });
 
         return {
@@ -138,15 +128,15 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         };
 
     } catch (error) {
-        // Log the full error object
-        console.error('Full error object:', JSON.stringify(error, null, 2));
+        console.error('Detailed error:', {
+            message: error.message,
+            status: error.status,
+            response: error.response?.data,
+            headers: error.response?.headers
+        });
+
         if (error.response?.data?.error?.status === 'PERMISSION_DENIED') {
-            console.error('Permission denied. Current scopes:', error.response.data.error.details);
-            throw new Error('Permission denied. Please check application permissions.');
-        };
-        if (error.response) {
-            console.error('Response data:', error.response.data);
-            console.error('Response headers:', error.response.headers);
+            throw new Error(`Permission denied. Required scopes: ${SCOPES.join(', ')}`);
         }
 
         throw error;
@@ -231,6 +221,7 @@ const deleteFileAsync = async (fileId, accessToken) => {
 
     return { success: true };
 };
+
 
 export default {
     getAuthUrl,  // Export the auth URL generator for user authentication
