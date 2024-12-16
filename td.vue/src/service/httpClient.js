@@ -81,6 +81,7 @@ const createClient = () => {
                 jwt: response.data.accessToken,        // Changed this
                 refreshToken: response.data.refreshToken  // Changed this
             };
+            console.log ( "tokens------------> ", tokens)
 
             // Verify tokens exist
             if (!tokens.jwt || !tokens.refreshToken) {
