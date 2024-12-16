@@ -43,6 +43,7 @@ const actions = {
 const mutations = {
     [AUTH_CLEAR]: (state) => clearState(state),
     [AUTH_SET_JWT]: (state, tokens) => {
+        console.log('Received tokens:.............', tokens);
         try {
             const { accessToken, refreshToken } = tokens;
             const tokenBody = accessToken.split('.')[1];
