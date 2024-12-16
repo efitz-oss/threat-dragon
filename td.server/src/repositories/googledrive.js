@@ -4,6 +4,30 @@ import { google } from 'googleapis';
 // Define the scope for Google Drive access
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 
+// OAuth client setup
+const oauth2Client = new google.auth.OAuth2(
+    env.get().config.GOOGLE_CLIENT_ID,
+    env.get().config.GOOGLE_CLIENT_SECRET,
+    env.get().config.GOOGLE_REDIRECT_URI
+);
+
+// Step 1: Generate the URL for the user to authenticate
+const getAuthUrl = () => {
+    return oauth2Client.generateAuthUrl({
+        access_type: 'offline',  // This allows you to get a refresh token for long-term access
+        scope: SCOPES,  // The scope you defined earlier, which includes 'https://www.googleapis.com/auth/drive'
+    });
+};
+
+// Step 2: Once the user has authenticated, you'll get a code in the callback
+// Handle the authorization code and exchange it for tokens
+const getTokens = async (code) => {
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);  // Save the tokens (access_token, refresh_token)
+    return tokens;  // Return the tokens for later use
+};
+
+// Step 3: Use the access token to authenticate API calls
 const getClient = (accessToken) => {
     const oauth2Client = new google.auth.OAuth2(
         env.get().config.GOOGLE_CLIENT_ID,
@@ -125,6 +149,8 @@ const deleteFileAsync = async (fileId, accessToken) => {
 };
 
 export default {
+    getAuthUrl,  // Export the auth URL generator for user authentication
+    getTokens,   // Export the function for exchanging the code for tokens
     getFolderDetailsAsync,
     getFolderParentIdAsync,
     listFilesInFolderAsync,
