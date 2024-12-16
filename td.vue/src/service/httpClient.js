@@ -75,7 +75,7 @@ const createClient = () => {
             );
 
             // Log the entire response to inspect its structure
-            console.log('Token refresh response:', response.data);
+            console.log('Token refresh response:', response.data.data);
             
             // Access tokens from the correct structure
             const tokens = {
