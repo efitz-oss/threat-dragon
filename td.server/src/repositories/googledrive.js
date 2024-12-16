@@ -19,30 +19,30 @@ const oauth2Client = new google.auth.OAuth2(
 
 // Step 1: Generate the URL for the user to authenticate
 const getAuthUrl = () => {
-    return oauth2Client.generateAuthUrl({
+    const url = oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        prompt: 'consent', // Forces consent screen to always appear
+        prompt: 'consent',
         scope: SCOPES,
         include_granted_scopes: true
     });
+    
+    console.log('Generated Auth URL with scopes:', SCOPES);
+    return url;
 };
 
 // Step 2: Once the user has authenticated, you'll get a code in the callback
 // Handle the authorization code and exchange it for tokens
 const getTokens = async (code) => {
     try {
+        console.log('Getting tokens with code...');
         const { tokens } = await oauth2Client.getToken(code);
-        console.log('Received tokens:', {
-            access_token_exists: !!tokens.access_token,
-            refresh_token_exists: !!tokens.refresh_token,
-            scope: tokens.scope, // This will show what scopes were actually granted
-            expiry: tokens.expiry_date
-        });
+        
+        console.log('Received tokens with scopes:', tokens.scope);
         
         oauth2Client.setCredentials(tokens);
         return tokens;
     } catch (error) {
-        console.error('Error getting tokens:', error);
+        console.error('Error in getTokens:', error);
         throw error;
     }
 };
