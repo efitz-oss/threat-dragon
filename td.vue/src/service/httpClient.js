@@ -79,7 +79,7 @@ const createClient = () => {
             
             // Access tokens from the correct structure
             const tokens = {
-                jwt: response.data.data.accessToken,        // Accessing directly from response.data
+                accessToken: response.data.data.accessToken,        // Accessing directly from response.data
                 refreshToken: response.data.data.refreshToken  // Accessing directly from response.data
             };
 
@@ -87,7 +87,7 @@ const createClient = () => {
             console.log('Tokens object:', tokens);
 
             // Verify tokens exist
-            if (!tokens.jwt || !tokens.refreshToken) {
+            if (!tokens.accessToken || !tokens.refreshToken) {
                 throw new Error('Missing tokens in response');
             }
 
@@ -96,12 +96,12 @@ const createClient = () => {
             console.log("Dispatched  tokens", AUTH_SET_JWT, tokens)
 
             // Update the failed request config with new token
-            error.config.headers.authorization = `Bearer ${tokens.jwt}`;
-            console.log("Dispatched tokens.jwt..", tokens.jwt)
+            error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
+            console.log("Dispatched tokens.jwt..", tokens.accessToken)
             
             // Retry the original request
             const retryResponse = await axios.request(error.config);
-            console.log("Dispatched tokens.jwt.. YOYOYOYo", tokens.jwt)
+            console.log("Dispatched tokens.jwt.. YOYOYOYo", tokens.accessToken)
             store.dispatch(LOADER_FINISHED);
             console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResponse)
             return retryResponse;
