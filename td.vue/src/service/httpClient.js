@@ -79,8 +79,8 @@ const createClient = () => {
             
             // Access tokens from the correct structure
             const tokens = {
-                jwt: response.data.accessToken,        // Accessing directly from response.data
-                refreshToken: response.data.refreshToken  // Accessing directly from response.data
+                jwt: response.data.data.accessToken,        // Accessing directly from response.data
+                refreshToken: response.data.data.refreshToken  // Accessing directly from response.data
             };
 
             // Log the tokens object to see what we have
