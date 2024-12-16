@@ -55,9 +55,9 @@ const verify = (token) => {
         console.log ('..........huhuhuhuhuhuhuh ----->',token )
         logger.debug('Refresh token verified');
         console.log ('Refresh token not found in repository-----> -1-1' )
-        const token= jwtHelper.verifyRefresh(token);
+        const Token= jwtHelper.verifyRefresh(token);
         console.log ('Refresh token not found in repository----->..00' )
-        return token
+        return Token
     // } catch (err) {
         // logger.audit('Error verifying refresh token');
         // logger.info(err);
