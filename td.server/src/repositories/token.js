@@ -52,10 +52,11 @@ const verify = (token) => {
     try {
         // Refresh tokens are just JWTs.  The JWTs have a default expiration time
         // Ensure that it is a valid (signed) token, and that it is not expired
+        console.log ('..........huhuhuhuhuhuhuh ----->',token )
         logger.debug('Refresh token verified');
-        console.log ('Refresh token not found in repository----->' )
+        console.log ('Refresh token not found in repository-----> -1-1' )
         const token= jwtHelper.verifyRefresh(token);
-        console.log ('Refresh token not found in repository----->' )
+        console.log ('Refresh token not found in repository----->..00' )
         return token
     } catch (err) {
         logger.audit('Error verifying refresh token');
