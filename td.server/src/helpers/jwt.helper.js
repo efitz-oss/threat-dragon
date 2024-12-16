@@ -1,5 +1,4 @@
 import jsonwebtoken from 'jsonwebtoken';
-
 import encryptionHelper from './encryption.helper.js';
 import env from '../env/Env.js';
 
@@ -9,46 +8,81 @@ const createAsync = async (providerName, providerOptions, user) => {
     const provider = {
         [providerName]: providerOptsEncoded
     };
-    // Explore other options including issuer, scope, etc
-    const accessToken = jsonwebtoken.sign({ provider, user }, env.get().config.ENCRYPTION_JWT_SIGNING_KEY, {
-        expiresIn: '1d'
-    });
 
-    const refreshToken = jsonwebtoken.sign({ provider, user }, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY, {
-        expiresIn: '7d'
-    });
+    console.log('Creating JWTs with signing keys...');
+    console.log('ENCRYPTION_JWT_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
+    console.log('ENCRYPTION_JWT_REFRESH_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
+
+    const accessToken = jsonwebtoken.sign(
+        { provider, user },
+        env.get().config.ENCRYPTION_JWT_SIGNING_KEY,
+        { expiresIn: '1d' } // 1 day
+    );
+
+    const refreshToken = jsonwebtoken.sign(
+        { provider, user },
+        env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY,
+        { expiresIn: '7d' } // 7 days
+    );
+
+    console.log('Access token created:', accessToken);
+    console.log('Refresh token created:', refreshToken);
 
     return { accessToken, refreshToken };
 };
 
 const decodeProvider = (encodedProvider) => {
     const providerName = Object.keys(encodedProvider)[0];
-    console.log ('Refresh token decodedProvider.....   1  ---providerName---->',providerName )
+    console.log('Decoding provider...', providerName);
+
     const decodedProvider = JSON.parse(Buffer.from(encodedProvider[providerName], 'base64').toString('utf-8'));
-    console.log ('Refresh token decodedProvider.....   2  ---providerName---->',decodedProvider )
+    console.log('Decoded provider (base64):', decodedProvider);
+
     const provider = JSON.parse(encryptionHelper.decrypt(decodedProvider));
-    console.log ('Refresh token decodedProvider.....   3  ---providerName---->',provider )
+    console.log('Decrypted provider:', provider);
+
     provider.name = providerName;
     return provider;
 };
 
 const decode = (token, key) => {
-    console.log (' 1.0  ----->----->' ,token)
-    console.log (' 1.0  ----->----->' ,key)
-    const { provider, user } = jsonwebtoken.verify(token, key);
-    console.log ('R  1.0  ----->----->' , provider, user)
-    const decodedProvider = decodeProvider(provider);
-    console.log ('Refresh token decodedProvider.....   1.0  ----->----->', decodedProvider )
-    return {
-        provider: decodedProvider,
-        user
-    };
+    console.log('Decoding token...');
+    console.log('Token:', token);
+    console.log('Key used for decoding:', key);
+
+    try {
+        // Decode without verifying to log and debug
+        const decodedToken = jsonwebtoken.decode(token, { complete: true });
+        console.log('Decoded token (without verification):', decodedToken);
+
+        // Verify the token
+        const { provider, user } = jsonwebtoken.verify(token, key);
+        console.log('Verified token:', { provider, user });
+
+        const decodedProvider = decodeProvider(provider);
+        console.log('Decoded provider:', decodedProvider);
+
+        return {
+            provider: decodedProvider,
+            user
+        };
+    } catch (error) {
+        console.error('Error verifying token:', error.message);
+        throw new Error('Invalid JWT');
+    }
 };
 
-const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
+const verifyToken = (token) => {
+    console.log('Verifying access token...');
+    console.log('ENCRYPTION_JWT_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
+    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
+};
 
-const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
-
+const verifyRefresh = (token) => {
+    console.log('Verifying refresh token...');
+    console.log('ENCRYPTION_JWT_REFRESH_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
+    return decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
+};
 
 export default {
     createAsync,
