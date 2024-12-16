@@ -43,74 +43,65 @@ const createClient = () => {
     client.interceptors.response.use((resp) => {
         console.log('--------here i am--------');
         const store = storeFactory.get();
-        console.log('--------now here i am--------');
         store.dispatch(LOADER_FINISHED);
         console.log('--------resp resp resp--------', resp);
         return resp;
     }, async (err) => {
         const store = storeFactory.get();
-
-        // const logAndExit = () => {
-        //     console.log('--------logAndExit--------');
-        //     console.error(err);
-        //     console.error('logAndExit---------e:---------', err.response);
-        //     store.dispatch(LOADER_FINISHED);
-        //     return Promise.reject(err);
-        // };
-
-        // if (err.response.status !== 401) {
-        //     console.log('--------logAndExit-err--------',err.response?.data);
-        //     console.error('Error details:-------------', err);  // Detailed error log
-        // console.error('Error Response:---------1', err.response); 
-        // console.error('Error Response:---------2', err.response?.message); 
-        // console.error('Error Response:---------3', err.response?.body);
-        //     return logAndExit();
-        // }
-
+    
+        const logAndExit = () => {
+            console.error('Error in interceptor:', err);
+            store.dispatch(LOADER_FINISHED);
+            return Promise.reject(err);
+        };
+    
         const refreshToken = store.state.auth.refreshToken;
-        console.log('--------refreshToken--------');
+        console.log('--------refreshToken--------', refreshToken);
+        
         if (!refreshToken) {
-            console.log('--------refreshToken-error--------', refreshToken);
-            return;
+            console.log('No refresh token available');
+            return logAndExit();
         }
-
-        // Do not use this axios instance for the refresh token
-        // Should this request fail and we use the same instance,
-        // we could be stuck in an infinite loop
+    
         try {
-            console.log('--------did i reach here -------with token-');
-            // const response = await axios.post('/api/token/refresh', { refreshToken });
+            console.log('Attempting to refresh token...');
             const response = await axios.post(
                 '/api/token/refresh',
-                { refreshToken }, // Check if this is how the backend expects it
+                { refreshToken },
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${refreshToken}`, // Remove if unnecessary
-                    },
+                        Authorization: `Bearer ${refreshToken}`,
+                    }
                 }
             );
-            console.log('Response:', response.data);
-            console.log('--------andh here too... --------');
+    
+            console.log('Token refresh response:', response.data);
             const tokens = response.data;
-            console.log('--------did i get this token...1 --------tokens');
-            // console.log('--------did i get this token... --------', tokens);
-            store.dispatch(AUTH_SET_JWT, tokens);
-            console.log('--------did i get this token...2 --------AUTH_SET_JWT', AUTH_SET_JWT);
-            err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            const retryResp = await axios.request(err.config);
-            console.log('--------did i get this token...2 --------', retryResp);
-            store.dispatch(LOADER_FINISHED);
-            console.log('--------retryResp retryResp retryResp--------LOADER_FINISHED', LOADER_FINISHED);
-            return retryResp;
-        } catch (error) {
-            console.error('Token refresh failed:', error.response?.data || error.message);
-            console.log('--------Error retrying Error retrying rError retrying--------', retryResp);
-            console.warn('Error retrying after refresh token update');
             
+            await store.dispatch(AUTH_SET_JWT, tokens);
+            
+            // Update the failed request config with new token
+            err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
+            
+            // Retry the original request
+            try {
+                const retryResp = await axios.request(err.config);
+                console.log('Retry successful:', retryResp);
+                store.dispatch(LOADER_FINISHED);
+                return retryResp;
+            } catch (retryError) {
+                console.error('Retry request failed:', retryError);
+                return logAndExit();
+            }
+    
+        } catch (refreshError) {
+            console.error('Token refresh failed:', refreshError.response?.data || refreshError.message);
             Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
             router.get().push({ name: 'HomePage' });
-            return await logAndExit();
+            return logAndExit();
+        } finally {
+            store.dispatch(LOADER_FINISHED);
         }
     });
 
