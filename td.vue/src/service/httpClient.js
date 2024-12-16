@@ -97,18 +97,23 @@ const createClient = () => {
 
             // Update the failed request config with new token
             error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            const refreshToken= tokens.refreshToken
-            return refreshToken
+            console.log("Dispatched tokens.jwt..", tokens.accessToken)
             
             // Retry the original request
-            // const retryResponse = await axios.request(error.config);
-            // console.log("Dispatched tokens.jwt.. YOYOYOYo", tokens.accessToken)
-            // store.dispatch(LOADER_FINISHED);
-            // console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResponse)
-            // return retryResponse;
+            try {
+                const retryResp = await axios.request(error.config);
+                console.log("retryResp..........>", retryResp); // Updated to use tokens.jwt
+                store.dispatch(LOADER_FINISHED);
+                console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResp);
+                return retryResp;
+            } catch (retryError) {
+                console.error('Error during retry request:', retryError); // Log the retry error
+                store.dispatch(LOADER_FINISHED);
+                return Promise.reject(retryError); // Reject the promise with the retry error
+            }
 
-        } catch (refreshError) {
-            console.error('Refresh token error:', refreshError);
+        } catch (retryError) {
+            console.error('Refresh token error:', retryError);
             Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
             router.get().push({ name: 'HomePage' });
             return Promise.reject(error);
