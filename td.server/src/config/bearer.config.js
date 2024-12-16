@@ -39,7 +39,7 @@ const middleware = (req, res, next) => {
 
     try {
         console.log("Verifying token...");
-        const decodedToken = jsonwebtoken.decode(token);  // This decodes the token without verifying the signature
+        const decodedToken = jwt.decode(token);  // This decodes the token without verifying the signature
         console.log('Decoded token (without verification):', decodedToken);
         // const { provider, user } = jwt.verifyToken(token);
 
