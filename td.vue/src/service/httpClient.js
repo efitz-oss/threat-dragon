@@ -107,6 +107,7 @@ const createClient = () => {
                 console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResp);
                 return retryResp;
             } catch (retryError) {
+                console.log("Retrying request with config:", error.config);
                 console.error('Error during retry request:', retryError); // Log the retry error
                 store.dispatch(LOADER_FINISHED);
                 return Promise.reject(retryError); // Reject the promise with the retry error
