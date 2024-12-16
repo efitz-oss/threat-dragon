@@ -51,13 +51,13 @@ const decode = (token, key) => {
     console.log('Key used for decoding:', key);
 
     try {
-        // Decode without verifying to log and debug
+        // Decode without verifying to inspect the token
         const decodedToken = jsonwebtoken.decode(token, { complete: true });
         console.log('Decoded token (without verification):', decodedToken);
 
         // Verify the token
         const { provider, user } = jsonwebtoken.verify(token, key);
-        console.log('Verified token:', { provider, user });
+        console.log('Verified token successfully:', { provider, user });
 
         const decodedProvider = decodeProvider(provider);
         console.log('Decoded provider:', decodedProvider);
@@ -68,9 +68,11 @@ const decode = (token, key) => {
         };
     } catch (error) {
         console.error('Error verifying token:', error.message);
+        console.error('Error stack:', error.stack);
         throw new Error('Invalid JWT');
     }
 };
+
 
 const verifyToken = (token) => {
     console.log('Verifying access token...');
