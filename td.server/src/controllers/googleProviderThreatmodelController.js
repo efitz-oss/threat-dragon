@@ -73,49 +73,52 @@ const logger = loggerHelper.get('controllers/googleProviderThreatmodelController
 // }, req, res, logger);
 
 
-const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
-    const auth = getClient(accessToken);
-    const url = `https://www.googleapis.com/drive/v3/files`;
-    const params = {
-        q: `'${folderId}' in parents`,
-        fields: 'nextPageToken, files(id, name, mimeType)',
-        pageToken: pageToken || undefined,
-    };
+// const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
+//     const auth = getClient(accessToken);
+//     console.log( "this is the access token for drive---->", accessToken)
+//     const url = `https://www.googleapis.com/drive/v3/files`;
+//     const params = {
+//         q: `'${folderId}' in parents`,
+//         fields: 'nextPageToken, files(id, name, mimeType)',
+//         pageToken: pageToken || undefined,
+//     };
 
-    try {
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${auth}`,
-            },
-            params,
-        });
+//     try {
+//         const response = await axios.get(url, {
+//             headers: {
+//                 Authorization: `Bearer ${auth}`,
+//             },
+//             params,
+//         });
+//         console.log ( response, "---------------------------->")
 
-        return {
-            folders: response.data.files.filter((file) => file.mimeType === 'application/vnd.google-apps.folder'),
-            files: response.data.files.filter((file) => file.mimeType !== 'application/vnd.google-apps.folder'),
-            nextPageToken: response.data.nextPageToken,
-        };
-    } catch (error) {
-        throw new Error(`Error fetching folder contents: ${error.response?.data?.error?.message || error.message}`);
-    }
-};
+//         return {
+//             folders: response.data.files.filter((file) => file.mimeType === 'application/vnd.google-apps.folder'),
+//             files: response.data.files.filter((file) => file.mimeType !== 'application/vnd.google-apps.folder'),
+//             nextPageToken: response.data.nextPageToken,
+//         };
+//     } catch (error) {
+//         console.log ( "might be this ..............")
+//         throw new Error(`Error fetching folder contents: ${error.response?.data?.error?.message || error.message}`);
+//     }
+// };
 
-const getFileContentAsync = async (fileId, accessToken) => {
-    const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+// const getFileContentAsync = async (fileId, accessToken) => {
+//     const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
 
-    try {
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: 'arraybuffer', // Use 'stream' for large files.
-        });
+//     try {
+//         const response = await axios.get(url, {
+//             headers: {
+//                 Authorization: `Bearer ${accessToken}`,
+//             },
+//             responseType: 'arraybuffer', // Use 'stream' for large files.
+//         });
 
-        return response.data;
-    } catch (error) {
-        throw new Error(`Error fetching file content: ${error.response?.data?.error?.message || error.message}`);
-    }
-};
+//         return response.data;
+//     } catch (error) {
+//         throw new Error(`Error fetching file content: ${error.response?.data?.error?.message || error.message}`);
+//     }
+// };
 
 // export default {
 //     listFilesInFolderAsync,
@@ -186,6 +189,6 @@ export default {
     create,
     update,
     model,
-    listFilesInFolderAsync,
-    getFileContentAsync,
+    // listFilesInFolderAsync,
+    // getFileContentAsync,
 };

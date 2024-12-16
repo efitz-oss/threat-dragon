@@ -37,6 +37,7 @@ const getClient = (accessToken) => {
     
     // Set the access token for the client
     oauth2Client.setCredentials({ access_token: accessToken });
+    console.log( "wowowowowowow")
     
     return oauth2Client;
 };
@@ -54,8 +55,12 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
 };
 
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
+    console.log( "wowowowowowow1")
     const auth = getClient(accessToken);
+    console.log( "this is the access token for drive---->", accessToken)
+    console.log( "wowowowowowow2")
     const driveClient = google.drive({ version: 'v3', auth });
+    console.log( "wowowowowowow3")
 
     const res = await driveClient.files.list({
         q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
@@ -63,6 +68,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         pageSize: 10,
         ...(pageToken ? { pageToken } : {})
     });
+    console.log( "this is the response of the drive---->", res)
 
     return {
         folders: res.data.files,
@@ -85,6 +91,7 @@ const getFolderParentIdAsync = async (folderId, accessToken) => {
 };
 
 const getFileContentAsync = async (fileId, accessToken) => {
+    
     const auth = getClient(accessToken);
     const driveClient = google.drive({ version: 'v3', auth });
 
