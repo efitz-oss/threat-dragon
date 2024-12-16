@@ -2,7 +2,7 @@ import env from '../env/Env.js';
 import { google } from 'googleapis';
 
 // Define the scope for Google Drive access
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.file']
 
 // OAuth client setup
 const oauth2Client = new google.auth.OAuth2(
@@ -57,10 +57,12 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
     console.log( "wowowowowowow1")
     const auth = getClient(accessToken);
+    console.log( "this is the folder---->", folderId)
+    console.log( "this is the pageToken---->", pageToken)
     console.log( "this is the access token for drive---->", accessToken)
     console.log( "wowowowowowow2")
     const driveClient = google.drive({ version: 'v3', auth });
-    console.log( "wowowowowowow3")
+    console.log( "wowowowowowow3....", driveClient )
 
     const res = await driveClient.files.list({
         q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
