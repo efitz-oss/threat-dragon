@@ -15,34 +15,7 @@ const get = () => {
     return cachedClient;
 };
 
-const createClient = () => {
-    const client = axios.create();
-    
-    // Set default headers
-    client.defaults.headers.common.Accept = 'application/json';
-    client.defaults.headers.post['Content-Type'] = 'application/json';
-
-    // Request interceptor
-    client.interceptors.request.use(
-        (config) => {
-            const store = storeFactory.get();
-            store.dispatch(LOADER_STARTED);
-
-            if (store.state.auth.jwt) {
-                config.headers.authorization = `Bearer ${store.state.auth.jwt}`;
-            }
-            return config;
-        },
-        (error) => {
-            const store = storeFactory.get();
-            store.dispatch(LOADER_FINISHED);
-            return Promise.reject(error);
-        }
-    );
-
-    // Response interceptor
-   // Response interceptor
-   client.interceptors.response.use(
+client.interceptors.response.use(
     (response) => {
         const store = storeFactory.get();
         store.dispatch(LOADER_FINISHED);
@@ -74,14 +47,17 @@ const createClient = () => {
                 }
             );
 
+            // Log the entire response to inspect its structure
             console.log('Token refresh response:', response.data);
             
-            // Handle the token response
+            // Access tokens from the correct structure
             const tokens = {
-                jwt: response.data.accessToken,        // Changed this
-                refreshToken: response.data.refreshToken  // Changed this
+                jwt: response.data.accessToken,        // Accessing directly from response.data
+                refreshToken: response.data.refreshToken  // Accessing directly from response.data
             };
-            console.log ( "tokens------------> ", tokens)
+
+            // Log the tokens object to see what we have
+            console.log('Tokens object:', tokens);
 
             // Verify tokens exist
             if (!tokens.jwt || !tokens.refreshToken) {
@@ -92,7 +68,7 @@ const createClient = () => {
             await store.dispatch(AUTH_SET_JWT, tokens);
 
             // Update the failed request config with new token
-            error.config.headers.authorization = `Bearer ${tokens.jwt}`;  // Changed this
+            error.config.headers.authorization = `Bearer ${tokens.jwt}`;
             
             // Retry the original request
             const retryResponse = await axios.request(error.config);
@@ -110,9 +86,6 @@ const createClient = () => {
         }
     }
 );
-
-    return client;
-};
 
 export default {
     get,
