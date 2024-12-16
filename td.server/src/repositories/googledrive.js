@@ -5,8 +5,10 @@ import { google } from 'googleapis';
 const SCOPES = [
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive.metadata',
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
     'https://www.googleapis.com/auth/drive.readonly',
-    'https://www.googleapis.com/auth/drive.metadata.readonly'
+    'https://www.googleapis.com/auth/drive.appdata'
 ];
 
 // OAuth client setup
@@ -20,8 +22,9 @@ const oauth2Client = new google.auth.OAuth2(
 const getAuthUrl = () => {
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        prompt: 'consent', // Force to show the consent screen
+        prompt: 'consent',
         scope: SCOPES,
+        include_granted_scopes: true
     });
 };
 
@@ -50,6 +53,8 @@ const getClient = (accessToken) => {
         throw new Error('Access token is required');
     }
 
+    console.log('Creating new OAuth2Client with token:', accessToken.substring(0, 10) + '...');
+
     const oauth2Client = new google.auth.OAuth2(
         env.get().config.GOOGLE_CLIENT_ID,
         env.get().config.GOOGLE_CLIENT_SECRET,
@@ -57,8 +62,7 @@ const getClient = (accessToken) => {
     );
     
     oauth2Client.setCredentials({ 
-        access_token: accessToken,
-        scope: SCOPES.join(' ')
+        access_token: accessToken
     });
     
     return oauth2Client;
@@ -87,29 +91,41 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
             throw new Error('Access token is required');
         }
 
+        console.log('Setting up Drive client...');
         const auth = getClient(accessToken);
-        const driveClient = google.drive({ version: 'v3', auth });
-
-        console.log('Attempting to list files with token:', accessToken.substring(0, 10) + '...');
-
-        const res = await driveClient.files.list({
-            q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
-            fields: 'nextPageToken, files(id, name, parents, mimeType)',
-            pageSize: 10,
-            ...(pageToken ? { pageToken } : {})
+        const driveClient = google.drive({ 
+            version: 'v3', 
+            auth,
+            timeout: 1000,
+            retry: true
         });
 
+        console.log(`Listing files for folder: ${folderId}`);
+        const query = `'${folderId}' in parents`;
+        
+        const res = await driveClient.files.list({
+            q: query,
+            fields: 'nextPageToken, files(id, name, parents, mimeType)',
+            pageSize: 10,
+            ...(pageToken ? { pageToken } : {}),
+            supportsAllDrives: true,
+            includeItemsFromAllDrives: true
+        });
+
+        console.log(`Found ${res.data.files?.length || 0} files`);
         return {
             folders: res.data.files,
             nextPageToken: res.data.nextPageToken,
         };
+
     } catch (error) {
         console.error('Detailed error in listFilesInFolderAsync:', {
             message: error.message,
             status: error.status,
             errors: error.errors,
             code: error.code,
-            stack: error.stack
+            stack: error.stack,
+            response: error.response?.data
         });
 
         if (error.status === 401) {
@@ -117,6 +133,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         }
 
         if (error.status === 403) {
+            console.error('Authorization headers:', error.config?.headers?.Authorization);
             throw new Error('Insufficient permissions. Please ensure you have granted all necessary permissions and try re-authenticating.');
         }
 
