@@ -65,6 +65,7 @@ const logger = loggerHelper.get('controllers/googleProviderThreatmodelController
 
 
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
+    const auth = getClient(accessToken);
     const url = `https://www.googleapis.com/drive/v3/files`;
     const params = {
         q: `'${folderId}' in parents`,
@@ -75,7 +76,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
     try {
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${auth}`,
             },
             params,
         });
@@ -86,7 +87,6 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
             nextPageToken: response.data.nextPageToken,
         };
     } catch (error) {
-        // Console.log ( "hey hi hey")
         throw new Error(`Error fetching folder contents: ${error.response?.data?.error?.message || error.message}`);
     }
 };
