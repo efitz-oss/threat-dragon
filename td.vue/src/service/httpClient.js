@@ -41,60 +41,70 @@ const createClient = () => {
     );
 
     // Response interceptor
-    client.interceptors.response.use(
-        (response) => {
-            const store = storeFactory.get();
+   // Response interceptor
+client.interceptors.response.use(
+    (response) => {
+        const store = storeFactory.get();
+        store.dispatch(LOADER_FINISHED);
+        return response;
+    },
+    async (error) => {
+        const store = storeFactory.get();
+        const refreshToken = store.state.auth.refreshToken;
+
+        console.log('Starting error handling...'); // Debug log 1
+
+        // If no refresh token, reject immediately
+        if (!refreshToken) {
+            console.log('No refresh token found'); // Debug log 2
             store.dispatch(LOADER_FINISHED);
-            return response;
-        },
-        async (error) => {
-            const store = storeFactory.get();
-            const refreshToken = store.state.auth.refreshToken;
+            return Promise.reject(error);
+        }
 
-            console.log ("refresh token..1", refreshToken)
+        try {
+            console.log('Attempting to refresh token...'); // Debug log 3
+            
+            // Attempt to refresh token
+            const response = await axios.post(
+                '/api/token/refresh',
+                { refreshToken },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${refreshToken}`
+                    }
+                }
+            );
 
-            // If no refresh token, reject immediately
-            if (!refreshToken) {
-                store.dispatch(LOADER_FINISHED);
-                return Promise.reject(error);
-            }
+            console.log('Token refresh response received:', response.status); // Debug log 4
+            
+            // Update tokens in store
+            const tokens = response.data;
+            console.log('Tokens received:', tokens ? 'yes' : 'no'); // Debug log 5
 
             try {
-                console.log ("refresh token..2", refreshToken)
-                // Attempt to refresh token
-                const response = await axios.post(
-                    '/api/token/refresh',
-                    { refreshToken },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${refreshToken}`
-                        }
-                    }
-                );
-
-                // Update tokens in store
-                const tokens = response.data;
-                console.log ("refresh token tokens.........", tokens)
                 await store.dispatch(AUTH_SET_JWT, tokens);
-                console.log ("refresh token tokenssssss.........", tokens)
-
+                console.log("refresh token tokenssssss.........", tokens);
+                
                 // Retry original request with new token
                 error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
                 return await axios.request(error.config);
-
-            } catch (refreshError) {
-                console.log ("refresh  tokens.........", refreshError)
-                // Handle refresh token failure
-                Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
-                router.get().push({ name: 'HomePage' });
-                return Promise.reject(error);
-
-            } finally {
-                store.dispatch(LOADER_FINISHED);
+            } catch (dispatchError) {
+                console.error('Error dispatching AUTH_SET_JWT:', dispatchError); // Debug log 6
+                throw dispatchError;
             }
+
+        } catch (refreshError) {
+            console.error('Refresh token error:', refreshError); // Debug log 7
+            Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
+            router.get().push({ name: 'HomePage' });
+            return Promise.reject(error);
+
+        } finally {
+            store.dispatch(LOADER_FINISHED);
         }
-    );
+    }
+);
 
     return client;
 };
