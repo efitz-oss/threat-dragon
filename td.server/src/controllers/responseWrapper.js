@@ -15,7 +15,7 @@ const sendResponse = (fn, req, res, logger) => {
             status: 200,
             data: fn()
         };
-        console.log ( "there is the respObj guys in the----- respObjc",respObj)
+        // console.log ( "there is the respObj guys in the----- respObjc",respObj)
         return res.status(200).json(respObj);
     } catch (e) {
         // logger.error(e);
@@ -37,7 +37,7 @@ const sendResponse = (fn, req, res, logger) => {
 const sendResponseAsync = async (asyncFn, req, res, logger) => {
     try {
         const data = await asyncFn();
-        console.log ( "there is the data against --- sendResponseAsync", data)
+        // console.log ( "there is the data against --- sendResponseAsync", data)
         return res.status(200).json({
             status: 200,
             data
