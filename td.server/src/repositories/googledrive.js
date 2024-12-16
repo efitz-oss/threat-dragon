@@ -34,16 +34,17 @@ const getTokens = async (code) => {
     try {
         const { tokens } = await oauth2Client.getToken(code);
         console.log('Received tokens:', {
-            access_token: tokens.access_token ? 'present' : 'missing',
-            refresh_token: tokens.refresh_token ? 'present' : 'missing',
-            scope: tokens.scope
+            access_token_exists: !!tokens.access_token,
+            refresh_token_exists: !!tokens.refresh_token,
+            scope: tokens.scope, // This will show what scopes were actually granted
+            expiry: tokens.expiry_date
         });
         
         oauth2Client.setCredentials(tokens);
         return tokens;
     } catch (error) {
         console.error('Error getting tokens:', error);
-        throw new Error('Failed to get authentication tokens');
+        throw error;
     }
 };
 
@@ -86,6 +87,11 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
 };
 
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
+    console.log('Environment check:', {
+        clientId: env.get().config.GOOGLE_CLIENT_ID?.substring(0, 10) + '...',
+        clientSecretExists: !!env.get().config.GOOGLE_CLIENT_SECRET,
+        redirectUri: env.get().config.GOOGLE_REDIRECT_URI
+    });
     try {
         if (!accessToken) {
             throw new Error('Access token is required');
@@ -93,11 +99,23 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
 
         console.log('Setting up Drive client...');
         const auth = getClient(accessToken);
+        
+        // Add this debug section
+        try {
+            const tokenInfo = await auth.getTokenInfo(accessToken);
+            console.log('Token Info:', {
+                scopes: tokenInfo.scopes,
+                expiry: new Date(tokenInfo.expiry_date).toISOString(),
+                email: tokenInfo.email
+            });
+        } catch (e) {
+            console.error('Error getting token info:', e);
+        }
+
         const driveClient = google.drive({ 
             version: 'v3', 
             auth,
-            timeout: 1000,
-            retry: true
+            timeout: 10000, // Increased timeout
         });
 
         console.log(`Listing files for folder: ${folderId}`);
@@ -112,32 +130,24 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
             includeItemsFromAllDrives: true
         });
 
-        console.log(`Found ${res.data.files?.length || 0} files`);
         return {
             folders: res.data.files,
             nextPageToken: res.data.nextPageToken,
         };
 
     } catch (error) {
-        console.error('Detailed error in listFilesInFolderAsync:', {
-            message: error.message,
-            status: error.status,
-            errors: error.errors,
-            code: error.code,
-            stack: error.stack,
-            response: error.response?.data
-        });
-
-        if (error.status === 401) {
-            throw new Error('Authentication token expired or invalid. Please re-authenticate.');
+        // Log the full error object
+        console.error('Full error object:', JSON.stringify(error, null, 2));
+        if (error.response?.data?.error?.status === 'PERMISSION_DENIED') {
+            console.error('Permission denied. Current scopes:', error.response.data.error.details);
+            throw new Error('Permission denied. Please check application permissions.');
+        };
+        if (error.response) {
+            console.error('Response data:', error.response.data);
+            console.error('Response headers:', error.response.headers);
         }
 
-        if (error.status === 403) {
-            console.error('Authorization headers:', error.config?.headers?.Authorization);
-            throw new Error('Insufficient permissions. Please ensure you have granted all necessary permissions and try re-authenticating.');
-        }
-
-        throw new Error(`Failed to list files: ${error.message}`);
+        throw error;
     }
 };
 
