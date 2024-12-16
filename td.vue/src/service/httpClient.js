@@ -51,6 +51,8 @@ const createClient = () => {
             const store = storeFactory.get();
             const refreshToken = store.state.auth.refreshToken;
 
+            console.log ("refresh token..1", refreshToken)
+
             // If no refresh token, reject immediately
             if (!refreshToken) {
                 store.dispatch(LOADER_FINISHED);
@@ -58,6 +60,7 @@ const createClient = () => {
             }
 
             try {
+                console.log ("refresh token..2", refreshToken)
                 // Attempt to refresh token
                 const response = await axios.post(
                     '/api/token/refresh',
@@ -72,6 +75,7 @@ const createClient = () => {
 
                 // Update tokens in store
                 const tokens = response.data;
+                console.log ("refresh token tokens.........", tokens)
                 await store.dispatch(AUTH_SET_JWT, tokens);
 
                 // Retry original request with new token
