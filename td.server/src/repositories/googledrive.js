@@ -4,6 +4,7 @@ import { google } from 'googleapis';
 // Define the scope for Google Drive access
 const SCOPES = [
     'https://www.googleapis.com/auth/drive',
+    'profile',
     'https://www.googleapis.com/auth/drive.file',
     'https://www.googleapis.com/auth/drive.metadata',
     'https://www.googleapis.com/auth/drive.metadata.readonly',
