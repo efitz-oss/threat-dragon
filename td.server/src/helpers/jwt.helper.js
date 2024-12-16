@@ -83,8 +83,8 @@ const verifyToken = (token) => {
 const verifyRefresh = (token) => {
     console.log(' refresh token...', token);
     console.log('Verifying refresh token...');
-    console.log('ENCRYPTION_JWT_REFRESH_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
-    return decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
+    console.log('ENCRYPTION_JWT_REFRESH_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
+    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 };
 
 export default {
