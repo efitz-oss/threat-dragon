@@ -42,7 +42,7 @@ const createClient = () => {
 
     // Response interceptor
    // Response interceptor
-client.interceptors.response.use(
+   client.interceptors.response.use(
     (response) => {
         const store = storeFactory.get();
         store.dispatch(LOADER_FINISHED);
@@ -52,19 +52,17 @@ client.interceptors.response.use(
         const store = storeFactory.get();
         const refreshToken = store.state.auth.refreshToken;
 
-        console.log('Starting error handling...'); // Debug log 1
+        console.log('Starting error handling...');
 
-        // If no refresh token, reject immediately
         if (!refreshToken) {
-            console.log('No refresh token found'); // Debug log 2
+            console.log('No refresh token found');
             store.dispatch(LOADER_FINISHED);
             return Promise.reject(error);
         }
 
         try {
-            console.log('Attempting to refresh token...'); // Debug log 3
+            console.log('Attempting to refresh token...');
             
-            // Attempt to refresh token
             const response = await axios.post(
                 '/api/token/refresh',
                 { refreshToken },
@@ -76,26 +74,39 @@ client.interceptors.response.use(
                 }
             );
 
-            console.log('Token refresh response received:', response.status); // Debug log 4
+            console.log('Token refresh response:', response.data);
             
-            // Update tokens in store
+            // Verify token structure
             const tokens = response.data;
-            console.log('Tokens received:', tokens ? 'yes' : 'no'); // Debug log 5
+            if (!tokens || !tokens.accessToken) {
+                throw new Error('Invalid token response format');
+            }
+
+            // Log token structure before dispatch
+            console.log('Token structure:', {
+                hasAccessToken: !!tokens.accessToken,
+                hasRefreshToken: !!tokens.refreshToken,
+                tokenType: typeof tokens.accessToken
+            });
 
             try {
-                await store.dispatch(AUTH_SET_JWT, tokens);
-                console.log("refresh token tokenssssss.........", tokens);
+                await store.dispatch(AUTH_SET_JWT, {
+                    jwt: tokens.accessToken,
+                    refreshToken: tokens.refreshToken
+                });
                 
-                // Retry original request with new token
+                console.log("Tokens successfully set in store");
+
+                // Update request config with new token
                 error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
                 return await axios.request(error.config);
             } catch (dispatchError) {
-                console.error('Error dispatching AUTH_SET_JWT:', dispatchError); // Debug log 6
+                console.error('Error dispatching AUTH_SET_JWT:', dispatchError);
                 throw dispatchError;
             }
 
         } catch (refreshError) {
-            console.error('Refresh token error:', refreshError); // Debug log 7
+            console.error('Refresh token error:', refreshError);
             Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
             router.get().push({ name: 'HomePage' });
             return Promise.reject(error);
