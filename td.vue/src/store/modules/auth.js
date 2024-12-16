@@ -43,13 +43,19 @@ const actions = {
 const mutations = {
     [AUTH_CLEAR]: (state) => clearState(state),
     [AUTH_SET_JWT]: (state, tokens) => {
-        console.log('Received tokens:.............', tokens);
+        console.log('Received tokens:', tokens); // Log the tokens to check their structure
         try {
-            const { accessToken, refreshToken } = tokens;
-            const tokenBody = accessToken.split('.')[1];
+            const { jwt, refreshToken } = tokens; // Change accessToken to jwt
+    
+            if (!jwt) {
+                console.error('JWT is missing');
+                throw new Error('JWT is missing');
+            }
+    
+            const tokenBody = jwt.split('.')[1]; // Use jwt instead of accessToken
             const decodedBody = window.atob(tokenBody);
             const jwtBody = JSON.parse(decodedBody);
-            state.jwt = accessToken;
+            state.jwt = jwt; // Set state.jwt to jwt
             state.jwtBody = jwtBody;
             state.user = jwtBody.user;
             state.refreshToken = refreshToken;
