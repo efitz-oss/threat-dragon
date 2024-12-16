@@ -68,7 +68,7 @@ const createClient = () => {
         // }
 
         const refreshToken = store.state.auth.refreshToken;
-        console.log('--------refreshToken--------', refreshToken);
+        console.log('--------refreshToken--------');
         if (!refreshToken) {
             console.log('--------refreshToken-error--------', refreshToken);
             return;
@@ -78,7 +78,7 @@ const createClient = () => {
         // Should this request fail and we use the same instance,
         // we could be stuck in an infinite loop
         try {
-            console.log('--------did i reach here -------with token-', refreshToken);
+            console.log('--------did i reach here -------with token-');
             // const response = await axios.post('/api/token/refresh', { refreshToken });
             const response = await axios.post(
                 '/api/token/refresh',
@@ -93,7 +93,7 @@ const createClient = () => {
             console.log('Response:', response.data);
             console.log('--------andh here too... --------');
             const tokens = response.data;
-            console.log('--------did i get this token...1 --------tokens', tokens);
+            console.log('--------did i get this token...1 --------tokens');
             // console.log('--------did i get this token... --------', tokens);
             store.dispatch(AUTH_SET_JWT, tokens);
             console.log('--------did i get this token...2 --------AUTH_SET_JWT', AUTH_SET_JWT);

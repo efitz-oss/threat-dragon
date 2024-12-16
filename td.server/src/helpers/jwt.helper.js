@@ -25,8 +25,8 @@ const createAsync = async (providerName, providerOptions, user) => {
         { expiresIn: '7d' } // 7 days
     );
 
-    console.log('Access token created:', accessToken);
-    console.log('Refresh token created:', refreshToken);
+    console.log('Access token created:');
+    console.log('Refresh token created:');
 
     return { accessToken, refreshToken };
 };
@@ -47,13 +47,13 @@ const decodeProvider = (encodedProvider) => {
 
 const decode = (token, key) => {
     console.log('Decoding token...');
-    console.log('Token:', token);
+    console.log('Token:');
     console.log('Key used for decoding:', key);
 
     try {
         // Decode without verifying to inspect the token
         const decodedToken = jwt.decode(token, { complete: true });
-        console.log('Decoded token (without verification):', decodedToken);
+        console.log('Decoded token (without verification):');
 
         // Verify the token
         const { provider, user } = jwt.verify(token, key);
@@ -81,7 +81,7 @@ const verifyToken = (token) => {
 };
 
 const verifyRefresh = (token) => {
-    console.log(' refresh token...', token);
+    console.log(' refresh token...');
     console.log('Verifying refresh token...');
     console.log('ENCRYPTION_JWT_REFRESH_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
     return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
