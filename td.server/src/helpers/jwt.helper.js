@@ -1,4 +1,4 @@
-import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import encryptionHelper from './encryption.helper.js';
 import env from '../env/Env.js';
 
@@ -13,15 +13,15 @@ const createAsync = async (providerName, providerOptions, user) => {
     console.log('ENCRYPTION_JWT_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
     console.log('ENCRYPTION_JWT_REFRESH_SIGNING_KEY:', env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
 
-    const accessToken = jsonwebtoken.sign(
+    const accessToken = jwt.sign(
         { provider, user },
         env.get().config.ENCRYPTION_JWT_SIGNING_KEY,
         { expiresIn: '1d' } // 1 day
     );
 
-    const refreshToken = jsonwebtoken.sign(
+    const refreshToken = jwt.sign(
         { provider, user },
-        env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY,
+        env.get().config.ENCRYPTION_JWT_SIGNING_KEY,
         { expiresIn: '7d' } // 7 days
     );
 
@@ -52,11 +52,11 @@ const decode = (token, key) => {
 
     try {
         // Decode without verifying to inspect the token
-        const decodedToken = jsonwebtoken.decode(token, { complete: true });
+        const decodedToken = jwt.decode(token, { complete: true });
         console.log('Decoded token (without verification):', decodedToken);
 
         // Verify the token
-        const { provider, user } = jsonwebtoken.verify(token, key);
+        const { provider, user } = jwt.verify(token, key);
         console.log('Verified token successfully:', { provider, user });
 
         const decodedProvider = decodeProvider(provider);
