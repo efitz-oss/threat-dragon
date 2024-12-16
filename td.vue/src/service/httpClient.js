@@ -65,6 +65,7 @@ const createClient = () => {
             
             const response = await axios.post(
                 '/api/token/refresh',
+                { refreshToken },
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -74,7 +75,7 @@ const createClient = () => {
             );
 
             // Log the entire response to inspect its structure
-            console.log('Token refresh response:', response.data);
+            console.log('Token refresh response:', response.data.data);
             
             // Access tokens from the correct structure
             const tokens = {
