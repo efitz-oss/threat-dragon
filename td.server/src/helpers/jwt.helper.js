@@ -35,9 +35,9 @@ const decodeProvider = (encodedProvider) => {
 const decode = (token, key) => {
     console.log (' 1.0  ----->----->' ,token,key)
     const { provider, user } = jsonwebtoken.verify(token, key);
-    console.log ('R  1.0  ----->----->' )
+    console.log ('R  1.0  ----->----->' , provider, user)
     const decodedProvider = decodeProvider(provider);
-    console.log ('Refresh token decodedProvider.....   1.0  ----->----->' )
+    console.log ('Refresh token decodedProvider.....   1.0  ----->----->', decodedProvider )
     return {
         provider: decodedProvider,
         user
