@@ -133,6 +133,7 @@ const folders = async (req, res) => {
     console.log('Received page:--------...............', pageToken);
 
     try {
+        console.log('i am here broo-------->:..............');
         const foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
         console.log('Folders response-------->:..............', foldersResp);
         if (!foldersResp || !foldersResp.folders) {
