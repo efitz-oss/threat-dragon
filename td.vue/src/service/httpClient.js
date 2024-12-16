@@ -69,7 +69,7 @@ const createClient = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${refreshToken}`
+                        // Authorization: `Bearer ${refreshToken}`
                     }
                 }
             );
