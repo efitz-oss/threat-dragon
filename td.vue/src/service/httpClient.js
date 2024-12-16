@@ -86,7 +86,7 @@ const createClient = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        // Authorization: `Bearer ${refreshToken}`, // Remove if unnecessary
+                        Authorization: `Bearer ${refreshToken}`, // Remove if unnecessary
                     },
                 }
             );
