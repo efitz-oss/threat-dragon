@@ -49,7 +49,7 @@ const routes = (router) => {
     router.put('/api/threatmodel/:organisation/:repo/:branch/:model/update', threatmodelController.update);
 
     // Google Drive routes
-    router.get('/api/googleproviderthreatmodel/folders', googleProviderThreatmodelController.listFilesInFolderAsync);
+    router.get('/api/googleproviderthreatmodel/folders', googleProviderThreatmodelController.folders);
     router.post('/api/googleproviderthreatmodel/:folder/create', googleProviderThreatmodelController.create);
     router.put('/api/googleproviderthreatmodel/:file/update', googleProviderThreatmodelController.update);
     router.get('/api/googleproviderthreatmodel/:file/data', googleProviderThreatmodelController.model);
