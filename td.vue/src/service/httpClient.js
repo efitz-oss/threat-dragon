@@ -100,11 +100,11 @@ const createClient = () => {
             console.log("Dispatched tokens.jwt..", tokens.accessToken)
             
             // Retry the original request
-            const retryResponse = await axios.request(error.config);
-            console.log("Dispatched tokens.jwt.. YOYOYOYo", tokens.accessToken)
-            store.dispatch(LOADER_FINISHED);
-            console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResponse)
-            return retryResponse;
+            // const retryResponse = await axios.request(error.config);
+            // console.log("Dispatched tokens.jwt.. YOYOYOYo", tokens.accessToken)
+            // store.dispatch(LOADER_FINISHED);
+            // console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResponse)
+            // return retryResponse;
 
         } catch (refreshError) {
             console.error('Refresh token error:', refreshError);
