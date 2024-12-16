@@ -97,7 +97,8 @@ const createClient = () => {
 
             // Update the failed request config with new token
             error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            console.log("Dispatched tokens.jwt..", tokens.accessToken)
+            const refreshToken= tokens.refreshToken
+            return refreshToken
             
             // Retry the original request
             // const retryResponse = await axios.request(error.config);
