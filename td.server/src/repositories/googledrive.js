@@ -87,6 +87,7 @@ const getFolderDetailsAsync = async (folderId, accessToken) => {
 };
 
 const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
+    console.log('pageToken........:', pageToken)
     console.log('Environment check:', {
         clientId: env.get().config.GOOGLE_CLIENT_ID?.substring(0, 10) + '...',
         clientSecretExists: !!env.get().config.GOOGLE_CLIENT_SECRET,
