@@ -132,8 +132,8 @@ const createClient = () => {
             console.log("Request URL:", fullUrl);
             console.log("Request Method:", error.config.method);
             console.log("Request Headers:", {
-                ...error.config.headers,
-                Authorization: `Bearer ${tokens.accessToken}`
+                ...error.config.headers
+                // Authorization: `Bearer ${tokens.accessToken}`
             });
             
             // Make the request
