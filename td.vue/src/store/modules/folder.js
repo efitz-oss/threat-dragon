@@ -29,7 +29,7 @@ const state = {
 
 const actions = {
     [FOLDER_CLEAR]: ({ commit }) => commit(FOLDER_CLEAR),
-    [FOLDER_FETCH]: async ({ commit }, { folderId = "", page = 1 } = {}) => {
+    [FOLDER_FETCH]: async ({ commit }, { folderId = "root", page = 1 } = {}) => {
         console.log("the issue could be here .....|||||");
         if (!folderId) commit(FOLDER_CLEAR);
         const pageToken = state.pageTokens[page - 1] || "";
