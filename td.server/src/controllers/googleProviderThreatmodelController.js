@@ -138,6 +138,25 @@ const folders = async (req, res) => {
     const folderId = req?.query?.folderId || 'root';
     const myRefresh = req.provider.access_token
     
+    const refreshAccessToken = async (myRefresh) => {
+        const response = await axios.post('https://oauth2.googleapis.com/token', null, {
+            params: {
+                client_id: env.get().config.GOOGLE_CLIENT_ID,
+                client_secret: env.get().config.GOOGLE_CLIENT_SECRET,
+                refresh_token: myRefresh,
+                grant_type: 'refresh_token',
+            },
+        });
+    
+        if (response.status !== 200) {
+            throw new Error('Failed to refresh access token');
+        }
+    
+        return response.data.access_token; // Return the new access token
+    };
+
+    const myNewRefreshToken = refreshAccessToken()
+    console.log("myNewRefreshToken.=.=.=.=.=.=.=.=", myNewRefreshToken )
 
     console.log('Received folderId:--------.................', folderId);
     console.log ( "myRefresh......>", myRefresh)
