@@ -8,21 +8,31 @@ import clientFactory from '../httpClient.js';
  */
 const getAsync = async (url, query = {}) => {
     try {
-        console.log ( "the issue could be here .....11..yoo + URL",url);
+        console.log("the issue could be here .....11..yoo + URL", url);
         console.log("Query Parameters:.......", query);
-        // console.log("HTTP Client Configuration:.....", client.defaults);
+
         if (!query) {
             console.warn("Query is undefined or null.........");
         }
         console.log("Query object:.........", query);
+
+        // Make the API call
         const res = await clientFactory.get().get(url, { params: query });
-        console.log ( "----------------------");
-        const responseDATA = await res.data;
-        console.log ( "Response from API responseDATA:", responseDATA)
-        return res.data;
+        console.log("----------------------");
+
+        // Log the entire response object to inspect its structure
+        console.log("Full Response Object:", res);
+
+        // Access the data directly from the response
+        const responseDATA = res.data; // No need to use await here
+        console.log("Response from API responseDATA:", responseDATA);
+
+        return responseDATA; // Return the data
     } catch (error) {
-        console.log ( "the issue could be here .....11..error");
+        console.log("the issue could be here .....11..error");
         console.error('Error in getAsync:', error.message);
+        // Log the entire error object for more context
+        console.error('Full Error Object:', error);
         throw error;
     }
 };
