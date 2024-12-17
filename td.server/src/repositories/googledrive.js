@@ -112,16 +112,17 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         });
 
         const query = `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`;
-        console.log('Token Info so i came here .................')
+        console.log('Query:', query);
+        
         const res = await driveClient.files.list({
             q: query,
             fields: 'nextPageToken, files(id, name, parents, mimeType)',
             pageSize: 10,
             pageToken: pageToken || undefined,
-            supportsAllDrives: false,  // Change this to false if you're only accessing user's drive
+            supportsAllDrives: false,
             includeItemsFromAllDrives: false
         });
-        console.log('Token Info so i came here ......../////.........')
+        console.log('drive response....:', res);
 
         return {
             folders: res.data.files,
@@ -140,7 +141,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
             throw new Error(`Permission denied. Required scopes: ${SCOPES.join(', ')}`);
         }
 
-        throw error;
+        throw error; // Rethrow the error to be caught in the controller
     }
 };
 
