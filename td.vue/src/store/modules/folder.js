@@ -37,7 +37,9 @@ const actions = {
         try {
             console.log('Fetching folders with params:', { folderId, pageToken });
             const resp = await googleDriveApi.folderAsync(folderId, page);
-            console.log('Google Drive API response:...', resp);
+            
+            // Log the entire response to inspect its structure
+            console.log('Google Drive API response:', resp);
     
             // Check if the response is valid and contains the expected data
             if (resp && resp.folders) {
