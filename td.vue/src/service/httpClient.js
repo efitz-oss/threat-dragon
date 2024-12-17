@@ -57,7 +57,11 @@ const createClient = () => {
 
         if (!response || response.status !== 401) {
             store.dispatch(LOADER_FINISHED);
-            console.error('[Response Error]', error);
+            console.error('[Response Error]:', {
+                status: error.response.status,
+                data: error.response.data,
+                headers: error.response.headers,
+            });
             return Promise.reject(error);
         }
 
