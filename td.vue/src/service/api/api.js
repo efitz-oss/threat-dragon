@@ -23,14 +23,6 @@ const getAsync = async (url, query = {}) => {
         // Log the entire response object to inspect its structure
         console.log("Full Response Object:", res);
 
-        // Check if the response is OK
-        if (!res.ok) {
-            // Read the response body as text or JSON
-            const errorBody = await res.text(); // or use res.json() if the response is JSON
-            console.error("Error response body:", errorBody);
-            throw new Error(`Request failed with status ${res.status}: ${errorBody}`);
-        }
-
         // Access the data directly from the response
         const responseDATA = res.data; // No need to use await here
         console.log("Response from API responseDATA:", responseDATA);
@@ -38,13 +30,25 @@ const getAsync = async (url, query = {}) => {
         return responseDATA; // Return the data
     } catch (error) {
         console.log("the issue could be here .....11..error");
-        console.error('Error in getAsync:', error.message);
-        // Log the entire error object for more context
-        console.error('Full Error Object:', error);
-        throw error;
+        
+        // Check if the error response exists
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error('Error response data:', error.response.data);
+            console.error('Error response status:', error.response.status);
+            console.error('Error response headers:', error.response.headers);
+            throw new Error(`Request failed with status ${error.response.status}: ${error.response.data}`);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Error request:', error.request);
+            throw new Error('No response received from the server.');
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
+            throw new Error(`Error in getAsync: ${error.message}`);
+        }
     }
 };
-
 /**
  * Does a POST request to the given resource
  * Will add the optional body if provided
