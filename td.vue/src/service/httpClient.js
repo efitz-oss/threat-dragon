@@ -101,6 +101,12 @@ const createClient = () => {
             
             // Retry the original request
             try {
+                const currentTime = Math.floor(Date.now() / 1000); 
+                 if (tokens.accessToken.payload.exp && tokens.accessToken.payload.exp < currentTime) {
+                   console.log('Token is expired');
+               } else {
+                    console.log('Token is valid');
+                   }
                 const retryResp = await axios.request(error.config);
                 console.log("retryResp..........>", retryResp);
                 store.dispatch(LOADER_FINISHED);
