@@ -132,21 +132,20 @@ const folders = async (req, res) => {
     const pageToken = req?.query?.page || null;
     const folderId = req?.query?.folderId || 'root';
 
-    console.log('Received folderId:', folderId);
-    console.log('Received page:', pageToken);
+    console.log('Received folderId:--------.................', folderId);
+    console.log('Received page:--------...............', pageToken);
 
     try {
+        console.log('i am here broo-------->:..............');
         const foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
-        console.log('Folders response:', foldersResp);
-        
+        console.log('Folders response-------->:..............', foldersResp);
         if (!foldersResp || !foldersResp.folders) {
-            throw new Error('Invalid response from Google Drive API.');
+            throw new Error('Invalid response from Google Drive API......');
         }
-        
         return res.json(foldersResp);
     } catch (error) {
-        console.error('Error in the catch block:', error);
-        res.status(500).json({ message: 'Internal Server Error-----' });
+        console.error('Error in the catch block:.........', error);
+        res.status(500).json({ message: 'Internal Server Error.........' });
     }
 };
 
