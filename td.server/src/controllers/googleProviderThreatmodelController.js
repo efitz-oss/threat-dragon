@@ -44,7 +44,7 @@ const folders = async (req, res) => {
 
     try {
 
-        const newAccessToken = await refreshAccessToken(refreshToken);
+        const newAccessToken = await refreshAccessToken(myRefresh);
         console.log('MY New access token obtained:-------->', newAccessToken);
         console.log('i am here broo-------->:..............');
         const foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, newAccessToken);
