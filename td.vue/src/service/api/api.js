@@ -23,6 +23,14 @@ const getAsync = async (url, query = {}) => {
         // Log the entire response object to inspect its structure
         console.log("Full Response Object:", res);
 
+        // Check if the response is OK
+        if (!res.ok) {
+            // Read the response body as text or JSON
+            const errorBody = await res.text(); // or use res.json() if the response is JSON
+            console.error("Error response body:", errorBody);
+            throw new Error(`Request failed with status ${res.status}: ${errorBody}`);
+        }
+
         // Access the data directly from the response
         const responseDATA = res.data; // No need to use await here
         console.log("Response from API responseDATA:", responseDATA);
