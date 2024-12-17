@@ -29,49 +29,30 @@ const state = {
 
 const actions = {
     [FOLDER_CLEAR]: ({ commit }) => commit(FOLDER_CLEAR),
-
-    [FOLDER_FETCH]: async ({ commit }, { folderId = 'root', page = 1 } = {}) => {
-        console.log("FOLDER_FETCH triggered with:", { folderId, page });
+    [FOLDER_FETCH]: async ({ commit }, { folderId = '', page = 1 } = {}) => {
+        console.log("the issue could be here .....|||||");
         if (!folderId) commit(FOLDER_CLEAR);
         const pageToken = state.pageTokens[page - 1] || '';
-    
-        try {
-            console.log('Fetching folders with params:', { folderId, pageToken });
-            const resp = await googleDriveApi.folderAsync(folderId, page);
-            console.log('Google Drive API response:', resp);
-    
-            // Check if the response is valid and contains the expected data
-            if (resp && resp.folders) {
-                if (resp.nextPageToken && !state.pageTokens[page]) {
-                    state.pageTokens[page] = resp.nextPageToken;
-                }
-    
-                commit(FOLDER_FETCH, {
-                    'folders': resp.folders,
-                    'page': page,
-                    'pageNext': !!resp.nextPageToken,
-                    'pagePrev': page > 1,
-                    'parentId': resp.parentId
-                });
-            } else {
-                console.error('Unexpected response structure:', resp);
-            }
-        } catch (error) {
-            console.error('Error fetching Google Drive folders:', {
-                message: error.message,
-                config: error.config,
-                response: error.response ? error.response.data : 'No response data',
-            });
+        const resp = await googleDriveApi.folderAsync(folderId, pageToken);
+        console.log("the issue could be here .....|||||...");
+        if (resp.data.pagination.nextPageToken && !state.pageTokens[page]) {
+            state.pageTokens[page] = resp.data.pagination.nextPageToken;
         }
-    },
 
+        commit(FOLDER_FETCH, {
+            'folders': resp.data.folders,
+            'page': page,
+            'pageNext': !!resp.data.pagination.nextPageToken,
+            'pagePrev': page > 1,
+            'parentId': resp.data.parentId
+        });
+    },
     [FOLDER_SELECTED]: ({ commit, dispatch }, folder) => {
         commit(FOLDER_SELECTED, folder.id);
         if (folder.mimeType !== 'application/json') {
             dispatch(FOLDER_FETCH, { folderId: folder.id });
         }
     },
-
     [FOLDER_NAVIGATE_BACK]: ({ commit, dispatch, state }) => {
         commit(FOLDER_SELECTED, state.parentId);
         dispatch(FOLDER_FETCH, { folderId: state.parentId });
