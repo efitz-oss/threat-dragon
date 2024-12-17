@@ -12,6 +12,7 @@ const get = () => {
     if (!cachedClient) {
         cachedClient = createClient();
     }
+    console.log ("cachedClient-------->", cachedClient )
     return cachedClient;
 };
 

@@ -12,7 +12,9 @@ const folderAsync = async (folderId = 'root', page = 1) => {
         console.log ( "the issue could be here .....1")
         const queryParams = { folderId, page };
         console.log("Query Params in folderAsync:.................", queryParams);
-        return api.getAsync(`${resource}/folders`, queryParams);
+        const listFiles = api.getAsync(`${resource}/folders`, queryParams);
+        console.log( listFiles, "listFiles response ---->")
+        return listFiles
     } catch (error) {
         console.log ( "the issue could be here .....1....//")
         console.error('Error fetching folders:', error.message);
