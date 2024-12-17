@@ -97,22 +97,24 @@ const createClient = () => {
 
             // Update the failed request config with new token
             console.log ("reaching here ----")
-            error.config.headers.authorization = `Bearer ${tokens.refreshToken}`;
-            console.log("Dispatched tokens.jwt..", tokens.refreshToken);
+            error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
+            console.log("Dispatched tokens.jwt..", tokens.accessToken);
+            
             // Retry the original request
-            try {
-                
-                const retryResp = await axios.request(error.config);
-                console.log("retryResp..........>", retryResp);
-                store.dispatch(LOADER_FINISHED);
-                console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResp);
-                return retryResp;
-            } catch (retryError) {
-                console.log("Retrying request with config:", error.config);
-                console.error('Error during retry request:', retryError);
-                store.dispatch(LOADER_FINISHED);
-                return Promise.reject(retryError);
-            }
+            console.log ("now here ----")
+            const retryResponse = await fetch(error.config.url, {
+                method: error.config.method,
+                headers: {
+                    ...error.config.headers,
+                    Authorization: `Bearer ${tokens.accessToken}`
+                },
+                body: error.config.data ? JSON.stringify(error.config.data) : undefined
+            });
+            console.log ("now here too ----")
+            const retryData = await retryResponse.json();
+            console.log("retryResp..........>", retryData);
+            store.dispatch(LOADER_FINISHED);
+            return retryData;
 
         } catch (refreshError) {
             console.error('Refresh token error:', refreshError);
