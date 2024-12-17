@@ -42,7 +42,7 @@ const actions = {
 
             // Check if the response is valid and contains the expected data
             if (resp && resp.data) {
-                if (resp.data.pagination && resp.data.pagination.nextPageToken && !state.pageTokens[page]) {
+                if ( resp.data.pagination.nextPageToken && !state.pageTokens[page]) {
                     state.pageTokens[page] = resp.data.pagination.nextPageToken;
                 }
 
