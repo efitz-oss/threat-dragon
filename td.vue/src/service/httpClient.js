@@ -140,8 +140,8 @@ const createClient = () => {
             const retryResponse = await fetch(fullUrl, {
                 method: error.config.method,
                 headers: {
-                    ...error.config.headers,
-                    Authorization: `Bearer ${tokens.accessToken}`
+                    ...error.config.headers
+                    // Authorization: `Bearer ${tokens.accessToken}`
                 }
             });
             console.log ( "retryResponse..............>", retryResponse)
