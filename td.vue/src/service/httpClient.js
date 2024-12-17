@@ -106,6 +106,7 @@ const createClient = () => {
             
             // Retry the original request
             console.log ("now here ----")
+            console.log ( "the structure of the config ", error.config)
             const retryResponse = await fetch(error.config.url, {
                 method: error.config.method,
                 headers: {
