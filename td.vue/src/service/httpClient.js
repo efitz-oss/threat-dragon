@@ -98,15 +98,15 @@ const createClient = () => {
             // Update the failed request config with new token
             error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
             console.log("Dispatched tokens.jwt..", tokens.accessToken);
-            
-            // Retry the original request
-            try {
-                const currentTime = Math.floor(Date.now() / 1000); 
+            const currentTime = Math.floor(Date.now() / 1000); 
                  if (tokens.accessToken.payload.exp && tokens.accessToken.payload.exp < currentTime) {
                    console.log('Token is expired');
                } else {
                     console.log('Token is valid');
                    }
+            // Retry the original request
+            try {
+                
                 const retryResp = await axios.request(error.config);
                 console.log("retryResp..........>", retryResp);
                 store.dispatch(LOADER_FINISHED);
