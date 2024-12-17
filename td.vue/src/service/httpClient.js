@@ -65,11 +65,11 @@ const createClient = () => {
         // Should this request fail and we use the same instance,
         // we could be stuck in an infinite loop
         try {
-            const response = await axios.post('/api/token/refresh', { refreshToken });
+            const response = await fetch('/api/token/refresh', { refreshToken });
             const tokens = response.data.data;
             store.dispatch(AUTH_SET_JWT, tokens);
             err.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            const retryResp = await axios.request(err.config);
+            const retryResp = await fetch(err.config);
             store.dispatch(LOADER_FINISHED);
             return retryResp;
         } catch (retryError) {
