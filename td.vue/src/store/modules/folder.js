@@ -37,32 +37,32 @@ const actions = {
 
         try {
             console.log('Fetching folders with params.....>:........', { folderId, pageToken });
-            // Make sure the token is valid and passed in the API call
-
             const resp = await googleDriveApi.folderAsync(folderId, page);
-            // console.log('Fetching folders with params.....>:', { folderId, pageToken });
             console.log('Google Drive API response:.....', resp);
 
+            // Check if the response is valid and contains the expected data
+            if (resp && resp.data) {
+                if (resp.data.pagination && resp.data.pagination.nextPageToken && !state.pageTokens[page]) {
+                    state.pageTokens[page] = resp.data.pagination.nextPageToken;
+                }
 
-
-            if (resp.data.pagination.nextPageToken && !state.pageTokens[page]) {
-                state.pageTokens[page] = resp.data.pagination.nextPageToken;
+                commit(FOLDER_FETCH, {
+                    'folders': resp.data.folders,
+                    'page': page,
+                    'pageNext': !!resp.data.pagination.nextPageToken,
+                    'pagePrev': page > 1,
+                    'parentId': resp.data.parentId
+                });
+            } else {
+                console.error('Unexpected response structure:', resp);
             }
-
-            commit(FOLDER_FETCH, {
-                'folders': resp.data.folders,
-                'page': page,
-                'pageNext': !!resp.data.pagination.nextPageToken,
-                'pagePrev': page > 1,
-                'parentId': resp.data.parentId
-            });
         } catch (error) {
             console.error('Error fetching Google Drive folders:..............', {
                 message: error.message,
                 config: error.config,
-                response: error.response?.data,
+                response: error.response ? error.response.data : 'No response data',
             });
-            // You can handle the error by showing a message to the user, if necessary
+            // Handle the error by showing a message to the user, if necessary
         }
     },
 
