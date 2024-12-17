@@ -92,6 +92,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         }
 
         const auth = getClient(accessToken);
+        console.log ("autrh here  ... ", auth)
         
         // Add token verification
         try {

@@ -128,6 +128,12 @@ const logger = loggerHelper.get('controllers/googleProviderThreatmodelController
 
 
 const folders = async (req, res) => {
+
+    const myRefresh = req.provider.access_token
+    console.log ( "myRefresh......>", myRefresh)
+
+
+    
     const googleDrive = repositories.getSpecific('googledrive');
     const pageToken = req?.query?.page || null;
     const folderId = req?.query?.folderId || 'root';
