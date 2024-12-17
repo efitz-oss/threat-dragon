@@ -75,12 +75,12 @@ const createClient = () => {
             );
 
             // Log the entire response to inspect its structure
-            console.log('Token refresh response:', response.data.data);
+            console.log('Token refresh response:', response.data);
             
             // Access tokens from the correct structure
             const tokens = {
-                accessToken: response.data.data.accessToken,        // Accessing directly from response.data
-                refreshToken: response.data.data.refreshToken  // Accessing directly from response.data
+                accessToken: response.data.data.accessToken,
+                refreshToken: response.data.data.refreshToken
             };
 
             // Log the tokens object to see what we have
@@ -93,30 +93,36 @@ const createClient = () => {
 
             console.log('Dispatching tokens to store...');
             await store.dispatch(AUTH_SET_JWT, tokens);
-            console.log("Dispatched  tokens", AUTH_SET_JWT, tokens)
+            console.log("Dispatched tokens", AUTH_SET_JWT, tokens);
 
             // Update the failed request config with new token
             error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            console.log("Dispatched tokens.jwt..", tokens.accessToken)
+            console.log("Dispatched tokens.jwt..", tokens.accessToken);
             
             // Retry the original request
             try {
                 const retryResp = await axios.request(error.config);
-                console.log("retryResp..........>", retryResp); // Updated to use tokens.jwt
+                console.log("retryResp..........>", retryResp);
                 store.dispatch(LOADER_FINISHED);
                 console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResp);
                 return retryResp;
             } catch (retryError) {
                 console.log("Retrying request with config:", error.config);
-                console.error('Error during retry request:', retryError); // Log the retry error
+                console.error('Error during retry request:', retryError);
                 store.dispatch(LOADER_FINISHED);
-                return Promise.reject(retryError); // Reject the promise with the retry error
+                return Promise.reject(retryError);
             }
 
-        } catch (retryError) {
-            console.error('Refresh token error:', retryError);
-            Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
-            router.get().push({ name: 'HomePage' });
+        } catch (refreshError) {
+            console.error('Refresh token error:', refreshError);
+            // Check if the error indicates that the refresh token is expired
+            if (refreshError.response && refreshError.response.status === 401) {
+                console.log('Refresh token expired or invalid');
+                Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
+                router.get().push({ name: 'HomePage' }); // Redirect to login page
+            } else {
+                Vue.$toast.error(i18n.get().t('auth.refreshTokenError'));
+            }
             return Promise.reject(error);
 
         } finally {
