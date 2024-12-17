@@ -106,20 +106,45 @@ const createClient = () => {
             
             // Retry the original request
             console.log ("now here ----")
-            console.log ( "the structure of the config ", error.config)
-            const retryResponse = await fetch(error.config.url, {
+            // console.log ( "the structure of the config ", error.config)
+            // const retryResponse = await fetch(error.config.url, {
+            //     method: error.config.method,
+            //     headers: {
+            //         ...error.config.headers,
+            //         Authorization: `Bearer ${tokens.accessToken}`
+            //     },
+            //     body: error.config.data ? JSON.stringify(error.config.data) : undefined
+            // });
+            // console.log ("now here too ----")
+            // const retryData = await retryResponse.json();
+            // console.log("retryResp..........>", retryData);
+            // store.dispatch(LOADER_FINISHED);
+            // return retryData;
+
+            const params = new URLSearchParams({
+                folderId: 'root',
+                page: 1
+            }).toString();
+            
+            const fullUrl = `${error.config.url}?${params}`;
+            
+            console.log("Request URL:", fullUrl);
+            console.log("Request Method:", error.config.method);
+            console.log("Request Headers:", {
+                ...error.config.headers,
+                Authorization: `Bearer ${tokens.accessToken}`
+            });
+            
+            // Make the request
+            const retryResponse = await fetch(fullUrl, {
                 method: error.config.method,
                 headers: {
                     ...error.config.headers,
                     Authorization: `Bearer ${tokens.accessToken}`
-                },
-                body: error.config.data ? JSON.stringify(error.config.data) : undefined
+                }
             });
-            console.log ("now here too ----")
-            const retryData = await retryResponse.json();
-            console.log("retryResp..........>", retryData);
-            store.dispatch(LOADER_FINISHED);
-            return retryData;
+            console.log ( "retryResponse..............>", retryResponse)
+            return retryResponse
 
         } catch (refreshError) {
             console.error('Refresh token error:', refreshError);
