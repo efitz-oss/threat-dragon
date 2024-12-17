@@ -83,8 +83,8 @@ const createClient = () => {
             
             // Access tokens from the correct structure
             const tokens = {
-                accessToken: response.data.data.accessToken,
-                refreshToken: response.data.data.refreshToken
+                accessToken: res.data.accessToken,
+                refreshToken: res.data.refreshToken
             };
 
             // Log the tokens object to see what we have
@@ -97,7 +97,7 @@ const createClient = () => {
 
             console.log('Dispatching tokens to store...');
             await store.dispatch(AUTH_SET_JWT, tokens);
-            console.log("Dispatched tokens", AUTH_SET_JWT, tokens);
+            console.log("Dispatched tokens", AUTH_SET_JWT);
 
             // Update the failed request config with new token
             console.log ("reaching here ----")
