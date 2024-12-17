@@ -27,7 +27,7 @@ const getAsync = async (url, query = {}) => {
         const responseDATA = res.data; // No need to use await here
         console.log("Response from API responseDATA:", responseDATA);
 
-        return responseDATA; // Return the data
+        return res; // Return the data
     } catch (error) {
         console.log("the issue could be here .....11..error");
         
