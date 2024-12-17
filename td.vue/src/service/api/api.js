@@ -17,7 +17,7 @@ const getAsync = async (url, query = {}) => {
         console.log("Query object:.........", query);
         const res = await clientFactory.get().get(url, { params: query });
         console.log ( "----------------------");
-        const responseDATA = await res.json();
+        const responseDATA = await res.data;
         console.log ( "Response from API responseDATA:", responseDATA)
         return res.data;
     } catch (error) {
