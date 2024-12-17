@@ -63,16 +63,18 @@ const createClient = () => {
         try {
             console.log('Attempting to refresh token...');
             
-            const response = await axios.post(
-                '/api/token/refresh',
-                { refreshToken },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${refreshToken}`
-                    }
-                }
-            );
+            const response = await fetch('/api/token/refresh', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${refreshToken}`
+                },
+                body: JSON.stringify({ refreshToken })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to refresh token');
+            }
 
             // Log the entire response to inspect its structure
             console.log('Token refresh response:', response.data);
