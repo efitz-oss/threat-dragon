@@ -96,8 +96,9 @@ const createClient = () => {
             console.log("Dispatched tokens", AUTH_SET_JWT, tokens);
 
             // Update the failed request config with new token
-            error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            console.log("Dispatched tokens.jwt..", tokens.accessToken);
+            console.log ("reaching here ----")
+            error.config.headers.authorization = `Bearer ${tokens.refreshToken}`;
+            console.log("Dispatched tokens.jwt..", tokens.refreshToken);
             // Retry the original request
             try {
                 
