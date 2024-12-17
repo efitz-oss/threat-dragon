@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Vue from 'vue';
+
 import { AUTH_SET_JWT } from '@/store/actions/auth.js';
 import i18n from '@/i18n/index.js';
 import { LOADER_FINISHED, LOADER_STARTED } from '@/store/actions/loader.js';
@@ -8,139 +9,85 @@ import storeFactory from '@/store/index.js';
 
 let cachedClient = null;
 
+const BASE_API_URL = process.env.APP_HOSTNAME || ''; // Use env variable for API base URL
+
 const get = () => {
-    if (!cachedClient) {
+    if (cachedClient === null) {
         cachedClient = createClient();
     }
     return cachedClient;
 };
 
+const refreshAccessToken = async (refreshToken) => {
+    const response = await axios.post(`${BASE_API_URL}/api/token/refresh`, { refreshToken });
+    return response.data.data;
+};
+
 const createClient = () => {
-    const client = axios.create();
-    
-    // Set default headers
-    client.defaults.headers.common.Accept = 'application/json';
-    client.defaults.headers.post['Content-Type'] = 'application/json';
-
-    // Request interceptor
-    client.interceptors.request.use(
-        (config) => {
-            const store = storeFactory.get();
-            store.dispatch(LOADER_STARTED);
-
-            if (store.state.auth.jwt) {
-                config.headers.authorization = `Bearer ${store.state.auth.jwt}`;
-            }
-            return config;
+    const client = axios.create({
+        baseURL: BASE_API_URL,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         },
-        (error) => {
-            const store = storeFactory.get();
+    });
+
+    client.interceptors.request.use((config) => {
+        const store = storeFactory.get();
+        store.dispatch(LOADER_STARTED);
+
+        const token = store.state.auth.jwt;
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    }, (error) => {
+        console.error('[Request Error]', error);
+        storeFactory.get().dispatch(LOADER_FINISHED);
+        return Promise.reject(error);
+    });
+
+    client.interceptors.response.use((response) => {
+        storeFactory.get().dispatch(LOADER_FINISHED);
+        return response;
+    }, async (error) => {
+        const store = storeFactory.get();
+        const { response } = error;
+
+        if (!response || response.status !== 401) {
             store.dispatch(LOADER_FINISHED);
+            console.error('[Response Error]', error);
             return Promise.reject(error);
         }
-    );
 
-    // Response interceptor
-   // Response interceptor
-   client.interceptors.response.use(
-    (response) => {
-        const store = storeFactory.get();
-        store.dispatch(LOADER_FINISHED);
-        return response;
-    },
-    async (error) => {
-        const store = storeFactory.get();
-        const refreshToken = store.state.auth.refreshToken;
-
-        console.log('Starting error handling...');
-
+        const { refreshToken } = store.state.auth;
         if (!refreshToken) {
-            console.log('No refresh token found');
+            Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
+            router.get().push({ name: 'HomePage' });
             store.dispatch(LOADER_FINISHED);
             return Promise.reject(error);
         }
 
         try {
-            console.log('Attempting to refresh token...');
-            
-            const response = await axios.post(
-                '/api/token/refresh',
-                { refreshToken },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${refreshToken}`
-                    }
-                }
-            );
+            const tokens = await refreshAccessToken(refreshToken);
+            store.dispatch(AUTH_SET_JWT, tokens);
 
-            // Log the entire response to inspect its structure
-            console.log('Token refresh response:', response.data);
-            
-            // Access tokens from the correct structure
-            const tokens = {
-                accessToken: response.data.data.accessToken,
-                refreshToken: response.data.data.refreshToken
-            };
-
-            // Log the tokens object to see what we have
-            console.log('Tokens object:', tokens);
-
-            // Verify tokens exist
-            if (!tokens.accessToken || !tokens.refreshToken) {
-                throw new Error('Missing tokens in response');
-            }
-
-            console.log('Dispatching tokens to store...');
-            await store.dispatch(AUTH_SET_JWT, tokens);
-            console.log("Dispatched tokens", AUTH_SET_JWT, tokens);
-
-            // Update the failed request config with new token
-            error.config.headers.authorization = `Bearer ${tokens.accessToken}`;
-            console.log("Dispatched tokens.jwt..", tokens.accessToken);
-            const currentTime = Math.floor(Date.now() / 1000); 
-                 if (tokens.accessToken.payload.exp && tokens.accessToken.payload.exp < currentTime) {
-                   console.log('Token is expired');
-               } else {
-                    console.log('Token is valid');
-                   }
-            // Retry the original request
-            try {
-                
-                const retryResp = await axios.request(error.config);
-                console.log("retryResp..........>", retryResp);
-                store.dispatch(LOADER_FINISHED);
-                console.log("Dispatched tokens.jwt.. YOYOYOYo..retryResponse...", retryResp);
-                return retryResp;
-            } catch (retryError) {
-                console.log("Retrying request with config:", error.config);
-                console.error('Error during retry request:', retryError);
-                store.dispatch(LOADER_FINISHED);
-                return Promise.reject(retryError);
-            }
-
+            error.config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+            return client.request(error.config); // Retry original request
         } catch (refreshError) {
-            console.error('Refresh token error:', refreshError);
-            // Check if the error indicates that the refresh token is expired
-            if (refreshError.response && refreshError.response.status === 401) {
-                console.log('Refresh token expired or invalid');
-                Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
-                router.get().push({ name: 'HomePage' }); // Redirect to login page
-            } else {
-                Vue.$toast.error(i18n.get().t('auth.refreshTokenError'));
-            }
-            return Promise.reject(error);
-
-        } finally {
+            console.error('[Token Refresh Error]', refreshError);
+            Vue.$toast.info(i18n.get().t('auth.sessionExpired'));
+            router.get().push({ name: 'HomePage' });
             store.dispatch(LOADER_FINISHED);
+            return Promise.reject(refreshError);
         }
-    }
-);
+    });
 
     return client;
 };
 
 export default {
+    createClient,
     get,
-    createClient // exposed for testing only
 };
