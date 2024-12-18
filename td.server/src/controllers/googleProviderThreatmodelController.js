@@ -7,8 +7,8 @@ const logger = loggerHelper.get('controllers/googleProviderThreatmodelController
 const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
 
-    const pageToken = req?.query?.page || null;
-    const folderId = req?.query?.folderId || 'root';
+    const pageToken = "1";
+    const folderId = 'root';
     let foldersResp = {};
     let folders = [];
     let parentId = '';
