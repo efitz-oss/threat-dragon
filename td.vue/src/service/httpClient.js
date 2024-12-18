@@ -51,6 +51,10 @@ const createClient = () => {
             store.dispatch(LOADER_FINISHED);
             return Promise.reject(err);
         };
+        if (err.response.status == 500) {
+            console.log ("--------------------->")
+            return logAndExit();
+        }
 
         if (err.response.status !== 401) {
             return logAndExit();
