@@ -13,7 +13,7 @@ const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
     let folders = [];
     let parentId = '';
     
-    foldersResp = await googleDrive.listFilesInFolderAsync('root', "1", req.provider.access_token);
+    foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
     folders = foldersResp.folders;
 
     const pagination = {

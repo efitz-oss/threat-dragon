@@ -29,10 +29,10 @@ const state = {
 
 const actions = {
     [FOLDER_CLEAR]: ({ commit }) => commit(FOLDER_CLEAR),
-    [FOLDER_FETCH]: async ({ commit }, { folderId = '', page = 1 } = {}) => {
+    [FOLDER_FETCH]: async ({ commit }, { folderId = 'root', page = 1 } = {}) => {
         if (!folderId) commit(FOLDER_CLEAR);
         const pageToken = state.pageTokens[page - 1] || '';
-        const resp = await googleDriveApi.folderAsync(folderId, pageToken);
+        const resp = await googleDriveApi.folderAsync(folderId, page);
 
         if (resp.data.pagination.nextPageToken && !state.pageTokens[page]) {
             state.pageTokens[page] = resp.data.pagination.nextPageToken;
