@@ -7,13 +7,13 @@ const logger = loggerHelper.get('controllers/googleProviderThreatmodelController
 const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
 
-    const pageToken = "1";
-    const folderId = 'root';
+    const pageToken = req?.query?.page || null;
+    const folderId = req?.query?.folderId || 'root';
     let foldersResp = {};
     let folders = [];
     let parentId = '';
     
-    foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, req.provider.access_token);
+    foldersResp = await googleDrive.listFilesInFolderAsync('root', "1", req.provider.access_token);
     folders = foldersResp.folders;
 
     const pagination = {
