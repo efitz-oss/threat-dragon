@@ -2,7 +2,7 @@
   <b-navbar toggleable="lg" fixed="top" id="navbar">
     <b-navbar-brand :to="username ? '/dashboard' : '/'" class="td-brand">
       <b-img :src="require('@/assets/threatdragon_logo_image.svg')" class="td-brand-img" alt="Threat Dragon Logo" />
-      Threat Dragon v{{this.$store.state.packageBuildVersion}}{{this.$store.state.packageBuildState}}
+      Threat Dragon v{{ this.$store.state.packageBuildVersion }}{{ this.$store.state.packageBuildState }}
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -13,13 +13,14 @@
         </b-nav-item>
       </b-navbar-nav>
 
-      <b-navbar-nav class="ml-auto">
-        <b-nav-text v-show="username" class="logged-in-as">{{ $t('nav.loggedInAs')}} {{ username }}</b-nav-text>
+      <!-- Ensure alignment to the right -->
+      <b-navbar-nav class="ms-auto d-flex align-items-center justify-content-end">
+        <b-nav-text v-show="username" class="logged-in-as">{{ $t('nav.loggedInAs') }} {{ username }}</b-nav-text>
         <b-nav-item v-show="username" @click="onLogOut" id="nav-sign-out">
           <font-awesome-icon
             icon="sign-out-alt"
             class="td-fa-nav"
-           v-tooltip.hover :title="$t('nav.logOut')"
+            v-tooltip.hover :title="$t('nav.logOut')"
           ></font-awesome-icon>
         </b-nav-item>
         <b-nav-item
@@ -53,19 +54,19 @@
           id="nav-owasp-td"
         >
           <b-img 
-          :src="require('@/assets/owasp.svg')"
-          class="td-fa-nav td-owasp-logo" :title="$t('desktop.help.visit')" />
+            :src="require('@/assets/owasp.svg')"
+            class="td-fa-nav td-owasp-logo" 
+            :title="$t('desktop.help.visit')"
+          />
         </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
 </template>
 
-
-
 <style lang="scss" scoped>
-@use '@/styles/sizes.scss' as sizes; /* Import sizes */
-@use '@/styles/colors.scss' as colors; /* Import colors */
+@use '@/styles/sizes.scss' as sizes;
+@use '@/styles/colors.scss' as colors;
 
 $icon-height: 1.2rem;
 
@@ -98,7 +99,7 @@ $icon-height: 1.2rem;
   }
 }
 
-@media (max-width: 576px) { /* Mobile breakpoint */
+@media (max-width: 576px) {
   .nav-link {
     color: colors.$red !important;
   }
@@ -110,14 +111,13 @@ $icon-height: 1.2rem;
 }
 
 @media (max-width: 576px) {
-  .td-owasp-logo { /* OWASP logo styling */
+  .td-owasp-logo {
     background-color: colors.$red;
     border-radius: 50%;
     padding: 5px;
   }
 }
 </style>
-
 
 <script>
 import { mapGetters } from 'vuex';

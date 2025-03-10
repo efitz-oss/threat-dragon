@@ -62,6 +62,8 @@ import openThreatModel from '@/service/otm/openThreatModel.js';
 import TdFormButton from '@/components/FormButton.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import { isValidSchema } from '@/service/schema/ajv';
+import { BRow, BCol, BForm, BFormGroup, BFormTextarea, BButtonGroup } from 'bootstrap-vue-next';
+
 
 // only search for text files
 const pickerFileOptions = {

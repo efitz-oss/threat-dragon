@@ -14,64 +14,50 @@ const folders = (req, res) => responseWrapper.sendResponseAsync(async () => {
         throw new Error('Access token is missing');
     }
 
-    let foldersResp = {};
-    let folders = [];
-    let parentId = '';
-    foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, accessToken); // Use the extracted accessToken
-    console.log ( "find me.......")
-    folders = foldersResp.folders;
-
-    const pagination = {
-        nextPageToken: foldersResp.nextPageToken || null,
-        currentPageToken: pageToken || null
-    };
-
-    if (folderId == 'root') {
-        parentId = '';
-    } else {
-        parentId = await googleDrive.getFolderParentIdAsync(folderId, accessToken); // Use the extracted accessToken
-    }
-
+    let foldersResp = await googleDrive.listFilesInFolderAsync(folderId, pageToken, accessToken);
+    
     return {
-        folders: folders.map((folder) => ({name: folder.name, id: folder.id, mimeType: folder.mimeType})),
-        pagination: pagination,
-        parentId
+        folders: foldersResp.folders.map(folder => ({ name: folder.name, id: folder.id, mimeType: folder.mimeType })),
+        pagination: {
+            nextPageToken: foldersResp.nextPageToken || null,
+            currentPageToken: pageToken || null
+        },
+        parentId: folderId === 'root' ? '' : await googleDrive.getFolderParentIdAsync(folderId, accessToken)
     };
 }, req, res, logger);
 
 const create = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
-
     const folderId = req.params.folder;
     const { fileContent, fileName } = req.body;
-
-    const resp = await googleDrive.createFileInFolderAsync(folderId, fileName, fileContent, req.provider.access_token);
     
-    return {
-        id: resp.id
-    };
+    const resp = await googleDrive.createFileInFolderAsync(folderId, fileName, fileContent, req.provider.access_token);
+    return { id: resp.id };
 }, req, res, logger);
 
 const update = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
-
     const fileId = req.params.file;
     const { fileContent } = req.body;
 
     const resp = await googleDrive.updateFileAsync(fileId, fileContent, req.provider.access_token);
-    
-    return {
-        id: resp.id
-    };
+    return { id: resp.id };
 }, req, res, logger);
 
 const model = (req, res) => responseWrapper.sendResponseAsync(async () => {
     const googleDrive = repositories.getSpecific('googledrive');
+    const fileId = req.params.fileId;
+    
+    // Use the access token from the request
+    const accessToken = req.access_token;
+    if (!accessToken) {
+        throw new Error("Access token is missing");
+    }
 
-    const fileId = req.params.file;
-    const resp = await googleDrive.getFileContentAsync(fileId, req.provider.access_token);
+    const resp = await googleDrive.getFileContentAsync(fileId, accessToken);
     return resp;
 }, req, res, logger);
+
 
 export default {
     folders,
