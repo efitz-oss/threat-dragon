@@ -4,10 +4,6 @@ import { ref, onMounted } from "vue";
 const apiKey = process.env.VUE_APP_GOOGLE_API_KEY;
 const clientId = process.env.VUE_APP_GOOGLE_CLIENT_ID;
 
-console.log("API Key:", apiKey);
-console.log("Client ID:", clientId);
-
-
 
 const scope = "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.readonly";
 let accessToken = ref(null);
@@ -30,8 +26,6 @@ const handleAuth = () => {
       }
       accessToken.value = response.access_token; // Store correct token
       tokenScopes.value = response.scope ? response.scope.split(" ") : [];
-      console.log("OAuth token received:", accessToken.value);
-      console.log("Token Scopes:", tokenScopes.value);
       createPicker();
     },
   });
@@ -52,7 +46,6 @@ const createPicker = () => {
 const pickerCallback = async (data) => {
   if (data.action === google.picker.Action.PICKED) {
     const file = data.docs[0]; // Get the selected file
-    console.log("Selected file:", file);
     if (file.mimeType === "application/json") {
       try {
         const fileContent = await fetchFileContent(file.id); // Fetch content
@@ -67,7 +60,6 @@ const pickerCallback = async (data) => {
 };
 
 const fetchFileContent = async (fileId) => {
-  console.log("Fetching file with token:", accessToken.value);
   const response = await fetch(
     `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
     {
@@ -81,7 +73,6 @@ const fetchFileContent = async (fileId) => {
 };
 
 const sendToBackend = async (fileId, fileContent) => {
-  console.log("Sending file to backend with token:", accessToken.value);
   if (!accessToken.value) {
     console.error("No access token available. User may not be authenticated.");
     return;
