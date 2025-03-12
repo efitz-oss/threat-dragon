@@ -1,6 +1,9 @@
 import { Env } from './Env.js';
 
-class EncryptionEnv extends Env {
+/**
+ * Environment configuration for encryption
+ */
+export class EncryptionEnv extends Env {
     constructor() {
         super('Encryption');
     }
@@ -18,5 +21,3 @@ class EncryptionEnv extends Env {
         ];
     }
 }
-
-export default EncryptionEnv;

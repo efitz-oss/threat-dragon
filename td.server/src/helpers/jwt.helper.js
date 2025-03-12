@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 
-import encryptionHelper from './encryption.helper.js';
-import env from '../env/Env.js';
+import * as encryptionHelper from './encryption.helper.js';
+import { getEnvironment as env } from '../env/Env.js';
 
 const createAsync = async (providerName, providerOptions, user) => {
     const encryptedProviderOptions = await encryptionHelper.encryptPromise(

@@ -1,6 +1,9 @@
 import { Env } from './Env.js';
 
-class ThreatDragonEnv extends Env {
+/**
+ * Environment configuration for Threat Dragon application
+ */
+export class ThreatDragonEnv extends Env {
     constructor() {
         super('ThreatDragon');
     }
@@ -13,7 +16,7 @@ class ThreatDragonEnv extends Env {
     // if the default SERVER_API_PORT is changed then ensure the CI pipeline still works
     get properties() {
         // Use SERVER_API_PORT if defined, otherwise fallback to PORT, then to default 3000
-        const serverPort = process.env.SERVER_API_PORT || process.env.PORT || 3000;
+        const serverPort = process.env.SERVER_API_PORT ?? process.env.PORT ?? 3000;
 
         return [
             { key: 'NODE_ENV', required: false, defaultValue: 'production' },
@@ -27,5 +30,3 @@ class ThreatDragonEnv extends Env {
         ];
     }
 }
-
-export default ThreatDragonEnv;

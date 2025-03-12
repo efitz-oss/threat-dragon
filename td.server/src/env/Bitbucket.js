@@ -1,6 +1,9 @@
 import { Env } from './Env.js';
 
-class BitbucketEnv extends Env {
+/**
+ * Environment configuration for Bitbucket integration
+ */
+export class BitbucketEnv extends Env {
     constructor() {
         super('Bitbucket');
     }
@@ -23,5 +26,3 @@ class BitbucketEnv extends Env {
         ];
     }
 }
-
-export default BitbucketEnv;

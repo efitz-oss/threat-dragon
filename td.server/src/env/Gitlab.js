@@ -1,6 +1,9 @@
 import { Env } from './Env.js';
 
-class GitlabEnv extends Env {
+/**
+ * Environment configuration for GitLab integration
+ */
+export class GitlabEnv extends Env {
     constructor() {
         super('Gitlab');
     }
@@ -21,5 +24,3 @@ class GitlabEnv extends Env {
         ];
     }
 }
-
-export default GitlabEnv;

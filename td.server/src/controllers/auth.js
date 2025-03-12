@@ -1,12 +1,12 @@
-import env from '../env/Env.js';
-import errors from './errors.js';
-import jwtHelper from '../helpers/jwt.helper.js';
-import loggerHelper from '../helpers/logger.helper.js';
-import providers from '../providers/index.js';
-import responseWrapper from './responseWrapper.js';
-import tokenRepo from '../repositories/token.js';
+import { getEnvironment as env } from '../env/Env.js';
+import * as errors from './errors.js';
+import * as jwtHelper from '../helpers/jwt.helper.js';
+import { getLogger } from '../helpers/logger.helper.js';
+import * as providers from '../providers/index.js';
+import * as responseWrapper from './responseWrapper.js';
+import * as tokenRepo from '../repositories/token.js';
 
-const logger = loggerHelper.get('controllers/auth.js');
+const logger = getLogger('controllers/auth.js');
 
 const login = (req, res) => {
     logger.debug(`API login request: ${logger.transformToString(req)}`);

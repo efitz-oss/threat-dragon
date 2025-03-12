@@ -1,4 +1,4 @@
-import env from '../env/Env.js';
+import { getEnvironment as env } from '../env/Env.js';
 import { Gitlab } from '@gitbeaker/rest';
 
 const repoRootDirectory = () =>
@@ -117,7 +117,7 @@ export const deleteAsync = (modelInfo, accessToken) =>
         'Deleted by OWASP Threat Dragon'
     );
 
-export const createBranchAsync = (repoInfo, accessToken) => {
+const createBranchAsync = (repoInfo, accessToken) => {
     const client = getClient(accessToken);
     const repo = getRepoFullName(repoInfo);
     return client.Branches.create(repo, repoInfo.branch, repoInfo.ref);

@@ -4,8 +4,8 @@
  */
 import axios from 'axios';
 
-import env from '../env/Env.js';
-import repositories from '../repositories/index.js';
+import { getEnvironment as env } from '../env/Env.js';
+import * as repositories from '../repositories/index.js';
 
 const name = 'gitlab';
 

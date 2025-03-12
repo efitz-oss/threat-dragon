@@ -1,4 +1,4 @@
-import env from '../env/Env.js';
+import { getEnvironment as env } from '../env/Env.js';
 import { google } from 'googleapis';
 
 const getClient = (accessToken) => {

@@ -1,6 +1,6 @@
 import pkg from 'bitbucket';
 const { Bitbucket } = pkg;
-import env from '../env/Env.js';
+import { getEnvironment as env } from '../env/Env.js';
 
 const repoRootDirectory = () =>
     env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY ?? env.get().config.REPO_ROOT_DIRECTORY;
@@ -161,7 +161,7 @@ export const deleteAsync = async (modelInfo, accessToken) => {
     throw new Error(`Bitbucket deleteAsync is not implemented yet`);
 };
 
-export const createBranchAsync = (repoInfo, accessToken) => {
+const createBranchAsync = (repoInfo, accessToken) => {
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);

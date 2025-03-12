@@ -1,7 +1,7 @@
-import jwtHelper from '../helpers/jwt.helper.js';
-import loggerHelper from '../helpers/logger.helper.js';
+import * as jwtHelper from '../helpers/jwt.helper.js';
+import { getLogger } from '../helpers/logger.helper.js';
 
-const logger = loggerHelper.get('repositories/token.js');
+const logger = getLogger('repositories/token.js');
 
 /**
  * The refresh tokens

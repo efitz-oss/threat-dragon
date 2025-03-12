@@ -1,6 +1,9 @@
 import { Env } from './Env.js';
 
-class GoogleEnv extends Env {
+/**
+ * Environment configuration for Google integration
+ */
+export class GoogleEnv extends Env {
     constructor() {
         super('Google');
     }
@@ -33,5 +36,3 @@ class GoogleEnv extends Env {
         ];
     }
 }
-
-export default GoogleEnv;

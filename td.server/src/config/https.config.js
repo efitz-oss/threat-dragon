@@ -1,4 +1,4 @@
-import env from '../env/Env.js';
+import { getEnvironment as env } from '../env/Env.js';
 
 const middleware = (req, res, next) => {
     // The 'x-forwarded-proto' check is for Heroku

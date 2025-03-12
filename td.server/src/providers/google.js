@@ -3,7 +3,7 @@
  * @description Identity provider for Google OAuth
  */
 import axios from 'axios';
-import env from '../env/Env.js';
+import { getEnvironment as env } from '../env/Env.js';
 
 const name = 'google';
 
