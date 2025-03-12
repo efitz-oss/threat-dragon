@@ -1,7 +1,8 @@
-import {Bitbucket} from 'bitbucket';
+import pkg from 'bitbucket';
+const { Bitbucket } = pkg;
 import env from '../env/Env.js';
 
-const repoRootDirectory = () => env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
+const repoRootDirectory = () => env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY ?? env.get().config.REPO_ROOT_DIRECTORY;
 
 export class BitbucketClientWrapper {
     static getClient(clientOptions){
@@ -36,9 +37,9 @@ export const reposAsync = async (page, accessToken, searchQuerys = []) => {
     return [responseRepos, null, {prev: hasPreviousPage(repos), next: hasNextPage(repos)}];
 };
 
-const hasNextPage = (response) => response.data.next !== undefined && response.data.next !== null;
+const hasNextPage = (response) => response.data?.next != null;
 
-const hasPreviousPage = (response) => response.data.previous !== undefined && response.data.previous !== null;
+const hasPreviousPage = (response) => response.data?.previous != null;
 
 //Migrate searchAsync required
 const searchAsync = (page, accessToken, searchQuerys) => getClient(accessToken).search().

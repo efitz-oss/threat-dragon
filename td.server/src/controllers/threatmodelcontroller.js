@@ -1,6 +1,6 @@
 import env from '../env/Env.js';
 import loggerHelper from '../helpers/logger.helper.js';
-import repositories from "../repositories";
+import repositories from "../repositories/index.js";
 import responseWrapper from './responseWrapper.js';
 import { serverError } from './errors.js';
 
@@ -18,7 +18,7 @@ const repos = (req, res) => responseWrapper.sendResponseAsync(async () => {
         logger.debug('Using searchAsync');
         const searchQuery = env.get().config.REPO_SEARCH_QUERY ?? env.get().config.GITHUB_SEARCH_QUERY;
         reposResp = await repository.searchAsync(page, req.provider.access_token, [searchQuery, ...searchQuerys]);
-        repos = reposResp[0].items ?? reposResp[0];
+        repos = reposResp[0]?.items ?? reposResp[0];
     } else {
         logger.debug('Using reposAsync');
         reposResp = await repository.reposAsync(page, req.provider.access_token, [searchQuerys]);
@@ -168,15 +168,15 @@ const deleteModel = async (req, res) => {
 };
 
 const getPagination = (headers, pageLinks, page) => {
-
-    if(headers === undefined || headers === null || (Object.keys(headers).length === 0) || headers?.link === null){
-        if (pageLinks === undefined || pageLinks === null || (Object.keys(pageLinks).length === 0)) {
+    // Check if headers is nullish or empty or has null link
+    if(!headers || Object.keys(headers).length === 0 || headers?.link === null) {
+        // Check if pageLinks is nullish or empty
+        if (!pageLinks || Object.keys(pageLinks).length === 0) {
             return {page, next: false, prev: false};
         }
         return getPaginationFromPageLinks(pageLinks, page);
-    } 
-        return getPaginationFromHeaders(headers, page);
-    
+    }
+    return getPaginationFromHeaders(headers, page);
 };
 
 const getPaginationFromPageLinks = (pageLinks, page) => {
@@ -189,9 +189,10 @@ const getPaginationFromPageLinks = (pageLinks, page) => {
 const getPaginationFromHeaders = (headers, page) => {
     const pagination = {page, next: false, prev: false};
     const linkHeader = headers.link;
+    
     if (linkHeader) {
         linkHeader.split(',').forEach((link) => {
-            const isLinkType = (type) => link.split(';')[1].split('=')[1] === type;
+            const isLinkType = (type) => link.split(';')?.[1]?.split('=')?.[1] === type;
 
             if (isLinkType('"next"')) {
                 pagination.next = true;
@@ -207,9 +208,9 @@ const getPaginationFromHeaders = (headers, page) => {
 
 const organisation = (req, res) => {
     const organisation = {
-        protocol: env.get().config.ENTERPRISE_PROTOCOL || 'https',
-        hostname: env.get().config.GITHUB_ENTERPRISE_HOSTNAME || 'www.github.com',
-        port: env.get().config.GITHUB_ENTERPRISE_PORT || '',
+        protocol: env.get().config.ENTERPRISE_PROTOCOL ?? 'https',
+        hostname: env.get().config.GITHUB_ENTERPRISE_HOSTNAME ?? 'www.github.com',
+        port: env.get().config.GITHUB_ENTERPRISE_PORT ?? '',
     };
     logger.debug(`API organisation request: ${logger.transformToString(req)}`);
 

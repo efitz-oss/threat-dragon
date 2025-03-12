@@ -1,9 +1,18 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { upDir } from '../helpers/path.helper.js';
 
+// Setup dirname equivalent for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/**
+ * Base environment configuration class
+ * Extended by specific provider configuration classes
+ */
 export class Env {
     /* eslint no-console: 0 */
 
@@ -70,17 +79,18 @@ export class Env {
      */
     tryReadFromFile (basePropertyName) {
         const propertyName = `${basePropertyName}_FILE`;
-        if (process.env[propertyName]) {
-            const filePath = process.env[propertyName];
+        const filePath = process.env[propertyName];
+        
+        if (filePath) {
             if (!fs.existsSync(filePath)) {
                 const errorMessage = `${propertyName} was set, but file ${filePath} does not exist.`;
                 console.error(errorMessage);
                 throw new Error(errorMessage);
             }
 
-            return fs.readFileSync(filePath).
-                toString('utf8').
-                trim();
+            return fs.readFileSync(filePath)
+                .toString('utf8')
+                .trim();
         }
 
         return null;
@@ -93,7 +103,7 @@ export class Env {
         const config = {};
         this.properties.forEach(({ key, required, defaultValue }) => {
             const prop = `${this.prefix}${key}`;
-            const value = process.env[prop] || this.tryReadFromFile(prop) || defaultValue;
+            const value = process.env[prop] ?? this.tryReadFromFile(prop) ?? defaultValue;
             if (!value && required) {
                 const errMsg = `${prop} is a required property, Threat Dragon server cannot start without it. Refer to development/environment.md for more information`;
                 console.error(errMsg);
@@ -116,7 +126,7 @@ export class Env {
      * Attempts to load the configuration from a dotenv file
      */
     _tryLoadDotEnv () {
-        const envFilePath = process.env.ENV_FILE || this._defaultEnvFilePath;
+        const envFilePath = process.env.ENV_FILE ?? this._defaultEnvFilePath;
         if (fs.existsSync(envFilePath)) {
             dotenv.config({
                 path: envFilePath
@@ -128,16 +138,19 @@ export class Env {
     }
 }
 
-let env = null;
+/**
+ * Singleton instance for environment configuration
+ * @type {Env|null}
+ */
+let envInstance = null;
 
-const get = () => {
-    if (env === null) {
-        env = new Env();
+/**
+ * Gets the singleton environment instance
+ * @returns {Env}
+ */
+export function getEnvironment() {
+    if (envInstance === null) {
+        envInstance = new Env();
     }
-    return env;
-};
-
-export default {
-    get,
-    Env
-};
+    return envInstance;
+}
