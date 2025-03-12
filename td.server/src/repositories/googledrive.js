@@ -2,7 +2,11 @@ import env from '../env/Env.js';
 import { google } from 'googleapis';
 
 const getClient = (accessToken) => {
-    const oauth2Client = new google.auth.OAuth2(env.get().config.GOOGLE_CLIENT_ID, env.get().config.GOOGLE_CLIENT_SECRET, env.get().config.GOOGLE_REDIRECT_URI);
+    const oauth2Client = new google.auth.OAuth2(
+        env.get().config.GOOGLE_CLIENT_ID,
+        env.get().config.GOOGLE_CLIENT_SECRET,
+        env.get().config.GOOGLE_REDIRECT_URI
+    );
     oauth2Client.setCredentials({ access_token: accessToken });
     return oauth2Client;
 };
@@ -27,7 +31,7 @@ const listFilesInFolderAsync = async (folderId, pageToken, accessToken) => {
         q: `'${folderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
         fields: 'nextPageToken, files(id, name, parents, mimeType)',
         pageSize: 10,
-        ...(pageToken ? { pageToken } : {})
+        ...(pageToken ? { pageToken } : {}),
     });
 
     return {
@@ -42,7 +46,7 @@ const getFolderParentIdAsync = async (folderId, accessToken) => {
 
     const res = await driveClient.files.get({
         fileId: folderId,
-        fields: 'id, name, parents'
+        fields: 'id, name, parents',
     });
 
     const parentId = res.data.parents ? res.data.parents[0] : '';

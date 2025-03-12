@@ -1,22 +1,22 @@
 import crypto from 'crypto';
 
-import cryptoPromise from './crypto.promise.js';
-import env from '../env/Env.js';
-import loggerHelper from './logger.helper.js';
+import { randomBytes } from './crypto.promise.js';
+import { getEnvironment } from '../env/Env.js';
+import { getLogger } from './logger.helper.js';
 
-const logger = loggerHelper.get('helpers/encryption.helper.js');
+const logger = getLogger('helpers/encryption.helper.js');
 
-const inputEncoding = 'ascii';
-const outputEncoding = 'base64';
-const keyEncoding = 'ascii';
-const algorithm = 'aes256';
+export const inputEncoding = 'ascii';
+export const outputEncoding = 'base64';
+export const keyEncoding = 'ascii';
+export const algorithm = 'aes256';
 
 /**
  * Gets the primary key used for encryption
  * @returns {Object}
  */
-const getPrimaryKey = () => {
-    const keys = JSON.parse(env.get().config.ENCRYPTION_KEYS);
+export function getPrimaryKey() {
+    const keys = JSON.parse(getEnvironment().config.ENCRYPTION_KEYS);
     const primaryKey = keys.find((key) => key.isPrimary);
 
     if (!primaryKey) {
@@ -27,9 +27,9 @@ const getPrimaryKey = () => {
 
     return {
         id: primaryKey.id,
-        value: Buffer.from(primaryKey.value, keyEncoding)
+        value: Buffer.from(primaryKey.value, keyEncoding),
     };
-};
+}
 
 /**
  * Gets a key by its id
@@ -37,8 +37,8 @@ const getPrimaryKey = () => {
  * @param {String} id
  * @returns {Object}
  */
-const getKeyById = (id) => {
-    const keys = JSON.parse(env.get().config.ENCRYPTION_KEYS);
+export function getKeyById(id) {
+    const keys = JSON.parse(getEnvironment().config.ENCRYPTION_KEYS);
     const key = keys.find((key) => key.id === id);
 
     if (!key) {
@@ -49,9 +49,9 @@ const getKeyById = (id) => {
 
     return {
         id: key.id,
-        value: Buffer.from(key.value, keyEncoding)
+        value: Buffer.from(key.value, keyEncoding),
     };
-};
+}
 
 /**
  * Encrypts plaintext data using the given key and initialization vector
@@ -60,16 +60,16 @@ const getKeyById = (id) => {
  * @param {String} iv
  * @returns {Object}
  */
-const encryptData = (plainText, key, iv) => {
+export function encryptData(plainText, key, iv) {
     const encryptor = crypto.createCipheriv(algorithm, key.value, iv);
     let cipherText = encryptor.update(plainText, inputEncoding, outputEncoding);
     cipherText += encryptor.final(outputEncoding);
     return {
         keyId: key.id,
         iv: iv.toString(keyEncoding),
-        data: cipherText
+        data: cipherText,
     };
-};
+}
 
 /**
  * Decrypts a ciphertext using the given key and initialization vector
@@ -78,11 +78,11 @@ const encryptData = (plainText, key, iv) => {
  * @param {String} iv
  * @returns {String}
  */
-const decryptData = (cipherText, key, iv) => {
+export function decryptData(cipherText, key, iv) {
     const decryptor = crypto.createDecipheriv(algorithm, key.value, iv);
     const plainText = decryptor.update(cipherText, outputEncoding, inputEncoding);
     return `${plainText}${decryptor.final(inputEncoding)}`;
-};
+}
 
 /**
  * Encrypts a plaintext to a ciphertext
@@ -91,13 +91,13 @@ const decryptData = (cipherText, key, iv) => {
  * @param {String} plainText
  * @returns {Promise<Object>}
  */
-const encryptPromise = (plainText) => {
+export async function encryptPromise(plainText) {
     const key = getPrimaryKey();
     logger.debug('Encrypting plaintext');
 
-    return cryptoPromise.randomBytes(16).
-        then((iv) => encryptData(plainText, key, iv));
-};
+    const iv = await randomBytes(16);
+    return encryptData(plainText, key, iv);
+}
 
 /**
  * Decrypts a ciphertext using the configured encryption keys
@@ -105,15 +105,10 @@ const encryptPromise = (plainText) => {
  * @param {Object} encryptedData
  * @returns {String}
  */
-const decrypt = (encryptedData) => {
+export function decrypt(encryptedData) {
     const iv = Buffer.from(encryptedData.iv, keyEncoding);
     const key = getKeyById(encryptedData.keyId);
     logger.debug('Decrypting ciphertext');
 
     return decryptData(encryptedData.data, key, iv);
-};
-
-export default {
-    decrypt,
-    encryptPromise
-};
+}

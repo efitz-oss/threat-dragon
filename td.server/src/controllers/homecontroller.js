@@ -1,9 +1,16 @@
 import loggerHelper from '../helpers/logger.helper.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { upDir } from '../helpers/path.helper.js';
 
 const logger = loggerHelper.get('controllers/homecontroller.js');
+
+/**
+ * Setup dirname equivalent for ESM
+ */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * The path to the index.html file
@@ -18,10 +25,10 @@ const indexHtmlPath = path.join(__dirname, upDir, upDir, upDir, 'dist', 'index.h
  * @returns {Object}
  */
 const index = (req, res) => {
-    logger.debug('API index request, sendFile ' + indexHtmlPath);
+    logger.debug(`API index request, sendFile ${indexHtmlPath}`);
     res.sendFile(indexHtmlPath);
 };
 
 export default {
-    index
+    index,
 };

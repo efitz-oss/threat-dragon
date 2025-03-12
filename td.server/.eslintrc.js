@@ -1,9 +1,12 @@
-module.exports = {
+export default {
     "env": {
         "es2021": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
     "parser": "@babel/eslint-parser",
     "parserOptions": {
         "ecmaVersion": 12,

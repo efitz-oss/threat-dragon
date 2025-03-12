@@ -5,6 +5,7 @@
 - ✅ #4 Template literals: Replace string concatenation with template literals for improved readability
 - ✅ #3 Standardize module export patterns (consistent use of named exports vs default exports)
 - ✅ #6 Optional chaining and nullish coalescing: Use `?.` and `??` operators for safer property access and defaults
+- ✅ #13 ESLint and Prettier: Configure tools to enforce modern standards
 
 ## To Do
 - #1 TypeScript: Add TypeScript for improved type safety and developer experience
@@ -15,7 +16,6 @@
 - #10 Immutability: Replace mutable state with immutable patterns when possible
 - #11 Modern data structures: Use Map and Set when appropriate instead of plain objects and arrays
 - #12 Composition over inheritance: Replace class inheritance with composition where appropriate
-- #13 ESLint and Prettier: Configure tools to enforce modern standards
 
 ## Standardization Plan for Module Exports (#3)
 

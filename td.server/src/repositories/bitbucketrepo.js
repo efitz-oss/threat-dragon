@@ -2,10 +2,11 @@ import pkg from 'bitbucket';
 const { Bitbucket } = pkg;
 import env from '../env/Env.js';
 
-const repoRootDirectory = () => env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY ?? env.get().config.REPO_ROOT_DIRECTORY;
+const repoRootDirectory = () =>
+    env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY ?? env.get().config.REPO_ROOT_DIRECTORY;
 
 export class BitbucketClientWrapper {
-    static getClient(clientOptions){
+    static getClient(clientOptions) {
         return new Bitbucket(clientOptions);
     }
 }
@@ -26,7 +27,12 @@ export const getClient = (accessToken) => {
 export const reposAsync = async (page, accessToken, searchQuerys = []) => {
     //Migrated
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
-    const repos = await getClient(accessToken).repositories.list({workspace: workspace, page: page, pagelen: 10, q: searchQuerys.join(' AND ')});
+    const repos = await getClient(accessToken).repositories.list({
+        workspace: workspace,
+        page: page,
+        pagelen: 10,
+        q: searchQuerys.join(' AND '),
+    });
 
     const responseRepos = repos.data.values.map((x) => {
         const newX = {};
@@ -34,7 +40,7 @@ export const reposAsync = async (page, accessToken, searchQuerys = []) => {
         return newX;
     });
 
-    return [responseRepos, null, {prev: hasPreviousPage(repos), next: hasNextPage(repos)}];
+    return [responseRepos, null, { prev: hasPreviousPage(repos), next: hasNextPage(repos) }];
 };
 
 const hasNextPage = (response) => response.data?.next != null;
@@ -42,11 +48,11 @@ const hasNextPage = (response) => response.data?.next != null;
 const hasPreviousPage = (response) => response.data?.previous != null;
 
 //Migrate searchAsync required
-const searchAsync = (page, accessToken, searchQuerys) => getClient(accessToken).search().
-reposAsync({
-    page: page,
-    q: searchQuerys
-});
+const searchAsync = (page, accessToken, searchQuerys) =>
+    getClient(accessToken).search().reposAsync({
+        page: page,
+        q: searchQuerys,
+    });
 
 export const userAsync = (accessToken) => getClient(accessToken).users.getAuthedUser();
 
@@ -57,12 +63,15 @@ export const branchesAsync = async (repoInfo, accessToken) => {
         workspace: workspace,
         repo_slug: repoInfo.repo,
         page: repoInfo.page,
-        pagelen: 10
+        pagelen: 10,
     });
     const branchesResponse = branches.data.values;
 
-    return [branchesResponse, null, {prev: hasPreviousPage(branches), next: hasNextPage(branches)}];
-
+    return [
+        branchesResponse,
+        null,
+        { prev: hasPreviousPage(branches), next: hasNextPage(branches) },
+    ];
 };
 
 export const modelsAsync = async (branchInfo, accessToken) => {
@@ -70,17 +79,17 @@ export const modelsAsync = async (branchInfo, accessToken) => {
 
     const client = getClient(accessToken);
 
-    const {data} = await client.repositories.getBranch({
+    const { data } = await client.repositories.getBranch({
         workspace: workspace,
         repo_slug: branchInfo.repo,
-        name: branchInfo.branch
+        name: branchInfo.branch,
     });
     const commitId = data.target.hash;
     const tree = await client.source.read({
         path: repoRootDirectory(),
         workspace: workspace,
         repo_slug: branchInfo.repo,
-        commit: commitId
+        commit: commitId,
     });
 
     tree.data.values.map((x) => {
@@ -94,19 +103,19 @@ export const modelAsync = async (modelInfo, accessToken) => {
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
-    const {data} = await client.repositories.getBranch({
+    const { data } = await client.repositories.getBranch({
         workspace: workspace,
         repo_slug: modelInfo.repo,
-        name: modelInfo.branch
+        name: modelInfo.branch,
     });
     const commitId = data.target.hash;
     const tree = await client.source.read({
         path: getModelPath(modelInfo),
         workspace: workspace,
         repo_slug: modelInfo.repo,
-        commit: commitId
+        commit: commitId,
     });
-    tree.content = Buffer.from(tree.data,).toString('base64');
+    tree.content = Buffer.from(tree.data).toString('base64');
     return [tree];
 };
 
@@ -115,15 +124,14 @@ export const createAsync = async (modelInfo, accessToken) => {
 
     const client = getClient(accessToken);
 
-    let created = await client.source.createFileCommit(
-        {
-            [getModelPath(modelInfo)]: getModelContent(modelInfo),
-            repo_slug: getRepoFullName(modelInfo),
-            files: getModelPath(modelInfo),
-            branch: modelInfo.branch,
-            workspace: workspace,
-            message: 'Created by OWASP Threat Dragon',
-        });
+    let created = await client.source.createFileCommit({
+        [getModelPath(modelInfo)]: getModelContent(modelInfo),
+        repo_slug: getRepoFullName(modelInfo),
+        files: getModelPath(modelInfo),
+        branch: modelInfo.branch,
+        workspace: workspace,
+        message: 'Created by OWASP Threat Dragon',
+    });
 
     created = created.data.values;
     return [created];
@@ -134,15 +142,14 @@ export const updateAsync = async (modelInfo, accessToken) => {
 
     const client = getClient(accessToken);
 
-    let created = await client.source.createFileCommit(
-        {
-            [getModelPath(modelInfo)]: getModelContent(modelInfo),
-            repo_slug: getRepoFullName(modelInfo),
-            files: getModelPath(modelInfo),
-            branch: modelInfo.branch,
-            workspace: workspace,
-            message: 'Updated by OWASP Threat Dragon',
-        });
+    let created = await client.source.createFileCommit({
+        [getModelPath(modelInfo)]: getModelContent(modelInfo),
+        repo_slug: getRepoFullName(modelInfo),
+        files: getModelPath(modelInfo),
+        branch: modelInfo.branch,
+        workspace: workspace,
+        message: 'Updated by OWASP Threat Dragon',
+    });
 
     created = created.data.values;
     return [created];
@@ -151,7 +158,6 @@ export const updateAsync = async (modelInfo, accessToken) => {
 // Not implemented as not used
 /* eslint-disable-next-line no-unused-vars, require-await */
 export const deleteAsync = async (modelInfo, accessToken) => {
-
     throw new Error(`Bitbucket deleteAsync is not implemented yet`);
 };
 
@@ -164,18 +170,18 @@ export const createBranchAsync = (repoInfo, accessToken) => {
         _body: {
             name: repoInfo.branch,
             target: {
-                hash: repoInfo.ref
-            }
+                hash: repoInfo.ref,
+            },
         },
         repo_slug: repo,
-        workspace: workspace
+        workspace: workspace,
     });
 };
 
 const getRepoFullName = (info) => `${info.repo}`;
-const getModelPath = (modelInfo) => `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
+const getModelPath = (modelInfo) =>
+    `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
-
 
 export default {
     branchesAsync,
@@ -188,5 +194,5 @@ export default {
     updateAsync,
     userAsync,
     getClient,
-    createBranchAsync
+    createBranchAsync,
 };

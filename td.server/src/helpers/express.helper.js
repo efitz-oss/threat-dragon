@@ -7,5 +7,5 @@ import express from 'express';
 const getInstance = () => express();
 
 export default {
-    getInstance
+    getInstance,
 };

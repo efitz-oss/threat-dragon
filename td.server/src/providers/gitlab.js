@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 import env from '../env/Env.js';
-import repositories from "../repositories";
+import repositories from '../repositories/index.js';
 
 const name = 'gitlab';
 
@@ -26,7 +26,8 @@ const getGitlabUrl = () => env.get().config.GITLAB_HOST || 'https://gitlab.com';
  * @returns {String}
  */
 const getOauthRedirectUrl = () => {
-    const scope = env.get().config.GITLAB_SCOPE || 'read_user read_repository write_repository profile';
+    const scope =
+        env.get().config.GITLAB_SCOPE || 'read_user read_repository write_repository profile';
     return `${getGitlabUrl()}/oauth/authorize?scope=${scope}&redirect_uri=${env.get().config.GITLAB_REDIRECT_URI}&response_type=code&client_id=${env.get().config.GITLAB_CLIENT_ID}`;
 };
 
@@ -58,28 +59,27 @@ const completeLoginAsync = async (code) => {
         redirect_uri: env.get().config.GITLAB_REDIRECT_URI,
         // grant_type
         // code_verifier: 'CODE_VERIFIER',
-        code
+        code,
     };
     const options = {
         headers: {
-            accept: 'application/json'
-        }
+            accept: 'application/json',
+        },
     };
 
     const providerResp = await axios.post(url, body, options);
 
-
-    repositories.set("gitlabrepo");
+    repositories.set('gitlabrepo');
     const repo = repositories.get();
     const fullUser = await repo.userAsync(providerResp.data.access_token);
 
     const user = {
         username: fullUser.username,
-        repos_url: fullUser.web_url
+        repos_url: fullUser.web_url,
     };
     return {
         user,
-        opts: providerResp.data
+        opts: providerResp.data,
     };
 };
 
@@ -88,5 +88,5 @@ export default {
     getOauthReturnUrl,
     getOauthRedirectUrl,
     isConfigured,
-    name
+    name,
 };

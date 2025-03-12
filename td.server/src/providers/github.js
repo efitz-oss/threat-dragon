@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 import env from '../env/Env.js';
-import repositories from "../repositories";
+import repositories from '../repositories/index.js';
 
 const name = 'github';
 
@@ -21,7 +21,7 @@ const isConfigured = () => Boolean(env.get().config.GITHUB_CLIENT_ID);
  */
 const getGithubUrl = () => {
     const enterpriseHostname = env.get().config.GITHUB_ENTERPRISE_HOSTNAME;
-    if(enterpriseHostname) {
+    if (enterpriseHostname) {
         const port = env.get().config.GITHUB_ENTERPRISE_PORT || '';
         const protocol = env.get().config.GITHUB_ENTERPRISE_PROTOCOL || 'https';
         return `${protocol}://${enterpriseHostname}${port ? ':' + port : ''}`;
@@ -61,26 +61,26 @@ const completeLoginAsync = async (code) => {
     const body = {
         client_id: env.get().config.GITHUB_CLIENT_ID,
         client_secret: env.get().config.GITHUB_CLIENT_SECRET,
-        code
+        code,
     };
     const options = {
         headers: {
-            accept: 'application/json'
-        }
+            accept: 'application/json',
+        },
     };
 
     const providerResp = await axios.post(url, body, options);
 
-    repositories.set("githubrepo");
+    repositories.set('githubrepo');
     const repo = repositories.get();
     const fullUser = await repo.userAsync(providerResp.data.access_token);
     const user = {
         username: fullUser.login,
-        repos_url: fullUser.repos_url
+        repos_url: fullUser.repos_url,
     };
     return {
         user,
-        opts: providerResp.data
+        opts: providerResp.data,
     };
 };
 
@@ -89,5 +89,5 @@ export default {
     getOauthReturnUrl,
     getOauthRedirectUrl,
     isConfigured,
-    name
+    name,
 };

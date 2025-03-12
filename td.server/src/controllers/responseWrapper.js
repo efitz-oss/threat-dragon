@@ -13,7 +13,7 @@ const sendResponse = (fn, req, res, logger) => {
     try {
         const respObj = {
             status: 200,
-            data: fn()
+            data: fn(),
         };
         return res.status(200).json(respObj);
     } catch (e) {
@@ -36,7 +36,7 @@ const sendResponseAsync = async (asyncFn, req, res, logger) => {
         const data = await asyncFn();
         return res.status(200).json({
             status: 200,
-            data
+            data,
         });
     } catch (e) {
         logger.error(e);
@@ -46,5 +46,5 @@ const sendResponseAsync = async (asyncFn, req, res, logger) => {
 
 export default {
     sendResponse,
-    sendResponseAsync
+    sendResponseAsync,
 };

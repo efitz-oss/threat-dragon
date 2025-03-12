@@ -1,6 +1,6 @@
 import bitbucket from './bitbucket.js';
 import github from './github.js';
-import gitlab from "./gitlab";
+import gitlab from './gitlab.js';
 import google from './google.js';
 
 /**
@@ -12,7 +12,7 @@ const all = Object.freeze({
     github,
     gitlab,
     bitbucket,
-    google
+    google,
 });
 
 /**
@@ -29,7 +29,9 @@ const get = (name) => {
     }
 
     if (!provider.isConfigured()) {
-        throw new Error(`Provider ${name} is not configured. Refer to development/environment.md for more info`);
+        throw new Error(
+            `Provider ${name} is not configured. Refer to development/environment.md for more info`
+        );
     }
 
     return provider;
@@ -37,5 +39,5 @@ const get = (name) => {
 
 export default {
     all,
-    get
+    get,
 };

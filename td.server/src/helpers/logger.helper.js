@@ -15,7 +15,7 @@ export const logLevels = {
     warn: 2,
     info: 3,
     debug: 4,
-    silly: 5
+    silly: 5,
 };
 
 // declare the various destinations for the logging messages
@@ -23,18 +23,18 @@ export const transports = {
     app: new winston.transports.File({
         filename: 'app.log',
         level: 'info',
-        silent: process.env.NODE_ENV === 'test'
+        silent: process.env.NODE_ENV === 'test',
     }),
     audit: new winston.transports.File({
         filename: 'audit.log',
         level: 'audit',
-        silent: process.env.NODE_ENV === 'test'
+        silent: process.env.NODE_ENV === 'test',
     }),
     console: new winston.transports.Console({
         format: format.combine(format.colorize(), format.simple()),
         level: 'info',
-        silent: process.env.NODE_ENV === 'test'
-    })
+        silent: process.env.NODE_ENV === 'test',
+    }),
 };
 
 const _logger = winston.createLogger({
@@ -47,12 +47,8 @@ const _logger = winston.createLogger({
         format.json()
     ),
     defaultMeta: { service: 'threat-dragon' },
-    transports: [
-        transports.audit,
-        transports.app,
-        transports.console
-    ],
-    silent: process.env.NODE_ENV === 'test'
+    transports: [transports.audit, transports.app, transports.console],
+    silent: process.env.NODE_ENV === 'test',
 });
 
 /**
@@ -64,7 +60,7 @@ export class Logger {
      * @param {string} service - The service name for context
      * @param {winston.Logger} logger - Optional logger instance
      */
-    constructor (service, logger) {
+    constructor(service, logger) {
         this.service = service;
         this.logger = logger || _logger;
     }
@@ -76,7 +72,7 @@ export class Logger {
      * @param {string} level - Log level
      * @returns {string} - Formatted message
      */
-    _formatMessage (service, message, level) {
+    _formatMessage(service, message, level) {
         if (typeof message === 'string') {
             return `${service}: ${message}`;
         }
@@ -89,17 +85,17 @@ export class Logger {
      * @param {object} complexObject - Object to stringify
      * @returns {string} - JSON string representation
      */
-    transformToString (complexObject) {
+    transformToString(complexObject) {
         const cache = [];
-        const resultString = JSON.stringify(complexObject, function(key, value) {
-          if (typeof value === "object" && value != null) {
-            if (cache.indexOf(value) !== -1) {
-              // Circular reference found
-              return "[Circular]";
+        const resultString = JSON.stringify(complexObject, function (key, value) {
+            if (typeof value === 'object' && value != null) {
+                if (cache.indexOf(value) !== -1) {
+                    // Circular reference found
+                    return '[Circular]';
+                }
+                cache.push(value);
             }
-            cache.push(value);
-          }
-          return value;
+            return value;
         });
         return resultString;
     }
@@ -109,43 +105,57 @@ export class Logger {
      * @param {string} level - Log level
      * @param {string|object} message - Message to log
      */
-    log (level, message) { this.logger.log(level, this._formatMessage(this.service, message)); }
+    log(level, message) {
+        this.logger.log(level, this._formatMessage(this.service, message));
+    }
 
     /**
      * Log at silly level
      * @param {string|object} message - Message to log
      */
-    silly (message) { this.logger.silly(this._formatMessage(this.service, message, 'silly')); }
+    silly(message) {
+        this.logger.silly(this._formatMessage(this.service, message, 'silly'));
+    }
 
     /**
      * Log at debug level
      * @param {string|object} message - Message to log
      */
-    debug (message) { this.logger.debug(this._formatMessage(this.service, message, 'debug')); }
+    debug(message) {
+        this.logger.debug(this._formatMessage(this.service, message, 'debug'));
+    }
 
     /**
      * Log at info level
      * @param {string|object} message - Message to log
      */
-    info (message) { this.logger.info(this._formatMessage(this.service, message, 'info')); }
+    info(message) {
+        this.logger.info(this._formatMessage(this.service, message, 'info'));
+    }
 
     /**
      * Log at warn level
      * @param {string|object} message - Message to log
      */
-    warn (message) { this.logger.warn(this._formatMessage(this.service, message, 'warn')); }
+    warn(message) {
+        this.logger.warn(this._formatMessage(this.service, message, 'warn'));
+    }
 
     /**
      * Log at error level
      * @param {string|object} message - Message to log
      */
-    error (message) { this.logger.error(this._formatMessage(this.service, message, 'error')); }
+    error(message) {
+        this.logger.error(this._formatMessage(this.service, message, 'error'));
+    }
 
     /**
      * Log at audit level
      * @param {string|object} message - Message to log
      */
-    audit (message) { this.logger.error(this._formatMessage(this.service, message, 'audit')); }
+    audit(message) {
+        this.logger.error(this._formatMessage(this.service, message, 'audit'));
+    }
 }
 
 /**
@@ -163,6 +173,6 @@ export function getLogger(service, logger) {
  * @param {string} logLevel - The log level to set
  */
 export function setLogLevel(logLevel) {
-    transports.console.level = logLevel; 
+    transports.console.level = logLevel;
     transports.app.level = logLevel;
 }

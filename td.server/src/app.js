@@ -1,16 +1,21 @@
 import express from 'express';
 import path from 'path';
 import rateLimit from 'express-rate-limit';
+import { fileURLToPath } from 'url';
 
-import env from './env/Env.js';
-import envConfig from './config/env.config';
+import { getEnvironment } from './env/Env.js';
+import envConfig from './config/env.config.js';
 import expressHelper from './helpers/express.helper.js';
 import https from './config/https.config.js';
-import loggerHelper from './helpers/logger.helper.js';
+import { getLogger, setLogLevel } from './helpers/logger.helper.js';
 import parsers from './config/parsers.config.js';
 import routes from './config/routes.config.js';
 import securityHeaders from './config/securityheaders.config.js';
 import { upDir } from './helpers/path.helper.js';
+
+// Setup dirname equivalent for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const siteDir = path.join(__dirname, upDir, upDir, 'dist');
 const docsDir = path.join(__dirname, upDir, upDir, 'docs');
@@ -20,17 +25,21 @@ const limiter = rateLimit({
     windowMs: 30 * 60 * 1000, // 10 minutes
     max: 6000,
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false // Disable the `X-RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-const create = () => {
+/**
+ * Creates and configures the Express application
+ * @returns {express.Application} The configured Express app
+ */
+export function create() {
     let logger;
 
     try {
         envConfig.tryLoadDotEnv();
         // logging environment, env will always supply a value
-        loggerHelper.level(env.get().config.LOG_LEVEL);
-        logger = loggerHelper.get('app.js');
+        setLogLevel(getEnvironment().config.LOG_LEVEL);
+        logger = getLogger('app.js');
 
         const app = expressHelper.getInstance();
         app.set('trust proxy', true);
@@ -58,20 +67,18 @@ const create = () => {
         // routes
         routes.config(app);
 
-        // env will always supply a value for the PORT
-        app.set('port', env.get().config.PORT);
-        logger.info('Express server listening on ' + app.get('port'));
+        // env will always supply a value for the SERVER_API_PORT
+        app.set('port', getEnvironment().config.SERVER_API_PORT);
+        logger.info(`Express server listening on ${app.get('port')}`);
 
         logger.info('OWASP Threat Dragon application started');
         return app;
     } catch (e) {
-        if (!logger) { logger = console; }
+        if (!logger) {
+            logger = console;
+        }
         logger.error('OWASP Threat Dragon failed to start');
         logger.error(e.message);
         throw e;
     }
-};
-
-export default {
-    create
-};
+}

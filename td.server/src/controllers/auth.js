@@ -36,39 +36,54 @@ const completeLogin = (req, res) => {
         const provider = providers.get(req.params.provider);
 
         // Errors in here will return as server errors as opposed to bad requests
-        return responseWrapper.sendResponseAsync(async () => {
-            const { user, opts } = await provider.completeLoginAsync(req.query.code);
-            const { accessToken, refreshToken } = await jwtHelper.createAsync(provider.name, opts, user);
-            tokenRepo.add(refreshToken);
-            return {
-                accessToken,
-                refreshToken
-            };
-        }, req, res, logger);
+        return responseWrapper.sendResponseAsync(
+            async () => {
+                const { user, opts } = await provider.completeLoginAsync(req.query.code);
+                const { accessToken, refreshToken } = await jwtHelper.createAsync(
+                    provider.name,
+                    opts,
+                    user
+                );
+                tokenRepo.add(refreshToken);
+                return {
+                    accessToken,
+                    refreshToken,
+                };
+            },
+            req,
+            res,
+            logger
+        );
     } catch (err) {
         return errors.badRequest(err.message, res, logger);
     }
 };
 
-const logout = (req, res) => responseWrapper.sendResponse(() => {
-    logger.debug(`API logout request: ${logger.transformToString(req)}`);
+const logout = (req, res) =>
+    responseWrapper.sendResponse(
+        () => {
+            logger.debug(`API logout request: ${logger.transformToString(req)}`);
 
-    try {
-        const refreshToken = req.body.refreshToken;
-        if (!refreshToken) {
-            logger.audit('Log out without a refresh token');
-            // Return OK, it could be a client error or an expired token
-            return '';
-        }
+            try {
+                const refreshToken = req.body.refreshToken;
+                if (!refreshToken) {
+                    logger.audit('Log out without a refresh token');
+                    // Return OK, it could be a client error or an expired token
+                    return '';
+                }
 
-        logger.debug('Remove refresh token');
-        tokenRepo.remove(refreshToken);
-        return '';
-    } catch (e) {
-        logger.error(e);
-        return '';
-    }
-}, req, res, logger);
+                logger.debug('Remove refresh token');
+                tokenRepo.remove(refreshToken);
+                return '';
+            } catch (e) {
+                logger.error(e);
+                return '';
+            }
+        },
+        req,
+        res,
+        logger
+    );
 
 const refresh = (req, res) => {
     logger.debug(`API refresh request: ${logger.transformToString(req)}`);
@@ -77,13 +92,18 @@ const refresh = (req, res) => {
     if (!tokenBody) {
         return errors.unauthorized(res, logger);
     }
-    return responseWrapper.sendResponseAsync(async () => {
-        const { provider, user } = tokenBody;
-        const { accessToken } = await jwtHelper.createAsync(provider.name, provider, user);
+    return responseWrapper.sendResponseAsync(
+        async () => {
+            const { provider, user } = tokenBody;
+            const { accessToken } = await jwtHelper.createAsync(provider.name, provider, user);
 
-        // Limit the time refresh tokens live, so do not provide a new one.
-        return { accessToken, refreshToken: req.body.refreshToken };
-    }, req, res, logger);
+            // Limit the time refresh tokens live, so do not provide a new one.
+            return { accessToken, refreshToken: req.body.refreshToken };
+        },
+        req,
+        res,
+        logger
+    );
 };
 
 export default {
@@ -91,5 +111,5 @@ export default {
     login,
     logout,
     oauthReturn,
-    refresh
+    refresh,
 };

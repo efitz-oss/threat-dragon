@@ -1,16 +1,19 @@
 import { Env } from './Env.js';
 
-class GithubEnv extends Env {
-    constructor () {
+/**
+ * Environment configuration for GitHub integration
+ */
+export class GithubEnv extends Env {
+    constructor() {
         super('Github');
     }
 
-    get prefix () {
+    get prefix() {
         return 'GITHUB_';
     }
 
     // Note that the actual env var will be prepended with GITHUB_
-    get properties () {
+    get properties() {
         return [
             { key: 'CLIENT_ID', required: false },
             { key: 'CLIENT_SECRET', required: false },
@@ -20,9 +23,7 @@ class GithubEnv extends Env {
             { key: 'ENTERPRISE_PROTOCOL', required: false, defaultValue: 'https' },
             { key: 'USE_SEARCH', required: false, defaultValue: false },
             { key: 'SEARCH_QUERY', required: false },
-            { key: 'REPO_ROOT_DIRECTORY', required: false }
+            { key: 'REPO_ROOT_DIRECTORY', required: false },
         ];
     }
 }
-
-export default GithubEnv;

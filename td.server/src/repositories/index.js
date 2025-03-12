@@ -1,35 +1,49 @@
-import bitbucketrepo from "./bitbucketrepo";
-import githubrepo from "./githubrepo";
-import gitlabrepo from "./gitlabrepo";
-import googledrive from "./googledrive";
+import bitbucketrepo from './bitbucketrepo.js';
+import githubrepo from './githubrepo.js';
+import gitlabrepo from './gitlabrepo.js';
+import googledrive from './googledrive.js';
 
 /**
  * An immutable object containing all
  * providers
  * @type {Object}
  */
-const all = Object.freeze({
+export const all = Object.freeze({
     githubrepo,
     gitlabrepo,
     bitbucketrepo,
-    googledrive
+    googledrive,
 });
 
+/**
+ * Current repository provider selection
+ * @type {string}
+ */
 let selection = 'bitbucketrepo';
 
-const get = () => getSpecific(selection);
-
-const set = (name) => {
-    selection = name;
-};
+/**
+ * Gets the currently selected repository provider
+ * @returns {Object} The selected repository provider
+ */
+export function getProvider() {
+    return getSpecificProvider(selection);
+}
 
 /**
- * Gets a provider
- * @param {String} name
- * @throw {Error} If the provider does not exist or is not configured
- * @returns {Object}
+ * Sets the current repository provider selection
+ * @param {string} name - The provider name to select
  */
-const getSpecific = (name) => {
+export function setProvider(name) {
+    selection = name;
+}
+
+/**
+ * Gets a specific repository provider by name
+ * @param {String} name - The provider name
+ * @throw {Error} If the provider does not exist or is not configured
+ * @returns {Object} The requested repository provider
+ */
+export function getSpecificProvider(name) {
     const lowerName = (name || '').toLowerCase();
     const provider = all[lowerName];
     if (!provider) {
@@ -41,11 +55,6 @@ const getSpecific = (name) => {
     // }
 
     return provider;
-};
+}
 
-export default {
-    all,
-    get,
-    getSpecific,
-    set
-};
+export { getProvider as get, setProvider as set, getSpecificProvider as getSpecific };

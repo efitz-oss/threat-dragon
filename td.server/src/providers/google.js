@@ -48,12 +48,12 @@ const completeLoginAsync = async (code) => {
         client_secret: env.get().config.GOOGLE_CLIENT_SECRET,
         code,
         grant_type: 'authorization_code',
-        redirect_uri: env.get().config.GOOGLE_REDIRECT_URI
+        redirect_uri: env.get().config.GOOGLE_REDIRECT_URI,
     };
     const options = {
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
     };
 
     const providerResp = await axios.post(url, new URLSearchParams(body), options);
@@ -64,12 +64,12 @@ const completeLoginAsync = async (code) => {
     const user = {
         username: userInfo.data.name,
         email: userInfo.data.email,
-        picture: userInfo.data.picture
+        picture: userInfo.data.picture,
     };
 
     return {
         user,
-        opts: providerResp.data
+        opts: providerResp.data,
     };
 };
 
@@ -78,5 +78,5 @@ export default {
     getOauthReturnUrl,
     getOauthRedirectUrl,
     isConfigured,
-    name
+    name,
 };

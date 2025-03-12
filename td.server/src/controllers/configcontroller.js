@@ -1,6 +1,6 @@
-import env from "../env/Env.js";
+import env from '../env/Env.js';
 import loggerHelper from '../helpers/logger.helper.js';
-import responseWrapper from "./responseWrapper.js";
+import responseWrapper from './responseWrapper.js';
 
 const logger = loggerHelper.get('controllers/configcontroller.js');
 
@@ -15,5 +15,5 @@ export const getConfig = () => ({
 });
 
 export default {
-    config
+    config,
 };

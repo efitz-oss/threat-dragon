@@ -65,5 +65,5 @@ const verify = (token) => {
 export default {
     add,
     remove,
-    verify
+    verify,
 };

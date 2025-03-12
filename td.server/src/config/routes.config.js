@@ -2,7 +2,7 @@ import express from 'express';
 
 import auth from '../controllers/auth.js';
 import bearer from './bearer.config.js';
-import configController from "../controllers/configcontroller";
+import configController from '../controllers/configcontroller.js';
 import googleProviderThreatmodelController from '../controllers/googleProviderThreatmodelController.js';
 import healthcheck from '../controllers/healthz.js';
 import homeController from '../controllers/homecontroller.js';
@@ -40,21 +40,45 @@ const routes = (router) => {
     router.get('/api/threatmodel/repos', threatmodelController.repos);
     router.get('/api/threatmodel/:organisation/:repo/branches', threatmodelController.branches);
     router.get('/api/threatmodel/:organisation/:repo/:branch/models', threatmodelController.models);
-    router.get('/api/threatmodel/:organisation/:repo/:branch/:model/data', threatmodelController.model);
+    router.get(
+        '/api/threatmodel/:organisation/:repo/:branch/:model/data',
+        threatmodelController.model
+    );
 
-    router.post('/api/threatmodel/:organisation/:repo/:branch/createBranch', threatmodelController.createBranch);
+    router.post(
+        '/api/threatmodel/:organisation/:repo/:branch/createBranch',
+        threatmodelController.createBranch
+    );
 
     // removed because of security denial of service concerns (denial of models)
     //router.delete('/api/threatmodel/:organisation/:repo/:branch/:model', threatmodelController.deleteModel);
 
-    router.post('/api/threatmodel/:organisation/:repo/:branch/:model/create', threatmodelController.create);
-    router.put('/api/threatmodel/:organisation/:repo/:branch/:model/update', threatmodelController.update);
+    router.post(
+        '/api/threatmodel/:organisation/:repo/:branch/:model/create',
+        threatmodelController.create
+    );
+    router.put(
+        '/api/threatmodel/:organisation/:repo/:branch/:model/update',
+        threatmodelController.update
+    );
 
     // Google Drive routes
-    router.get('/api/googleproviderthreatmodel/folders', googleProviderThreatmodelController.folders);
-    router.post('/api/googleproviderthreatmodel/:folder/create', googleProviderThreatmodelController.create);
-    router.put('/api/googleproviderthreatmodel/:file/update', googleProviderThreatmodelController.update);
-    router.get('/api/googleproviderthreatmodel/:file/data', googleProviderThreatmodelController.model);
+    router.get(
+        '/api/googleproviderthreatmodel/folders',
+        googleProviderThreatmodelController.folders
+    );
+    router.post(
+        '/api/googleproviderthreatmodel/:folder/create',
+        googleProviderThreatmodelController.create
+    );
+    router.put(
+        '/api/googleproviderthreatmodel/:file/update',
+        googleProviderThreatmodelController.update
+    );
+    router.get(
+        '/api/googleproviderthreatmodel/:file/data',
+        googleProviderThreatmodelController.model
+    );
 };
 
 const config = (app) => {
@@ -69,5 +93,5 @@ const config = (app) => {
 };
 
 export default {
-    config
+    config,
 };

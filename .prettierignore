@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+**/dist/
+dist-electron/
+**/dist-electron/
+.vite_cache/
+.nyc_output/
+coverage/
+
+# Generated files
+**/package-lock.json
+**/yarn.lock
+**/sbom.json
+**/sbom.xml
+*.min.js

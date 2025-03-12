@@ -6,5 +6,5 @@ const config = (app) => {
 };
 
 export default {
-    config
+    config,
 };

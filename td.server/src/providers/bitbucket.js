@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 import env from '../env/Env.js';
-import repositories from "../repositories";
+import repositories from '../repositories/index.js';
 
 const name = 'bitbucket';
 
@@ -21,7 +21,7 @@ const isConfigured = () => Boolean(env.get().config.BITBUCKET_CLIENT_ID);
  */
 const getBitbucketUrl = () => {
     const enterpriseHostname = env.get().config.BITBUCKET_ENTERPRISE_HOSTNAME;
-    if(enterpriseHostname) {
+    if (enterpriseHostname) {
         const port = env.get().config.BITBUCKET_ENTERPRISE_PORT || '';
         const protocol = env.get().config.BITBUCKET_ENTERPRISE_PROTOCOL || 'https';
         return `${protocol}://${enterpriseHostname}${port ? ':' + port : ''}`;
@@ -59,27 +59,27 @@ const getOauthReturnUrl = (code) => {
 const completeLoginAsync = async (code) => {
     const url = `${getBitbucketUrl()}/site/oauth2/access_token`;
     const form = new FormData();
-    form.append("grant_type", "authorization_code");
-    form.append("client_id", env.get().config.BITBUCKET_CLIENT_ID);
-    form.append("client_secret", env.get().config.BITBUCKET_CLIENT_SECRET);
-    form.append("code", code);
+    form.append('grant_type', 'authorization_code');
+    form.append('client_id', env.get().config.BITBUCKET_CLIENT_ID);
+    form.append('client_secret', env.get().config.BITBUCKET_CLIENT_SECRET);
+    form.append('code', code);
     const options = {
         headers: {
             'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
-        }
+        },
     };
 
-    repositories.set("bitbucketrepo");
+    repositories.set('bitbucketrepo');
     const repo = repositories.get();
     const providerResp = await axios.post(url, form, options);
     const fullUser = await repo.userAsync(providerResp.data.access_token);
     const user = {
         username: fullUser.display_name,
-        repos_url: fullUser.repos_url
+        repos_url: fullUser.repos_url,
     };
     return {
         user,
-        opts: providerResp.data
+        opts: providerResp.data,
     };
 };
 
@@ -88,5 +88,5 @@ export default {
     getOauthReturnUrl,
     getOauthRedirectUrl,
     isConfigured,
-    name
+    name,
 };
