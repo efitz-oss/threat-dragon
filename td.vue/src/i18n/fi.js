@@ -1,57 +1,61 @@
 const fin = {
     auth: {
-        sessionExpired: 'Istuntosi on vanhentunut. Ole hyvä ja kirjaudu sisään uudelleen jatkaaksesi.'
+        sessionExpired:
+            'Istuntosi on vanhentunut. Ole hyvä ja kirjaudu sisään uudelleen jatkaaksesi.',
     },
     nav: {
-        v2Warning: 'Version 2.0 uhkamallit eivät ole taaksepäin yhteensopivia version 1.x kanssa. Version 1.x mallit päivitetään automaattisesti version 2.0 uhkamalleiksi.',
+        v2Warning:
+            'Version 2.0 uhkamallit eivät ole taaksepäin yhteensopivia version 1.x kanssa. Version 1.x mallit päivitetään automaattisesti version 2.0 uhkamalleiksi.',
         loggedInAs: 'Kirjautunut käyttäjänä',
-        logOut: 'Log out'
+        logOut: 'Log out',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'OWASP Threat Dragon on ilmainen avoimen lähdekoodin alustariippumaton sovellus uhkamallintamiseen. Voit piirtää sovelluksella uhkamallinnuskaavioita ja tunnistaa järjestelmän uhkia. Erilaiset käyttäjät voivat helposti lähestyä sovellusta, koska se on yksinkertainen ja joustava.'
+        description:
+            'OWASP Threat Dragon on ilmainen avoimen lähdekoodin alustariippumaton sovellus uhkamallintamiseen. Voit piirtää sovelluksella uhkamallinnuskaavioita ja tunnistaa järjestelmän uhkia. Erilaiset käyttäjät voivat helposti lähestyä sovellusta, koska se on yksinkertainen ja joustava.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Aloita'
+            loginWith: 'Aloita',
         },
         github: {
             displayName: 'GitHubilla',
-            loginWith: 'Kirjaudu sisään'
+            loginWith: 'Kirjaudu sisään',
         },
         gitlab: {
             displayName: 'GitLabilla',
-            loginWith: 'Kirjaudu sisään'
+            loginWith: 'Kirjaudu sisään',
         },
         bitbucket: {
             displayName: 'Bitbucketissa',
-            loginWith: 'Kirjaudu sisään'
+            loginWith: 'Kirjaudu sisään',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Kirjaudu sisään'
+            loginWith: 'Kirjaudu sisään',
         },
         local: {
             displayName: 'paikallisesti',
-            loginWith: 'Kirjaudu sisään'
-        }
+            loginWith: 'Kirjaudu sisään',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Tervetuloa!',
-            description: 'Voit nyt aloittaa järjestelmäsi suunnittelun. Voit avaita olemassa olevan uhkamallin tai tehdä uuden valitsemalla jonkin seuraavista vaihtoehdoista. '
+            description:
+                'Voit nyt aloittaa järjestelmäsi suunnittelun. Voit avaita olemassa olevan uhkamallin tai tehdä uuden valitsemalla jonkin seuraavista vaihtoehdoista. ',
         },
         actions: {
             openExisting: 'Avaa olemassa oleva uhkamalli',
             createNew: 'Tee uusi tyhjä uhkamalli',
             readDemo: 'Tutki esimerkkejä',
-            importExisting: 'Tuo uhkamalli JSON-tiedostosta'
-        }
+            importExisting: 'Tuo uhkamalli JSON-tiedostosta',
+        },
     },
     demo: {
-        select: 'Valitse uhkamalli alla olevista'
+        select: 'Valitse uhkamalli alla olevista',
     },
     desktop: {
         file: {
@@ -63,7 +67,7 @@ const fin = {
             open: 'Avaa Uhkamalli',
             recentDocs: 'Open Recent',
             save: 'Tallenna Uhkamalli',
-            saveAs: 'Tallenna Uhkamalli Nimellä'
+            saveAs: 'Tallenna Uhkamalli Nimellä',
         },
         help: {
             heading: 'OHje',
@@ -72,13 +76,13 @@ const fin = {
             sheets: 'OWASP:n lunttilaput',
             github: 'Vieraile OWASP:n githubissa',
             submit: 'Ilmoita ongelmasta',
-            check: 'Tarkist päivitykset ...'
-        }
+            check: 'Tarkist päivitykset ...',
+        },
     },
     repository: {
         select: 'Valitse',
         from: 'arkisto alla olevista',
-        noneFound: 'Arkistoa ei löytynyt. Aloittaaksesi tee uusi arkisto kohteeseen'
+        noneFound: 'Arkistoa ei löytynyt. Aloittaaksesi tee uusi arkisto kohteeseen',
     },
     branch: {
         select: 'Valitse haara',
@@ -100,7 +104,7 @@ const fin = {
         branch: 'haara',
         or: 'or',
         repo: 'arkisto',
-        newThreatModel: 'Tee uusi uhkamalli'
+        newThreatModel: 'Tee uusi uhkamalli',
     },
     threatmodel: {
         contributors: 'Osallistujat',
@@ -118,41 +122,42 @@ const fin = {
             generic: {
                 defaultTitle: 'Uusi yleinen kaavio',
                 defaultDescription: 'Uuden yleisen kaavion kuvaus',
-                select: 'Yleinen'
+                select: 'Yleinen',
             },
             stride: {
                 defaultTitle: 'Uusi STRIDE-kaavio',
                 defaultDescription: 'Uuden STRIDE-kaavion kuvaus',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'Uusi LINDDUN-kaavio',
                 defaultDescription: 'Uuden LINDDUN-kaavion kuvaus',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'Uusi PLOT4ai-kaavio',
                 defaultDescription: 'Uuden PLOT4ai-kaavion kuvaus',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'Uusi DIE-kaavio',
                 defaultDescription: 'Uuden DIE-kaavion kuvaus',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'Uusi CIA-kaavio',
                 defaultDescription: 'Uuden CIA-kaavion kuvaus',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Uhat',
         errors: {
             dropSingleFileOnly: 'Voit pudottaa vain yhden tiedoston.',
-            invalidJson: 'JSON-tiedoton muoto on virheellinen. Tarkista tiedosto ja yritä uudelleen.',
+            invalidJson:
+                'JSON-tiedoton muoto on virheellinen. Tarkista tiedosto ja yritä uudelleen.',
             onlyJsonAllowed: 'Sovellus tukee vain .json -päätteisiä tiedostoja.',
             open: 'Virhe uhkamallin lukemisessa. Yksityiskohtaisemmat tiedot virheestä löytyvät kehittäjän konsolista.',
-            save: 'Virhe uhkamallin tallentamisessa. Yksityiskohtaisemmat tiedot virheestä löytyvät kehittäjän konsolista.'
+            save: 'Virhe uhkamallin tallentamisessa. Yksityiskohtaisemmat tiedot virheestä löytyvät kehittäjän konsolista.',
         },
         opened: 'Uhkamallin avaaminen onnistui',
         saved: 'Uhkamallin tallentaminen onnistui',
@@ -176,7 +181,7 @@ const fin = {
             protocol: 'Protokolla',
             publicNetwork: 'Julkinen tietoverkko',
             storesCredentials: 'Tallentaa tunnistetietoja',
-            storesInventory: 'Stores Inventory'
+            storesInventory: 'Stores Inventory',
         },
         buttons: {
             delete: 'Poista valitut',
@@ -185,46 +190,46 @@ const fin = {
             toggleGrid: 'Ruudukko',
             undo: 'Kumoa muokkaus',
             zoomIn: 'Lähennä',
-            zoomOut: 'Loitonna'
+            zoomOut: 'Loitonna',
         },
         shortcuts: {
             title: 'Pikavalinnat',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'Kopioi'
+                action: 'Kopioi',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'Liitä'
+                action: 'Liitä',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'Kumoa'
+                action: 'Kumoa',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'Tee uudelleen'
+                action: 'Tee uudelleen',
             },
             delete: {
                 shortcut: 'del',
-                action: 'Poista'
+                action: 'Poista',
             },
             pan: {
                 shortcut: 'vaihto + hiiren vasen (pidä pohjassa & vedä)',
-                action: 'Siirrä näkymää'
+                action: 'Siirrä näkymää',
             },
             multiSelect: {
                 shortcut: 'hiiren vasen ja vedä tyhjällä alueella',
-                action: 'Valitse useita'
+                action: 'Valitse useita',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + rulla',
-                action: 'Suurennos'
+                action: 'Suurennos',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Rajat',
@@ -232,7 +237,7 @@ const fin = {
             entities: 'Entiteetit',
             metadata: 'Metadata',
             search: 'Etsi',
-            notFound: 'Toimintoa ei ole vielä, ilmoita puutteesta? :)'
+            notFound: 'Toimintoa ei ole vielä, ilmoita puutteesta? :)',
         },
         shapes: {
             actor: 'Toimija',
@@ -241,8 +246,8 @@ const fin = {
             process: 'Prosessi',
             store: 'Säilö',
             text: 'Kuvausteksti',
-            trustBoundary: 'Luottamusraja'
-        }
+            trustBoundary: 'Luottamusraja',
+        },
     },
     forms: {
         apply: 'Käytä',
@@ -272,7 +277,7 @@ const fin = {
         saveModelAs: 'Tallenna Uhkamalli Nimellä',
         search: 'Etsi',
         next: 'Seuraava',
-        previous: 'Edellinen'
+        previous: 'Edellinen',
     },
     threats: {
         model: {
@@ -280,13 +285,13 @@ const fin = {
                 header: '--- CIA ---',
                 confidentiality: 'Confidentiality',
                 integrity: 'Integrity',
-                availability: 'Availability'
+                availability: 'Availability',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Distributed',
                 immutable: 'Immutable',
-                ephemeral: 'Ephemeral'
+                ephemeral: 'Ephemeral',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -296,7 +301,7 @@ const fin = {
                 detectability: 'Detectability',
                 disclosureOfInformation: 'Disclosure of information',
                 unawareness: 'Unawareness',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -307,7 +312,7 @@ const fin = {
                 safety: 'Safety',
                 unawareness: 'Unawareness',
                 ethicsHumanRights: 'Ethics & Human Rights',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -316,8 +321,8 @@ const fin = {
                 repudiation: 'Repudiation',
                 informationDisclosure: 'Information disclosure',
                 denialOfService: 'Denial of service',
-                elevationOfPrivilege: 'Elevation of privilege'
-            }
+                elevationOfPrivilege: 'Elevation of privilege',
+            },
         },
         generic: {
             default: 'Uusi yleinen uhka',
@@ -325,7 +330,7 @@ const fin = {
             die: 'Uusi DIE-uhka',
             linddun: 'Uusi LINDDUN-uhka',
             plot4ai: 'Uusi PLOT4ai-uhka',
-            stride: 'Uusi STRIDE-uhka'
+            stride: 'Uusi STRIDE-uhka',
         },
         edit: 'Muokkaa Uhkaa',
         confirmDeleteTitle: 'Vahvista Poistaminen',
@@ -345,20 +350,20 @@ const fin = {
             score: 'Pisteytys',
             status: 'Tila',
             title: 'Otsikko',
-            type: 'Tyyppi'
+            type: 'Tyyppi',
         },
         status: {
             notApplicable: 'N/A',
             open: 'Avoin',
-            mitigated: 'Hallittu'
+            mitigated: 'Hallittu',
         },
         priority: {
             tbd: 'TBD',
             low: 'Alhainen',
             medium: 'Keskitaso',
             high: 'Korkea',
-            critical: 'Kriittinen'
-        }
+            critical: 'Kriittinen',
+        },
     },
     report: {
         options: {
@@ -367,7 +372,7 @@ const fin = {
             showModelDiagrams: 'Näytä uhkamallin kaaviot',
             showEmpty: 'Näytä tyhjät elementit',
             showProperties: 'Show element properties',
-            showBranding: 'Threat Dragon logo'
+            showBranding: 'Threat Dragon logo',
         },
         title: 'Uhkamallinnus kohteelle',
         dateGenerated: 'Luomispäivä',
@@ -383,19 +388,19 @@ const fin = {
             openMedium: 'Avoin / Keskitason tärkeys',
             openLow: 'Avoin / Alhainen tärkeys',
             openTbd: 'Avoin / TBD tärkeys',
-            openUnknown: 'Avoin / Tuntematon tärkeys'
-        }
+            openUnknown: 'Avoin / Tuntematon tärkeys',
+        },
     },
     upgrade: {
         modal: {
             header: 'Uhkamallin päivitys',
             welcome: 'Tervetuloa versioon 2 OWASP Threat Dragon -työkalusta!',
             p1: 'Versio 2 käyttää erilaista piirustuskirjastoa, mikä muuttaa uhkamallien osien tallennustapaa. Vaikka useimmat kaaviot näyttävät samalta kuin Threat Dragonin aiemmissa versioissa, joissakin tapauksissa niitä on ehkä hieman muutettava.',
-            p2: 'Suljettuasi tämän ilmoituksen näet, miten tämän mallin kukin kaavio esitetään versio 2 -muodossa. Merkitse muistiin kaikki kaaviot, joita saatat joutua muokkaamaan. Tämä on kertaluonteinen päivitys, eikä tätä viestiä pitäisi enää tulla mallin tallentamisen jälkeen.'
+            p2: 'Suljettuasi tämän ilmoituksen näet, miten tämän mallin kukin kaavio esitetään versio 2 -muodossa. Merkitse muistiin kaikki kaaviot, joita saatat joutua muokkaamaan. Tämä on kertaluonteinen päivitys, eikä tätä viestiä pitäisi enää tulla mallin tallentamisen jälkeen.',
         },
         instructions: 'Hienoa! Jatketaan uhkamallin pariin.',
-        continue: 'Jatka uhkamalliin'
-    }
+        continue: 'Jatka uhkamalliin',
+    },
 };
 
 export default fin;

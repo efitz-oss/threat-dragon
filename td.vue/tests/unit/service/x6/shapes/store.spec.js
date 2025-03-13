@@ -1,4 +1,4 @@
-import { StoreShape }  from '@/service/x6/shapes/store.js';
+import { StoreShape } from '@/service/x6/shapes/store.js';
 
 describe('service/x6/shapes/store.js', () => {
     let victim;
@@ -26,8 +26,7 @@ describe('service/x6/shapes/store.js', () => {
         });
 
         it('sets the topLine/strokeDasharray attribute', () => {
-            expect(victim.setAttrByPath).toHaveBeenCalledWith(
-                'topLine/strokeDasharray', dash);
+            expect(victim.setAttrByPath).toHaveBeenCalledWith('topLine/strokeDasharray', dash);
         });
 
         it('sets the topLine/strokeWidth attribute', () => {
@@ -39,8 +38,7 @@ describe('service/x6/shapes/store.js', () => {
         });
 
         it('sets the bottomLine/strokeDasharray attribute', () => {
-            expect(victim.setAttrByPath).toHaveBeenCalledWith(
-                'bottomLine/strokeDasharray', dash);
+            expect(victim.setAttrByPath).toHaveBeenCalledWith('bottomLine/strokeDasharray', dash);
         });
 
         it('sets the bottomLine/strokeWidth attribute', () => {

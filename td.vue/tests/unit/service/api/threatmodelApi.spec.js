@@ -23,7 +23,9 @@ describe('service/threatmodelApi.js', () => {
         });
 
         it('calls the repos endpoint', () => {
-            expect(api.getAsync).toHaveBeenCalledWith('/api/threatmodel/repos', {'params': {'page': 1, 'searchQuery': ''}});
+            expect(api.getAsync).toHaveBeenCalledWith('/api/threatmodel/repos', {
+                params: { page: 1, searchQuery: '' },
+            });
         });
     });
 
@@ -35,7 +37,10 @@ describe('service/threatmodelApi.js', () => {
         });
 
         it('calls the branches endpoint', () => {
-            expect(api.getAsync).toHaveBeenCalledWith('/api/threatmodel/owasp/with%2Fdeep%2Flayers%2Fthreat-dragon/branches', {'params': {'page': 1}});
+            expect(api.getAsync).toHaveBeenCalledWith(
+                '/api/threatmodel/owasp/with%2Fdeep%2Flayers%2Fthreat-dragon/branches',
+                { params: { page: 1 } }
+            );
         });
     });
 
@@ -48,7 +53,9 @@ describe('service/threatmodelApi.js', () => {
         });
 
         it('calls the models endpoint', () => {
-            expect(api.getAsync).toHaveBeenCalledWith('/api/threatmodel/owasp/with%2Fdeep%2Flayers%2Fthreat-dragon/feature%2Fsome-feature/models');
+            expect(api.getAsync).toHaveBeenCalledWith(
+                '/api/threatmodel/owasp/with%2Fdeep%2Flayers%2Fthreat-dragon/feature%2Fsome-feature/models'
+            );
         });
     });
 
@@ -62,7 +69,9 @@ describe('service/threatmodelApi.js', () => {
         });
 
         it('calls the model endpoint', () => {
-            expect(api.getAsync).toHaveBeenCalledWith('/api/threatmodel/owasp/with%2Fdeep%2Flayers%2Fthreat-dragon/main%26/test%3F/data');
+            expect(api.getAsync).toHaveBeenCalledWith(
+                '/api/threatmodel/owasp/with%2Fdeep%2Flayers%2Fthreat-dragon/main%26/test%3F/data'
+            );
         });
     });
 

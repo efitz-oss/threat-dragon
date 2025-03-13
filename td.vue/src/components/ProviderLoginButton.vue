@@ -1,53 +1,87 @@
 <template>
-    <b-btn
+    <Button
         :id="`${provider.key}-login-btn`"
-        class="m-1"
-        variant="secondary"
-        @click="onProviderClick()"> 
-        <span class="login-btn-icon">
-            <font-awesome-icon
-                :icon="provider.icon"
-                size="2x"
-                color="white"
-                class="mr-2"
-            ></font-awesome-icon>
-        </span>
+        class="p-button-secondary login-btn"
+        :loading="isLoading"
+        :disabled="isLoading"
+        @click="onProviderClick"
+    >
+        <font-awesome-icon v-if="!isLoading" :icon="provider.icon" class="fa-button-icon" />
         <span>
-            {{ $t('providers.' + provider.key + '.loginWith') }} {{ $t('providers.' + provider.key + '.displayName') }}
+            {{ $t(`providers.${provider.key}.loginWith`) }}
+            {{ $t(`providers.${provider.key}.displayName`) }}
         </span>
-    </b-btn>
+    </Button>
+    <!-- Debug info -->
+    <div class="debug-info">Provider: {{ provider.key }}</div>
 </template>
 
-<style lang="scss" scoped>
-.login-btn-icon {
-  display: block;
-}
-</style>
-
-<script>
+<script setup>
+import { useRouter } from 'vue-router';
 import { providerNames } from '@/service/provider/providers.js';
-import { AUTH_SET_LOCAL } from '@/store/actions/auth.js';
 import loginApi from '@/service/api/loginApi.js';
-import { PROVIDER_SELECTED } from '@/store/actions/provider.js';
+import { useProviderStore } from '@/stores/provider';
+import { useAuthStore } from '@/stores/auth';
+import Button from 'primevue/button';
+import { ref } from 'vue';
 
-export default {
-    name: 'TdProviderLoginButton',
-    props: {
-        provider: Object
+// Props
+const props = defineProps({
+    provider: {
+        type: Object,
+        required: true,
     },
-    methods: {
-        async onProviderClick() {
-            console.debug('login with provider: ' + this.provider.key);
-            await this.$store.dispatch(PROVIDER_SELECTED, this.provider.key);
+});
 
-            if (this.provider.key === providerNames.local || this.provider.key === providerNames.desktop) {
-                this.$store.dispatch(AUTH_SET_LOCAL);
-                return this.$router.push('/dashboard');
-            }
-          
-            const resp = await loginApi.loginAsync(this.provider.key);
-            window.location.href = resp.data;
+// Composables
+const router = useRouter();
+const providerStore = useProviderStore();
+const authStore = useAuthStore();
+
+// State
+const isLoading = ref(false);
+
+// Methods
+const onProviderClick = async () => {
+    if (isLoading.value) return;
+
+    isLoading.value = true;
+    console.debug(`login with provider: ${props.provider.key}`);
+
+    try {
+        await providerStore.selectProvider(props.provider.key);
+
+        if (
+            props.provider.key === providerNames.local ||
+                props.provider.key === providerNames.desktop
+        ) {
+            authStore.setLocal();
+            router.push('/dashboard');
+            return;
         }
+
+        const resp = await loginApi.loginAsync(props.provider.key);
+        window.location.href = resp.data;
+    } catch (error) {
+        console.error('Login error:', error);
+        isLoading.value = false;
     }
 };
 </script>
+
+<style lang="scss" scoped>
+    @import '@/styles/icons.scss';
+
+    .login-btn {
+        margin: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .debug-info {
+        display: none;
+    }
+</style>

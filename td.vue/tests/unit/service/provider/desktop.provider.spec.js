@@ -2,12 +2,11 @@ import desktop from '@/service/provider/desktop.provider.js';
 
 describe('service/desktop.provider.js', () => {
     describe('getDashboardActions', () => {
-
         describe('import', () => {
             let action;
 
             beforeEach(() => {
-                action = desktop.getDashboardActions().find(x=> x.key === 'openExisting');
+                action = desktop.getDashboardActions().find((x) => x.key === 'openExisting');
             });
 
             it('links to the import page', () => {
@@ -23,7 +22,7 @@ describe('service/desktop.provider.js', () => {
             let action;
 
             beforeEach(() => {
-                action = desktop.getDashboardActions().find(x=> x.key === 'createNew');
+                action = desktop.getDashboardActions().find((x) => x.key === 'createNew');
             });
 
             it('links to the create page', () => {
@@ -39,7 +38,7 @@ describe('service/desktop.provider.js', () => {
             let action;
 
             beforeEach(() => {
-                action = desktop.getDashboardActions().find(x=> x.key === 'readDemo');
+                action = desktop.getDashboardActions().find((x) => x.key === 'readDemo');
             });
 
             it('links to the demo select page', () => {

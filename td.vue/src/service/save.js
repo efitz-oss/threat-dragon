@@ -7,7 +7,7 @@ const local = (data, fileName) => {
     saveTD(data, fileName);
 };
 
-function saveTD (data, fileName) {
+function saveTD(data, fileName) {
     if ('showSaveFilePicker' in self) {
         console.debug('Save using browser file picker');
         writeFile(data, fileName);
@@ -31,7 +31,7 @@ function downloadFile(data, fileName) {
 
 async function writeFile(data, fileName) {
     const jsonData = JSON.stringify(data, null, 2);
-    var fileHandle = null;
+    let fileHandle = null;
     const options = {
         suggestedName: fileName,
         types: [
@@ -51,7 +51,7 @@ async function writeFile(data, fileName) {
         return;
     }
 
-    if ( await verifyPermission(fileHandle) ) {
+    if (await verifyPermission(fileHandle)) {
         const writable = await fileHandle.createWritable();
         try {
             await writable.write({ type: 'write', position: 0, data: jsonData });
@@ -79,5 +79,5 @@ async function verifyPermission(fileHandle) {
 }
 
 export default {
-    local
+    local,
 };

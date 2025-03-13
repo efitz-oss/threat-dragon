@@ -1,52 +1,61 @@
 <template>
-    <div></div>
+    <div />
 </template>
 
-<script>
-import { mapState } from 'vuex';
-
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import isElectron from 'is-electron';
 import { getProviderType } from '@/service/provider/providers.js';
-import tmActions from '@/store/actions/threatmodel.js';
+import { useProviderStore } from '@/stores/provider';
+import { useThreatmodelStore } from '@/stores/threatmodel';
+import { useAppStore } from '@/stores/app';
 
-export default {
-    name: 'NewThreatModel',
-    computed: mapState({
-        providerType: (state) => getProviderType(state.provider.selected),
-        version: (state) => state.packageBuildVersion
-    }),
-    mounted() {
-        this.$store.dispatch(tmActions.clear);
-        const newTm = {
-            version: this.version,
-            summary: {
-                title: 'New Threat Model',
-                owner: '',
-                description: '',
-                id: 0
-            },
-            detail: {
-                contributors: [],
-                diagrams: [],
-                diagramTop: 0,
-                reviewer: '',
-                threatTop: 0
-            }
-        };
+// Composables
+const route = useRoute();
+const router = useRouter();
+const providerStore = useProviderStore();
+const threatmodelStore = useThreatmodelStore();
+const appStore = useAppStore();
 
-        this.$store.dispatch(tmActions.selected, newTm);
-        const params = Object.assign({}, this.$route.params, {
-            threatmodel: newTm.summary.title
-        });
-        if (isElectron()) {
-            // tell the desktop server that the model has changed
-            window.electronAPI.modelOpened(newTm.summary.title);
-        }
-        if (this.providerType === 'local' || this.providerType === 'desktop') {
-            this.$router.push({ name: `${this.providerType}ThreatModelEdit`, params });
-        } else {
-            this.$router.push({ name: `${this.providerType}ThreatModelCreate`, params });
-        }
+// Computed
+const providerType = computed(() => getProviderType(providerStore.selected));
+const version = computed(() => appStore.packageBuildVersion);
+
+// Lifecycle
+onMounted(() => {
+    threatmodelStore.clear();
+    const newTm = {
+        version: version.value,
+        summary: {
+            title: 'New Threat Model',
+            owner: '',
+            description: '',
+            id: 0,
+        },
+        detail: {
+            contributors: [],
+            diagrams: [],
+            diagramTop: 0,
+            reviewer: '',
+            threatTop: 0,
+        },
+    };
+
+    threatmodelStore.setSelected(newTm);
+    const params = Object.assign({}, route.params, {
+        threatmodel: newTm.summary.title,
+    });
+
+    if (isElectron()) {
+        // tell the desktop server that the model has changed
+        window.electronAPI.modelOpened(newTm.summary.title);
     }
-};
+
+    if (providerType.value === 'local' || providerType.value === 'desktop') {
+        router.replace({ name: `${providerType.value}ThreatModelEdit`, params });
+    } else {
+        router.replace({ name: `${providerType.value}ThreatModelCreate`, params });
+    }
+});
 </script>

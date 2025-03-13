@@ -1,7 +1,33 @@
-import { BootstrapVue, BCard } from 'bootstrap-vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import TdExecutiveSummary from '@/components/report/ExecutiveSummary.vue';
+
+// Stubs for Bootstrap-Vue components
+const BCardStub = {
+    template:
+        '<div class="card"><div class="card-header">{{ header }}</div><div class="card-body"><slot></slot></div></div>',
+    props: ['header'],
+};
+
+const BTableStub = {
+    template:
+        '<table class="table"><tbody><tr v-for="(item, index) in items" :key="index"><td>{{ item.name }}</td><td>{{ item.value }}</td></tr></tbody></table>',
+    props: ['items', 'fields'],
+    methods: {
+        getDataTestId(item) {
+            return { 'data-test-id': item.name };
+        },
+    },
+};
+
+const BRowStub = {
+    template: '<div class="row"><slot></slot></div>',
+};
+
+const BColStub = {
+    template: '<div class="col"><slot></slot></div>',
+};
 
 describe('components/report/ExecutiveSummary.vue', () => {
     let propsData, wrapper;
@@ -14,22 +40,27 @@ describe('components/report/ExecutiveSummary.vue', () => {
             { status: 'NotApplicable', severity: 'Low' },
             { status: 'Open', severity: 'Low' },
             { status: 'Open', severity: '' },
-            { status: 'Mitigated', severity: '' }
-        ]
+            { status: 'Mitigated', severity: '' },
+        ],
     });
 
     const setup = (data) => {
-        const localVue = createLocalVue();
-        localVue.use(BootstrapVue);
         wrapper = shallowMount(TdExecutiveSummary, {
-            localVue,
-            propsData: {
+            props: {
                 summary: data.summary,
-                threats: data.threats
+                threats: data.threats,
             },
-            mocks: {
-                $t: t => t
-            }
+            global: {
+                stubs: {
+                    'b-card': BCardStub,
+                    'b-table': BTableStub,
+                    'b-row': BRowStub,
+                    'b-col': BColStub,
+                },
+                mocks: {
+                    $t: (t) => t,
+                },
+            },
         });
     };
 
@@ -39,23 +70,20 @@ describe('components/report/ExecutiveSummary.vue', () => {
     });
 
     it('displays the executive summary title', () => {
-        const summary = wrapper.findComponent(BCard);
-        expect(summary.attributes('header')).toEqual('report.executiveSummary');
+        const summary = wrapper.find('.card-header');
+        expect(summary.text()).toEqual('report.executiveSummary');
     });
 
     it('displays the description title', () => {
-        expect(wrapper.find('.td-description-title').text())
-            .toEqual('threatmodel.description');
+        expect(wrapper.find('.td-description-title').text()).toEqual('threatmodel.description');
     });
 
     it('displays the summary', () => {
-        expect(wrapper.find('.td-summary').text())
-            .toEqual(propsData.summary);
+        expect(wrapper.find('.td-summary').text()).toEqual(propsData.summary);
     });
 
     it('displays the report summary subtitle', () => {
-        expect(wrapper.find('.td-report-summary').text())
-            .toEqual('report.summary');
+        expect(wrapper.find('.td-report-summary').text()).toEqual('report.summary');
     });
 
     it('gets only the open threats', () => {
@@ -63,18 +91,15 @@ describe('components/report/ExecutiveSummary.vue', () => {
     });
 
     it('counts the total threats', () => {
-        expect(TdExecutiveSummary.computed.total.call(propsData))
-            .toEqual(6);
+        expect(wrapper.vm.total).toEqual(6);
     });
 
     it('counts the mitigated threats', () => {
-        expect(TdExecutiveSummary.computed.mitigated.call(propsData))
-            .toEqual(1);
+        expect(wrapper.vm.mitigated).toEqual(1);
     });
 
     it('counts the unmitigated threats', () => {
-        expect(TdExecutiveSummary.computed.notMitigated.call(propsData))
-            .toEqual(5);
+        expect(wrapper.vm.notMitigated).toEqual(5);
     });
 
     it('gets the data test id from the row item', () => {

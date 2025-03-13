@@ -2,12 +2,11 @@ import google from '@/service/provider/google.provider.js';
 
 describe('service/google.provider.js', () => {
     describe('getDashboardActions', () => {
-
         describe('open existing', () => {
             let action;
 
             beforeEach(() => {
-                action = google.getDashboardActions().find(x => x.key === 'openExisting');
+                action = google.getDashboardActions().find((x) => x.key === 'openExisting');
             });
 
             it('links to the folder page', () => {
@@ -24,7 +23,7 @@ describe('service/google.provider.js', () => {
             let action;
 
             beforeEach(() => {
-                action = google.getDashboardActions().find(x => x.key === 'createNew');
+                action = google.getDashboardActions().find((x) => x.key === 'createNew');
             });
 
             it('links to the folder creation page', () => {
@@ -40,7 +39,7 @@ describe('service/google.provider.js', () => {
             let action;
 
             beforeEach(() => {
-                action = google.getDashboardActions().find(x => x.key === 'readDemo');
+                action = google.getDashboardActions().find((x) => x.key === 'readDemo');
             });
 
             it('links to the demo select page', () => {

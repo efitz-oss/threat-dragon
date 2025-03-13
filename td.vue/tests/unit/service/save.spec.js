@@ -3,17 +3,16 @@ import save from '@/service/save.js';
 describe('service/save.js', () => {
     const data = { foo: 'bar' };
     const name = 'test.json';
-    
-    describe('local', () => {
 
+    describe('local', () => {
         let mockAnchor;
         beforeEach(() => {
             mockAnchor = {
                 click: jest.fn(),
-                remove: jest.fn()
+                remove: jest.fn(),
             };
             window.URL = {
-                createObjectURL: jest.fn()
+                createObjectURL: jest.fn(),
             };
             document.createElement = jest.fn().mockReturnValue(mockAnchor);
             save.local(data, name);

@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 
 import * as encryptionHelper from './encryption.helper.js';
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 
 const createAsync = async (providerName, providerOptions, user) => {
     const encryptedProviderOptions = await encryptionHelper.encryptPromise(
@@ -16,7 +16,7 @@ const createAsync = async (providerName, providerOptions, user) => {
     // Explore other options including issuer, scope, etc
     const accessToken = jsonwebtoken.sign(
         { provider, user },
-        env.get().config.ENCRYPTION_JWT_SIGNING_KEY,
+        getEnvironment().config.ENCRYPTION_JWT_SIGNING_KEY,
         {
             expiresIn: '1d',
         }
@@ -24,7 +24,7 @@ const createAsync = async (providerName, providerOptions, user) => {
 
     const refreshToken = jsonwebtoken.sign(
         { provider, user },
-        env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY,
+        getEnvironment().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY,
         {
             expiresIn: '7d',
         }
@@ -52,9 +52,9 @@ const decode = (token, key) => {
     };
 };
 
-const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
+const verifyToken = (token) => decode(token, getEnvironment().config.ENCRYPTION_JWT_SIGNING_KEY);
 
-const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
+const verifyRefresh = (token) => decode(token, getEnvironment().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
 
 export default {
     createAsync,

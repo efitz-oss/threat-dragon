@@ -1,21 +1,13 @@
 <template>
     <div class="mt-5">
-        <b-row>
-            <b-col>
+        <div class="grid">
+            <div class="col-12">
                 <td-graph />
-            </b-col>
-        </b-row>
+            </div>
+        </div>
     </div>
 </template>
 
-<script>
-import TdGraph from '@/components/Graph.vue';
-
-export default {
-    name: 'DiagramEdit',
-    components: {
-        TdGraph
-    }
-};
-
+<script setup>
+import TdGraph from '@/components/TdGraph.vue';
 </script>

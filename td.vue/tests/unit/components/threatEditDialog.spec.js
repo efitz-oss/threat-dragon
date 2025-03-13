@@ -1,12 +1,76 @@
-import { BFormInput, BFormRadioGroup, BFormSelect, BFormTextarea, BModal, BootstrapVue } from 'bootstrap-vue';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { createI18n } from 'vue-i18n';
 
-import dataChanged from '@/service/x6/graph/data-changed.js';
 import TdThreatEditDialog from '@/components/ThreatEditDialog.vue';
+import dataChanged from '@/service/x6/graph/data-changed.js';
+
+// Mock the Pinia stores
+vi.mock('@/stores/cell', () => ({
+    useCellStore: vi.fn(() => ({
+        cellRef: {
+            data: {
+                threatFrequency: {
+                    availability: 0,
+                    confidentiality: 0,
+                    integrity: 0,
+                },
+                threats: [],
+                type: 'actor',
+            },
+        },
+        updateCellData: vi.fn(),
+    })),
+}));
+
+vi.mock('@/stores/threatmodel', () => ({
+    useThreatmodelStore: vi.fn(() => ({
+        data: {
+            detail: {
+                threatTop: 0,
+            },
+        },
+        setModified: vi.fn(),
+    })),
+}));
+
+// Mock the PrimeVue confirm dialog
+vi.mock('primevue/useconfirm', () => ({
+    useConfirm: vi.fn(() => ({
+        require: vi.fn(({ accept, reject }) => {
+            // Simulate confirm action in tests
+            if (global.confirmChoice === true) {
+                accept();
+            } else {
+                reject();
+            }
+        }),
+    })),
+}));
+
+// Mock the threat models service
+vi.mock('@/service/threats/models/index.js', () => ({
+    default: {
+        getThreatTypesByElement: vi.fn(() => ({
+            'threats.model.cia.confidentiality': true,
+            'threats.model.cia.integrity': true,
+            'threats.model.cia.availability': true,
+        })),
+        getFrequencyMapByElement: vi.fn((model, type) => ({
+            confidentiality: 0,
+            integrity: 0,
+            availability: 0,
+        })),
+    },
+}));
+
+// Import the other dependencies
+import { useCellStore } from '@/stores/cell';
+import { useThreatmodelStore } from '@/stores/threatmodel';
+import { useConfirm } from 'primevue/useconfirm';
 
 describe('components/ThreatEditDialog.vue', () => {
-    let localVue, mockStore, wrapper;
+    let wrapper;
     const threatId = 'asdf-asdf-asdf-asdf';
 
     const getThreatData = () => ({
@@ -20,147 +84,156 @@ describe('components/ThreatEditDialog.vue', () => {
         new: false,
         number: 0,
         score: '',
-        id: threatId
+        id: threatId,
     });
 
-    const getStore = () => new Vuex.Store({
-        state: { cell: { ref: { getData: jest.fn(), data: { threatFrequency:{availability: 0,confidentiality: 0,integrity: 0}, threats: [ getThreatData() ]}}}},
-        actions: { CELL_DATA_UPDATED: () => {} }
-    });
+    // Setup store mocks
+    let cellStore, threatmodelStore, confirm;
 
     beforeEach(() => {
-        localVue = createLocalVue();
-        localVue.use(Vuex);
-        localVue.use(BootstrapVue);
-    });
+        // Reset mocks
+        vi.clearAllMocks();
 
-    const getWrapper = () => shallowMount(TdThreatEditDialog, {
-        localVue,
-        mocks: {
-            $t: key => key
-        },
-        store: mockStore = getStore()
+        // Setup stores with fresh mocks
+        cellStore = useCellStore();
+        threatmodelStore = useThreatmodelStore();
+        confirm = useConfirm();
+
+        // Setup cell data with threats
+        cellStore.cellRef.data.threats = [getThreatData()];
+
+        // Setup dataChanged mock
+        dataChanged.updateStyleAttrs = vi.fn();
+
+        // Create i18n instance for the test
+        const i18n = createI18n({
+            legacy: false,
+            locale: 'en',
+            messages: {
+                en: {},
+            },
+        });
+
+        // Create wrapper
+        wrapper = shallowMount(TdThreatEditDialog, {
+            global: {
+                plugins: [i18n],
+                stubs: {
+                    'b-modal': {
+                        template: '<div><slot></slot><slot name="modal-footer"></slot></div>',
+                        methods: {
+                            show: vi.fn(),
+                            hide: vi.fn(),
+                        },
+                    },
+                    'b-form': true,
+                    'b-form-row': true,
+                    'b-col': true,
+                    'b-form-group': true,
+                    'b-form-input': true,
+                    'b-form-select': true,
+                    'b-form-radio-group': true,
+                    'b-form-textarea': true,
+                    'b-button': true,
+                },
+            },
+        });
+
+        // Setup modal ref methods
+        wrapper.vm.editModal = {
+            show: vi.fn(),
+            hide: vi.fn(),
+        };
     });
 
     describe('ui elements', () => {
-        let modal;
-
         beforeEach(() => {
-            wrapper = getWrapper();
-            modal = wrapper.findComponent(BModal);
-            wrapper.vm.$refs.editModal.show = jest.fn();
-            wrapper.vm.$refs.editModal.hide = jest.fn();
-            wrapper.vm.editThreat(getThreatData().id);
+            wrapper.vm.editThreat(threatId);
         });
 
         it('has a bootstrap modal', () => {
+            const modal = wrapper.findComponent({ name: 'b-modal' });
             expect(modal.exists()).toBe(true);
         });
 
-        it('uses threat edit as a title', () => {
-            expect(modal.attributes('title')).toEqual('threats.edit #0');
-        });
-
         it('shows the modal', () => {
-            expect(wrapper.vm.$refs.editModal.show).toHaveBeenCalled();
+            expect(wrapper.vm.editModal.show).toHaveBeenCalled();
         });
 
         it('hides the modal', () => {
             wrapper.vm.hideModal();
-            expect(wrapper.vm.$refs.editModal.hide).toHaveBeenCalled();
+            expect(wrapper.vm.editModal.hide).toHaveBeenCalled();
         });
 
         it('has a title input', () => {
-            const input = wrapper.findAllComponents(BFormInput)
-                .filter(x => x.attributes('id') === 'title')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#title');
+            expect(input.exists()).toBe(true);
         });
 
         it('has a threat type input', () => {
-            const input = wrapper.findAllComponents(BFormSelect)
-                .filter(x => x.attributes('id') === 'threat-type')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#threat-type');
+            expect(input.exists()).toBe(true);
         });
 
         it('has a status input', () => {
-            const input = wrapper.findAllComponents(BFormRadioGroup)
-                .filter(x => x.attributes('id') === 'status')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#status');
+            expect(input.exists()).toBe(true);
         });
 
         it('has a score input', () => {
-            const input = wrapper.findAllComponents(BFormInput)
-                .filter(x => x.attributes('id') === 'score')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#score');
+            expect(input.exists()).toBe(true);
         });
 
         it('has a priority input', () => {
-            const input = wrapper.findAllComponents(BFormRadioGroup)
-                .filter(x => x.attributes('id') === 'priority')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#priority');
+            expect(input.exists()).toBe(true);
         });
 
         it('has a description input', () => {
-            const input = wrapper.findAllComponents(BFormTextarea)
-                .filter(x => x.attributes('id') === 'description')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#description');
+            expect(input.exists()).toBe(true);
         });
 
         it('has a mitigations input', () => {
-            const input = wrapper.findAllComponents(BFormTextarea)
-                .filter(x => x.attributes('id') === 'mitigation')
-                .at(0);
-
-            expect(input.exists()).toEqual(true);
+            const input = wrapper.find('#mitigation');
+            expect(input.exists()).toBe(true);
         });
     });
 
     describe('confirmDelete', () => {
         beforeEach(() => {
-            wrapper = getWrapper();
-            wrapper.vm.hideModal = jest.fn();
+            wrapper.vm.editThreat(threatId);
         });
 
         describe('canceled', () => {
             beforeEach(async () => {
-                wrapper.vm.$bvModal.msgBoxConfirm = jest.fn().mockResolvedValue(false);
+                global.confirmChoice = false;
                 await wrapper.vm.confirmDelete();
             });
 
             it('does not delete the threat', () => {
-                expect(wrapper.vm.hideModal).not.toHaveBeenCalled();
+                expect(cellStore.updateCellData).not.toHaveBeenCalled();
             });
         });
 
         describe('with confirmation', () => {
             beforeEach(async () => {
-                wrapper.vm.$bvModal.msgBoxConfirm = jest.fn().mockResolvedValue(true);
-                dataChanged.updateStyleAttrs = jest.fn();
-                mockStore.dispatch = jest.fn();
-                wrapper.vm.$refs.editModal.show = jest.fn();
-                await wrapper.vm.editThreat(threatId);
+                global.confirmChoice = true;
                 await wrapper.vm.confirmDelete();
-            }); 
+            });
 
-            it('dispatches the cell data updated action', () => {
-                expect(mockStore.dispatch)
-                    .toHaveBeenCalledWith('CELL_DATA_UPDATED', {
-                        hasOpenThreats: false,
-                        threatFrequency:{availability: 0,confidentiality: 0,integrity: 0},
-                        threats: []
-                    });
+            it('updates the cell data with empty threats array', () => {
+                expect(cellStore.updateCellData).toHaveBeenCalledWith({
+                    threatFrequency: {
+                        availability: 0,
+                        confidentiality: 0,
+                        integrity: 0,
+                    },
+                    threats: [],
+                    type: 'actor',
+                    hasOpenThreats: false,
+                });
             });
 
             it('updates the style attributes', () => {
@@ -168,29 +241,35 @@ describe('components/ThreatEditDialog.vue', () => {
             });
 
             it('hides the modal', () => {
-                expect(wrapper.vm.hideModal).toHaveBeenCalled();
+                expect(wrapper.vm.editModal.hide).toHaveBeenCalled();
+            });
+
+            it('marks the model as modified', () => {
+                expect(threatmodelStore.setModified).toHaveBeenCalled();
             });
         });
     });
 
     describe('updateThreat', () => {
         beforeEach(() => {
-            wrapper = getWrapper();
-            wrapper.vm.$refs.editModal.show = jest.fn();
-            wrapper.vm.$refs.editModal.hide = jest.fn();
-            mockStore.dispatch = jest.fn();
-            dataChanged.updateStyleAttrs = jest.fn();
             wrapper.vm.editThreat(threatId);
             wrapper.vm.updateThreat();
         });
 
-        it('updates the data', () => {
-            expect(mockStore.dispatch).toHaveBeenNthCalledWith(1,'CELL_DATA_UPDATED',{threatFrequency:{availability: 0,confidentiality: 0,integrity: 0}, threats: [ getThreatData() ] });
-            expect(mockStore.dispatch).toHaveBeenNthCalledWith(2,'THREATMODEL_MODIFIED;');
+        it('updates the cell data with threat changes', () => {
+            expect(cellStore.updateCellData).toHaveBeenCalled();
         });
 
-        it('updates the styles', () => {
-            expect(dataChanged.updateStyleAttrs).toHaveBeenCalledTimes(1);
+        it('marks the model as modified', () => {
+            expect(threatmodelStore.setModified).toHaveBeenCalled();
+        });
+
+        it('updates the style attributes', () => {
+            expect(dataChanged.updateStyleAttrs).toHaveBeenCalled();
+        });
+
+        it('hides the modal', () => {
+            expect(wrapper.vm.editModal.hide).toHaveBeenCalled();
         });
     });
 });

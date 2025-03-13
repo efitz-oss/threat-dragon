@@ -4,7 +4,7 @@
  */
 import axios from 'axios';
 
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 import * as repositories from '../repositories/index.js';
 
 const name = 'bitbucket';
@@ -13,17 +13,17 @@ const name = 'bitbucket';
  * Determines if the Bitbucket provider is configured
  * @returns {Boolean}
  */
-const isConfigured = () => Boolean(env.get().config.BITBUCKET_CLIENT_ID);
+const isConfigured = () => Boolean(getEnvironment().config.BITBUCKET_CLIENT_ID);
 
 /**
  * Gets the Bitbucket endpoint, which will be bitbucket.com by default OR a custom endpoint for Bitbucket enterprise
  * @returns {String}
  */
 const getBitbucketUrl = () => {
-    const enterpriseHostname = env.get().config.BITBUCKET_ENTERPRISE_HOSTNAME;
+    const enterpriseHostname = getEnvironment().config.BITBUCKET_ENTERPRISE_HOSTNAME;
     if (enterpriseHostname) {
-        const port = env.get().config.BITBUCKET_ENTERPRISE_PORT || '';
-        const protocol = env.get().config.BITBUCKET_ENTERPRISE_PROTOCOL || 'https';
+        const port = getEnvironment().config.BITBUCKET_ENTERPRISE_PORT || '';
+        const protocol = getEnvironment().config.BITBUCKET_ENTERPRISE_PROTOCOL || 'https';
         return `${protocol}://${enterpriseHostname}${port ? ':' + port : ''}`;
     }
     return 'https://bitbucket.org';
@@ -34,8 +34,8 @@ const getBitbucketUrl = () => {
  * @returns {String}
  */
 const getOauthRedirectUrl = () => {
-    const scope = env.get().config.BITBUCKET_SCOPE || '';
-    return `${getBitbucketUrl()}/site/oauth2/authorize?scope=${scope}&response_type=code&client_id=${env.get().config.BITBUCKET_CLIENT_ID}`;
+    const scope = getEnvironment().config.BITBUCKET_SCOPE || '';
+    return `${getBitbucketUrl()}/site/oauth2/authorize?scope=${scope}&response_type=code&client_id=${getEnvironment().config.BITBUCKET_CLIENT_ID}`;
 };
 
 /**
@@ -45,7 +45,7 @@ const getOauthRedirectUrl = () => {
  */
 const getOauthReturnUrl = (code) => {
     let returnUrl = `/#/oauth-return?code=${code}`;
-    if (env.get().config.NODE_ENV === 'development') {
+    if (getEnvironment().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;
     }
     return returnUrl;
@@ -60,8 +60,8 @@ const completeLoginAsync = async (code) => {
     const url = `${getBitbucketUrl()}/site/oauth2/access_token`;
     const form = new FormData();
     form.append('grant_type', 'authorization_code');
-    form.append('client_id', env.get().config.BITBUCKET_CLIENT_ID);
-    form.append('client_secret', env.get().config.BITBUCKET_CLIENT_SECRET);
+    form.append('client_id', getEnvironment().config.BITBUCKET_CLIENT_ID);
+    form.append('client_secret', getEnvironment().config.BITBUCKET_CLIENT_SECRET);
     form.append('code', code);
     const options = {
         headers: {

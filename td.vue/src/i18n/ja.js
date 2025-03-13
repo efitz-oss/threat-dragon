@@ -1,53 +1,56 @@
 const jpn = {
     auth: {
-        sessionExpired: 'セッションの有効期限が切れました。再ログインしてください。'
+        sessionExpired: 'セッションの有効期限が切れました。再ログインしてください。',
     },
     nav: {
-        v2Warning: 'バージョン2.0の脅威モデルは、Threat Dragonバージョン1.xとの互換性を保っていません。バージョン1.xのモデルは、インポート時にバージョン2.0のフォーマットに変換されます。',
+        v2Warning:
+            'バージョン2.0の脅威モデルは、Threat Dragonバージョン1.xとの互換性を保っていません。バージョン1.xのモデルは、インポート時にバージョン2.0のフォーマットに変換されます。',
         loggedInAs: 'ユーザー名',
-        logOut: 'ログアウト'
+        logOut: 'ログアウト',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragonロゴ',
-        description: 'OWASP Threat Dragonは無償で、脅威モデリングのソフトです。オープンソースで複数のプラットホームに対応しています。Threat Dragonで脅威モデルを作成することによって、システムに対する脅威が明確になります。重視が多様性と使い勝手に置かれているので、簡単に利用できます。'
+        description:
+            'OWASP Threat Dragonは無償で、脅威モデリングのソフトです。オープンソースで複数のプラットホームに対応しています。Threat Dragonで脅威モデルを作成することによって、システムに対する脅威が明確になります。重視が多様性と使い勝手に置かれているので、簡単に利用できます。',
     },
     providers: {
         desktop: {
             displayName: '開始',
-            loginWith: 'Threat Dragon'
+            loginWith: 'Threat Dragon',
         },
         github: {
             displayName: 'GitHubで',
-            loginWith: 'ログイン'
+            loginWith: 'ログイン',
         },
         bitbucket: {
             displayName: 'Bitbucketで',
-            loginWith: 'ログイン'
+            loginWith: 'ログイン',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'ログイン'
+            loginWith: 'ログイン',
         },
         local: {
             displayName: 'ローカルセッション',
-            loginWith: 'ログイン'
-        }
+            loginWith: 'ログイン',
+        },
     },
     dashboard: {
         welcome: {
             title: 'ようこそ！',
-            description: 'システムの設計をもっとセキュアにしましょう。既存の脅威モデルを開くか、次の選択肢から一つを選んで新しい脅威モデルを作成できます。'
+            description:
+                'システムの設計をもっとセキュアにしましょう。既存の脅威モデルを開くか、次の選択肢から一つを選んで新しい脅威モデルを作成できます。',
         },
         actions: {
             openExisting: '既存の脅威モデルを開く',
             createNew: '新しい脅威モデルを作る',
             readDemo: '脅威モデルの一例を見る',
-            importExisting: '脅威モデルをJSONからインポートする'
-        }
+            importExisting: '脅威モデルをJSONからインポートする',
+        },
     },
     demo: {
-        select: '次のものから脅威モデルの一例を選んでください'
+        select: '次のものから脅威モデルの一例を選んでください',
     },
     desktop: {
         file: {
@@ -59,7 +62,7 @@ const jpn = {
             open: 'モデルを開く',
             recentDocs: '最近開いたモデル',
             save: 'モデルを保存',
-            saveAs: '名前を付けてモデルを保存'
+            saveAs: '名前を付けてモデルを保存',
         },
         help: {
             heading: 'ヘルプ',
@@ -68,13 +71,13 @@ const jpn = {
             sheets: 'OWASP Cheat Sheets',
             github: 'GitHubリポジトリ',
             submit: '問題を報告',
-            check: '更新を確認...'
-        }
+            check: '更新を確認...',
+        },
     },
     repository: {
         select: '次のものから',
         from: 'リポジトリを選択してください',
-        noneFound: 'リポジトリが見付かりません。新しいリポジトリを作成してください。'
+        noneFound: 'リポジトリが見付かりません。新しいリポジトリを作成してください。',
     },
     branch: {
         select: '次のものから',
@@ -96,7 +99,7 @@ const jpn = {
         branch: '別のブランチ',
         or: 'または',
         repo: 'リポジトリに切り替える',
-        newThreatModel: '新しい脅威モデルを作成する'
+        newThreatModel: '新しい脅威モデルを作成する',
     },
     threatmodel: {
         contributors: '貢献者',
@@ -114,41 +117,42 @@ const jpn = {
             generic: {
                 defaultTitle: '一般の図面',
                 defaultDescription: '図面の概要',
-                select: '一般'
+                select: '一般',
             },
             stride: {
                 defaultTitle: 'STRIDE図',
                 defaultDescription: '新しいSTRIDE図の概要',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'LINDDUN図',
                 defaultDescription: '新しいLINDDUN図の概要',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'PLOT4ai図',
                 defaultDescription: '新しいPLOT4ai図の概要',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'DIE図',
                 defaultDescription: '新しいDIE図の概要',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'CIA図',
                 defaultDescription: '新しいCIA図の概要',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: '脅威',
         errors: {
             dropSingleFileOnly: '単一のファイルをドロップしてください。',
-            invalidJson: 'ファイルのJSONフォーマットに対応していません。モデルを確認したうえ、もう一度試してみてください。',
+            invalidJson:
+                'ファイルのJSONフォーマットに対応していません。モデルを確認したうえ、もう一度試してみてください。',
             onlyJsonAllowed: '拡張子.jsonのファイルのみに対応しています。',
             open: '脅威モデルを開く時にエラーが発生しました。開発者コンソールを確認してください。',
-            save: '脅威モデルを保存時にエラーが発生しました。開発者コンソールを確認してください。'
+            save: '脅威モデルを保存時にエラーが発生しました。開発者コンソールを確認してください。',
         },
         opened: '脅威モデルを読み込みました。',
         saved: '脅威モデルを書き込みました。',
@@ -172,7 +176,7 @@ const jpn = {
             protocol: 'プロトコル',
             publicNetwork: '公衆ネットワーク',
             storesCredentials: '認証情報を保管している',
-            storesInventory: '登録簿を保管している'
+            storesInventory: '登録簿を保管している',
         },
         buttons: {
             delete: '選択を削除',
@@ -181,46 +185,46 @@ const jpn = {
             toggleGrid: 'グリッドの表示',
             undo: '戻す',
             zoomIn: '拡大',
-            zoomOut: '縮小'
+            zoomOut: '縮小',
         },
         shortcuts: {
             title: 'キーボードショートカット',
             copy: {
                 shortcut: '(コントロール/コマンド) + c',
-                action: 'コピー'
+                action: 'コピー',
             },
             paste: {
                 shortcut: '(コントロール/コマンド) + v',
-                action: '貼り付ける'
+                action: '貼り付ける',
             },
             undo: {
                 shortcut: '(コントロール/コマンド) + z',
-                action: '戻す'
+                action: '戻す',
             },
             redo: {
                 shortcut: '(コントロール/コマンド) + y',
-                action: '繰り返す'
+                action: '繰り返す',
             },
             delete: {
                 shortcut: '削除',
-                action: '削除'
+                action: '削除',
             },
             pan: {
                 shortcut: 'シフト + 左クリック (ドラッグとドロップ)',
-                action: '移動する'
+                action: '移動する',
             },
             multiSelect: {
                 shortcut: '空白に左クリックとドラッグ',
-                action: '複数の要素を選択'
+                action: '複数の要素を選択',
             },
             zoom: {
                 shortcut: '(コントロール/コマンド) + ホイール',
-                action: '拡大・縮小'
+                action: '拡大・縮小',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: '境界',
@@ -228,7 +232,7 @@ const jpn = {
             entities: 'エンティティ',
             metadata: 'メタデータ',
             search: '検索',
-            notFound: '見付かりませんでした。チケットを切りますか？ :)'
+            notFound: '見付かりませんでした。チケットを切りますか？ :)',
         },
         shapes: {
             actor: 'アクター',
@@ -237,8 +241,8 @@ const jpn = {
             process: 'プロセス',
             store: 'データストア',
             text: '説明',
-            trustBoundary: '信頼境界線'
-        }
+            trustBoundary: '信頼境界線',
+        },
     },
     forms: {
         apply: '適用',
@@ -268,7 +272,7 @@ const jpn = {
         saveModelAs: '名前を付けてモデルを保存',
         search: '検索',
         next: '次',
-        previous: '前の'
+        previous: '前の',
     },
     threats: {
         model: {
@@ -276,15 +280,17 @@ const jpn = {
                 header: '--- CIA ---',
                 confidentiality: '機密性',
                 integrity: '完全性',
-                availability: '可用性'
+                availability: '可用性',
             },
-            die: { // Source: https://www.fastly.com/jp/blog/the-dept-of-know-live-sounil-yu-on-why-embracing-the-die-security-model-means-faster-innovation
+            die: {
+                // Source: https://www.fastly.com/jp/blog/the-dept-of-know-live-sounil-yu-on-why-embracing-the-die-security-model-means-faster-innovation
                 header: '--- DIE ---',
                 distributed: '分散化',
                 immutable: '不変',
-                ephemeral: '一時的'
+                ephemeral: '一時的',
             },
-            linddun: { // No Japanese sources for LINDDUN; using English terms
+            linddun: {
+                // No Japanese sources for LINDDUN; using English terms
                 header: '--- LINDDUN ---',
                 linkability: 'Linkability',
                 identifiability: 'Identifiability',
@@ -292,9 +298,10 @@ const jpn = {
                 detectability: 'Detectability',
                 disclosureOfInformation: 'Disclosure Of Information',
                 unawareness: 'Unawareness',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
-            plot4ai: { // No Japanese sources for PLOT4ai; using English terms
+            plot4ai: {
+                // No Japanese sources for PLOT4ai; using English terms
                 header: '--- PLOT4ai ---',
                 techniqueProcesses: 'Technique & Processes',
                 accessibility: 'Accessibility',
@@ -303,17 +310,18 @@ const jpn = {
                 safety: 'Safety',
                 unawareness: 'Unawareness',
                 ethicsHumanRights: 'Ethics & Human Rights',
-                nonCompliance: 'Non-Compliance'
+                nonCompliance: 'Non-Compliance',
             },
-            stride: { // Source: https://learn.microsoft.com/ja-jp/azure/security/develop/threat-modeling-tool-threats
+            stride: {
+                // Source: https://learn.microsoft.com/ja-jp/azure/security/develop/threat-modeling-tool-threats
                 header: '--- STRIDE ---',
                 spoofing: 'なりすまし',
                 tampering: '改竄',
                 repudiation: '否認',
                 informationDisclosure: '情報漏洩',
                 denialOfService: 'サービス拒否',
-                elevationOfPrivilege: '特権の昇格'
-            }
+                elevationOfPrivilege: '特権の昇格',
+            },
         },
         generic: {
             default: '脅威を追加',
@@ -321,7 +329,7 @@ const jpn = {
             die: 'DIE脅威を追加',
             linddun: 'LINDDUN脅威を追加',
             plot4ai: 'PLOT4ai脅威を追加',
-            stride: 'STRIDE脅威を追加'
+            stride: 'STRIDE脅威を追加',
         },
         edit: '脅威を編集',
         confirmDeleteTitle: '削除の確認',
@@ -341,20 +349,20 @@ const jpn = {
             score: '結果',
             status: 'ステータス',
             title: 'タイトル',
-            type: '種別'
+            type: '種別',
         },
         status: {
             notApplicable: 'N/A',
             open: '未対応',
-            mitigated: '解決済み'
+            mitigated: '解決済み',
         },
         priority: {
             tbd: '未定',
             low: '低',
             medium: '中',
             high: '高',
-            critical: '致命的'
-        }
+            critical: '致命的',
+        },
     },
     report: {
         options: {
@@ -363,7 +371,7 @@ const jpn = {
             showModelDiagrams: 'モデルの図面を表示',
             showEmpty: '空要素を表示',
             showProperties: 'Show element properties',
-            showBranding: 'Threat Dragonロゴ'
+            showBranding: 'Threat Dragonロゴ',
         },
         title: '脅威レポート',
         dateGenerated: '作成日付',
@@ -379,19 +387,19 @@ const jpn = {
             openMedium: '未対応 / 中優先度',
             openLow: '未対応 / 低優先度',
             openTbd: '未対応 / 優先度は未定',
-            openUnknown: '未対応 / 優先度不明'
-        }
+            openUnknown: '未対応 / 優先度不明',
+        },
     },
     upgrade: {
         modal: {
             header: '脅威モデルを更新',
             welcome: 'OWASP Threat Dragonバージョン2へようこそ！',
             p1: 'バージョン2が使用している表示ライブラリが変わったため、脅威モデルのデータフォーマットに変更がありました。表示には以前と変わりがないが、場合によって図面を修正する必要があります。',
-            p2: 'モデルを閉じると、バージョン2のフォーマットでの表示が映ります。図面を修正する必要があるか確認してください。一旦保存したら再び修正する必要がないので、このメッセージは今後表示されません。'
+            p2: 'モデルを閉じると、バージョン2のフォーマットでの表示が映ります。図面を修正する必要があるか確認してください。一旦保存したら再び修正する必要がないので、このメッセージは今後表示されません。',
         },
         instructions: '素晴らしい！モデルに進みましょう。',
-        continue: '脅威モデルへ進む'
-    }
+        continue: '脅威モデルへ進む',
+    },
 };
 
 export default jpn;

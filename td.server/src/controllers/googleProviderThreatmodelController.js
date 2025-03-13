@@ -1,8 +1,8 @@
-import loggerHelper from '../helpers/logger.helper.js';
-import repositories from '../repositories/index.js';
+import { getLogger } from '../helpers/logger.helper.js';
+import * as repositories from '../repositories/index.js';
 import responseWrapper from './responseWrapper.js';
 
-const logger = loggerHelper.get('controllers/googleProviderThreatmodelController.js');
+const logger = getLogger('controllers/googleProviderThreatmodelController.js');
 
 const folders = (req, res) =>
     responseWrapper.sendResponseAsync(

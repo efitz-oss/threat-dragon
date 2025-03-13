@@ -1,57 +1,60 @@
 const deu = {
     auth: {
-        sessionExpired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.'
+        sessionExpired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.',
     },
     nav: {
-        v2Warning: 'Version 2.0 Bedrohungsmodelle sind nicht Abwärtskompatibel mit Version 1.x Threat Dragon Modellen. Importierte Version 1.x Modelle werden auf das Version 2.0 Schema gehoben', //in line with wording of BSI Leitfaden zur Entwicklung sicherer Webanwendungen
+        v2Warning:
+            'Version 2.0 Bedrohungsmodelle sind nicht Abwärtskompatibel mit Version 1.x Threat Dragon Modellen. Importierte Version 1.x Modelle werden auf das Version 2.0 Schema gehoben', //in line with wording of BSI Leitfaden zur Entwicklung sicherer Webanwendungen
         loggedInAs: 'Angemeldet als',
-        logOut: 'Log out'
+        logOut: 'Log out',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'OWASP Threat Dragon ist eine kostenlose, Open-Source, plattformübergreifende Applikation für das Erstellen von Bedrohungsmodellen. Verwenden Sie es, um Diagramme zu Bedrohungsmodellen zu erstellen und Bedrohungen für Ihre Systeme zu identifizieren. Mit Fokus auf Flexibilität und Einfachheit ist das System leicht verständlich und für alle Benutzer zugänglich.'
+        description:
+            'OWASP Threat Dragon ist eine kostenlose, Open-Source, plattformübergreifende Applikation für das Erstellen von Bedrohungsmodellen. Verwenden Sie es, um Diagramme zu Bedrohungsmodellen zu erstellen und Bedrohungen für Ihre Systeme zu identifizieren. Mit Fokus auf Flexibilität und Einfachheit ist das System leicht verständlich und für alle Benutzer zugänglich.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Start'
+            loginWith: 'Start',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'Anmelden mit'
+            loginWith: 'Anmelden mit',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'Anmelden mit'
+            loginWith: 'Anmelden mit',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'Anmelden mit'
+            loginWith: 'Anmelden mit',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Anmelden mit'
+            loginWith: 'Anmelden mit',
         },
         local: {
             displayName: 'Lokale Sitzung',
-            loginWith: 'Anmelden an'
-        }
+            loginWith: 'Anmelden an',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Willkommen!',
-            description: 'Sie sind bereit Ihren Applikationsentwurf sicherer zu gestalten. Sie können ein bestehendes Bedrohungsmodell öffnen, oder ein neues erstellen indem Sie eine der folgenden Optionen auswählen. '
+            description:
+                'Sie sind bereit Ihren Applikationsentwurf sicherer zu gestalten. Sie können ein bestehendes Bedrohungsmodell öffnen, oder ein neues erstellen indem Sie eine der folgenden Optionen auswählen. ',
         },
         actions: {
             openExisting: 'Ein bestehendes Bedrohungsmodell öffnen',
             createNew: 'Ein neues, leeres, Bedrohungsmodell erstellen',
             readDemo: 'Erkunden Sie ein Bespiel Bedrohungsmodell',
-            importExisting: 'Ein Bedrohungsmodell als JSON importieren'
-        }
+            importExisting: 'Ein Bedrohungsmodell als JSON importieren',
+        },
     },
     demo: {
-        select: 'Wählen Sie ein Beispiel Bedrohungsmodell aus der folgenden Liste'
+        select: 'Wählen Sie ein Beispiel Bedrohungsmodell aus der folgenden Liste',
     },
     desktop: {
         file: {
@@ -63,7 +66,7 @@ const deu = {
             open: 'Modell öffnen',
             recentDocs: 'Open Recent',
             save: 'Modell speichern',
-            saveAs: 'Modell speichern als'
+            saveAs: 'Modell speichern als',
         },
         help: {
             heading: 'Hilfe',
@@ -72,13 +75,13 @@ const deu = {
             sheets: 'OWASP Cheat Sheets',
             github: 'Besuchen Sie uns auf GitHub',
             submit: 'Ein Problem melden',
-            check: 'Nach Updates suchen ...'
-        }
+            check: 'Nach Updates suchen ...',
+        },
     },
     repository: {
         select: 'Wählen Sie ein',
-        from: 'Repository aus folgender Liste',  //in line with Github wording https://docs.github.com/de/repositories
-        noneFound: 'Kein Repository gefunden. Legen Sie zum Starten eine neues Repository an.'
+        from: 'Repository aus folgender Liste', //in line with Github wording https://docs.github.com/de/repositories
+        noneFound: 'Kein Repository gefunden. Legen Sie zum Starten eine neues Repository an.',
     },
     branch: {
         select: 'Wähle einen Branch aus', //in line with Github wording https://docs.github.com/de/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository
@@ -92,7 +95,7 @@ const deu = {
         refBranch: 'Referenz Branch',
         add: 'Branch hinzufügen',
         cancel: 'Abbrechen',
-        name: 'Branch Name'
+        name: 'Branch Name',
     },
     threatmodelSelect: {
         select: 'Ein Bedrohungsmodell auswählen aus',
@@ -100,7 +103,7 @@ const deu = {
         branch: 'Branch',
         or: 'oder',
         repo: 'Repository',
-        newThreatModel: 'Ein neues Bedrohungsmodell erstellen'
+        newThreatModel: 'Ein neues Bedrohungsmodell erstellen',
     },
     threatmodel: {
         contributors: 'Mitwirkende',
@@ -108,7 +111,8 @@ const deu = {
         description: 'High-Level System Beschreibung',
         dragAndDrop: 'Ziehen und ablegen oder ',
         editing: 'Bearbeiten',
-        jsonPaste: 'Legen Sie eine Bedrohungsmodell JSON Datei ab oder kopieren Sie den Inhalt hier:',
+        jsonPaste:
+            'Legen Sie eine Bedrohungsmodell JSON Datei ab oder kopieren Sie den Inhalt hier:',
         owner: 'Eigentümer',
         reviewer: 'Prüfer',
         title: 'Titel',
@@ -118,41 +122,42 @@ const deu = {
             generic: {
                 defaultTitle: 'Neues generisches Diagramm',
                 defaultDescription: 'Neue generische Diagramm Beschreibung',
-                select: 'Generisch'
+                select: 'Generisch',
             },
             stride: {
                 defaultTitle: 'Neues STRIDE Diagramm',
                 defaultDescription: 'Neue STRIDE Diagramm Beschreibung',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'Neues LINDDUN Diagramm',
                 defaultDescription: 'Neue LINDDUN Diagramm Beschreibung',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'Neues PLOT4ai Diagramm',
                 defaultDescription: 'Neue PLOT4ai Diagramm Beschreibung',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'New DIE diagram',
                 defaultDescription: 'Neue DIE Diagramm Beschreibung',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'Neues CIA Diagramm',
                 defaultDescription: 'Neue CIA Diagramm Beschreibung',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Bedrohungen',
         errors: {
             dropSingleFileOnly: 'Ziehen und ablegen erfordert eine einzige Datei.',
-            invalidJson: 'Ungültiges JSON. Bitte überprüfen Sie Ihr Modell und versuchen Sie es erneut.',
+            invalidJson:
+                'Ungültiges JSON. Bitte überprüfen Sie Ihr Modell und versuchen Sie es erneut.',
             onlyJsonAllowed: 'Nur Datein mit .json Endung werden unterstützt.',
             open: 'Fehler beim Öffnen des Bedrohungsmodells. Prüfen Sie die Developer Konsole für mehr Informationen',
-            save: 'Fehler beim Speichern des Bedrohungsmodells. Prüfen Sie die Developer Konsole für mehr Informationen'
+            save: 'Fehler beim Speichern des Bedrohungsmodells. Prüfen Sie die Developer Konsole für mehr Informationen',
         },
         opened: 'Bedrohungsmodell erfolgreich geöffnet',
         saved: 'Bedrohungsmodell erfolgreich gespeichert',
@@ -176,7 +181,7 @@ const deu = {
             protocol: 'Protokoll',
             publicNetwork: 'Öffentliches Netzwerk',
             storesCredentials: 'Speichert Zugangsinformationen',
-            storesInventory: 'Stores Inventory'
+            storesInventory: 'Stores Inventory',
         },
         buttons: {
             delete: 'Auswahl löschen',
@@ -185,46 +190,46 @@ const deu = {
             toggleGrid: 'Gitter umschalten',
             undo: 'Bearbeitung zurücknehmen',
             zoomIn: 'Vergrößern',
-            zoomOut: 'Verkleinern'
+            zoomOut: 'Verkleinern',
         },
         shortcuts: {
             title: 'Abkürzungen',
             copy: {
                 shortcut: '(Strg/cmd) + c',
-                action: 'Kopieren'
+                action: 'Kopieren',
             },
             paste: {
                 shortcut: '(Strg/cmd) + v',
-                action: 'Einfügen'
+                action: 'Einfügen',
             },
             undo: {
                 shortcut: '(Strg/cmd) + z',
-                action: 'Zurücknehmen'
+                action: 'Zurücknehmen',
             },
             redo: {
                 shortcut: '(Strg/cmd) + y',
-                action: 'Wiederholen'
+                action: 'Wiederholen',
             },
             delete: {
                 shortcut: 'Enft',
-                action: 'Löschen'
+                action: 'Löschen',
             },
             pan: {
                 shortcut: 'shift + Linksklick (ziehen/ablegen)',
-                action: 'Schwenken'
+                action: 'Schwenken',
             },
             multiSelect: {
                 shortcut: 'Linksklick im leeren Bereich und ziehen',
-                action: 'Mehrfachauswahl'
+                action: 'Mehrfachauswahl',
             },
             zoom: {
                 shortcut: '(Strg/cmd) + Mausrad',
-                action: 'Zoomen'
+                action: 'Zoomen',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Grenzen',
@@ -232,7 +237,7 @@ const deu = {
             entities: 'Einheiten',
             metadata: 'Metadata',
             search: 'Suchen',
-            notFound: 'Noch nicht vorhanden. Wollen Sie einen Issue öffnen? :)'
+            notFound: 'Noch nicht vorhanden. Wollen Sie einen Issue öffnen? :)',
         },
         shapes: {
             actor: 'Actor',
@@ -241,8 +246,8 @@ const deu = {
             process: 'Process',
             store: 'Store',
             text: 'Descriptive text',
-            trustBoundary: 'Trust Boundary'
-        }
+            trustBoundary: 'Trust Boundary',
+        },
     },
     forms: {
         apply: 'Anwenden',
@@ -272,7 +277,7 @@ const deu = {
         saveModelAs: 'Modell speichern als',
         search: 'Suchen',
         next: 'nächste',
-        previous: 'vorherige'
+        previous: 'vorherige',
     },
     threats: {
         model: {
@@ -280,15 +285,16 @@ const deu = {
                 header: '--- CIA ---',
                 confidentiality: 'Vertraulichkeit',
                 integrity: 'Integrität',
-                availability: 'Verfügbarkeit'
+                availability: 'Verfügbarkeit',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Distributed',
                 immutable: 'Immutable',
-                ephemeral: 'Ephemeral'
+                ephemeral: 'Ephemeral',
             },
-            linddun: { //unable to find german sources to Linddun. The official website is also not available on german. will leave the specific terms as in the original
+            linddun: {
+                //unable to find german sources to Linddun. The official website is also not available on german. will leave the specific terms as in the original
                 header: '--- LINDDUN ---',
                 linkability: 'Linkability',
                 identifiability: 'Identifiability',
@@ -296,7 +302,7 @@ const deu = {
                 detectability: 'Detectability',
                 disclosureOfInformation: 'Disclosure of information',
                 unawareness: 'Unawareness',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -307,7 +313,7 @@ const deu = {
                 safety: 'Safety',
                 unawareness: 'Unawareness',
                 ethicsHumanRights: 'Ethics & Human Rights',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             stride: {
                 header: '--- STRIDE ---', //translation according to https://learn.microsoft.com/de-de/azure/security/develop/threat-modeling-tool-threats
@@ -316,8 +322,8 @@ const deu = {
                 repudiation: 'Nichtanerkennung',
                 informationDisclosure: 'Veröffentlichung von Informationen',
                 denialOfService: 'Denial of service',
-                elevationOfPrivilege: 'Erhöhung von Rechten'
-            }
+                elevationOfPrivilege: 'Erhöhung von Rechten',
+            },
         },
         generic: {
             default: 'Neue generische Bedrohung',
@@ -325,14 +331,15 @@ const deu = {
             die: 'Neue DIE Bedrohung',
             linddun: 'Neue LINDDUN Bedrohung',
             plot4ai: 'Neue PLOT4ai Bedrohung',
-            stride: 'Neue STRIDE Bedrohung'
+            stride: 'Neue STRIDE Bedrohung',
         },
         edit: 'Bedrohung bearbeiten',
         confirmDeleteTitle: 'Löschen bestätigen',
         confirmDeleteMessage: 'Sind Sie sicher, dass Sie diese Bedrohung löschen wollen?',
         description: 'Geben Sie eine Beschreibung dieser Bedrohung an',
         emptyThreat: 'Wählen Sie ein Element im Diagramm aus, um eine Bedrohung hinzuzufügen',
-        mitigation: 'Geben Sie eine Korrekturmaßnahme für diese Bedrohung oder eine Begründung N/A an',
+        mitigation:
+            'Geben Sie eine Korrekturmaßnahme für diese Bedrohung oder eine Begründung N/A an',
         newThreat: 'Neue Bedrohung',
         newThreatByType: 'Neue Bedrohung nach Typ',
         newThreatByContext: 'Neue Bedrohung nach Kontext',
@@ -345,20 +352,20 @@ const deu = {
             score: 'Ergebnis',
             status: 'Status',
             title: 'Titel',
-            type: 'Typ'
+            type: 'Typ',
         },
         status: {
             notApplicable: 'N/A',
             open: 'Offen',
-            mitigated: 'Abgeschwächt'
+            mitigated: 'Abgeschwächt',
         },
         priority: {
             tbd: '',
             low: 'Niedrig',
             medium: 'Mittel',
             high: 'Hoch',
-            critical: 'Kritisch'
-        }
+            critical: 'Kritisch',
+        },
     },
     report: {
         options: {
@@ -367,7 +374,7 @@ const deu = {
             showModelDiagrams: 'Modell Diagramme anzeigen',
             showEmpty: 'Leere Elemente anzeigen',
             showProperties: 'Show element properties',
-            showBranding: 'Threat Dragon Logo'
+            showBranding: 'Threat Dragon Logo',
         },
         title: 'Bedrohungsmodell Bereicht für',
         dateGenerated: 'Erstellungsdaten',
@@ -383,19 +390,19 @@ const deu = {
             openMedium: 'Offen / Mittlere Priorität',
             openLow: 'Offen / Niedrige Priorität',
             openTbd: 'Offen / TBD-Priorität',
-            openUnknown: 'Offen / Unbekannte Priorität'
-        }
+            openUnknown: 'Offen / Unbekannte Priorität',
+        },
     },
     upgrade: {
         modal: {
             header: 'Bedrohungsmodell Aktualisierung',
             welcome: 'Willkommen zu Version 2 von OWASP Threat Dragon!',
             p1: 'Version 2 verwendet eine andere Zeichnungsbibliothek, wodurch sich die Art wie Bedrohungsmodelle gespeichert werden, ändert. Obwohl die meisten Diagramme genauso aussehen wie in früheren Versionen von Threat Dragon, kann es vorkommen, dass in einigen Fällen die Diagramme leicht angepasst werden müssen.',
-            p2: 'Nachdem schließen dieses Modells, sehen Sie wie Diagramme in diesem Modell im Version 2 Format dargestellt werden. Notieren Sie sich bitte alle Diagramme, die Sie eventuell anpassen müssen. Dies ist ein einmaliges Upgrade und Sie sollten diese Nachricht nach dem Speichern des Modells nicht erneut sehen.'
+            p2: 'Nachdem schließen dieses Modells, sehen Sie wie Diagramme in diesem Modell im Version 2 Format dargestellt werden. Notieren Sie sich bitte alle Diagramme, die Sie eventuell anpassen müssen. Dies ist ein einmaliges Upgrade und Sie sollten diese Nachricht nach dem Speichern des Modells nicht erneut sehen.',
         },
         instructions: 'Super! Bringen wir Sie zu Ihrem Modell.',
-        continue: 'Weiter zum Bedrohungsmodell'
-    }
+        continue: 'Weiter zum Bedrohungsmodell',
+    },
 };
 
 export default deu;

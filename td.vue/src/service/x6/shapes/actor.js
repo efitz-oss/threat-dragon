@@ -16,10 +16,10 @@ export const ActorShape = Shape.Rect.define({
     attrs: {
         body: {
             fill: 'transparent',
-            fillOpacity: 0
-        }
+            fillOpacity: 0,
+        },
     },
-    ports: { ...ports }
+    ports: { ...ports },
 });
 
 ActorShape.prototype.type = 'tm.Actor';
@@ -36,5 +36,5 @@ ActorShape.prototype.updateStyle = function (color, dash, strokeWidth) {
 
 export default {
     ActorShape,
-    name
+    name,
 };

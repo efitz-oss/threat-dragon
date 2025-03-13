@@ -9,5 +9,5 @@ const logoutAsync = (refreshToken) => api.postAsync('/api/logout', { refreshToke
 export default {
     completeLoginAsync,
     loginAsync,
-    logoutAsync
+    logoutAsync,
 };

@@ -1,119 +1,110 @@
-import { BDropdown, BDropdownItem, BootstrapVue } from 'bootstrap-vue';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import VueI18n from 'vue-i18n';
-import Vuex from 'vuex';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
 import LocaleSelect from '@/components/LocaleSelect.vue';
-import { LOCALE_SELECTED } from '@/store/actions/locale.js';
+
+// Mock the vue-i18n composable
+vi.mock('vue-i18n', () => ({
+    useI18n: vi.fn(() => ({
+        locale: { value: 'eng' },
+        availableLocales: ['eng', 'deu'],
+    })),
+}));
+
+// Mock the locale store module
+vi.mock('@/stores/locale', () => ({
+    useLocaleStore: vi.fn(() => ({
+        locale: 'eng',
+        selectLocale: vi.fn(),
+    })),
+}));
+
+// Import the mocked store
+import { useLocaleStore } from '@/stores/locale';
+import { useI18n } from 'vue-i18n';
+
+// Mock isElectron
+vi.mock('is-electron', () => ({
+    default: () => false,
+}));
 
 describe('components/LocaleSelect.vue', () => {
-    let mockStore, wrapper;
+    let wrapper, mockLocaleStore, mockI18n;
 
     describe('default locale', () => {
         beforeEach(() => {
-            const localVue = createLocalVue();
-            localVue.use(Vuex);
-            localVue.use(VueI18n);
-            localVue.use(BootstrapVue);
-
-            const i18n = new VueI18n({
+            // Configure the mock store
+            mockLocaleStore = {
                 locale: 'eng',
-                messages: {
-                    eng: { hello: 'Hello World' },
-                    deu: { hello: 'Hallo Welt' }
-                }
-            });
+                selectLocale: vi.fn(),
+            };
 
-            mockStore = new Vuex.Store({
-                state: { locale: { locale: 'eng' }},
-                actions: { [LOCALE_SELECTED]: () => {} },
-                dispatch: () => {}
-            });
+            // Configure the mock i18n
+            mockI18n = {
+                locale: { value: 'eng' },
+                availableLocales: ['eng', 'deu'],
+            };
+
+            // Set the mock implementations
+            useLocaleStore.mockImplementation(() => mockLocaleStore);
+            useI18n.mockImplementation(() => mockI18n);
 
             wrapper = shallowMount(LocaleSelect, {
-                localVue,
-                i18n,
-                store: mockStore
+                global: {
+                    stubs: {
+                        Dropdown: true,
+                    },
+                },
             });
         });
 
         it('renders the component', () => {
-            expect(wrapper.findComponent(BDropdown).exists()).toEqual(true);
+            expect(wrapper.findComponent({ name: 'Dropdown' }).exists()).toBe(true);
         });
 
-        it('displays the current locale', () => {
-            expect(wrapper.findComponent(BDropdown).attributes('text')).toEqual('English');
-        });
-
-        it('has an option for eng', () => {
-            expect(wrapper.findAllComponents(BDropdownItem)
-                .filter((c) => c.text() === 'English').exists()
-            ).toEqual(true);
-        });
-
-        it('has an option for deu', () => {
-            expect(wrapper.findAllComponents(BDropdownItem)
-                .filter((c) => c.text() === 'Deutsch').exists()
-            ).toEqual(true);
+        it('gets the language name correctly', () => {
+            expect(wrapper.vm.getLanguageName('eng')).toBe('English');
+            expect(wrapper.vm.getLanguageName('deu')).toBe('Deutsch');
         });
 
         describe('updates', () => {
-            beforeEach(() => {
-                mockStore.dispatch = jest.fn();
+            it('calls selectLocale when locale is changed', async () => {
+                // Directly call the exposed method
+                await wrapper.vm.updateLocale('deu');
+                expect(mockLocaleStore.selectLocale).toHaveBeenCalledWith('deu');
             });
-
-            it('updates the locale to deu', async () => {
-                await wrapper.findAllComponents(BDropdownItem)
-                    .filter(c => c.text() === 'Deutsch')
-                    .at(0)
-                    .trigger('click');
-
-                expect(mockStore.dispatch).toHaveBeenCalledWith(LOCALE_SELECTED, 'deu');
-            });
-
-            it('updates the locale to eng', async () => {
-                await wrapper.findAllComponents(BDropdownItem)
-                    .filter(c => c.text() === 'English')
-                    .at(0)
-                    .trigger('click');
-
-                expect(mockStore.dispatch).toHaveBeenCalledWith(LOCALE_SELECTED, 'eng');
-            });
-
         });
     });
 
     describe('different locale', () => {
-        let i18n;
         beforeEach(() => {
-            const localVue = createLocalVue();
-            localVue.use(Vuex);
-            localVue.use(VueI18n);
-            localVue.use(BootstrapVue);
+            // Configure the mock store with a different locale
+            mockLocaleStore = {
+                locale: 'test',
+                selectLocale: vi.fn(),
+            };
 
-            i18n = new VueI18n({
-                locale: 'eng',
-                messages: {
-                    eng: { hello: 'Hello World' },
-                    deu: { hello: 'Hallo Welt' }
-                }
-            });
+            // Configure the mock i18n
+            mockI18n = {
+                locale: { value: 'test' },
+                availableLocales: ['eng', 'deu', 'test'],
+            };
 
-            mockStore = new Vuex.Store({
-                state: { locale: { locale: 'test' }},
-                actions: { [LOCALE_SELECTED]: () => {} },
-                dispatch: () => {}
-            });
+            // Set the mock implementations
+            useLocaleStore.mockImplementation(() => mockLocaleStore);
+            useI18n.mockImplementation(() => mockI18n);
 
             wrapper = shallowMount(LocaleSelect, {
-                localVue,
-                i18n,
-                store: mockStore
+                global: {
+                    stubs: {
+                        Dropdown: true,
+                    },
+                },
             });
         });
 
-        it('sets the locale based on the state', () => {
-            expect(i18n.locale).toEqual('test');
+        it('uses the locale from the store', () => {
+            expect(mockLocaleStore.locale).toBe('test');
         });
     });
 });

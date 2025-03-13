@@ -17,32 +17,32 @@ export const StoreShape = Shape.Rect.define({
         ...Shape.Rect.getMarkup(),
         {
             tagName: 'path',
-            selector: 'topLine'
+            selector: 'topLine',
         },
         {
             tagName: 'path',
-            selector: 'bottomLine'
-        }
+            selector: 'bottomLine',
+        },
     ],
     attrs: {
         topLine: {
             stroke: '#333333',
             strokeWidth: 2,
-            refD: 'M 0 0 l 200 0'
+            refD: 'M 0 0 l 200 0',
         },
         bottomLine: {
             stroke: '#333333',
             strokeWidth: 2,
             refDy: 0,
-            refD: 'M 0 0 l 100 0'
+            refD: 'M 0 0 l 100 0',
         },
         body: {
             fill: 'transparent',
             opacity: 0,
-            fillOpacity: 0
-        }
+            fillOpacity: 0,
+        },
     },
-    ports: { ...ports }
+    ports: { ...ports },
 });
 
 StoreShape.prototype.type = 'tm.Store';
@@ -62,5 +62,5 @@ StoreShape.prototype.updateStyle = function (color, dash, strokeWidth) {
 
 export default {
     name,
-    StoreShape
+    StoreShape,
 };

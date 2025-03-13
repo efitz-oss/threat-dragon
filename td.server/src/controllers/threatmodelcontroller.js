@@ -1,10 +1,10 @@
-import env from '../env/Env.js';
-import loggerHelper from '../helpers/logger.helper.js';
-import repositories from '../repositories/index.js';
+import { getEnvironment } from '../env/Env.js';
+import { getLogger } from '../helpers/logger.helper.js';
+import * as repositories from '../repositories/index.js';
 import responseWrapper from './responseWrapper.js';
 import { serverError } from './errors.js';
 
-const logger = loggerHelper.get('controllers/threatmodelcontroller.js');
+const logger = getLogger('controllers/threatmodelcontroller.js');
 
 const repos = (req, res) =>
     responseWrapper.sendResponseAsync(
@@ -17,12 +17,12 @@ const repos = (req, res) =>
             let repos;
             // backwardly compatible with previous use of env vars GITHUB_USE_SEARCH and GITHUB_SEARCH_QUERY
             if (
-                env.get().config.REPO_USE_SEARCH === 'true' ||
-                env.get().config.GITHUB_USE_SEARCH === 'true'
+                getEnvironment().config.REPO_USE_SEARCH === 'true' ||
+                getEnvironment().config.GITHUB_USE_SEARCH === 'true'
             ) {
                 logger.debug('Using searchAsync');
                 const searchQuery =
-                    env.get().config.REPO_SEARCH_QUERY ?? env.get().config.GITHUB_SEARCH_QUERY;
+                    getEnvironment().config.REPO_SEARCH_QUERY ?? getEnvironment().config.GITHUB_SEARCH_QUERY;
                 reposResp = await repository.searchAsync(page, req.provider.access_token, [
                     searchQuery,
                     ...searchQuerys,
@@ -241,9 +241,9 @@ const getPaginationFromHeaders = (headers, page) => {
 
 const organisation = (req, res) => {
     const organisation = {
-        protocol: env.get().config.ENTERPRISE_PROTOCOL ?? 'https',
-        hostname: env.get().config.GITHUB_ENTERPRISE_HOSTNAME ?? 'www.github.com',
-        port: env.get().config.GITHUB_ENTERPRISE_PORT ?? '',
+        protocol: getEnvironment().config.ENTERPRISE_PROTOCOL ?? 'https',
+        hostname: getEnvironment().config.GITHUB_ENTERPRISE_HOSTNAME ?? 'www.github.com',
+        port: getEnvironment().config.GITHUB_ENTERPRISE_PORT ?? '',
     };
     logger.debug(`API organisation request: ${logger.transformToString(req)}`);
 

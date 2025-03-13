@@ -1,165 +1,251 @@
-import {
-    BootstrapVue,
-    BNavbarBrand,
-    BImg,
-    BCollapse,
-    BNavbarNav,
-    BNavItem
-} from 'bootstrap-vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Vuex from 'vuex';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
 
-import { LOGOUT } from '@/store/actions/auth.js';
 import Navbar from '@/components/Navbar.vue';
 
+// Mock the store modules
+vi.mock('@/stores/auth', () => ({
+    useAuthStore: vi.fn(() => ({
+        username: 'foobar',
+        logout: vi.fn(),
+    })),
+}));
+
+vi.mock('@/stores/app', () => ({
+    useAppStore: vi.fn(() => ({
+        packageBuildVersion: '3.0.0',
+        packageBuildState: '',
+    })),
+}));
+
+vi.mock('@/stores/locale', () => ({
+    useLocaleStore: vi.fn(() => ({
+        locale: 'eng',
+        selectLocale: vi.fn(),
+    })),
+}));
+
+// Import the mocked stores
+import { useAuthStore } from '@/stores/auth';
+import { useAppStore } from '@/stores/app';
+import { useLocaleStore } from '@/stores/locale';
+
+// Mock vue-router
+vi.mock('vue-router', () => ({
+    useRouter: vi.fn(() => ({
+        push: vi.fn().mockResolvedValue({}),
+        replace: vi.fn(),
+    })),
+}));
+
+// Mock vue-i18n
+vi.mock('vue-i18n', () => ({
+    useI18n: vi.fn(() => ({
+        t: (key) => key,
+        locale: { value: 'eng' },
+        availableLocales: { value: ['eng', 'fra', 'deu'] },
+    })),
+}));
+
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+// Mock is-electron
+vi.mock('is-electron', () => ({
+    default: vi.fn().mockReturnValue(false),
+}));
+
+// Stub components
+const MenubarStub = {
+    template: '<div class="p-menubar"><slot name="start"></slot><slot name="end"></slot></div>',
+    inheritAttrs: false,
+};
+
+const ButtonStub = {
+    template:
+        '<button :id="$attrs.id" class="p-button" @click="$emit(\'click\', $event)"><slot></slot></button>',
+    props: ['icon'],
+    emits: ['click'],
+    inheritAttrs: false,
+};
+
+const RouterLinkStub = {
+    name: 'RouterLink',
+    template: '<a :href="to" :to="to" class="router-link td-brand"><slot></slot></a>',
+    props: ['to'],
+    inheritAttrs: false,
+};
+
+const TdLocaleSelectStub = {
+    template: '<div class="locale-select-stub"></div>',
+    inheritAttrs: false,
+};
+
 describe('components/Navbar.vue', () => {
-    let wrapper, localVue, mockStore, routerMock;
+    let wrapper, router, authStore, appStore;
 
     beforeEach(() => {
-        localVue = createLocalVue();
-        localVue.use(BootstrapVue);
-        localVue.component('font-awesome-icon', FontAwesomeIcon);
-        localVue.use(Vuex);
-        routerMock = { push: jest.fn() };
-        mockStore = new Vuex.Store({
-            getters: {
-                username: () => 'foobar'
+        // Reset mocks
+        vi.clearAllMocks();
+
+        // Setup auth store mock with reactive properties
+        authStore = {
+            username: 'foobar',
+            logout: vi.fn(),
+        };
+        useAuthStore.mockImplementation(() => authStore);
+
+        // Make sure the mock implementation is updated when the username changes
+        Object.defineProperty(authStore, 'username', {
+            get() {
+                return this._username;
             },
-            dispatch: () => {}
+            set(value) {
+                this._username = value;
+                // Re-apply the mock implementation to trigger reactivity
+                useAuthStore.mockImplementation(() => authStore);
+            },
         });
-        wrapper = shallowMount(Navbar, {
-            localVue,
-            store: mockStore,
-            mocks: {
-                $router: routerMock,
-                $t: key => key
-            }
+        authStore._username = 'foobar';
+
+        // Setup app store mock
+        appStore = {
+            packageBuildVersion: '3.0.0',
+            packageBuildState: '',
+        };
+        useAppStore.mockImplementation(() => appStore);
+
+        // Setup router mock
+        router = {
+            push: vi.fn().mockResolvedValue({}),
+        };
+        useRouter.mockImplementation(() => router);
+
+        // Create the wrapper
+        wrapper = mount(Navbar, {
+            global: {
+                stubs: {
+                    Menubar: MenubarStub,
+                    Button: ButtonStub,
+                    'router-link': RouterLinkStub,
+                    'td-locale-select': TdLocaleSelectStub,
+                },
+                mocks: {
+                    $t: (key) => key,
+                },
+                directives: {
+                    tooltip: {
+                        mounted: () => {},
+                        unmounted: () => {},
+                    },
+                },
+            },
         });
     });
 
     describe('brand', () => {
-        let navbarBrand;
-
-        beforeEach(() => {
-            navbarBrand = wrapper.findComponent(BNavbarBrand);
-        });
-        it('renders the navbar-brand', () => {
-            expect(navbarBrand.exists()).toBe(true);
+        it('renders the brand link', () => {
+            const brand = wrapper.find('.td-brand');
+            expect(brand.exists()).toBe(true);
         });
 
-        it('routes to the dashboard page', () => {
-            expect(navbarBrand.attributes('to')).toEqual('/dashboard');
+        it('routes to the dashboard page when logged in', () => {
+            const brand = wrapper.find('.td-brand');
+            expect(brand.attributes('to')).toEqual('/dashboard');
         });
 
         it('renders the brand image', () => {
-            expect(navbarBrand.findComponent(BImg).exists()).toBe(true);
+            const brandImg = wrapper.find('.td-brand-img');
+            expect(brandImg.exists()).toBe(true);
         });
 
-        it('displays threatdragon_logo.svg', () => {
-            expect(navbarBrand.findComponent(BImg).attributes('src'))
-                .toContain('threatdragon_logo');
-        });
-    });
-
-    describe('collapse', () => {
-        let collapse;
-
-        beforeEach(() => {
-            collapse = wrapper.findComponent(BCollapse);
+        it('displays threatdragon_logo', () => {
+            const brandImg = wrapper.find('.td-brand-img');
+            expect(brandImg.attributes('src')).toContain('threatdragon_logo');
         });
 
-        it('renders the b-collapse', () => {
-            expect(collapse.exists()).toBe(true);
+        it('shows version number', () => {
+            expect(wrapper.text()).toContain('Threat Dragon v3.0.0');
         });
     });
 
-    describe('nav', () => {
-        let nav,
-            navItems;
-
-        beforeEach(() => {
-            nav = wrapper.findComponent(BNavbarNav);
-            navItems = wrapper.findAllComponents(BNavItem);
+    describe('navigation items', () => {
+        it('shows username when logged in', () => {
+            const loggedInText = wrapper.find('.logged-in-as');
+            expect(loggedInText.exists()).toBe(true);
+            expect(loggedInText.text()).toContain('foobar');
         });
 
-        it('renders the nav', () => {
-            expect(nav.exists()).toBe(true);
-        });
+        it('does not display username when logged out', async () => {
+            // Create a new wrapper with no username
+            const loggedOutAuthStore = {
+                username: null,
+                logout: vi.fn(),
+            };
+            useAuthStore.mockImplementation(() => loggedOutAuthStore);
 
-        describe('sign out', () => {
-            let signOut;
-
-            beforeEach(() => {
-                signOut = navItems
-                    .filter(x => x.attributes('id') === 'nav-sign-out')
-                    .at(0);
-                mockStore.dispatch = jest.fn();
+            // Create a new component with the logged out state
+            const loggedOutWrapper = mount(Navbar, {
+                global: {
+                    stubs: {
+                        Menubar: MenubarStub,
+                        Button: ButtonStub,
+                        'router-link': RouterLinkStub,
+                        'td-locale-select': TdLocaleSelectStub,
+                    },
+                    mocks: {
+                        $t: (key) => key,
+                    },
+                    directives: {
+                        tooltip: {
+                            mounted: () => {},
+                            unmounted: () => {},
+                        },
+                    },
+                },
             });
 
-            it('has the sign out button', () => {
+            // Check the logged-in text is hidden
+            const loggedInText = loggedOutWrapper.find('.logged-in-as');
+            expect(loggedInText.attributes('style')).toBe('display: none;');
+        });
+
+        describe('sign out button', () => {
+            it('is visible when logged in', () => {
+                const signOut = wrapper.find('#nav-sign-out');
                 expect(signOut.exists()).toBe(true);
             });
 
-            it('uses fa sign-out-alt', () => {
-                expect(signOut.findComponent(FontAwesomeIcon).attributes('icon'))
-                    .toEqual('sign-out-alt');
-            });
-
-            it('dispatches the logout event', async () => {
+            it('calls logout and navigates to home on click', async () => {
+                // Find and click the sign out button
+                const signOut = wrapper.find('#nav-sign-out');
                 await signOut.trigger('click');
-                expect(mockStore.dispatch).toHaveBeenCalledWith(LOGOUT);
-            });
 
-            it('navigates to the home page', async () => {
-                await signOut.trigger('click');
-                expect(routerMock.push).toHaveBeenCalledWith('/');
+                // Verify logout was called and router push to home
+                expect(authStore.logout).toHaveBeenCalled();
+                expect(router.push).toHaveBeenCalledWith('/');
             });
         });
 
-        describe('docs', () => {
-            let docs;
-
-            beforeEach(() => {
-                docs = navItems
-                    .filter(x => x.attributes('id') === 'nav-docs')
-                    .at(0);
-            });
-
-            it('uses fa question-circle', () => {
-                expect(docs.findComponent(FontAwesomeIcon).attributes('icon'))
-                    .toEqual('question-circle');
-            });
+        it('renders the docs link', () => {
+            const docs = wrapper.find('#nav-docs');
+            expect(docs.exists()).toBe(true);
+            expect(docs.attributes('href')).toContain('owasp.org');
         });
 
-        describe('TM cheat sheet', () => {
-            let cheatSheet;
-
-            beforeEach(() => {
-                cheatSheet = navItems
-                    .filter(x => x.attributes('id') === 'nav-tm-cheat-sheet')
-                    .at(0);
-            });
-
-            it('uses fa gift', () => {
-                expect(cheatSheet.findComponent(FontAwesomeIcon).attributes('icon'))
-                    .toEqual('gift');
-            });
+        it('renders the cheat sheet link', () => {
+            const cheatSheet = wrapper.find('#nav-tm-cheat-sheet');
+            expect(cheatSheet.exists()).toBe(true);
+            expect(cheatSheet.attributes('href')).toContain('cheatsheets');
         });
 
-        describe('threat dragon owasp', () => {
-            let tdOwasp;
+        it('renders the OWASP link with logo', () => {
+            const owaspLink = wrapper.find('#nav-owasp-td');
+            const owaspImg = wrapper.find('.td-owasp-logo');
 
-            beforeEach(() => {
-                tdOwasp = navItems
-                    .filter(x => x.attributes('id') === 'nav-owasp-td')
-                    .at(0);
-            });
-
-            it('uses the OWASP image', () => {
-                expect(tdOwasp.findComponent(BImg).attributes('src'))
-                    .toContain('owasp');
-            });
+            expect(owaspLink.exists()).toBe(true);
+            expect(owaspImg.exists()).toBe(true);
+            expect(owaspImg.attributes('src')).toContain('owasp');
         });
     });
 });

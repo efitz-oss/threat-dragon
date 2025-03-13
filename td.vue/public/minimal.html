@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Test</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script>
+        // Simple Vue app to test if Vue is working
+        const { createApp, h } = Vue;
+        
+        const app = createApp({
+            render() {
+                return h('div', [
+                    h('h1', 'Vue 3 Test'),
+                    h('p', 'If you can see this, Vue is working correctly.'),
+                    h('button', { onClick: () => alert('Button clicked!') }, 'Click me')
+                ]);
+            }
+        });
+        
+        app.mount('#app');
+    </script>
+</body>
+</html>

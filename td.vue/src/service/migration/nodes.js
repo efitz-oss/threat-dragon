@@ -9,10 +9,10 @@ const map = (constructor) => (cell) => {
         // process flows to other elements prior to drawing
         id: cell.id,
         zIndex: cell.z,
-        label: cell.attrs && cell.attrs.text && cell.attrs.text.text ? cell.attrs.text.text : ''
+        label: cell.attrs && cell.attrs.text && cell.attrs.text.text ? cell.attrs.text.text : '',
     });
 };
 
 export default {
-    map
+    map,
 };

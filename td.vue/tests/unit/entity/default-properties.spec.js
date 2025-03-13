@@ -217,8 +217,7 @@ describe('service/entity/default-properties.js', () => {
 
     describe('getByType', () => {
         it('throws an error for an unknown type', () => {
-            expect(() => defaultProperties.getByType('fake'))
-                .toThrowError('Unknown entity: fake');
+            expect(() => defaultProperties.getByType('fake')).toThrowError('Unknown entity: fake');
         });
 
         it('gets actor', () => {
@@ -230,7 +229,9 @@ describe('service/entity/default-properties.js', () => {
         });
 
         it('gets boundaryBox', () => {
-            expect(defaultProperties.getByType('tm.BoundaryBox')).toEqual(defaultProperties.boundaryBox);
+            expect(defaultProperties.getByType('tm.BoundaryBox')).toEqual(
+                defaultProperties.boundaryBox
+            );
         });
 
         it('gets flow', () => {

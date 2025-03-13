@@ -66,31 +66,20 @@ describe('service/x6/stencil.js', () => {
 
     it('loads the entities', () => {
         expect(stencilInstance.load).toHaveBeenCalledWith(
-            [
-                expect.any(Object),
-                expect.any(Object),
-                expect.any(Object),
-                expect.any(Object),
-            ],
+            [expect.any(Object), expect.any(Object), expect.any(Object), expect.any(Object)],
             'components'
         );
     });
 
     it('loads the trust boundaries', () => {
         expect(stencilInstance.load).toHaveBeenCalledWith(
-            [
-                expect.any(Object),
-                expect.any(Object),
-            ],
+            [expect.any(Object), expect.any(Object)],
             'boundaries'
         );
     });
 
     it('loads the metadata', () => {
-        expect(stencilInstance.load).toHaveBeenCalledWith(
-            [expect.any(Object)],
-            'metadata'
-        );
+        expect(stencilInstance.load).toHaveBeenCalledWith([expect.any(Object)], 'metadata');
     });
 
     it('calls onSearch twice', () => {
@@ -101,4 +90,3 @@ describe('service/x6/stencil.js', () => {
         expect(container.appendChild).toHaveBeenCalledWith(stencilInstance.container);
     });
 });
-

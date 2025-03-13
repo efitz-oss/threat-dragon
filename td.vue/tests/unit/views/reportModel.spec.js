@@ -23,24 +23,22 @@ describe('views/ReportModel.vue', () => {
                         summary: {
                             title: 'My title',
                             owner: 'some owner',
-                            description: 'Aweomse sauce'
+                            description: 'Aweomse sauce',
                         },
                         detail: {
                             reviewer: 'Reviewer',
                             contributors: ['Contribs'],
-                            diagrams: [
-                                { cells: [{ threats: [{ foo: 'bar' }] }]}
-                            ]
-                        }
-                    }
+                            diagrams: [{ cells: [{ threats: [{ foo: 'bar' }] }] }],
+                        },
+                    },
                 },
                 provider: {
-                    selected: 'local'
-                }
+                    selected: 'local',
+                },
             },
             getters: {
-                contributors: () => []
-            }
+                contributors: () => [],
+            },
         });
         wrapper = shallowMount(ReportModel, {
             localVue,
@@ -48,68 +46,58 @@ describe('views/ReportModel.vue', () => {
             mocks: {
                 $route: routerMock,
                 $router: routerMock,
-                $t: t => t
-            }
+                $t: (t) => t,
+            },
         });
     });
 
     describe('report options', () => {
         it('has an option for showing out of scope entities', () => {
-            expect(wrapper.find('#show_outofscope').exists())
-                .toEqual(true);
+            expect(wrapper.find('#show_outofscope').exists()).toEqual(true);
         });
-    
+
         it('has an option for showing out of mitigated threats', () => {
-            expect(wrapper.find('#show_mitigated').exists())
-                .toEqual(true);
+            expect(wrapper.find('#show_mitigated').exists()).toEqual(true);
         });
-    
+
         it('has an option for showing out of the diagrams', () => {
-            expect(wrapper.find('#show_models').exists())
-                .toEqual(true);
+            expect(wrapper.find('#show_models').exists()).toEqual(true);
         });
-    
+
         it('has an option for showing Threat Dragon branding', () => {
-            expect(wrapper.find('#show_branding').exists())
-                .toEqual(true);
+            expect(wrapper.find('#show_branding').exists()).toEqual(true);
         });
-    
+
         it('has a print button', () => {
-            expect(wrapper.findComponent('#td-print-btn').exists())
-                .toEqual(true);
+            expect(wrapper.findComponent('#td-print-btn').exists()).toEqual(true);
         });
-    
+
         it('has a return button', () => {
-            expect(wrapper.findComponent('#td-return-btn').exists())
-                .toEqual(true);
+            expect(wrapper.findComponent('#td-return-btn').exists()).toEqual(true);
         });
-    
+
         it('does not display the save pdf button', () => {
-            expect(wrapper.findComponent('#td-save-pdf-btn').exists())
-                .toEqual(false);
+            expect(wrapper.findComponent('#td-save-pdf-btn').exists()).toEqual(false);
         });
     });
 
     it('shows the cover sheet', () => {
-        expect(wrapper.findComponent(TdCoversheet).exists())
-            .toEqual(true);
+        expect(wrapper.findComponent(TdCoversheet).exists()).toEqual(true);
     });
 
     it('shows the executive summary', () => {
-        expect(wrapper.findComponent(TdExecutiveSummary).exists())
-            .toEqual(true);
+        expect(wrapper.findComponent(TdExecutiveSummary).exists()).toEqual(true);
     });
 
     it('shows the diagram detail', () => {
-        expect(wrapper.findComponent(TdDiagramDetail).exists())
-            .toEqual(true);
+        expect(wrapper.findComponent(TdDiagramDetail).exists()).toEqual(true);
     });
 
     it('closes the report', () => {
         wrapper.vm.onCloseClick();
         expect(routerMock.push).toHaveBeenCalledWith({
             name: 'localThreatModel',
-            params: routerMock.params
+            params: routerMock.params,
         });
     });
 

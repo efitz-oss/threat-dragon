@@ -1,9 +1,11 @@
+/**
+ * Tests for desktop utilities
+ */
+import { describe, it, expect } from 'vitest';
 import utils from '@/desktop/utils.js';
 
 describe('desktop/utils.js', () => {
-
     describe('Desktop server utilities', () => {
-
         it('should provide the log level', () => {
             expect(utils.logLevel).toMatch('debug');
         });
@@ -15,7 +17,5 @@ describe('desktop/utils.js', () => {
         it('should not provide the url', () => {
             expect(utils.electronURL).not.toBeDefined();
         });
-
     });
-
 });

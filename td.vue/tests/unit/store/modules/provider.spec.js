@@ -6,7 +6,7 @@ import threatmodelApi from '@/service/api/threatmodelApi.js';
 describe('store/modules/provider.js', () => {
     const mocks = {
         commit: () => {},
-        dispatch: () => {}
+        dispatch: () => {},
     };
 
     beforeEach(() => {
@@ -37,7 +37,7 @@ describe('store/modules/provider.js', () => {
             providerModule.actions[PROVIDER_CLEAR](mocks);
             expect(mocks.commit).toHaveBeenCalledWith(PROVIDER_CLEAR);
         });
-        
+
         describe('fetch', () => {
             beforeEach(() => {
                 providerModule.actions[PROVIDER_FETCH](mocks);
@@ -54,32 +54,37 @@ describe('store/modules/provider.js', () => {
                 );
             });
         });
-        
+
         describe('selected', () => {
             beforeEach(async () => {
-                jest.spyOn(threatmodelApi, 'organisationAsync').mockResolvedValue(
-                    { 
-                        'protocol': 'https',
-                        'hostname': 'github.com',
-                        'port': ''
-                    });
+                jest.spyOn(threatmodelApi, 'organisationAsync').mockResolvedValue({
+                    protocol: 'https',
+                    hostname: 'github.com',
+                    port: '',
+                });
             });
 
             it('throws an error if providerName is falsy', async () => {
-                await expect(() => providerModule.actions[PROVIDER_SELECTED](mocks)).rejects.toThrowError();
+                await expect(() =>
+                    providerModule.actions[PROVIDER_SELECTED](mocks)
+                ).rejects.toThrowError();
             });
 
             it('throws an error for an unknown provider', async () => {
-                await expect(() => providerModule.actions[PROVIDER_SELECTED](mocks, 'fake')).rejects.toThrowError();
+                await expect(() =>
+                    providerModule.actions[PROVIDER_SELECTED](mocks, 'fake')
+                ).rejects.toThrowError();
             });
 
             it('commits the selected provider', async () => {
-                await providerModule.actions[PROVIDER_SELECTED](mocks, providerService.providerNames.github);
-                expect(mocks.commit).toHaveBeenCalledWith(PROVIDER_SELECTED, 
-                    { 
-                        'providerName': providerService.providerNames.github, 
-                        'providerUri': 'https://github.com' 
-                    });
+                await providerModule.actions[PROVIDER_SELECTED](
+                    mocks,
+                    providerService.providerNames.github
+                );
+                expect(mocks.commit).toHaveBeenCalledWith(PROVIDER_SELECTED, {
+                    providerName: providerService.providerNames.github,
+                    providerUri: 'https://github.com',
+                });
             });
         });
     });
@@ -112,7 +117,10 @@ describe('store/modules/provider.js', () => {
             const providerUri = 'https://github.com';
 
             beforeEach(() => {
-                providerModule.mutations[PROVIDER_SELECTED](providerModule.state, {'providerName': provider, 'providerUri': providerUri});
+                providerModule.mutations[PROVIDER_SELECTED](providerModule.state, {
+                    providerName: provider,
+                    providerUri: providerUri,
+                });
             });
 
             it('sets the provider prop', () => {

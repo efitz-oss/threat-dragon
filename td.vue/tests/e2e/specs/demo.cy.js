@@ -22,5 +22,4 @@ describe('print', () => {
         cy.get('a').contains('Demo Threat Model').click();
         cy.url().should('contain', '/local/Demo%20Threat%20Model');
     });
-
 });

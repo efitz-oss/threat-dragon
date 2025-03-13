@@ -7,24 +7,24 @@ import models from '../threats/models/index.js';
 const getCellConverter = () => ({
     'tm.Actor': {
         isNode: true,
-        mapper: nodes.map(shapes.ActorShape)
+        mapper: nodes.map(shapes.ActorShape),
     },
     'tm.Boundary': {
         isNode: false,
-        mapper: edges.map(shapes.TrustBoundaryCurve)
+        mapper: edges.map(shapes.TrustBoundaryCurve),
     },
     'tm.Flow': {
         isNode: false,
-        mapper: edges.map(shapes.Flow)
+        mapper: edges.map(shapes.Flow),
     },
     'tm.Process': {
         isNode: true,
-        mapper: nodes.map(shapes.ProcessShape)
+        mapper: nodes.map(shapes.ProcessShape),
     },
     'tm.Store': {
         isNode: true,
-        mapper: nodes.map(shapes.StoreShape)
-    }
+        mapper: nodes.map(shapes.StoreShape),
+    },
 });
 
 /**
@@ -68,5 +68,5 @@ const map = (diagram) => {
 };
 
 export default {
-    map
+    map,
 };

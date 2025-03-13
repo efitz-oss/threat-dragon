@@ -40,8 +40,8 @@ describe('service/x6/graph/graph.js', () => {
             expect(graphRes.use).toHaveBeenCalledWith(
                 expect.objectContaining({
                     options: expect.objectContaining({
-                        beforeAddCommand: beforeAddCommand
-                    })
+                        beforeAddCommand: beforeAddCommand,
+                    }),
                 })
             );
         });
@@ -59,8 +59,8 @@ describe('service/x6/graph/graph.js', () => {
                 expect.objectContaining({
                     name: 'history',
                     options: expect.objectContaining({
-                        enabled: true
-                    })
+                        enabled: true,
+                    }),
                 })
             );
         });
@@ -68,7 +68,7 @@ describe('service/x6/graph/graph.js', () => {
         it('sets the grid', () => {
             expect(graphRes.grid).toEqual({
                 size: 10,
-                visible: true
+                visible: true,
             });
         });
 
@@ -78,8 +78,8 @@ describe('service/x6/graph/graph.js', () => {
                     name: 'snapline',
                     options: expect.objectContaining({
                         enabled: true,
-                        sharp: true
-                    })
+                        sharp: true,
+                    }),
                 })
             );
         });
@@ -89,8 +89,8 @@ describe('service/x6/graph/graph.js', () => {
                 expect.objectContaining({
                     name: 'clipboard',
                     options: expect.objectContaining({
-                        enabled: true
-                    })
+                        enabled: true,
+                    }),
                 })
             );
         });
@@ -101,8 +101,8 @@ describe('service/x6/graph/graph.js', () => {
                     name: 'keyboard',
                     options: expect.objectContaining({
                         enabled: true,
-                        global: true
-                    })
+                        global: true,
+                    }),
                 })
             );
         });
@@ -128,15 +128,17 @@ describe('service/x6/graph/graph.js', () => {
             expect(graphRes.mousewheel).toEqual({
                 enabled: true,
                 global: true,
-                modifiers: ['ctrl', 'meta']
+                modifiers: ['ctrl', 'meta'],
             });
         });
 
         it('enables connecting', () => {
-            expect(graphRes.connecting).toEqual(expect.objectContaining({
-                allowNode: true,
-                allowBlank: true
-            }));
+            expect(graphRes.connecting).toEqual(
+                expect.objectContaining({
+                    allowNode: true,
+                    allowBlank: true,
+                })
+            );
         });
 
         it('enables the scroller', () => {

@@ -2,24 +2,24 @@ import { providerTypes } from './providerTypes.js';
 
 const providerType = providerTypes.local;
 
-const getDashboardActions = () => ([
+const getDashboardActions = () => [
     {
         to: `/${providerType}/threatmodel/import`,
         key: 'openExisting',
-        icon: 'file-import'
+        icon: 'file-import',
     },
     {
         to: `/${providerType}/threatmodel/new`,
         key: 'createNew',
-        icon: 'plus'
+        icon: 'plus',
     },
     {
         to: '/demo/select',
         key: 'readDemo',
-        icon: 'cloud-download-alt'
-    }
-]);
+        icon: 'cloud-download-alt',
+    },
+];
 
 export default {
-    getDashboardActions
+    getDashboardActions,
 };

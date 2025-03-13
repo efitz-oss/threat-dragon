@@ -1,142 +1,253 @@
 <template>
-  <b-navbar toggleable="lg" fixed="top" id="navbar">
-    <b-navbar-brand :to="username ? '/dashboard' : '/'" class="td-brand">
-      <b-img src="@/assets/threatdragon_logo_image.svg" class="td-brand-img" alt="Threat Dragon Logo" />
-      Threat Dragon v{{this.$store.state.packageBuildVersion}}{{this.$store.state.packageBuildState}}
-    </b-navbar-brand>
+    <Menubar class="top-navbar">
+        <template #start>
+            <div class="navbar-start-items">
+                <router-link :to="username ? '/dashboard' : '/'" class="td-brand">
+                    <img
+                        src="@/assets/threatdragon_logo_image.svg"
+                        class="brand-logo"
+                        alt="Threat Dragon Logo"
+                    />
+                    Threat Dragon v{{ appStore.packageBuildVersion
+                    }}{{ appStore.packageBuildState }}
+                </router-link>
 
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-        <b-nav-item>
-            <td-locale-select />
-        </b-nav-item>
-      </b-navbar-nav>
-      
-      <b-navbar-nav class="ml-auto">
-        <b-nav-text v-show="username" class="logged-in-as">{{ $t('nav.loggedInAs')}} {{ username }}</b-nav-text>
-        <b-nav-item v-show="username" @click="onLogOut" id="nav-sign-out">
-          <font-awesome-icon
-            icon="sign-out-alt"
-            class="td-fa-nav"
-            v-b-tooltip.hover :title="$t('nav.logOut')"
-          ></font-awesome-icon>
-        </b-nav-item>
-        <b-nav-item
-          href="https://owasp.org/www-project-threat-dragon/docs-2/"
-          target="_blank"
-          rel="noopener noreferrer"
-          id="nav-docs"
-        >
-          <font-awesome-icon
-            icon="question-circle"
-            class="td-fa-nav"
-            v-b-tooltip.hover :title="$t('desktop.help.docs')"
-          ></font-awesome-icon>
-        </b-nav-item>
-        <b-nav-item
-          href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          id="nav-tm-cheat-sheet"
-        >
-          <font-awesome-icon
-            icon="gift"
-            class="td-fa-nav"
-            v-b-tooltip.hover :title="$t('desktop.help.sheets')"
-          ></font-awesome-icon>
-        </b-nav-item>
-        <b-nav-item
-          href="https://owasp.org/www-project-threat-dragon/"
-          target="_blank"
-          rel="noopener noreferrer"
-          id="nav-owasp-td"
-        >
-          <b-img src="@/assets/owasp.svg" class="td-fa-nav td-owasp-logo" :title="$t('desktop.help.visit')"/>
-        </b-nav-item>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
+                <td-locale-select class="locale-select" />
+            </div>
+        </template>
+
+        <template #end>
+            <div class="navbar-end-items">
+                <div v-show="username" class="logged-in-as">
+                    {{ $t('nav.loggedInAs') }} {{ username }}
+                </div>
+
+                <Button
+                    v-show="username"
+                    id="nav-sign-out"
+                    v-tooltip.bottom="$t('nav.logOut')"
+                    class="p-button-text p-button-rounded"
+                    @click="onLogOut"
+                >
+                    <template #icon>
+                        <font-awesome-icon icon="sign-out-alt" class="fa-nav-icon" />
+                    </template>
+                </Button>
+
+                <a
+                    id="nav-docs"
+                    href="https://owasp.org/www-project-threat-dragon/docs-2/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Button
+                        v-tooltip.bottom="$t('desktop.help.docs')"
+                        class="p-button-text p-button-rounded"
+                    >
+                        <template #icon>
+                            <font-awesome-icon icon="question-circle" class="fa-nav-icon" />
+                        </template>
+                    </Button>
+                </a>
+
+                <a
+                    id="nav-tm-cheat-sheet"
+                    href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Button
+                        v-tooltip.bottom="$t('desktop.help.sheets')"
+                        class="p-button-text p-button-rounded"
+                    >
+                        <template #icon>
+                            <font-awesome-icon icon="gift" class="fa-nav-icon" />
+                        </template>
+                    </Button>
+                </a>
+
+                <a
+                    id="nav-owasp-td"
+                    href="https://owasp.org/www-project-threat-dragon/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                        src="@/assets/owasp.svg"
+                        class="navbar-icon owasp-logo"
+                        :title="$t('desktop.help.visit')"
+                        width="24"
+                        height="24"
+                    />
+                </a>
+            </div>
+        </template>
+    </Menubar>
 </template>
 
-<style lang="scss" scoped>
-$icon-height: 1.2rem;
-
-.navbar {
-  background-color: $orange;
-  border-color: $orange-alt;
-  height: $header-height+10;
-  font-size: 15px;
-}
-
-.nav-link,
-.logged-in-as {
-  color: $white !important;
-}
-
-.logged-in-as {
-  margin-right: 10px;
-}
-
-.td-fa-nav {
-  font-size: $icon-height;
-  max-height: $icon-height;
-  margin: 0 5px 0 5px;
-}
-
-.td-brand {
-  color: $white !important;
-  .td-brand-img {
-    max-height: ($header-height - 10);
-  }
-}
-
-@media (max-width: 576px) { /* This is the typical breakpoint for phones */
-  .nav-link {
-  color: red !important;
-  }
-  .logged-in-as {
-    background-color: $orange;
-    border-radius: 5px;
-    padding:10px;
-  }
-}
-@media (max-width: 576px) {
-  .td-owasp-logo { /* Target the OWASP logo */
-    background-color: red;
-    border-radius: 50%;
-    padding: 5px;
-  }
-  }
-
-</style>
-
-<script>
-import { mapGetters } from 'vuex';
-
-import { LOGOUT } from '@/store/actions/auth.js';
+<script setup>
+import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useAppStore } from '@/stores/app';
 import TdLocaleSelect from './LocaleSelect.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-export default {
-    name: 'TdNavbar',
-    components: {
-        TdLocaleSelect
-    },
-    computed: {
-        ...mapGetters([
-            'username'
-        ])
-    },
-    methods: {
-        onLogOut(evt) {
-            evt.preventDefault();
-            this.$store.dispatch(LOGOUT);
-            this.$router.push('/').catch(error => {
-                if (error.name != 'NavigationDuplicated') {
-                    throw error;
-                }
-            });
+// Component imports
+import Menubar from 'primevue/menubar';
+import Button from 'primevue/button';
+
+// Store instances
+const authStore = useAuthStore();
+const appStore = useAppStore();
+const router = useRouter();
+
+// Computed properties
+const username = computed(() => authStore.username);
+
+// Methods
+async function onLogOut(evt) {
+    evt.preventDefault();
+    await authStore.logout();
+
+    // Router navigation with timestamp query parameter to force refresh in Safari
+    router.push({ path: '/', query: { t: Date.now() } });
+
+    // Add a slight delay and then perform a full navigation if needed
+    // This helps with Safari's cache handling
+    setTimeout(() => {
+        if (window.location.pathname !== '/') {
+            window.location.href = `/?t=${Date.now()}`;
+        }
+    }, 100);
+}
+</script>
+
+<style lang="scss" scoped>
+    @import '@/styles/primevue-variables.scss';
+    @import '@/styles/icons.scss';
+    @import '@/styles/scss-includes.scss';
+
+    .top-navbar {
+        background-color: var(--primary-color);
+        border-color: var(--primary-dark-color);
+        height: #{$header-height};
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+
+        /* Ensure proper Menubar layout */
+        :deep(.p-menubar) {
+            width: 100%;
+            display: flex;
+        }
+
+        :deep(.p-menubar-start) {
+            flex: 0 1 auto;
+            padding-left: 1rem;
+        }
+
+        :deep(.p-menubar-end) {
+            display: flex;
+            justify-content: flex-end;
+            margin-left: auto; /* Push to the far right */
+            padding-right: 1rem;
+        }
+
+        /* Override PrimeVue font size for the navbar */
+        font-size: 15px !important;
+
+        /* Ensure all child elements inherit the font size */
+        * {
+            font-size: 15px;
+        }
+
+        /* Specific overrides for PrimeVue components inside navbar */
+        :deep(.p-menubar-root-list),
+        :deep(.p-menuitem-link),
+        :deep(.p-menuitem-text) {
+            font-size: 15px;
+        }
+
+        /* Override PrimeVue menubar styles */
+        :deep(.p-menubar) {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
+            justify-content: space-between;
         }
     }
-};
-</script>
+
+    .navbar-start-items {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .navbar-end-items {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: flex-end; /* Align items to the right */
+        flex-wrap: nowrap; /* Prevent wrapping */
+        width: 100%; /* Take up full width of container */
+    }
+
+    .locale-select {
+        margin-left: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    :deep(.p-menubar-root-list) {
+        display: none;
+    }
+
+    :deep(.p-button.p-button-text) {
+        color: white;
+        background-color: transparent;
+        height: 32px;
+        width: 32px;
+        padding: 0;
+        margin: 0;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+        }
+    }
+
+    .logged-in-as {
+        color: white;
+        margin-right: 10px;
+    }
+
+    .td-brand {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    @media (max-width: 576px) {
+        /* This is the typical breakpoint for phones */
+        .logged-in-as {
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 0.85rem;
+        }
+    }
+</style>

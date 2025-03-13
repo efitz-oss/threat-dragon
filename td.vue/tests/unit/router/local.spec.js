@@ -5,8 +5,7 @@ describe('routes/local.js', () => {
         let route;
 
         beforeEach(() => {
-            route = localRoutes
-                .find(x => x.name === 'localThreatModel');
+            route = localRoutes.find((x) => x.name === 'localThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -23,8 +22,7 @@ describe('routes/local.js', () => {
         let route;
 
         beforeEach(() => {
-            route = localRoutes
-                .find(x => x.name === 'localThreatModelEdit');
+            route = localRoutes.find((x) => x.name === 'localThreatModelEdit');
         });
 
         it('uses the expected path', () => {
@@ -41,8 +39,7 @@ describe('routes/local.js', () => {
         let route;
 
         beforeEach(() => {
-            route = localRoutes
-                .find(x => x.name === 'localDiagramEdit');
+            route = localRoutes.find((x) => x.name === 'localDiagramEdit');
         });
 
         it('uses the expected path', () => {
@@ -55,13 +52,11 @@ describe('routes/local.js', () => {
         });
     });
 
-
     describe('New threat model', () => {
         let route;
 
         beforeEach(() => {
-            route = localRoutes
-                .find(x => x.name === 'localNewThreatModel');
+            route = localRoutes.find((x) => x.name === 'localNewThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -78,8 +73,7 @@ describe('routes/local.js', () => {
         let route;
 
         beforeEach(() => {
-            route = localRoutes
-                .find(x => x.name === 'localThreatModelImport');
+            route = localRoutes.find((x) => x.name === 'localThreatModelImport');
         });
 
         it('uses the expected path', () => {
@@ -96,8 +90,7 @@ describe('routes/local.js', () => {
         let route;
 
         beforeEach(() => {
-            route = localRoutes
-                .find(x => x.name === 'localReport');
+            route = localRoutes.find((x) => x.name === 'localReport');
         });
 
         it('uses the expected path', () => {
@@ -109,5 +102,4 @@ describe('routes/local.js', () => {
             expect(cmp.default.name).toEqual('ReportModel');
         });
     });
-    
 });

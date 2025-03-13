@@ -6,11 +6,11 @@ describe('service/migration/edges.js', () => {
         const getCell = () => ({
             protocol: 'foo',
             isEncrypted: true,
-            isPublicNetwork: true
+            isPublicNetwork: true,
         });
-        
+
         const getData = () => ({
-            type: 'tm.Flow'
+            type: 'tm.Flow',
         });
 
         it('does not modify data for anything other than flows', () => {
@@ -53,7 +53,7 @@ describe('service/migration/edges.js', () => {
         const getCell = () => ({
             source: 'the source',
             target: 'the target',
-            vertices: [1, 2, 3]
+            vertices: [1, 2, 3],
         });
 
         beforeEach(() => {
@@ -65,21 +65,27 @@ describe('service/migration/edges.js', () => {
         });
 
         it('sets the source', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                source: cell.source
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    source: cell.source,
+                })
+            );
         });
 
         it('sets the target', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                target: cell.target
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    target: cell.target,
+                })
+            );
         });
 
         it('sets the vertices', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                vertices: cell.vertices
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    vertices: cell.vertices,
+                })
+            );
         });
     });
 
@@ -90,22 +96,28 @@ describe('service/migration/edges.js', () => {
             source: 'the source',
             target: 'the target',
             vertices: [1, 2, 3],
-            labels: [{
-                position: { x: 1, y: 2 }
-            }]
+            labels: [
+                {
+                    position: { x: 1, y: 2 },
+                },
+            ],
         };
         const mapFn = edges.map(constructor);
         mapFn(cell);
 
-        expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-            labels: [{
-                position: cell.labels[0].position,
-                attrs: {
-                    label: {
-                        text: 'asdf'
-                    }
-                }
-            }]
-        }));
+        expect(constructor).toHaveBeenCalledWith(
+            expect.objectContaining({
+                labels: [
+                    {
+                        position: cell.labels[0].position,
+                        attrs: {
+                            label: {
+                                text: 'asdf',
+                            },
+                        },
+                    },
+                ],
+            })
+        );
     });
 });

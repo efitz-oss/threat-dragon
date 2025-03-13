@@ -1,0 +1,39 @@
+/* 
+ * SCSS Utilities
+ * Contains utility variables and mixins that don't require sass:math
+ */
+
+/*
+ * Note: We've eliminated the sass:math dependency by using native CSS calc()
+ * For example, instead of:
+ *   height: add($header-height, 10);
+ * Use:
+ *   height: calc($header-height + 10px);
+ */
+
+/* Utility Variables */
+$default-spacing: 1rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+/* Utility Mixins */
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* No need to import sizes.scss or colors.scss as they're now consolidated in primevue-variables.scss */

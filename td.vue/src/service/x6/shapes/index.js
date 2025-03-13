@@ -30,5 +30,5 @@ export default {
     TextBlock,
     TrustBoundaryBox,
     TrustBoundaryCurve,
-    TrustBoundaryCurveStencil
+    TrustBoundaryCurveStencil,
 };

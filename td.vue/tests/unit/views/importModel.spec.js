@@ -16,9 +16,9 @@ describe('ImportModel.vue', () => {
         mockStore = new Vuex.Store({
             state: {
                 provider: {
-                    selected: 'local'
-                }
-            }
+                    selected: 'local',
+                },
+            },
         });
         mockStore.dispatch = jest.fn();
         mockRouter = { push: jest.fn() };
@@ -26,16 +26,18 @@ describe('ImportModel.vue', () => {
             localVue,
             store: mockStore,
             mocks: {
-                $t: key => key,
+                $t: (key) => key,
                 $toast: toast,
-                $route: { params: { }},
-                $router: mockRouter
-            }
+                $route: { params: {} },
+                $router: mockRouter,
+            },
         });
     });
 
     it('shows the jumbotron text', () => {
-        expect(wrapper.findComponent(BJumbotron).text()).toEqual('forms.open / dashboard.actions.importExisting');
+        expect(wrapper.findComponent(BJumbotron).text()).toEqual(
+            'forms.open / dashboard.actions.importExisting'
+        );
     });
 
     it('has the textarea input', () => {
@@ -47,10 +49,10 @@ describe('ImportModel.vue', () => {
     });
 
     describe('with valid JSON', () => {
-        const tm = { summary: { title: 'foo' }};
+        const tm = { summary: { title: 'foo' } };
         beforeEach(() => {
             wrapper.setData({
-                tmJson: JSON.stringify(tm)
+                tmJson: JSON.stringify(tm),
             });
             wrapper.vm.onImportClick();
         });
@@ -61,8 +63,8 @@ describe('ImportModel.vue', () => {
 
         it('navigates to the threatmodel view', () => {
             expect(mockRouter.push).toHaveBeenCalledWith({
-                name: 'localThreatModel', 
-                params: { threatmodel: 'foo' }
+                name: 'localThreatModel',
+                params: { threatmodel: 'foo' },
             });
         });
     });
@@ -70,7 +72,7 @@ describe('ImportModel.vue', () => {
     describe('with invalid json', () => {
         beforeEach(() => {
             wrapper.setData({
-                tmJson: 'invalidJson'
+                tmJson: 'invalidJson',
             });
             wrapper.vm.onImportClick();
         });

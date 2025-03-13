@@ -5,7 +5,7 @@ describe('routes/google.js', () => {
         let route;
 
         beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleFolder');
+            route = googleRoutes.find((x) => x.name === 'googleFolder');
         });
 
         it('uses the expected path', () => {
@@ -22,7 +22,7 @@ describe('routes/google.js', () => {
         let route;
 
         beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleThreatModel');
+            route = googleRoutes.find((x) => x.name === 'googleThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -39,7 +39,7 @@ describe('routes/google.js', () => {
         let route;
 
         beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleNewThreatModel');
+            route = googleRoutes.find((x) => x.name === 'googleNewThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -56,7 +56,7 @@ describe('routes/google.js', () => {
         let route;
 
         beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleThreatModelEdit');
+            route = googleRoutes.find((x) => x.name === 'googleThreatModelEdit');
         });
 
         it('uses the expected path', () => {
@@ -73,7 +73,7 @@ describe('routes/google.js', () => {
         let route;
 
         beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleDiagramEdit');
+            route = googleRoutes.find((x) => x.name === 'googleDiagramEdit');
         });
 
         it('uses the expected path', () => {
@@ -90,7 +90,7 @@ describe('routes/google.js', () => {
         let route;
 
         beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleReport');
+            route = googleRoutes.find((x) => x.name === 'googleReport');
         });
 
         it('uses the expected path', () => {

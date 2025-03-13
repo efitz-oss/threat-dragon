@@ -20,20 +20,20 @@ export const ProcessShape = Shape.Circle.define({
         // than the main circle
         {
             tagName: 'rect',
-            selector: 'customBoundary'
-        }
+            selector: 'customBoundary',
+        },
     ],
     attrs: {
         customBoundary: {
             opacity: 0,
             refWidth: '110%', // intentionally over-sized for usability
-            refHeight: '110%'
+            refHeight: '110%',
         },
         body: {
-            fill: 'transparent'
-        }
+            fill: 'transparent',
+        },
     },
-    ports: { ...ports }
+    ports: { ...ports },
 });
 
 ProcessShape.prototype.type = 'tm.Process';
@@ -50,5 +50,5 @@ ProcessShape.prototype.updateStyle = function (color, dash, strokeWidth) {
 
 export default {
     name,
-    ProcessShape
+    ProcessShape,
 };

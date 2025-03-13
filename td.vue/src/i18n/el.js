@@ -1,57 +1,61 @@
 const ell = {
     auth: {
-        sessionExpired: 'Η συνεδρία σας έχει λήξει.  Παρακαλούμε συνδεθείτε εκ νέου για να συνεχίσετε.'
+        sessionExpired:
+            'Η συνεδρία σας έχει λήξει.  Παρακαλούμε συνδεθείτε εκ νέου για να συνεχίσετε.',
     },
     nav: {
-        v2Warning: 'Η έκδοση 2.0 των μοντέλων απειλών δεν είναι συμβατή με την έκδοση 1.x των μοντέλων του Threat Dragon. Τα εισαχθέντα μοντέλα της έκδοσης 1.x models θα αναβαθμιστούν στο σχήμα της έκδοσης 2.0',
+        v2Warning:
+            'Η έκδοση 2.0 των μοντέλων απειλών δεν είναι συμβατή με την έκδοση 1.x των μοντέλων του Threat Dragon. Τα εισαχθέντα μοντέλα της έκδοσης 1.x models θα αναβαθμιστούν στο σχήμα της έκδοσης 2.0',
         loggedInAs: 'Σύνδεση ως',
-        logOut: 'Αποσύνδεση'
+        logOut: 'Αποσύνδεση',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Λογότυπο Threat Dragon',
-        description: 'Το Threat Dragon είναι ένα δωρεάν, ανοιχτού κώδικα εργαλείο μοντελοποίησης απειλών (threat modeling) του Οργανισμού OWASP. Μπορεί να χρησιμοποιηθεί ως μια αυτόνομη desktop εφαρμογή για Windows, MacOS και Linux ή ως μια web εφαρμογή. Η desktop εφαρμογή είναι ιδανική αν θέλετε να δοκιμάσετε την εφαρμογή χωρίς να της δώσετε πρόσβαση στα github αποθετήρια σας, αλλά αν επιλέξετε την online έκδοση τότε θα "εξαπολύσετε" την φοβερή δύναμη του GitHub στα μοντέλα απειλών σας! Προφανώς, για να το κάνετε αυτό θα πρέπει πρώτα να συνδεθείτε.'
+        description:
+            'Το Threat Dragon είναι ένα δωρεάν, ανοιχτού κώδικα εργαλείο μοντελοποίησης απειλών (threat modeling) του Οργανισμού OWASP. Μπορεί να χρησιμοποιηθεί ως μια αυτόνομη desktop εφαρμογή για Windows, MacOS και Linux ή ως μια web εφαρμογή. Η desktop εφαρμογή είναι ιδανική αν θέλετε να δοκιμάσετε την εφαρμογή χωρίς να της δώσετε πρόσβαση στα github αποθετήρια σας, αλλά αν επιλέξετε την online έκδοση τότε θα "εξαπολύσετε" την φοβερή δύναμη του GitHub στα μοντέλα απειλών σας! Προφανώς, για να το κάνετε αυτό θα πρέπει πρώτα να συνδεθείτε.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Έναρξη'
+            loginWith: 'Έναρξη',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'Είσοδος με'
+            loginWith: 'Είσοδος με',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'Είσοδος με'
+            loginWith: 'Είσοδος με',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'Είσοδος με'
+            loginWith: 'Είσοδος με',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Είσοδος με'
+            loginWith: 'Είσοδος με',
         },
         local: {
             displayName: 'Τοπική Συνεδρία',
-            loginWith: 'Είσοδος με'
-        }
+            loginWith: 'Είσοδος με',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Καλώς ήρθατε!',
-            description: 'Είστε έτοιμοι να ξεκινήσετε να κάνετε τα σχέδια των εφαρμογών σας πιο ασφαλή. Μπορείτε να ανοίξετε ένα υφιστάμενο μοντέλο απειλών ή να δημιουργήσετε ένα καινούργιο επιλέγοντας μία από τις παρακάτω επιλογές. '
+            description:
+                'Είστε έτοιμοι να ξεκινήσετε να κάνετε τα σχέδια των εφαρμογών σας πιο ασφαλή. Μπορείτε να ανοίξετε ένα υφιστάμενο μοντέλο απειλών ή να δημιουργήσετε ένα καινούργιο επιλέγοντας μία από τις παρακάτω επιλογές. ',
         },
         actions: {
             openExisting: 'Άνοιγμα ενός υφιστάμενου μοντέλου απειλών',
             createNew: 'Δημιουργήστε ένα νέο, κενό μοντέλο απειλών',
             readDemo: 'Εξερευνήστε ένα δείγμα μοντέλου απειλών',
-            importExisting: 'Εισάγετε ένα μοντέλο απειλών σε μορφή JSON'
-        }
+            importExisting: 'Εισάγετε ένα μοντέλο απειλών σε μορφή JSON',
+        },
     },
     demo: {
-        select: 'Επιλέξτε ένα δείγμα μοντέλου απειλών από την παρακάτω λίστα'
+        select: 'Επιλέξτε ένα δείγμα μοντέλου απειλών από την παρακάτω λίστα',
     },
     desktop: {
         file: {
@@ -63,7 +67,7 @@ const ell = {
             open: 'Άνοιγμα Μοντέλου',
             recentDocs: 'Άνοιγμα πρόσφατου αρχείου',
             save: 'Αποθήκευση Μοντέλου',
-            saveAs: 'Αποθήκευση Μοντέλου ως'
+            saveAs: 'Αποθήκευση Μοντέλου ως',
         },
         help: {
             heading: 'Βοήθεια',
@@ -72,13 +76,14 @@ const ell = {
             sheets: 'OWASP Cheat Sheets',
             github: 'Επισκεφθείτε μας στο GitHub',
             submit: 'Υποβάλετε ένα πρόβλημα',
-            check: 'Έλεγχος για ενημερώσεις ...'
-        }
+            check: 'Έλεγχος για ενημερώσεις ...',
+        },
     },
     repository: {
         select: 'Επιλέξτε ένα',
         from: 'αποθετήριο (repository) από την παρακάτω λίστα',
-        noneFound: 'Δε βρέθηκαν αποθετήρια. Για να ξεκινήσετε, δημιουργήστε ένα νέο αποθετήριο τώρα στο'
+        noneFound:
+            'Δε βρέθηκαν αποθετήρια. Για να ξεκινήσετε, δημιουργήστε ένα νέο αποθετήριο τώρα στο',
     },
     branch: {
         select: 'Επιλέξτε ένα παρακλάδι (branch) από',
@@ -100,7 +105,7 @@ const ell = {
         branch: 'παρακλάδι (branch)',
         or: 'ή',
         repo: 'αποθετήριο',
-        newThreatModel: 'Δημιουργήστε ένα νέο μοντέλο απειλών'
+        newThreatModel: 'Δημιουργήστε ένα νέο μοντέλο απειλών',
     },
     threatmodel: {
         contributors: 'Συνεισφέροντες',
@@ -118,33 +123,33 @@ const ell = {
             generic: {
                 defaultTitle: 'Νέο γενικό διάγραμμα',
                 defaultDescription: 'Περιγραφή νέου γενικού διαγράμματος',
-                select: 'Generic'
+                select: 'Generic',
             },
             stride: {
                 defaultTitle: 'Νέο διάγραμμα STRIDE',
                 defaultDescription: 'Περιγραφή νέου διαγράμματος STRIDE',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'Νέο διάγραμμα LINDDUN',
                 defaultDescription: 'Περιγραφή νέου διαγράμματος LINDDUN',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'Νέο διάγραμμα PLOT4ai',
                 defaultDescription: 'Περιγραφή νέου διαγράμματος PLOT4ai',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'Νέο διάγραμμα DIE',
                 defaultDescription: 'Περιγραφή νέου διαγράμματος DIE',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'Νέο διάγραμμα CIA',
                 defaultDescription: 'Περιγραφή νέου διαγράμματος CIA',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Απειλές',
         errors: {
@@ -152,7 +157,7 @@ const ell = {
             invalidJson: 'Μη έγκυρο JSON.  Παρακαλούμε ελέγξτε το μοντέλο και προσπαθήστε ξανά.',
             onlyJsonAllowed: 'Υποστηρίζονται μόνο αρχεία με κατάληξη .json.',
             open: 'Σφάλμα κατά το άνοιγμα αυτού του μοντέλου απειλών. Ελέγξτε την κονσόλα του προγραμματιστή για περισσότερες πληροφορίες',
-            save: 'Σφάλμα κατά την αποθήκευση του μοντέλου απειλών. Παρακαλούμε ελέγξτε την κονσόλα για περαιτέρω πληροφορίες'
+            save: 'Σφάλμα κατά την αποθήκευση του μοντέλου απειλών. Παρακαλούμε ελέγξτε την κονσόλα για περαιτέρω πληροφορίες',
         },
         opened: 'Το μοντέλο απειλών άνοιξε επιτυχώς',
         saved: 'Το μοντέλο απειλών αποθηκεύτηκε επιτυχώς',
@@ -176,7 +181,7 @@ const ell = {
             protocol: 'Πρωτόκολλο',
             publicNetwork: 'Δημόσιο Δίκτυο',
             storesCredentials: 'Αποθηκεύει στοιχεία πρόσβασης',
-            storesInventory: 'Stores Inventory'
+            storesInventory: 'Stores Inventory',
         },
         buttons: {
             delete: 'Διαγραφή επιλεγμένων',
@@ -185,46 +190,46 @@ const ell = {
             toggleGrid: 'Εναλλαγή Πλέγματος',
             undo: 'Αναίρεση',
             zoomIn: 'Μεγένθυνση',
-            zoomOut: 'Σμίκρυνση'
+            zoomOut: 'Σμίκρυνση',
         },
         shortcuts: {
             title: 'Συντομεύσεις',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'Αντιγραφή'
+                action: 'Αντιγραφή',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'Επικόλληση'
+                action: 'Επικόλληση',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'Αναίρεση'
+                action: 'Αναίρεση',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'Επανάληψη'
+                action: 'Επανάληψη',
             },
             delete: {
                 shortcut: 'del',
-                action: 'Διαγραφή'
+                action: 'Διαγραφή',
             },
             pan: {
                 shortcut: 'shift + αριστερό κλικ (κράτημα/σύρσιμο)',
-                action: 'οριζόντια/κάθετη μετακίνηση'
+                action: 'οριζόντια/κάθετη μετακίνηση',
             },
             multiSelect: {
                 shortcut: 'κάντε αριστερό κλικ σε ένα άδειο σημείο και σύρετε',
-                action: 'Πολλαπλή Επιλογή'
+                action: 'Πολλαπλή Επιλογή',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + τροχός κύλισης',
-                action: 'Εστίαση'
+                action: 'Εστίαση',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Όρια',
@@ -232,7 +237,7 @@ const ell = {
             entities: 'Οντότητες',
             metadata: 'Μεταδεδομένα',
             search: 'Αναζήτηση',
-            notFound: 'Δεν το έχουμε ακόμα αυτό, θέλετε να ανοίξετε ένα issue; :)'
+            notFound: 'Δεν το έχουμε ακόμα αυτό, θέλετε να ανοίξετε ένα issue; :)',
         },
         shapes: {
             actor: 'Παράγοντας',
@@ -241,8 +246,8 @@ const ell = {
             process: 'Διαδικασία',
             store: 'Αποθετήριο Δεδομένων',
             text: 'Κείμενο',
-            trustBoundary: 'Όριο Εμπιστοσύνης'
-        }
+            trustBoundary: 'Όριο Εμπιστοσύνης',
+        },
     },
     forms: {
         apply: 'Εφαρμογή',
@@ -272,7 +277,7 @@ const ell = {
         saveModelAs: 'Αποθήκευση Μοντέλου ως',
         search: 'Αναζήτηση',
         next: 'Επόμενο',
-        previous: 'προηγούμενος'
+        previous: 'προηγούμενος',
     },
     threats: {
         model: {
@@ -280,13 +285,13 @@ const ell = {
                 header: '--- CIA ---',
                 confidentiality: 'Εμπιστευτικότητα',
                 integrity: 'Ακεραιότητα',
-                availability: 'Διαθεσιμότητα'
+                availability: 'Διαθεσιμότητα',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Κατανεμημένο (Distributed)',
                 immutable: 'Αμετάβλητο (Immutable)',
-                ephemeral: 'Εφήμερο (Ephemeral)'
+                ephemeral: 'Εφήμερο (Ephemeral)',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -296,18 +301,19 @@ const ell = {
                 detectability: 'Ανιχνευσιμότητα',
                 disclosureOfInformation: 'Αποκάλυψη Πληροφοριών (Information Disclosure)',
                 unawareness: 'Έλλειψη επίγνωσης (Unawareness)',
-                nonCompliance: 'Μη συμμόρφωση (Non-compliance)'
+                nonCompliance: 'Μη συμμόρφωση (Non-compliance)',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
                 techniqueProcesses: 'Τεχνική & Διαδικασίες (Technique & Processes)',
                 accessibility: 'Προσβασιμότητα (Accessibility)',
-                identifiabilityLinkability: 'Αναγνωρισιμότητα & Συνδεσιμότητα (Identifiability & Linkability)',
+                identifiabilityLinkability:
+                    'Αναγνωρισιμότητα & Συνδεσιμότητα (Identifiability & Linkability)',
                 security: 'Ασφάλεια (Security)',
                 safety: 'Ασφάλεια (Safety)',
                 unawareness: 'Έλλειψη επίγνωσης (Unawareness)',
                 ethicsHumanRights: 'Ηθική και Ανθρώπινα Δικαιώματα (Ethics & Human Rights)',
-                nonCompliance: 'Μη συμμόρφωση (Non-compliance)'
+                nonCompliance: 'Μη συμμόρφωση (Non-compliance)',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -316,8 +322,8 @@ const ell = {
                 repudiation: 'Αποποίηση (Repudiation)',
                 informationDisclosure: 'Αποκάλυψη Πληροφοριών (Information Disclosure)',
                 denialOfService: 'Άρνηση εκτέλεσης υπηρεσίας (Denial of service)',
-                elevationOfPrivilege: 'Αναβάθμιση προνομίων (Elevation of Priviledge)'
-            }
+                elevationOfPrivilege: 'Αναβάθμιση προνομίων (Elevation of Priviledge)',
+            },
         },
         generic: {
             default: 'Νέα γενική απειλή',
@@ -325,7 +331,7 @@ const ell = {
             die: 'Νέα απειλή DIE',
             linddun: 'Νέα απειλή LINDDUN',
             plot4ai: 'Νέα απειλή PLOT4ai',
-            stride: 'Νέα απειλή STRIDE'
+            stride: 'Νέα απειλή STRIDE',
         },
         edit: 'Επεξεργασία Απειλής',
         confirmDeleteTitle: 'Επιβεβαίωση Διαγραφής',
@@ -345,20 +351,20 @@ const ell = {
             score: 'Σκορ',
             status: 'Κατάσταση',
             title: 'Τίτλος',
-            type: 'Τύπος'
+            type: 'Τύπος',
         },
         status: {
             notApplicable: 'Δεν έχει εφαρμογή',
             open: 'Ανοιχτή',
-            mitigated: 'Καλύφθηκε'
+            mitigated: 'Καλύφθηκε',
         },
         priority: {
             tbd: 'TBD',
             low: 'Χαμηλή',
             medium: 'Μεσαία',
             high: 'Υψηλή',
-            critical: 'Κρίσιμος'
-        }
+            critical: 'Κρίσιμος',
+        },
     },
     report: {
         options: {
@@ -367,7 +373,7 @@ const ell = {
             showModelDiagrams: 'Εμφάνιση διαγραμμάτων μοντέλων',
             showEmpty: 'Προβολή κενών στοιχείων',
             showProperties: 'Show element properties',
-            showBranding: 'Λογότυπο Threat Dragon'
+            showBranding: 'Λογότυπο Threat Dragon',
         },
         title: 'Αναφορά μοντέλου απειλών για',
         dateGenerated: 'Ημερομηνία δημιουργίας',
@@ -383,19 +389,19 @@ const ell = {
             openMedium: 'Ανοιχτές / Μέτριας Προτεραιότητας',
             openLow: 'Ανοιχτές / Χαμηλής Προτεραιότητας',
             openTbd: 'Ανοιχτές / TBD Προτεραιότητα',
-            openUnknown: 'Ανοιχτές / Άγνωστης Προτεραιότητας'
-        }
+            openUnknown: 'Ανοιχτές / Άγνωστης Προτεραιότητας',
+        },
     },
     upgrade: {
         modal: {
             header: 'Ενημέρωση Μοντέλου Απειλών',
             welcome: 'Καλώς ήρθατε στην 2η έκδοση του OWASP Threat Dragon!',
             p1: 'Η 2η έκδοση χρησιμοποιεί μια διαφορετική βιβλιοθήκη σχεδίασης, η οποία θα αλλάξει τον τρόπο με τον οποίο μέρη των μοντέλων απειλών αποθηκεύονται. Ενώ τα περισσότερα διαγράμματα θα δείχνουν το ίδιο όπως στις προηγούμενες εκδόσεις του Threat Dragon, υπάρχουν περιπτώσεις κατά τις οποίες ενδέχεται να απαιτηθούν κάποιες τροποποιήσεις.',
-            p2: 'Μετά το κλείσιμο του μοντέλου, θα δείτε πως κάθε διάγραμμα στο μοντέλο απεικονίζεται στη μορφή της 2ης έκδοση. Παρακαλούμε όπως σημειώσετε τα διαγράμματα που τυχόν απαιτήσουν τροποποιήσεις. Αυτή είναι μία "εφάπαξ" αναβάθμιση, και δε θα χρειαστεί να δείτε ξανά αυτό το μήνυμα μετά την αποθήκευση του μοντέλου.'
+            p2: 'Μετά το κλείσιμο του μοντέλου, θα δείτε πως κάθε διάγραμμα στο μοντέλο απεικονίζεται στη μορφή της 2ης έκδοση. Παρακαλούμε όπως σημειώσετε τα διαγράμματα που τυχόν απαιτήσουν τροποποιήσεις. Αυτή είναι μία "εφάπαξ" αναβάθμιση, και δε θα χρειαστεί να δείτε ξανά αυτό το μήνυμα μετά την αποθήκευση του μοντέλου.',
         },
         instructions: 'Τέλεια! Ας προχωρήσουμε στο μοντέλο σας.',
-        continue: 'Συνέχεια στο μοντέλο απειλών'
-    }
+        continue: 'Συνέχεια στο μοντέλο απειλών',
+    },
 };
 
 export default ell;

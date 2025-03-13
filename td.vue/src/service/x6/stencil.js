@@ -1,6 +1,6 @@
 import shapes from './shapes/index.js';
 import { tc } from '@/i18n/index.js';
-import { Stencil as DefaultStencil } from '@antv/x6-plugin-stencil';
+import { Stencil as DefaultStencil } from '@/plugins/antv';
 
 const getStencilConfig = (target) => ({
     title: tc('threatmodel.stencil.entities'),
@@ -12,20 +12,20 @@ const getStencilConfig = (target) => ({
             name: 'components',
             title: tc('threatmodel.stencil.components'),
             collapsed: false,
-            collapsable: true
+            collapsable: true,
         },
         {
             name: 'boundaries',
             title: tc('threatmodel.stencil.boundaries'),
             collapsed: false,
-            collapsable: true
+            collapsable: true,
         },
         {
             name: 'metadata',
             title: tc('threatmodel.stencil.metadata'),
             collapsed: false,
-            collapsable: true
-        }
+            collapsable: true,
+        },
     ],
     layoutOptions: {
         columns: 1,
@@ -69,4 +69,3 @@ const get = (target, container, StencilClass = DefaultStencil) => {
 export default {
     get,
 };
-

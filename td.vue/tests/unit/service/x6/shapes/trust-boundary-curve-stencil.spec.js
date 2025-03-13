@@ -30,4 +30,3 @@ describe('service/x6/shapes/trust-boundary-curve-stencil.js', () => {
         });
     });
 });
-

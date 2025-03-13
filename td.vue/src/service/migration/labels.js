@@ -7,5 +7,5 @@ const getText = (cell, label) => {
 };
 
 export default {
-    getText
+    getText,
 };

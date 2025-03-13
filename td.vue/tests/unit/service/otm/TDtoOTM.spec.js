@@ -1,7 +1,7 @@
-import { convert as convertTDtoOTM }  from '@/service/otm/TDtoOTM.js';
+import { convert as convertTDtoOTM } from '@/service/otm/TDtoOTM.js';
 
 describe('service/otm/openThreatModel.js', () => {
-    var dragonModel = new Object();
+    const dragonModel = new Object();
     dragonModel.version = '2.0';
     dragonModel.summary = new Object();
     dragonModel.summary.title = 'name';
@@ -14,14 +14,14 @@ describe('service/otm/openThreatModel.js', () => {
     dragonModel.detail.diagramTop = 0;
     dragonModel.detail.reviewer = '';
     dragonModel.detail.threatTop = 0;
-    var diagram = new Object();
+    const diagram = new Object();
     diagram.version = '2.0';
     diagram.title = 'Main Request Data Flow';
     diagram.id = 0;
     diagram.diagramType = 'STRIDE';
     diagram.cells = [];
     dragonModel.detail.diagrams.push(diagram);
-    
+
     let otmModel;
     describe('convertTDtoOTM', () => {
         beforeEach(() => {

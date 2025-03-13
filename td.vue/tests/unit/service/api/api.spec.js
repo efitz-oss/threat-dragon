@@ -3,12 +3,12 @@ import httpClient from '@/service/httpClient.js';
 
 describe('service/api.js', () => {
     const url = 'http://threatdragon.org/api/foobar';
-    const query = {page: 1};
+    const query = { page: 1 };
     const mockResp = { data: 'foo' };
     const mockClient = {
         get: () => mockResp,
         post: () => mockResp,
-        put: () => mockResp
+        put: () => mockResp,
     };
 
     let res;

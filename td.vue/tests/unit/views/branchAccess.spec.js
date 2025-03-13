@@ -8,7 +8,6 @@ import { REPOSITORY_CLEAR, REPOSITORY_SELECTED } from '@/store/actions/repositor
 import TdSelectionPage from '@/components/SelectionPage.vue';
 import AddBranchDialog from '@/components/AddBranchDialog.vue';
 
-
 describe('views/BranchAccess.vue', () => {
     const repo = 'someRepo';
     let wrapper, localVue, mockStore, mockRouter;
@@ -28,46 +27,51 @@ describe('views/BranchAccess.vue', () => {
             mocks: {
                 $route: mockRoute,
                 $router: mockRouter,
-                $t: key => key
-            }
+                $t: (key) => key,
+            },
         });
     };
 
-    const getMockStore = () => new Vuex.Store({
-        state: {
-            repo: {
-                selected: repo,
-                page: 1,
-                pageNext: true,
-                pagePrev: false
+    const getMockStore = () =>
+        new Vuex.Store({
+            state: {
+                repo: {
+                    selected: repo,
+                    page: 1,
+                    pageNext: true,
+                    pagePrev: false,
+                },
+                branch: {
+                    selected: 'someBranch',
+                    all: [
+                        { name: 'b1', protected: true },
+                        { name: 'b2', protected: false },
+                        { name: 'b3', protected: false },
+                    ],
+                    page: 1,
+                    pageNext: true,
+                    pagePrev: false,
+                },
+                provider: {
+                    selected: 'github',
+                },
             },
-            branch: {
-                selected: 'someBranch',
-                all: [{ name: 'b1', protected: true }, { name: 'b2', protected: false }, { name: 'b3', protected: false }],
-                page: 1,
-                pageNext: true,
-                pagePrev: false
+            actions: {
+                [BRANCH_FETCH]: () => Promise.resolve(getMockStore().state.branch.all),
+                [BRANCH_SELECTED]: () => {},
+                [PROVIDER_SELECTED]: () => {},
+                [REPOSITORY_CLEAR]: () => {},
+                [REPOSITORY_SELECTED]: () => {},
             },
-            provider: {
-                selected: 'github'
-            }
-        },
-        actions: {
-            [BRANCH_FETCH]: () =>  Promise.resolve(getMockStore().state.branch.all),
-            [BRANCH_SELECTED]: () => { },
-            [PROVIDER_SELECTED]: () => { },
-            [REPOSITORY_CLEAR]: () => { },
-            [REPOSITORY_SELECTED]: () => { }
-        }
-    });
+        });
 
     describe('mounted', () => {
         it('sets the provider from the route', () => {
             getLocalVue({
                 params: {
                     provider: 'local',
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(PROVIDER_SELECTED, 'local');
         });
@@ -76,8 +80,8 @@ describe('views/BranchAccess.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: 'fakeRepoBad'
-                }
+                    repository: 'fakeRepoBad',
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(REPOSITORY_SELECTED, 'fakeRepoBad');
         });
@@ -86,17 +90,18 @@ describe('views/BranchAccess.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(BRANCH_FETCH, 1);
             expect(wrapper.vm.branches).toEqual([
                 {
                     value: 'b1',
                     icon: 'lock',
-                    iconTooltip: 'branch.protectedBranch'
+                    iconTooltip: 'branch.protectedBranch',
                 },
-                'b2','b3'
+                'b2',
+                'b3',
             ]);
         });
     });
@@ -106,8 +111,8 @@ describe('views/BranchAccess.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
         });
 
@@ -125,8 +130,8 @@ describe('views/BranchAccess.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             wrapper.vm.selectRepoClick();
         });
@@ -146,11 +151,11 @@ describe('views/BranchAccess.vue', () => {
         beforeEach(() => {
             routeParams = {
                 provider: mockStore.state.provider.selected,
-                repository: mockStore.state.repo.selected
+                repository: mockStore.state.repo.selected,
             };
             getLocalVue({
                 params: routeParams,
-                query: {}
+                query: {},
             });
             wrapper.vm.onBranchClick(testBranch);
         });
@@ -161,7 +166,10 @@ describe('views/BranchAccess.vue', () => {
 
         it('navigates to the edit page', () => {
             routeParams.branch = testBranch;
-            expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitThreatModelSelect', params: routeParams });
+            expect(mockRouter.push).toHaveBeenCalledWith({
+                name: 'gitThreatModelSelect',
+                params: routeParams,
+            });
         });
     });
 
@@ -171,20 +179,23 @@ describe('views/BranchAccess.vue', () => {
         beforeEach(() => {
             routeParams = {
                 provider: mockStore.state.provider.selected,
-                repository: mockStore.state.repo.selected
+                repository: mockStore.state.repo.selected,
             };
             getLocalVue({
                 params: routeParams,
                 query: {
-                    action: 'create'
-                }
+                    action: 'create',
+                },
             });
             wrapper.vm.onBranchClick(testBranch);
         });
 
         it('navigates to the new page', () => {
             routeParams.branch = testBranch;
-            expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitNewThreatModel', params: routeParams });
+            expect(mockRouter.push).toHaveBeenCalledWith({
+                name: 'gitNewThreatModel',
+                params: routeParams,
+            });
         });
     });
 
@@ -193,8 +204,8 @@ describe('views/BranchAccess.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             wrapper.vm.toggleNewBranchDialog();
         });

@@ -15,23 +15,23 @@ export const FlowStencil = Shape.Path.define({
     markup: [
         {
             tagName: 'path',
-            selector: 'boundary'
+            selector: 'boundary',
         },
         {
             tagName: 'text',
-            selector: 'label'
+            selector: 'label',
         },
         {
             tagName: 'rect',
-            selector: 'customBoundary'
-        }
+            selector: 'customBoundary',
+        },
     ],
     attrs: {
         boundary: {
             strokeWidth: 1.5,
             stroke: '#333333',
             fill: 'transparent',
-            refD: 'M 30 20 C 70 20 70 100 110 100'
+            refD: 'M 30 20 C 70 20 70 100 110 100',
         },
         customBoundary: {
             opacity: 0,
@@ -41,14 +41,14 @@ export const FlowStencil = Shape.Path.define({
         label: {
             text: tc('threatmodel.shapes.flowStencil'),
             fill: '#333',
-            textVerticalAnchor: 'middle'
+            textVerticalAnchor: 'middle',
         },
         line: {
             targetMarker: 'block',
-            sourceMarker: ''
-        }
+            sourceMarker: '',
+        },
     },
-    data: defaultProperties.flow
+    data: defaultProperties.flow,
 });
 
 FlowStencil.prototype.type = 'tm.FlowStencil';
@@ -62,5 +62,5 @@ FlowStencil.prototype.updateStyle = function () {};
 
 export default {
     FlowStencil,
-    name
+    name,
 };

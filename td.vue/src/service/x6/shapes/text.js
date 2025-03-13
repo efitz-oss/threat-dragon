@@ -15,9 +15,9 @@ export const TextBlock = Shape.Rect.define({
         body: {
             fill: 'transparent',
             fillOpacity: 0,
-            strokeOpacity: 0
-        }
-    }
+            strokeOpacity: 0,
+        },
+    },
 });
 
 TextBlock.prototype.type = 'tm.Text';
@@ -30,5 +30,5 @@ TextBlock.prototype.updateStyle = function () {};
 
 export default {
     name,
-    TextBlock
+    TextBlock,
 };

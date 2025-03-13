@@ -14,25 +14,25 @@ describe('service/httpClient.js', () => {
     const mockStore = {
         dispatch: () => {},
         state: {
-            auth: { jwt: '' }
-        }
+            auth: { jwt: '' },
+        },
     };
 
     const clientMock = {
         defaults: {
             headers: {
                 common: {},
-                post: {}
-            }
+                post: {},
+            },
         },
         interceptors: {
             request: {
-                use: () => {}
+                use: () => {},
             },
             response: {
-                use: () => {}
-            }
-        }
+                use: () => {},
+            },
+        },
     };
     let client;
 
@@ -51,15 +51,15 @@ describe('service/httpClient.js', () => {
         beforeEach(() => {
             client = httpClient.createClient();
         });
-    
+
         it('adds the accept header to everything', () => {
             expect(client.defaults.headers.common.Accept).toEqual('application/json');
         });
-    
+
         it('adds the content type header to post requests', () => {
             expect(client.defaults.headers.post['Content-Type']).toEqual('application/json');
         });
-    
+
         it('adds an interceptor', () => {
             expect(client.interceptors.request.use).toHaveBeenCalled();
         });
@@ -72,32 +72,34 @@ describe('service/httpClient.js', () => {
             config = {
                 headers: {
                     common: {},
-                    post: {}
-                }
+                    post: {},
+                },
             };
         });
 
         describe('request', () => {
-
             describe('with a jwt', () => {
                 beforeEach(() => {
-                    storeFactory.get.mockReturnValue({ dispatch: () => {}, state: { auth: { jwt: 'foobar' }}});
+                    storeFactory.get.mockReturnValue({
+                        dispatch: () => {},
+                        state: { auth: { jwt: 'foobar' } },
+                    });
                     clientMock.interceptors.request.use = (fn) => fn(config);
                     client = httpClient.createClient();
                 });
-    
+
                 it('adds the authorization header', () => {
                     expect(config.headers.authorization).toEqual('Bearer foobar');
                 });
             });
-    
+
             describe('without a JWT', () => {
                 beforeEach(() => {
                     jest.spyOn(mockStore, 'dispatch');
                     clientMock.interceptors.request.use = (fn) => fn(config);
                     client = httpClient.createClient();
                 });
-    
+
                 it('does not add the authorization header', () => {
                     expect(config.headers.authorization).toBeUndefined();
                 });
@@ -106,16 +108,19 @@ describe('service/httpClient.js', () => {
                     expect(mockStore.dispatch).toHaveBeenCalledWith(LOADER_STARTED);
                 });
             });
-    
+
             describe('with error', () => {
                 const err = new Error('whoops!');
-    
+
                 beforeEach(() => {
-                    clientMock.interceptors.request.use = (fn, errFn) => errFn(err).then(() => {}).catch(() => {});
+                    clientMock.interceptors.request.use = (fn, errFn) =>
+                        errFn(err)
+                            .then(() => {})
+                            .catch(() => {});
                     console.error = jest.fn();
                     httpClient.createClient();
                 });
-    
+
                 it('logs the error', () => {
                     expect(console.error).toHaveBeenCalledWith(err);
                 });
@@ -124,7 +129,10 @@ describe('service/httpClient.js', () => {
     });
 
     describe('response', () => {
-        const errorIntercept = (err) => (fn, errFn) => errFn(err).then(() => {}).catch(() => {});
+        const errorIntercept = (err) => (fn, errFn) =>
+            errFn(err)
+                .then(() => {})
+                .catch(() => {});
         const tokens = { accessToken: 'token', refreshToken: 'refresh' };
 
         beforeEach(() => {
@@ -144,10 +152,9 @@ describe('service/httpClient.js', () => {
         });
 
         describe('with error', () => {
-
             describe('with a non-401 error', () => {
-                const error = { response: { status: 500 }};
-                
+                const error = { response: { status: 500 } };
+
                 beforeEach(() => {
                     clientMock.interceptors.response.use = errorIntercept(error);
                     httpClient.createClient();
@@ -156,14 +163,14 @@ describe('service/httpClient.js', () => {
                 it('logs the error', () => {
                     expect(console.error).toHaveBeenCalledTimes(1);
                 });
-                
+
                 it('dispatches the loader finished event', () => {
                     expect(mockStore.dispatch).toHaveBeenCalledWith(LOADER_FINISHED);
                 });
             });
 
             describe('without a refresh token present', () => {
-                const error = { response: { status: 401 }};
+                const error = { response: { status: 401 } };
 
                 beforeEach(() => {
                     clientMock.interceptors.response.use = errorIntercept(error);
@@ -180,7 +187,7 @@ describe('service/httpClient.js', () => {
             });
 
             describe('with a successful refresh attempt', () => {
-                const error = { response: { status: 401 }, config: { foo: 'bar', headers: {} }};
+                const error = { response: { status: 401 }, config: { foo: 'bar', headers: {} } };
 
                 beforeEach(() => {
                     mockStore.state.auth.refreshToken = tokens.refreshToken;
@@ -189,9 +196,9 @@ describe('service/httpClient.js', () => {
                         data: {
                             data: {
                                 accessToken: tokens.accessToken,
-                                refreshToken: tokens.refreshToken
-                            }
-                        }
+                                refreshToken: tokens.refreshToken,
+                            },
+                        },
                     };
                     axios.post = jest.fn().mockReturnValue(postResp);
                     axios.request = jest.fn();
@@ -199,7 +206,9 @@ describe('service/httpClient.js', () => {
                 });
 
                 it('attempts to get a new JWT', () => {
-                    expect(axios.post).toHaveBeenCalledWith('/api/token/refresh', { refreshToken: tokens.refreshToken });
+                    expect(axios.post).toHaveBeenCalledWith('/api/token/refresh', {
+                        refreshToken: tokens.refreshToken,
+                    });
                 });
 
                 it('dispatches the set jwt event', () => {
@@ -207,7 +216,9 @@ describe('service/httpClient.js', () => {
                 });
 
                 it('sets the bearer token on the config', () => {
-                    expect(error.config.headers.authorization).toEqual(`Bearer ${tokens.accessToken}`);
+                    expect(error.config.headers.authorization).toEqual(
+                        `Bearer ${tokens.accessToken}`
+                    );
                 });
 
                 it('retries the request', () => {
@@ -221,7 +232,7 @@ describe('service/httpClient.js', () => {
         });
 
         describe('with unsucessful refresh attempt', () => {
-            const error = { response: { status: 401 }, config: { foo: 'bar', headers: {} }};
+            const error = { response: { status: 401 }, config: { foo: 'bar', headers: {} } };
 
             beforeEach(() => {
                 mockStore.state.auth.refreshToken = tokens.refreshToken;
@@ -232,7 +243,9 @@ describe('service/httpClient.js', () => {
             });
 
             it('attempts to refresh the token', () => {
-                expect(axios.post).toHaveBeenCalledWith('/api/token/refresh', { refreshToken: tokens.refreshToken });
+                expect(axios.post).toHaveBeenCalledWith('/api/token/refresh', {
+                    refreshToken: tokens.refreshToken,
+                });
             });
 
             it('logs the error', () => {

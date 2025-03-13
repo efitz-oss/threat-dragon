@@ -10,11 +10,11 @@ describe('service/migration/cells.js', () => {
     const getEdge = (type) => ({
         type,
         source: {
-            id: 'foobar'
+            id: 'foobar',
         },
         target: {
-            id: 'barbaz'
-        }
+            id: 'barbaz',
+        },
     });
 
     beforeEach(() => {
@@ -30,7 +30,7 @@ describe('service/migration/cells.js', () => {
     describe('actor', () => {
         beforeEach(() => {
             cell = { type: 'tm.Actor' };
-            cells.map({ diagramJson: { cells: [ cell ]}});
+            cells.map({ diagramJson: { cells: [cell] } });
         });
 
         it('calls the nodes mapper', () => {
@@ -46,7 +46,7 @@ describe('service/migration/cells.js', () => {
         beforeEach(() => {
             cell = getEdge('tm.Boundary');
             data.map.mockReturnValue(cell);
-            cells.map({ diagramJson: { cells: [ cell ]}});
+            cells.map({ diagramJson: { cells: [cell] } });
         });
 
         it('calls the edges mapper', () => {
@@ -62,7 +62,7 @@ describe('service/migration/cells.js', () => {
         beforeEach(() => {
             cell = getEdge('tm.Flow');
             data.map.mockReturnValue(cell);
-            cells.map({ diagramJson: { cells: [ cell ]}});
+            cells.map({ diagramJson: { cells: [cell] } });
         });
 
         it('calls the edges mapper', () => {
@@ -77,7 +77,7 @@ describe('service/migration/cells.js', () => {
     describe('process', () => {
         beforeEach(() => {
             cell = { type: 'tm.Process' };
-            cells.map({ diagramJson: { cells: [ cell ]}});
+            cells.map({ diagramJson: { cells: [cell] } });
         });
 
         it('calls the nodes mapper', () => {
@@ -92,7 +92,7 @@ describe('service/migration/cells.js', () => {
     describe('store', () => {
         beforeEach(() => {
             cell = { type: 'tm.Store' };
-            cells.map({ diagramJson: { cells: [ cell ]}});
+            cells.map({ diagramJson: { cells: [cell] } });
         });
 
         it('calls the nodes mapper', () => {
@@ -110,7 +110,7 @@ describe('service/migration/cells.js', () => {
             delete cell.source.id;
             delete cell.target.id;
             data.map.mockReturnValue(cell);
-            cells.map({ diagramJson: { cells: [ cell ]}});
+            cells.map({ diagramJson: { cells: [cell] } });
         });
 
         it('calls the edges mapper', () => {
@@ -133,7 +133,7 @@ describe('service/migration/cells.js', () => {
                 .mockReturnValueOnce(cell)
                 .mockReturnValueOnce(nodeSource)
                 .mockReturnValueOnce(nodeTarget);
-            res = cells.map({ diagramJson: { cells: [ cell, nodeSource, nodeTarget ]}});
+            res = cells.map({ diagramJson: { cells: [cell, nodeSource, nodeTarget] } });
         });
 
         it('relates the source', () => {

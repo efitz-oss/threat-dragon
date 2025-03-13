@@ -4,7 +4,7 @@
  */
 import axios from 'axios';
 
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 import * as repositories from '../repositories/index.js';
 
 const name = 'github';
@@ -13,17 +13,17 @@ const name = 'github';
  * Determines if the GitHub provider is configured
  * @returns {Boolean}
  */
-const isConfigured = () => Boolean(env.get().config.GITHUB_CLIENT_ID);
+const isConfigured = () => Boolean(getEnvironment().config.GITHUB_CLIENT_ID);
 
 /**
  * Gets the Github endpoint, which will be github.com by default OR a custom endpoint for Github enterprise
  * @returns {String}
  */
 const getGithubUrl = () => {
-    const enterpriseHostname = env.get().config.GITHUB_ENTERPRISE_HOSTNAME;
+    const enterpriseHostname = getEnvironment().config.GITHUB_ENTERPRISE_HOSTNAME;
     if (enterpriseHostname) {
-        const port = env.get().config.GITHUB_ENTERPRISE_PORT || '';
-        const protocol = env.get().config.GITHUB_ENTERPRISE_PROTOCOL || 'https';
+        const port = getEnvironment().config.GITHUB_ENTERPRISE_PORT || '';
+        const protocol = getEnvironment().config.GITHUB_ENTERPRISE_PROTOCOL || 'https';
         return `${protocol}://${enterpriseHostname}${port ? ':' + port : ''}`;
     }
     return 'https://github.com';
@@ -34,8 +34,8 @@ const getGithubUrl = () => {
  * @returns {String}
  */
 const getOauthRedirectUrl = () => {
-    const scope = env.get().config.GITHUB_SCOPE || 'public_repo';
-    return `${getGithubUrl()}/login/oauth/authorize?scope=${scope}&client_id=${env.get().config.GITHUB_CLIENT_ID}`;
+    const scope = getEnvironment().config.GITHUB_SCOPE || 'public_repo';
+    return `${getGithubUrl()}/login/oauth/authorize?scope=${scope}&client_id=${getEnvironment().config.GITHUB_CLIENT_ID}`;
 };
 
 /**
@@ -45,7 +45,7 @@ const getOauthRedirectUrl = () => {
  */
 const getOauthReturnUrl = (code) => {
     let returnUrl = `/#/oauth-return?code=${code}`;
-    if (env.get().config.NODE_ENV === 'development') {
+    if (getEnvironment().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;
     }
     return returnUrl;
@@ -59,8 +59,8 @@ const getOauthReturnUrl = (code) => {
 const completeLoginAsync = async (code) => {
     const url = `${getGithubUrl()}/login/oauth/access_token`;
     const body = {
-        client_id: env.get().config.GITHUB_CLIENT_ID,
-        client_secret: env.get().config.GITHUB_CLIENT_SECRET,
+        client_id: getEnvironment().config.GITHUB_CLIENT_ID,
+        client_secret: getEnvironment().config.GITHUB_CLIENT_SECRET,
         code,
     };
     const options = {

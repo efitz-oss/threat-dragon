@@ -16,10 +16,9 @@ describe('service/googleDriveApi.js', () => {
         });
 
         it('calls the folder endpoint', () => {
-            expect(api.getAsync).toHaveBeenCalledWith(
-                '/api/googleproviderthreatmodel/folders', 
-                { params: { page: 1, folderId: 'root' } }
-            );
+            expect(api.getAsync).toHaveBeenCalledWith('/api/googleproviderthreatmodel/folders', {
+                params: { page: 1, folderId: 'root' },
+            });
         });
     });
 
@@ -34,7 +33,7 @@ describe('service/googleDriveApi.js', () => {
 
         it('calls the create endpoint', () => {
             expect(api.postAsync).toHaveBeenCalledWith(
-                `/api/googleproviderthreatmodel/${folder}/create`, 
+                `/api/googleproviderthreatmodel/${folder}/create`,
                 { fileContent, fileName }
             );
         });
@@ -50,7 +49,7 @@ describe('service/googleDriveApi.js', () => {
 
         it('calls the update endpoint', () => {
             expect(api.putAsync).toHaveBeenCalledWith(
-                `/api/googleproviderthreatmodel/${fileId}/update`, 
+                `/api/googleproviderthreatmodel/${fileId}/update`,
                 { fileContent }
             );
         });

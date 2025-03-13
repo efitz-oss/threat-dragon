@@ -1,0 +1,52 @@
+/* Icon styling and configuration */
+
+/* Define icon size variables */
+$icon-size-sm: 1rem;
+$icon-size-md: 1.2rem;
+$icon-size-lg: 1.5rem;
+$icon-size-xl: 2rem;
+
+/* FontAwesome icon styles */
+.svg-inline--fa {
+  &.fa-nav-icon {
+    color: var(--text-color-inverse, #fff);
+    height: $icon-size-md;
+    width: $icon-size-md;
+  }
+  
+  &.fa-button-icon {
+    margin-right: 0.5rem;
+    height: $icon-size-md;
+    width: $icon-size-md;
+  }
+}
+
+/* Navbar icon styles */
+.navbar-icon {
+  height: $icon-size-md;
+  width: $icon-size-md;
+  margin: 0 5px;
+  
+  &.owasp-logo {
+    height: $icon-size-md;
+    
+    @media (max-width: 576px) {
+      background-color: white;
+      border-radius: 50%;
+      padding: 2px;
+    }
+  }
+}
+
+/* Brand logo */
+.brand-logo {
+  max-height: 40px;
+  margin-right: 0.5rem;
+}
+
+/* PrimeVue icon overrides */
+:deep(.p-button) {
+  .p-button-icon {
+    font-size: $icon-size-md;
+  }
+}

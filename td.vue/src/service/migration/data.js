@@ -6,7 +6,13 @@ import threats from '../threats/index.js';
 const getName = (cell) => {
     if (cell.name) return cell.name;
     if (cell.attrs && cell.attrs.text && cell.attrs.text.text) return cell.attrs.text.text;
-    if (cell.labels && cell.labels[0].attrs && cell.labels[0].attrs.text && cell.labels[0].attrs.text.text) return cell.labels[0].attrs.text.text;
+    if (
+        cell.labels &&
+        cell.labels[0].attrs &&
+        cell.labels[0].attrs.text &&
+        cell.labels[0].attrs.text.text
+    )
+        return cell.labels[0].attrs.text.text;
     return '';
 };
 
@@ -14,7 +20,7 @@ const getBaseData = (cell) => ({
     name: getName(cell),
     description: cell.description || '',
     type: cell.type,
-    isTrustBoundary: cell.type === 'tm.Boundary'
+    isTrustBoundary: cell.type === 'tm.Boundary',
 });
 
 const applyThreatData = (cell, data) => {
@@ -26,8 +32,7 @@ const applyThreatData = (cell, data) => {
             data.threats.forEach((threat) => {
                 if (cell.modelType) {
                     threat.modelType = cell.modelType;
-                }
-                else {
+                } else {
                     threat.modelType = threats.getModelByTranslation(
                         threats.convertToTranslationString(threat.type)
                     );
@@ -68,5 +73,5 @@ const map = (entity, cell) => {
 };
 
 export default {
-    map
+    map,
 };

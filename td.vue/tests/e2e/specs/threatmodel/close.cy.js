@@ -13,5 +13,4 @@ describe('closing a threat model', () => {
             cy.url().should('equal', Cypress.config().baseUrl + '#/dashboard');
         });
     });
-
 });

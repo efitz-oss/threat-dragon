@@ -30,7 +30,7 @@ describe('service/x6/shapes/flow.js', () => {
         });
 
         it('sets the name', () => {
-            expect(victim.setLabels).toHaveBeenCalledWith([ name ]);
+            expect(victim.setLabels).toHaveBeenCalledWith([name]);
         });
     });
 });

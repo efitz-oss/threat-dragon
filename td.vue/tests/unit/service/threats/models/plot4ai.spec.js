@@ -31,6 +31,4 @@ describe('service/threats/models/plot4ai.js', () => {
     it('has a translation for ethics and human rights', () => {
         expect(plot4ai.all.ethicsHumanRights.length).toBeGreaterThan(0);
     });
-
-
 });

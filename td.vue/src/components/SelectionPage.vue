@@ -1,177 +1,243 @@
 <template>
-    <b-container fluid>
-        <b-row>
-            <b-col>
-                <b-jumbotron class="text-center">
+    <div class="container-fluid">
+        <div class="grid">
+            <div class="col-12">
+                <div class="jumbotron text-center">
                     <h4>
-                        <slot></slot>
+                        <slot />
                     </h4>
-                </b-jumbotron>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col md=6 offset=3>
-                <b-form>
-                    <b-form-row>
-                        <b-col>
-                            <b-form-group id="filter-group">
-                                <b-form-input
-                                    id="filter"
-                                    v-model="localFilter"
-                                    :placeholder="$t('forms.search')"
-                                ></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                    </b-form-row>
-                </b-form>
-            </b-col>
-        </b-row>
-
-        <b-row>
-            <b-col md=6 offset=3>
-                <b-list-group>
-                    <b-list-group-item
-                        v-if="showBackItem"
-                        href="javascript:void(0)"
-                        @click="onBackClick">
-                        ...
-                    </b-list-group-item>
-
-                    <b-list-group-item
-                        v-if="items.length === 0 && !!emptyStateText"
-                        @click="onEmptyStateClick"
-                        href="javascript:void(0)">
-                        {{ emptyStateText }}
-                    </b-list-group-item>
-
-                    <b-list-group-item
-                        v-for="(item, idx) in displayedItems"
-                        :key="idx"
-                        href="javascript:void(0)"
-                        @click="onItemClick(item)">
-                        <span v-if="typeof item === 'string'">{{ item }}</span>
-                        <span v-else class="d-flex justify-content-between align-items-center">
-                            {{ item.value }}
-                            <font-awesome-icon
-                                v-if="item.icon"
-                                :icon="item.icon"
-                                v-b-tooltip.hover
-                                :title="$t(item.iconTooltip) || ''"
-                            ></font-awesome-icon>
-                        </span>
-                    </b-list-group-item>
-                </b-list-group>
-            </b-col>
-        </b-row>
-
-        <b-row>
-            <b-col md=6 offset=3>
-                <div class="pagination">
-                    <button @click="paginate(--pageRef)" :disabled="!pagePrev">Previous</button>
-                    <button class="btn" data-toggle="buttons" :disabled="true">{{ pageRef }}</button>
-                    <button @click="paginate(++pageRef)" :disabled="!pageNext">Next</button>
                 </div>
-            </b-col>
-        </b-row>
-    </b-container>
+            </div>
+        </div>
+        
+        <div class="grid justify-content-center">
+            <div class="col-12 md:col-6">
+                <div class="p-fluid">
+                    <div class="field">
+                        <span class="p-input-icon-left w-full">
+                            <i class="pi pi-search" />
+                            <InputText
+                                id="filter"
+                                v-model="localFilter"
+                                :placeholder="$t('forms.search')"
+                                class="w-full"
+                            />
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid justify-content-center">
+            <div class="col-12 md:col-6">
+                <div class="card">
+                    <ul class="list-group">
+                        <li 
+                            v-if="showBackItem"
+                            class="list-group-item cursor-pointer"
+                            @click="onBackClick"
+                        >
+                            ...
+                        </li>
+
+                        <li
+                            v-if="items.length === 0 && !!emptyStateText"
+                            class="list-group-item cursor-pointer"
+                            @click="onEmptyStateClick"
+                        >
+                            {{ emptyStateText }}
+                        </li>
+
+                        <li
+                            v-for="(item, idx) in displayedItems"
+                            :key="idx"
+                            class="list-group-item cursor-pointer"
+                            @click="onItemClick(item)"
+                        >
+                            <span v-if="typeof item === 'string'">{{ item }}</span>
+                            <div v-else class="flex justify-content-between align-items-center">
+                                {{ item.value }}
+                                <font-awesome-icon
+                                    v-if="item.icon"
+                                    :icon="item.icon"
+                                    v-tooltip.top="$t(item.iconTooltip) || ''"
+                                />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid justify-content-center">
+            <div class="col-12 md:col-6">
+                <div class="pagination flex justify-content-center mt-3">
+                    <Button 
+                        :disabled="!pagePrev" 
+                        icon="pi pi-chevron-left" 
+                        @click="paginate(--pageRef)"
+                        label="Previous"
+                        class="mr-2"
+                    />
+                    <Button 
+                        :disabled="true" 
+                        :label="pageRef.toString()"
+                        class="mx-2"
+                    />
+                    <Button 
+                        :disabled="!pageNext" 
+                        icon="pi pi-chevron-right" 
+                        iconPos="right"
+                        label="Next"
+                        class="ml-2"
+                        @click="paginate(++pageRef)"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
-<script>
-export default {
-    name: 'TdSelectionPage',
-    data() {
-        return {
-            pageRef: this.page,
-            localFilter: this.filter
-        };
+<script setup>
+import { ref, computed, watch } from 'vue';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Tooltip from 'primevue/tooltip';
+
+// Props
+const props = defineProps({
+    filter: {
+        type: String,
+        default: '',
     },
-    watch: {
-        filter(newFilter) {
-            this.localFilter = newFilter;
+    items: {
+        type: Array,
+        required: true,
+        validator: (value) => {
+            return value.every((item) => {
+                return (
+                    typeof item === 'string' ||
+                        (item.value &&
+                            typeof item.value === 'string' &&
+                            (!item.icon || typeof item.icon === 'string') &&
+                            (!item.iconTooltip ||
+                                (typeof item.iconTooltip === 'string' && item.icon)))
+                );
+            });
         },
-        localFilter(newFilter) {
-            this.$emit('update:filter', newFilter);
-        }
     },
-    props: {
-        filter: {
-            required: false,
-            type: String,
-            default: ''
-        },
-        items: {
-            required: true,
-            type: Array,
-            validator: (value) => {
-                return value.every((item) => {
-                    return typeof item === 'string' || (item.value && typeof item.value === 'string')
-                        && (!item.icon || typeof item.icon === 'string')
-                        && (!item.iconTooltip || (typeof item.iconTooltip === 'string' && item.icon));
-                });
-            }
-        },
-        page: {
-            required: false,
-            type: Number,
-            default: 1
-        },
-        pageNext: {
-            required: false,
-            type: Boolean,
-            default: false
-        },
-        pagePrev: {
-            required: false,
-            type: Boolean,
-            default: false
-        },
-        paginate: {
-            required: false,
-            type: Function
-        },
-        onItemClick: {
-            required: true,
-            type: Function
-        },
-        emptyStateText: {
-            required: false,
-            type: String
-        },
-        onEmptyStateClick: {
-            required: false,
-            type: Function,
-            default: () => {
-            }
-        },
-        showBackItem: {
-            required: false,
-            type: Boolean,
-            default: false
-        },
-        onBackClick: {
-            required: false,
-            type: Function,
-            default: () => {
-            }
-        },
-        isGoogleProvider: {
-            required: false,
-            type: Boolean,
-            default: false
-        }
+    page: {
+        type: Number,
+        default: 1,
     },
-    computed: {
-        displayedItems: function () {
-            if (!this.filter) {
-                return this.items;
-            }
-            if (this.$props.isGoogleProvider) {
-                return this.items.filter(x => x.name.toLowerCase().includes(this.filter.toLowerCase()));
-            } else {
-                console.log(this.items);
-                return this.items.filter(x => (x.value || x).toLowerCase().includes(this.filter.toLowerCase()));
-            }
-        }
+    pageNext: {
+        type: Boolean,
+        default: false,
+    },
+    pagePrev: {
+        type: Boolean,
+        default: false,
+    },
+    paginate: {
+        type: Function,
+    },
+    onItemClick: {
+        type: Function,
+        required: true,
+    },
+    emptyStateText: {
+        type: String,
+    },
+    onEmptyStateClick: {
+        type: Function,
+        default: () => {},
+    },
+    showBackItem: {
+        type: Boolean,
+        default: false,
+    },
+    onBackClick: {
+        type: Function,
+        default: () => {},
+    },
+    isGoogleProvider: {
+        type: Boolean,
+        default: false,
+    },
+});
+
+// Emits
+const emit = defineEmits(['update:filter']);
+
+// State
+const pageRef = ref(props.page);
+const localFilter = ref(props.filter);
+
+// Computed
+const displayedItems = computed(() => {
+    if (!props.filter) {
+        return props.items;
     }
-};
+    if (props.isGoogleProvider) {
+        return props.items.filter((x) =>
+            x.name.toLowerCase().includes(props.filter.toLowerCase())
+        );
+    } else {
+        return props.items.filter((x) =>
+            (x.value || x).toLowerCase().includes(props.filter.toLowerCase())
+        );
+    }
+});
+
+// Watchers
+watch(() => props.filter, (newFilter) => {
+    localFilter.value = newFilter;
+});
+
+watch(localFilter, (newFilter) => {
+    emit('update:filter', newFilter);
+});
 </script>
+
+<style scoped>
+.jumbotron {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background-color: var(--surface-100);
+    border-radius: 0.5rem;
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border-radius: 0.5rem;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--surface-0);
+    border: 1px solid var(--surface-200);
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.list-group-item:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-pointer:hover {
+    background-color: var(--surface-100);
+}
+</style>

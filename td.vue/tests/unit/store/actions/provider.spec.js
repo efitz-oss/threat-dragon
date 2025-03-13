@@ -1,8 +1,4 @@
-import {
-    PROVIDER_CLEAR,
-    PROVIDER_FETCH,
-    PROVIDER_SELECTED
-} from '@/store/actions/provider.js';
+import { PROVIDER_CLEAR, PROVIDER_FETCH, PROVIDER_SELECTED } from '@/store/actions/provider.js';
 
 describe('store/actions/provider.js', () => {
     it('defines a clear action', () => {

@@ -42,12 +42,11 @@
   },
   "resolutions": {},
   "dependencies": {
-    "@babel/runtime": "^7.21.0",
     "@gitbeaker/rest": "^39.34.2",
     "bitbucket": "^2.11.0",
     "express": "^5.0.1",
     "express-rate-limit": "^7.5.0",
-    "googleapis": "^144.0.0",
+    "googleapis": "^146.0.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "octonode": "^0.10.2",
@@ -55,19 +54,11 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
-    "@babel/eslint-parser": "^7.21.3",
-    "@babel/node": "^7.20.7",
-    "@babel/plugin-transform-runtime": "^7.21.4",
-    "@babel/preset-env": "^7.21.4",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.3",
     "mocha": "^10.8.2",
     "nodemon": "^2.0.22",
     "nyc": "^15.1.0",
-    "prettier": "^3.5.3",
     "sinon": "^10.0.0",
     "sinon-chai": "^3.7.0",
     "supertest": "^4.0.2"

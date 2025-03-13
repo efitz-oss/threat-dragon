@@ -1,7 +1,7 @@
-var appFactory = require('./dist/app.js');
+import { create } from './dist/app.js';
 
-var app = appFactory.default.create();
+const app = create();
 
-var server = app.listen(app.get('port'), function() {
-    console.log('Express server listening at ' + server.address().address + ' on port ' +  server.address().port);
+const server = app.listen(app.get('port'), function() {
+    console.log(`Express server listening at ${server.address().address} on port ${server.address().port}`);
 });

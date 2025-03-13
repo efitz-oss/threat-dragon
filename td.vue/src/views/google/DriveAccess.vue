@@ -2,82 +2,94 @@
     <td-selection-page
         :items="folders"
         :page="page"
-        :pageNext="pageNext"
-        :pagePrev="pagePrev"
-        :onItemClick="onFolderClick"
-        :onBackClick="navigateBack"
+        :page-next="pageNext"
+        :page-prev="pagePrev"
+        :on-item-click="onFolderClick"
+        :on-back-click="navigateBack"
         :paginate="paginate"
-        :showBackItem="!!parentId"
-        isGoogleProvider
-        :emptyStateText="`${$t('folder.noneFound')}`">
-        {{ $t('folder.select') }} {{ $t(`providers.${provider}.displayName`) }} {{ $t('folder.from') }}
+        :show-back-item="!!parentId"
+        is-google-provider
+        :empty-state-text="`${$t('folder.noneFound')}`"
+    >
+        {{ $t('folder.select') }} {{ $t(`providers.${provider}.displayName`) }}
+        {{ $t('folder.from') }}
         {{ $t('threatmodelSelect.or') }}
-        <a href="javascript:void(0)" id="new-threat-model" @click="newThreatModel(selected)">{{ $t('threatmodelSelect.newThreatModel') }}</a>
+        <a id="new-threat-model" href="javascript:void(0)" @click="newThreatModel(selected)">{{
+            $t('threatmodelSelect.newThreatModel')
+        }}</a>
     </td-selection-page>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProviderStore } from '@/stores/provider';
+import { useFolderStore } from '@/stores/folder';
+import { useThreatmodelStore } from '@/stores/threatmodel';
 import { getProviderType } from '@/service/provider/providers.js';
-import providerActions from '@/store/actions/provider.js';
-import folderActions from '@/store/actions/folder.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
-import tmActions from '@/store/actions/threatmodel.js';
 
-export default {
-    name: 'DriveAccess',
-    components: {
-        TdSelectionPage
-    },
-    computed: mapState({
-        provider: (state) => state.provider.selected,
-        providerType: (state) => getProviderType(state.provider.selected),
-        folders: (state) => state.folder.all,
-        selected: (state) => state.folder.selected,
-        page: (state) => state.folder.page,
-        pageNext: (state) => state.folder.pageNext,
-        pagePrev: (state) => state.folder.pagePrev,
-        parentId: (state) => state.folder.parentId,
-        selectedModel: (state) => state.threatmodel.data
-    }),
-    mounted() {
-        if (this.provider !== this.$route.params.provider) {
-            this.$store.dispatch(providerActions.selected, this.$route.params.provider);
-        }
-        let page = 1;
-        if (this.$route.query.page) {
-            page = this.$route.query.page;
-        }
+// Composables
+const route = useRoute();
+const router = useRouter();
+const providerStore = useProviderStore();
+const folderStore = useFolderStore();
+const threatmodelStore = useThreatmodelStore();
 
-        this.$store.dispatch(folderActions.fetch, { page });
-    },
-    methods: {
-        async onFolderClick(folder) {
-            const prevfolder = this.selected;
-            this.$store.dispatch(folderActions.selected, folder);
-            if (folder.mimeType == 'application/json') {
-                await this.$store.dispatch(tmActions.fetch, folder.id);
-                const params = Object.assign({}, this.$route.params, { folder: prevfolder, threatmodel: folder.name });
-                this.$store.dispatch(tmActions.selected, this.selectedModel);
-                this.$router.push({ name: `${this.providerType}ThreatModel`, params });
-            }
-        },
-        paginate(page) {
-            this.$store.dispatch(folderActions.fetch, { page });
-        },
-        navigateBack() {
-            this.$store.dispatch(folderActions.navigateBack);
-        },
-        newThreatModel(folderId) {
-            const params = Object.assign({}, this.$route.params, {
-                folder: folderId
-            });
+// Computed
+const provider = computed(() => providerStore.selected);
+const providerType = computed(() => getProviderType(providerStore.selected));
+const folders = computed(() => folderStore.all);
+const selected = computed(() => folderStore.selected);
+const page = computed(() => folderStore.page);
+const pageNext = computed(() => folderStore.pageNext);
+const pagePrev = computed(() => folderStore.pagePrev);
+const parentId = computed(() => folderStore.parentId);
+const selectedModel = computed(() => threatmodelStore.data);
 
-            const routeName = `${this.providerType}${this.$route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'}`;
-
-            this.$router.push({ name: routeName, params });
-        }
+// Methods
+const onFolderClick = async (folder) => {
+    const prevfolder = selected.value;
+    folderStore.selectFolder(folder);
+    if (folder.mimeType == 'application/json') {
+        await threatmodelStore.fetchModel(folder.id);
+        const params = Object.assign({}, route.params, {
+            folder: prevfolder,
+            threatmodel: folder.name,
+        });
+        threatmodelStore.setSelected(selectedModel.value);
+        router.push({ name: `${providerType.value}ThreatModel`, params });
     }
 };
+
+const paginate = (pageNum) => {
+    folderStore.fetch({ page: pageNum });
+};
+
+const navigateBack = () => {
+    folderStore.navigateBack();
+};
+
+const newThreatModel = (folderId) => {
+    const params = Object.assign({}, route.params, {
+        folder: folderId,
+    });
+
+    const routeName = `${providerType.value}${route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'}`;
+    router.push({ name: routeName, params });
+};
+
+// Lifecycle
+onMounted(() => {
+    if (provider.value !== route.params.provider) {
+        providerStore.selectProvider(route.params.provider);
+    }
+
+    let pageNum = 1;
+    if (route.query.page) {
+        pageNum = route.query.page;
+    }
+
+    folderStore.fetch({ page: pageNum });
+});
 </script>

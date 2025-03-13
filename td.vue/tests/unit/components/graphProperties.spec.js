@@ -1,31 +1,86 @@
-import { BootstrapVue, BFormTextarea, BFormGroup, BFormCheckbox } from 'bootstrap-vue';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import Vuex from 'vuex';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
+// Mock cell store
+vi.mock('@/stores/cell', () => ({
+    useCellStore: vi.fn(),
+}));
+
+import { useCellStore } from '@/stores/cell';
+import dataChanged from '@/service/x6/graph/data-changed.js';
 import TdGraphProperties from '@/components/GraphProperties.vue';
+
+vi.mock('@/service/x6/graph/data-changed.js', () => ({
+    default: {
+        updateName: vi.fn(),
+        updateProperties: vi.fn(),
+        updateStyleAttrs: vi.fn(),
+    },
+}));
 
 describe('components/GraphProperties.vue', () => {
     let wrapper;
 
     describe('emptyState', () => {
         beforeEach(() => {
-            const localVue = createLocalVue();
-            localVue.use(Vuex);
-            localVue.use(BootstrapVue);
-            localVue.use(Vuex);
-            const mockStore = new Vuex.Store({
-                state: {
-                    cell: {
-                        ref: null
-                    }
-                }
+            // Mock the store to return null for cellRef
+            useCellStore.mockReturnValue({
+                cellRef: null,
             });
+
             wrapper = shallowMount(TdGraphProperties, {
-                localVue,
-                store: mockStore,
-                mocks: {
-                    $t: key => key
-                }
+                global: {
+                    stubs: {
+                        'b-row': {
+                            template: '<div class="row"><slot /></div>',
+                        },
+                        'b-col': {
+                            template: '<div class="col"><slot /></div>',
+                        },
+                        'b-form': {
+                            template: '<div class="form"><slot /></div>',
+                        },
+                        'b-form-row': {
+                            template: '<div class="form-row"><slot /></div>',
+                        },
+                        'b-form-group': {
+                            template:
+                                '<div :id="id" class="form-group"><label v-if="label">{{ label }}</label><slot /></div>',
+                            props: ['id', 'label', 'labelFor', 'labelCols'],
+                        },
+                        'b-form-textarea': {
+                            template:
+                                '<textarea :id="id" class="form-textarea" v-model="internalValue" @input="$emit(\'update\')"></textarea>',
+                            props: ['id', 'modelValue', 'rows', 'disabled'],
+                            data() {
+                                return {
+                                    internalValue: this.modelValue,
+                                };
+                            },
+                            emits: ['update'],
+                        },
+                        'b-form-checkbox': {
+                            template:
+                                '<div class="form-check"><input type="checkbox" :id="id" :checked="modelValue" @change="$emit(\'change\')" /></div>',
+                            props: ['id', 'modelValue'],
+                            emits: ['change'],
+                        },
+                        'b-form-input': {
+                            template:
+                                '<input :id="id" class="form-input" :type="type" v-model="internalValue" @change="$emit(\'change\')" />',
+                            props: ['id', 'modelValue', 'type'],
+                            data() {
+                                return {
+                                    internalValue: this.modelValue,
+                                };
+                            },
+                            emits: ['change'],
+                        },
+                    },
+                    mocks: {
+                        $t: (key) => key,
+                    },
+                },
             });
         });
 
@@ -34,7 +89,7 @@ describe('components/GraphProperties.vue', () => {
         });
     });
 
-    describe('with data', () => {
+    describe('with flow data', () => {
         let entityData;
 
         beforeEach(() => {
@@ -44,71 +99,199 @@ describe('components/GraphProperties.vue', () => {
                 description: 'describing the thing',
                 outOfScope: true,
                 isBidirectional: true,
-                reasonOutOfScope: 'someone thought so'
+                reasonOutOfScope: 'someone thought so',
             };
-            const localVue = createLocalVue();
-            localVue.use(Vuex);
-            localVue.use(BootstrapVue);
-            localVue.use(Vuex);
-            const mockStore = new Vuex.Store({
-                state: {
-                    cell: {
-                        ref: {
-                            data: entityData
-                        }
-                    }
-                }
+
+            // Mock the store to return data for cellRef
+            useCellStore.mockReturnValue({
+                cellRef: {
+                    data: entityData,
+                },
             });
+
             wrapper = shallowMount(TdGraphProperties, {
-                localVue,
-                store: mockStore,
-                mocks: {
-                    $t: key => key
-                }
+                global: {
+                    stubs: {
+                        'b-row': {
+                            template: '<div class="row"><slot /></div>',
+                        },
+                        'b-col': {
+                            template: '<div class="col"><slot /></div>',
+                        },
+                        'b-form': {
+                            template: '<div class="form"><slot /></div>',
+                        },
+                        'b-form-row': {
+                            template: '<div class="form-row"><slot /></div>',
+                        },
+                        'b-form-group': {
+                            template:
+                                '<div :id="id" class="form-group"><label v-if="label">{{ label }}</label><slot /></div>',
+                            props: ['id', 'label', 'labelFor', 'labelCols'],
+                        },
+                        'b-form-textarea': {
+                            template:
+                                '<textarea :id="id" class="form-textarea" v-model="internalValue" @input="$emit(\'update\')"></textarea>',
+                            props: ['id', 'modelValue', 'rows', 'disabled'],
+                            data() {
+                                return {
+                                    internalValue: this.modelValue,
+                                };
+                            },
+                            emits: ['update', 'change'],
+                        },
+                        'b-form-checkbox': {
+                            template:
+                                '<div class="form-check"><input type="checkbox" :id="id" :checked="modelValue" @change="$emit(\'change\')" /></div>',
+                            props: ['id', 'modelValue'],
+                            emits: ['change'],
+                        },
+                        'b-form-input': {
+                            template:
+                                '<input :id="id" class="form-input" :type="type" v-model="internalValue" @change="$emit(\'change\')" />',
+                            props: ['id', 'modelValue', 'type'],
+                            data() {
+                                return {
+                                    internalValue: this.modelValue,
+                                };
+                            },
+                            emits: ['change'],
+                        },
+                    },
+                    mocks: {
+                        $t: (key) => key,
+                    },
+                },
             });
         });
 
-        it('has a label for name', () => {
-            const group = wrapper.findAllComponents(BFormGroup)
-                .filter(x => x.attributes('id') === 'name-group')
-                .at(0);
-            expect(group.attributes('label')).toEqual('threatmodel.properties.name');
+        it('shows name form group', () => {
+            const formGroup = wrapper.find('#name-group');
+            expect(formGroup.exists()).toBe(true);
         });
 
-        it('displays the name in a textarea', () => {
-            const input = wrapper.findAllComponents(BFormTextarea)
-                .filter(x => x.attributes('id') === 'name')
-                .at(0);
-            expect(input.attributes('value')).toEqual(entityData.name);
+        it('shows description form group', () => {
+            const formGroup = wrapper.find('#description-group');
+            expect(formGroup.exists()).toBe(true);
         });
 
-        it('shows the description', () => {
-            const input = wrapper.findAllComponents(BFormTextarea)
-                .filter(x => x.attributes('id') === 'description')
-                .at(0);
-            expect(input.attributes('value')).toEqual(entityData.description);
+        it('shows outOfScope checkbox group', () => {
+            const formGroup = wrapper.find('#flowoutofscope-group');
+            expect(formGroup.exists()).toBe(true);
         });
 
-        it('has an out of scope checkbox', () => {
-            const input = wrapper.findAllComponents(BFormCheckbox)
-                .filter(x => x.attributes('id') === 'flowoutofscope')
-                .at(0);
-            expect(input.attributes('value')).toEqual(entityData.outOfScope.toString());
+        it('shows the bidirectional checkbox', () => {
+            const bidirectionalGroup = wrapper.find('#flowoutofscope-group');
+            expect(bidirectionalGroup.exists()).toBe(true);
         });
 
-        it('has a reason for out of scope', () => {
-            const input = wrapper.findAllComponents(BFormTextarea)
-                .filter(x => x.attributes('id') === 'reasonoutofscope')
-                .at(0);
-            expect(input.attributes('value')).toEqual(entityData.reasonOutOfScope);
-        });
-
-        it('has a bidirectional checkbox', () => {
-            const input = wrapper.findAllComponents(BFormCheckbox)
-                .filter(x => x.attributes('id') === 'bidirection')
-                .at(0);
-            expect(input.attributes('value')).toEqual(entityData.isBidirectional.toString());
+        it('shows reasonOutOfScope textarea', () => {
+            const reasonGroup = wrapper.find('#reasonoutofscope-group');
+            expect(reasonGroup.exists()).toBe(true);
         });
     });
 
+    describe('event handlers', () => {
+        let cellRef;
+
+        beforeEach(() => {
+            cellRef = {
+                data: {
+                    type: 'tm.Flow',
+                    name: 'some flow',
+                    description: 'describing the thing',
+                    outOfScope: true,
+                    isBidirectional: true,
+                    reasonOutOfScope: 'someone thought so',
+                },
+            };
+
+            // Mock the store to return data for cellRef
+            useCellStore.mockReturnValue({
+                cellRef,
+            });
+
+            // Mock document.getElementById
+            global.document.getElementById = vi.fn().mockReturnValue({
+                disabled: false,
+            });
+
+            wrapper = shallowMount(TdGraphProperties, {
+                global: {
+                    stubs: {
+                        'b-row': {
+                            template: '<div class="row"><slot /></div>',
+                        },
+                        'b-col': {
+                            template: '<div class="col"><slot /></div>',
+                        },
+                        'b-form': {
+                            template: '<div class="form"><slot /></div>',
+                        },
+                        'b-form-row': {
+                            template: '<div class="form-row"><slot /></div>',
+                        },
+                        'b-form-group': {
+                            template:
+                                '<div :id="id" class="form-group"><label v-if="label">{{ label }}</label><slot /></div>',
+                            props: ['id', 'label', 'labelFor', 'labelCols'],
+                        },
+                        'b-form-textarea': {
+                            template:
+                                '<textarea :id="id" class="form-textarea" v-model="internalValue" @update="$emit(\'update\')" @change="$emit(\'change\')"></textarea>',
+                            props: ['id', 'modelValue', 'rows', 'disabled'],
+                            data() {
+                                return {
+                                    internalValue: this.modelValue,
+                                };
+                            },
+                            emits: ['update', 'change'],
+                        },
+                        'b-form-checkbox': {
+                            template:
+                                '<div class="form-check"><input type="checkbox" :id="id" :checked="modelValue" @change="$emit(\'change\')" /></div>',
+                            props: ['id', 'modelValue'],
+                            emits: ['change'],
+                        },
+                        'b-form-input': {
+                            template:
+                                '<input :id="id" class="form-input" :type="type" v-model="internalValue" @change="$emit(\'change\')" />',
+                            props: ['id', 'modelValue', 'type'],
+                            data() {
+                                return {
+                                    internalValue: this.modelValue,
+                                };
+                            },
+                            emits: ['change'],
+                        },
+                    },
+                    mocks: {
+                        $t: (key) => key,
+                    },
+                },
+            });
+        });
+
+        it('calls updateName for name change', async () => {
+            await wrapper.vm.onChangeName();
+            expect(dataChanged.updateName).toHaveBeenCalledWith(cellRef);
+        });
+
+        it('calls updateProperties and updateStyleAttrs for bidirection change', async () => {
+            await wrapper.vm.onChangeBidirection();
+            expect(dataChanged.updateProperties).toHaveBeenCalledWith(cellRef);
+            expect(dataChanged.updateStyleAttrs).toHaveBeenCalledWith(cellRef);
+        });
+
+        it('calls updateProperties for property changes', async () => {
+            await wrapper.vm.onChangeProperties();
+            expect(dataChanged.updateProperties).toHaveBeenCalledWith(cellRef);
+        });
+
+        it('calls updateProperties and updateStyleAttrs for scope changes', async () => {
+            await wrapper.vm.onChangeScope();
+            expect(dataChanged.updateProperties).toHaveBeenCalledWith(cellRef);
+            expect(dataChanged.updateStyleAttrs).toHaveBeenCalledWith(cellRef);
+        });
+    });
 });

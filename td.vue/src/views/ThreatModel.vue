@@ -1,151 +1,176 @@
 <template>
     <div v-if="!!model && model.summary">
-        <b-row class="mb-4" id="title_row">
-            <b-col>
+        <div id="title_row" class="row mb-4">
+            <div class="col">
                 <td-threat-model-summary-card />
-            </b-col>
-        </b-row>
+            </div>
+        </div>
 
         <!-- Description -->
-        <b-row class="mb-4">
-            <b-col>
-                <b-card
-                    :header="$t('threatmodel.description')">
-                    <b-row class="tm-card">
-                        <b-col>
-                            <p id="tm_description">{{ model.summary.description }}</p>
-                        </b-col>
-                    </b-row>
-                </b-card>
-            </b-col>
-        </b-row>
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">{{ $t('threatmodel.description') }}</div>
+                    <div class="card-body">
+                        <div class="row tm-card">
+                            <div class="col">
+                                <p id="tm_description">
+                                    {{
+                                        model.summary.description || $t('threatmodel.noDescription')
+                                    }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Diagrams -->
-        <b-row class="mb-4">
-            <b-col
-                class="tm_diagram"
-                lg="3"
-                v-for="(diagram, idx) in model.detail.diagrams"
-                :key="idx"
-            >
-                <b-card>
-                    <template #header>
+        <div class="row mb-4">
+            <div v-for="(diagram, idx) in diagrams" :key="idx" class="col-lg-3 tm_diagram">
+                <div class="card">
+                    <div class="card-header">
                         <h6 class="diagram-header-text">
-                            <a href="javascript:void(0)" @click="editDiagram(diagram)" class="diagram-edit">
+                            <a href="#" class="diagram-edit" @click.prevent="editDiagram(diagram)">
                                 {{ diagram.title }}
                             </a>
                         </h6>
-                    </template>
-                    <a href="javascript:void(0)" @click="editDiagram(diagram)">
-                        <!-- "thumbnail": "./public/content/images/thumbnail.jpg", -->                        <b-img-lazy
-                            class="m-auto d-block td-diagram-thumb"
-                            :src="require(`../assets/${diagram.thumbnail ? diagram.thumbnail.split('/').pop() : 'thumbnail.jpg'}`)"
-                            :alt="diagram.title" />
-                    </a>
-                    <h6 v-if=diagram.description class="diagram-description-text">
-                        {{ diagram.description }}
-                    </h6>
-                </b-card>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col class="text-right">
-                <b-btn-group>
+                    </div>
+                    <div class="card-body">
+                        <a href="#" @click.prevent="editDiagram(diagram)">
+                            <img
+                                class="m-auto d-block td-diagram-thumb"
+                                :src="getThumbnailUrl(diagram)"
+                                :alt="diagram.title"
+                            />
+                        </a>
+                        <h6 v-if="diagram.description" class="diagram-description-text">
+                            {{ diagram.description }}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-right">
+                <div class="btn-group">
                     <td-form-button
                         id="td-edit-btn"
-                        :isPrimary="true"
-                        :onBtnClick="onEditClick"
+                        :is-primary="true"
+                        :on-btn-click="onEditClick"
                         icon="edit"
-                        :text="$t('forms.edit')" />
+                        :text="$t('forms.edit')"
+                    />
                     <td-form-button
                         id="td-report-btn"
-                        :onBtnClick="onReportClick"
+                        :on-btn-click="onReportClick"
                         icon="file-alt"
-                        :text="$t('forms.report')" />
+                        :text="$t('forms.report')"
+                    />
                     <td-form-button
                         id="td-close-btn"
-                        :onBtnClick="onCloseClick"
+                        :on-btn-click="onCloseClick"
                         icon="times"
-                        :text="$t('forms.closeModel')" />
-                </b-btn-group>
-            </b-col>
-        </b-row>
+                        :text="$t('forms.closeModel')"
+                    />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
-<style lang="scss" scoped>
-.tm-card {
-    font-size: 14px;
-    white-space: pre-wrap;
-}
-.diagram-header-text a {
-    color: $black;
-}
-
-.diagram-description-text a {
-    color: $black;
-}
-
-.td-diagram-thumb {
-    max-width: 200px;
-    max-height: 160px;
-}
-</style>
-
-<script>
-import { mapState } from 'vuex';
-
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProviderStore } from '@/stores/provider';
+import { useThreatmodelStore } from '@/stores/threatmodel';
+import { useAppStore } from '@/stores/app';
 import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
 import TdThreatModelSummaryCard from '@/components/ThreatModelSummaryCard.vue';
-import tmActions from '@/store/actions/threatmodel.js';
 
-export default {
-    name: 'ThreatModel',
-    components: {
-        TdFormButton,
-        TdThreatModelSummaryCard
-    },
-    computed: mapState({
-        model: (state) => state.threatmodel.data,
-        providerType: (state) => getProviderType(state.provider.selected),
-        version: (state) => state.packageBuildVersion
-    }),
-    methods: {
-        onEditClick(evt) {
-            evt.preventDefault();
-            this.$router.push({ name: `${this.providerType}ThreatModelEdit`, params: this.$route.params });
-        },
-        onReportClick(evt) {
-            evt.preventDefault();
-            this.$router.push({ name: `${this.providerType}Report`, params: this.$route.params });
-        },
-        onCloseClick(evt) {
-            evt.preventDefault();
-            this.$store.dispatch(tmActions.clear);
-            this.$router.push('/dashboard');
-        },
-        getThumbnailUrl(diagram) {
-            if (!diagram || !diagram.diagramType) {
-                return '../assets/thumbnail.jpg';
-            }
-            return `../assets/thumbnail.${diagram.diagramType.toLowerCase()}.jpg`;
-        },
-        editDiagram(diagram) {
-            this.$store.dispatch(tmActions.diagramSelected, diagram);
-            const path = `${this.$route.path}/edit/${encodeURIComponent(diagram.title)}`;
-            this.$router.push(path);
+// Composables
+const route = useRoute();
+const router = useRouter();
+const providerStore = useProviderStore();
+const threatmodelStore = useThreatmodelStore();
+const appStore = useAppStore();
+
+// Computed properties
+const model = computed(() => threatmodelStore.data);
+const providerType = computed(() => getProviderType(providerStore.selected));
+const version = computed(() => appStore.packageBuildVersion);
+const diagrams = computed(() => {
+        if (!model.value || !model.value.detail || !model.value.detail.diagrams) {
+            return [];
         }
-    },
-    mounted() {
-        // make sure we are compatible with version 1.x and early 2.x
-        let threatTop = this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
-        let diagramTop = this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
-        let update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
-        console.debug('updates: ' + JSON.stringify(update));
-        this.$store.dispatch(tmActions.update, update);
-        // if a diagram has just been closed, the history insists on marking the model as modified
-        this.$store.dispatch(tmActions.notModified);
-    }
+    return model.value.detail.diagrams;
+});
+
+// Methods
+const onEditClick = (evt) => {
+    evt.preventDefault();
+    router.push({ name: `${providerType.value}ThreatModelEdit`, params: route.params });
 };
+
+const onReportClick = (evt) => {
+    evt.preventDefault();
+    router.push({ name: `${providerType.value}Report`, params: route.params });
+};
+
+const onCloseClick = (evt) => {
+    evt.preventDefault();
+    threatmodelStore.clear();
+    router.push('/dashboard');
+};
+
+const getThumbnailUrl = (diagram) => {
+    if (!diagram || !diagram.diagramType) {
+        return '../assets/thumbnail.jpg';
+    }
+    return `../assets/thumbnail.${diagram.diagramType.toLowerCase()}.jpg`;
+};
+
+const editDiagram = (diagram) => {
+    threatmodelStore.selectDiagram(diagram);
+    const path = `${route.path}/edit/${encodeURIComponent(diagram.title)}`;
+    router.push(path);
+};
+
+// Lifecycle
+onMounted(() => {
+    // make sure we are compatible with version 1.x and early 2.x
+    const threatTop =
+            model.value.detail.threatTop === undefined ? 100 : model.value.detail.threatTop;
+    const diagramTop =
+            model.value.detail.diagramTop === undefined ? 10 : model.value.detail.diagramTop;
+    const update = { diagramTop: diagramTop, version: version.value, threatTop: threatTop };
+    console.debug(`updates: ${JSON.stringify(update)}`);
+    threatmodelStore.updateModel(update);
+    // if a diagram has just been closed, the history insists on marking the model as modified
+    threatmodelStore.setNotModified();
+});
 </script>
+
+<style lang="scss" scoped>
+    @import '@/styles/primevue-variables.scss';
+
+    .tm-card {
+        font-size: 14px;
+        white-space: pre-wrap;
+    }
+    .diagram-header-text a {
+        color: $black;
+    }
+
+    .diagram-description-text a {
+        color: $black;
+    }
+
+    .td-diagram-thumb {
+        max-width: 200px;
+        max-height: 160px;
+    }
+</style>

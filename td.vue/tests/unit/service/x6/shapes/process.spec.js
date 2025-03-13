@@ -26,8 +26,7 @@ describe('service/x6/shapes/process.js', () => {
         });
 
         it('sets the body/strokeDasharray attribute', () => {
-            expect(victim.setAttrByPath).toHaveBeenCalledWith(
-                'body/strokeDasharray', dash);
+            expect(victim.setAttrByPath).toHaveBeenCalledWith('body/strokeDasharray', dash);
         });
 
         it('sets the body/strokeWidth attribute', () => {

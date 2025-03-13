@@ -20,19 +20,19 @@ describe('HomePage.vue', () => {
             localVue = createLocalVue();
             localVue.use(Vuex);
             localVue.use(BootstrapVue);
-            localVue.component('font-awesome-icon', FontAwesomeIcon);
+            localVue.component('FontAwesomeIcon', FontAwesomeIcon);
             mockStore = new Vuex.Store({
                 state: {
                     config: {
                         config: {
                             githubEnabled: true,
                         },
-                    }
+                    },
                 },
                 actions: {
                     [AUTH_SET_LOCAL]: () => {},
-                    [PROVIDER_SELECTED]: () => {}
-                }
+                    [PROVIDER_SELECTED]: () => {},
+                },
             });
             mockIsElectron = false;
             jest.spyOn(loginApi, 'loginAsync').mockResolvedValue({ data: redirectUrl });
@@ -49,13 +49,12 @@ describe('HomePage.vue', () => {
                 isElectron: mockIsElectron,
                 store: mockStore,
                 mocks: {
-                    $t: key => key
-                }
+                    $t: (key) => key,
+                },
             });
         });
 
         describe('layout', () => {
-
             it('renders the home view', () => {
                 expect(wrapper.exists()).toBe(true);
             });
@@ -73,8 +72,9 @@ describe('HomePage.vue', () => {
             });
 
             it('displays the threat dragon logo', () => {
-                expect(wrapper.findComponent(BImg).attributes('src'))
-                    .toContain('threatdragon_logo_image');
+                expect(wrapper.findComponent(BImg).attributes('src')).toContain(
+                    'threatdragon_logo_image'
+                );
             });
 
             it('has the description of the project', () => {

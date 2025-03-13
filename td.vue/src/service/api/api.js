@@ -38,5 +38,5 @@ const putAsync = async (url, body) => {
 export default {
     getAsync,
     postAsync,
-    putAsync
+    putAsync,
 };

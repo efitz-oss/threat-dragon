@@ -12,5 +12,5 @@ const graph = (config) => {
 
 export default {
     graph,
-    stencil
+    stencil,
 };

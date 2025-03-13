@@ -13,7 +13,7 @@ import {
     THREATMODEL_SAVE,
     THREATMODEL_SELECTED,
     THREATMODEL_STASH,
-    THREATMODEL_UPDATE
+    THREATMODEL_UPDATE,
 } from '@/store/actions/threatmodel.js';
 import threatmodelModule, { clearState } from '@/store/modules/threatmodel.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
@@ -22,23 +22,23 @@ import { THREATMODEL_CONTRIBUTORS_UPDATED, THREATMODEL_RESTORE } from '@/store/a
 describe('store/modules/threatmodel.js', () => {
     const getRootState = () => ({
         auth: {
-            jwt: 'test'
+            jwt: 'test',
         },
         repo: {
-            selected: 'foobar'
+            selected: 'foobar',
         },
         branch: {
-            selected: 'myBranch'
+            selected: 'myBranch',
         },
         provider: {
-            selected: 'github'
-        }
+            selected: 'github',
+        },
     });
     const mocks = {
         commit: () => {},
         dispatch: () => {},
         rootState: getRootState(),
-        state: {}
+        state: {},
     };
 
     beforeEach(() => {
@@ -87,12 +87,12 @@ describe('store/modules/threatmodel.js', () => {
             beforeEach(() => {
                 Vue.$toast = {
                     success: jest.fn(),
-                    error: jest.fn()
+                    error: jest.fn(),
                 };
                 mocks.state.data = {
                     summary: {
-                        title: 'New Blank Model'
-                    }
+                        title: 'New Blank Model',
+                    },
                 };
             });
 
@@ -153,10 +153,7 @@ describe('store/modules/threatmodel.js', () => {
             });
 
             it('commits the fetch action', () => {
-                expect(mocks.commit).toHaveBeenCalledWith(
-                    THREATMODEL_FETCH,
-                    data
-                );
+                expect(mocks.commit).toHaveBeenCalledWith(THREATMODEL_FETCH, data);
             });
         });
 
@@ -164,10 +161,7 @@ describe('store/modules/threatmodel.js', () => {
             const data = 'foobar';
             jest.spyOn(threatmodelApi, 'modelsAsync').mockResolvedValue({ data });
             await threatmodelModule.actions[THREATMODEL_FETCH_ALL](mocks);
-            expect(mocks.commit).toHaveBeenCalledWith(
-                THREATMODEL_FETCH_ALL,
-                data
-            );
+            expect(mocks.commit).toHaveBeenCalledWith(THREATMODEL_FETCH_ALL, data);
         });
 
         it('does not do a fetch all if using a local provider', async () => {
@@ -180,23 +174,17 @@ describe('store/modules/threatmodel.js', () => {
         it('commits the selected action', () => {
             const data = 'foobar';
             threatmodelModule.actions[THREATMODEL_SELECTED](mocks, data);
-            expect(mocks.commit).toHaveBeenCalledWith(
-                THREATMODEL_SELECTED,
-                data
-            );
+            expect(mocks.commit).toHaveBeenCalledWith(THREATMODEL_SELECTED, data);
         });
 
         it('commits the contributors updated action', () => {
-            const contribs = [ 'test1' ];
+            const contribs = ['test1'];
             threatmodelModule.actions[THREATMODEL_CONTRIBUTORS_UPDATED](mocks, contribs);
-            expect(mocks.commit).toHaveBeenCalledWith(
-                THREATMODEL_CONTRIBUTORS_UPDATED,
-                contribs
-            );
+            expect(mocks.commit).toHaveBeenCalledWith(THREATMODEL_CONTRIBUTORS_UPDATED, contribs);
         });
 
         describe('threatmodel restore', () => {
-            const originalModel = { summary: { title: 'test' }};
+            const originalModel = { summary: { title: 'test' } };
 
             beforeEach(() => {
                 threatmodelApi.modelAsync = jest.fn().mockReturnValue({ data: originalModel });
@@ -239,12 +227,9 @@ describe('store/modules/threatmodel.js', () => {
 
             it('commits the set rollback copy action', () => {
                 threatmodelModule.actions[THREATMODEL_STASH](mocks);
-                expect(mocks.commit).toHaveBeenCalledWith(
-                    THREATMODEL_STASH
-                );
+                expect(mocks.commit).toHaveBeenCalledWith(THREATMODEL_STASH);
             });
         });
-
 
         describe('save', () => {
             const data = 'foobar';
@@ -252,7 +237,7 @@ describe('store/modules/threatmodel.js', () => {
             beforeEach(() => {
                 Vue.$toast = {
                     success: jest.fn(),
-                    error: jest.fn()
+                    error: jest.fn(),
                 };
             });
 
@@ -341,19 +326,18 @@ describe('store/modules/threatmodel.js', () => {
             });
         });
 
-
         describe('diagramSelected', () => {
             let diagram;
             beforeEach(() => {
                 threatmodelModule.state.data.detail = {
-                    diagrams: [
-                        { id: 1 },
-                        { id: 2}
-                    ]
+                    diagrams: [{ id: 1 }, { id: 2 }],
                 };
                 threatmodelModule.state.selectedDiagram = { id: 2, foo: 'bar' };
                 diagram = { id: 2, foo: 'baz' };
-                threatmodelModule.mutations[THREATMODEL_DIAGRAM_SELECTED](threatmodelModule.state, diagram);
+                threatmodelModule.mutations[THREATMODEL_DIAGRAM_SELECTED](
+                    threatmodelModule.state,
+                    diagram
+                );
             });
 
             it('sets the selected diagram', () => {
@@ -385,11 +369,11 @@ describe('store/modules/threatmodel.js', () => {
         });
 
         describe('modified', () => {
-	        it('sets the modified flag', () => {
-	            threatmodelModule.state.modified = false;
-	            threatmodelModule.mutations[THREATMODEL_MODIFIED](threatmodelModule.state);
-	            expect(threatmodelModule.state.modified).toEqual(true);
-	        });
+            it('sets the modified flag', () => {
+                threatmodelModule.state.modified = false;
+                threatmodelModule.mutations[THREATMODEL_MODIFIED](threatmodelModule.state);
+                expect(threatmodelModule.state.modified).toEqual(true);
+            });
         });
 
         describe('restore', () => {
@@ -411,20 +395,21 @@ describe('store/modules/threatmodel.js', () => {
         });
 
         describe('stash', () => {
-	        it('sets the rollback copy from the data', () => {
-	            threatmodelModule.state.data = { foo: 'bar' };
-	            threatmodelModule.mutations[THREATMODEL_STASH](threatmodelModule.state);
-	            expect(threatmodelModule.state.stash)
-	                .toEqual(JSON.stringify(threatmodelModule.state.data));
-	        });
+            it('sets the rollback copy from the data', () => {
+                threatmodelModule.state.data = { foo: 'bar' };
+                threatmodelModule.mutations[THREATMODEL_STASH](threatmodelModule.state);
+                expect(threatmodelModule.state.stash).toEqual(
+                    JSON.stringify(threatmodelModule.state.data)
+                );
+            });
         });
 
         describe('unmodified', () => {
-	        it('resets the modified flag', () => {
-	            threatmodelModule.state.modified = true;
-	            threatmodelModule.mutations[THREATMODEL_NOT_MODIFIED](threatmodelModule.state);
-	            expect(threatmodelModule.state.modified).toEqual(false);
-	        });
+            it('resets the modified flag', () => {
+                threatmodelModule.state.modified = true;
+                threatmodelModule.mutations[THREATMODEL_NOT_MODIFIED](threatmodelModule.state);
+                expect(threatmodelModule.state.modified).toEqual(false);
+            });
         });
 
         describe('update', () => {
@@ -437,18 +422,14 @@ describe('store/modules/threatmodel.js', () => {
     });
 
     describe('getters', () => {
-
         describe('contributors', () => {
             let res;
             describe('with data', () => {
                 beforeEach(() => {
                     threatmodelModule.state.data = {
                         detail: {
-                            contributors: [
-                                { name: 'contrib 1' },
-                                { name: 'contrib 2' }
-                            ]
-                        }
+                            contributors: [{ name: 'contrib 1' }, { name: 'contrib 2' }],
+                        },
                     };
                     res = threatmodelModule.getters.contributors(threatmodelModule.state);
                 });
@@ -468,20 +449,21 @@ describe('store/modules/threatmodel.js', () => {
                 });
 
                 it('returns an empty array', () => {
-                    expect(threatmodelModule.getters.contributors(threatmodelModule.state))
-                        .toEqual([]);
+                    expect(threatmodelModule.getters.contributors(threatmodelModule.state)).toEqual(
+                        []
+                    );
                 });
             });
         });
 
         describe('modelChanged', () => {
             it('returns true when the model has changed', () => {
-                const state = { modified: true};
+                const state = { modified: true };
                 expect(threatmodelModule.getters.modelChanged(state)).toEqual(true);
             });
 
             it('returns false when the model has not changed', () => {
-                const state = { modified: false};
+                const state = { modified: false };
                 expect(threatmodelModule.getters.modelChanged(state)).toEqual(false);
             });
         });
@@ -493,17 +475,17 @@ describe('store/modules/threatmodel.js', () => {
             });
 
             it('returns false when the version is set to 2.0', () => {
-                const state = { data: { version: '2.0' }};
+                const state = { data: { version: '2.0' } };
                 expect(threatmodelModule.getters.isV1Model(state)).toEqual(false);
             });
 
             it('returns true when the version is set to 1.6.1', () => {
-                const state = { data: { version: '1.6.1' }};
+                const state = { data: { version: '1.6.1' } };
                 expect(threatmodelModule.getters.isV1Model(state)).toEqual(true);
             });
 
             it('returns true when the version is not set', () => {
-                const state = { data: { foo: '2.0' }};
+                const state = { data: { foo: '2.0' } };
                 expect(threatmodelModule.getters.isV1Model(state)).toEqual(true);
             });
         });

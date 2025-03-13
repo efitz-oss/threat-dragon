@@ -9,55 +9,48 @@ describe('report', () => {
 
     describe('report options', () => {
         it('shows/hides out of scope elements', () => {
-            cy.get('.entity-title')
-                .contains('Web Application Config (Store)')
-                .should('be.visible');
-    
+            cy.get('.entity-title').contains('Web Application Config (Store)').should('be.visible');
+
             cy.get('#show_outofscope').click({ force: true });
-    
+
             cy.get('.entity-title')
                 .contains('Web Application Config (Store)')
-                .should('not.be','visible');
-    
+                .should('not.be', 'visible');
+
             cy.get('#show_outofscope').click({ force: true });
         });
-    
+
         it('shows/hides mitigated threats', () => {
             cy.get('[data-test-id="Database"]')
                 .contains('Unauthorised access')
                 .should('be.visible');
-    
+
             cy.get('#show_mitigated').click({ force: true });
-    
+
             cy.get('[data-test-id="Database"]')
                 .contains('Unauthorised access')
-                .should('not.be','visible');
-    
+                .should('not.be', 'visible');
+
             cy.get('#show_mitigated').click({ force: true });
         });
-    
+
         it('shows/hides model diagrams', () => {
-            cy.get('.td-readonly-diagram')
-                .should('be.visible');
-    
+            cy.get('.td-readonly-diagram').should('be.visible');
+
             cy.get('#show_models').click({ force: true });
-    
-            cy.get('.td-readonly-diagram')
-                .should('not.be','visible');
-    
+
+            cy.get('.td-readonly-diagram').should('not.be', 'visible');
+
             cy.get('#show_models').click({ force: true });
         });
-    
+
         it('shows/hides TD branding', () => {
-            cy.get('.td-brand-text')
-                .should('not.be','visible');
-    
+            cy.get('.td-brand-text').should('not.be', 'visible');
+
             cy.get('#show_branding').click({ force: true });
 
-            cy.get('.td-brand-text')
-                .contains('OWASP Threat Dragon')
-                .should('be.visible');
-    
+            cy.get('.td-brand-text').contains('OWASP Threat Dragon').should('be.visible');
+
             cy.get('#show_branding').click({ force: true });
         });
     });
@@ -66,7 +59,7 @@ describe('report', () => {
         const selectors = {
             description: '.td-summary',
             descriptionTitle: '.td-description-title',
-            wrapper: '.td-executive-summary'
+            wrapper: '.td-executive-summary',
         };
 
         // This could be abstracted/reused in the future
@@ -77,15 +70,12 @@ describe('report', () => {
         };
 
         it('shows the exec summary title', () => {
-            cy.get(selectors.wrapper)
-                .contains('Executive Summary');
+            cy.get(selectors.wrapper).contains('Executive Summary');
         });
 
         it('shows the description', () => {
-            cy.get(selectors.descriptionTitle)
-                .contains('High level system description');
-            cy.get(selectors.description)
-                .contains('A sample model of a web application');
+            cy.get(selectors.descriptionTitle).contains('High level system description');
+            cy.get(selectors.description).contains('A sample model of a web application');
         });
 
         it('displays the table data', () => {

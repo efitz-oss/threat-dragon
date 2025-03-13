@@ -6,7 +6,7 @@ describe('service/x6/graph/data-changed.js', () => {
         data: {},
         getData: jest.fn(),
         setAttrByPath: jest.fn(),
-        isEdge: jest.fn()
+        isEdge: jest.fn(),
     });
     let cell;
 
@@ -32,7 +32,7 @@ describe('service/x6/graph/data-changed.js', () => {
             cell.constructor = { name: 'Actor' };
             cell.getData.mockImplementation(() => ({
                 hasOpenThreats: true,
-                outOfScope: true
+                outOfScope: true,
             }));
             cell.updateStyle = jest.fn();
             dataChanged.updateStyleAttrs(cell);
@@ -50,7 +50,7 @@ describe('service/x6/graph/data-changed.js', () => {
             cell.constructor = { name: 'Process' };
             cell.getData.mockImplementation(() => ({
                 hasOpenThreats: false,
-                outOfScope: false
+                outOfScope: false,
             }));
             cell.updateStyle = jest.fn();
             dataChanged.updateStyleAttrs(cell);
@@ -82,7 +82,7 @@ describe('service/x6/graph/data-changed.js', () => {
             cell.constructor = { name: 'BoundaryBox' };
             cell.isEdge.mockReturnValue(false);
             cell.getData.mockImplementation(() => ({
-                isTrustBoundary: true
+                isTrustBoundary: true,
             }));
             cell.updateStyle = jest.fn();
             dataChanged.updateStyleAttrs(cell);
@@ -99,7 +99,7 @@ describe('service/x6/graph/data-changed.js', () => {
             cell.constructor = { name: 'Edge' };
             cell.isEdge.mockReturnValue(true);
             cell.getData.mockImplementation(() => ({
-                isTrustBoundary: true
+                isTrustBoundary: true,
             }));
             cell.updateStyle = jest.fn();
             dataChanged.updateStyleAttrs(cell);
@@ -118,12 +118,12 @@ describe('service/x6/graph/data-changed.js', () => {
             cell.getData.mockImplementation(() => ({
                 isTrustBoundary: false,
                 isEncrypted: true,
-                isBidirectional: true
+                isBidirectional: true,
             }));
             cell.updateStyle = jest.fn();
             dataChanged.updateStyleAttrs(cell);
         });
-        
+
         it('calls updateStyle', () => {
             expect(cell.updateStyle).toHaveBeenCalledWith('#333333', null, 1.5, 'block');
         });

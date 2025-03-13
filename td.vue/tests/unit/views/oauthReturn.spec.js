@@ -21,17 +21,17 @@ describe('views/OauthReturn.vue', () => {
             localVue.use(Vuex);
             routerMock = {
                 push: jest.fn(),
-                query: { code: code }
+                query: { code: code },
             };
             mockStore = new Vuex.Store({
                 state: {
                     provider: {
-                        selected: provider
-                    }
+                        selected: provider,
+                    },
                 },
                 actions: {
-                    [AUTH_SET_JWT]: () => {}
-                }
+                    [AUTH_SET_JWT]: () => {},
+                },
             });
             jest.spyOn(mockStore, 'dispatch');
             jest.spyOn(loginApi, 'completeLoginAsync').mockResolvedValue({ data: jwt });
@@ -40,8 +40,8 @@ describe('views/OauthReturn.vue', () => {
                 store: mockStore,
                 mocks: {
                     $route: routerMock,
-                    $router: routerMock
-                }
+                    $router: routerMock,
+                },
             });
         });
 
@@ -65,30 +65,30 @@ describe('views/OauthReturn.vue', () => {
             localVue = createLocalVue({
                 errorHandler(e) {
                     err = e;
-                }
+                },
             });
             localVue.use(Vuex);
             routerMock = {
                 push: jest.fn(),
-                query: { code: code }
+                query: { code: code },
             };
             mockStore = new Vuex.Store({
                 state: {
                     provider: {
-                        selected: provider
-                    }
+                        selected: provider,
+                    },
                 },
                 actions: {
-                    [AUTH_SET_JWT]: () => {}
-                }
+                    [AUTH_SET_JWT]: () => {},
+                },
             });
             jest.spyOn(loginApi, 'completeLoginAsync').mockRejectedValue('whoops');
             shallowMount(OAuthReturn, {
                 localVue,
                 store: mockStore,
                 mocks: {
-                    $router: routerMock
-                }
+                    $router: routerMock,
+                },
             });
         });
 

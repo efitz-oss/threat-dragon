@@ -1,8 +1,3 @@
-import Vue from 'vue';
-import Toast, { POSITION } from 'vue-toastification';
-
-import 'vue-toastification/dist/index.css';
-
-Vue.use(Toast, {
-    position: POSITION.BOTTOM_LEFT
-});
+// Toast notifications are now configured using PrimeVue ToastService
+// This functionality is set up in main.js
+// This file is kept for reference only

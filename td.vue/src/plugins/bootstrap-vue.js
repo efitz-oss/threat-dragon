@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
-import BootstrapVue from 'bootstrap-vue';
-
-Vue.use(BootstrapVue);
+// This plugin is no longer used.
+// PrimeVue is now configured directly in main.js
+// This file is kept for reference only.

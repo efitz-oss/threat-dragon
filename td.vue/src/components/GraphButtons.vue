@@ -1,159 +1,167 @@
 <template>
     <b-btn-group>
         <td-form-button
-            :onBtnClick="deleteSelected"
+            :on-btn-click="deleteSelected"
             icon="trash"
             :title="$t('threatmodel.buttons.delete')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="noOp"
             v-b-modal.shortcuts
+            :on-btn-click="noOp"
             icon="keyboard"
             :title="$t('threatmodel.buttons.shortcuts')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="undo"
+            :on-btn-click="undo"
             icon="undo"
             :title="$t('threatmodel.buttons.undo')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="redo"
+            :on-btn-click="redo"
             icon="redo"
             :title="$t('threatmodel.buttons.redo')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="zoomIn"
+            :on-btn-click="zoomIn"
             icon="search-plus"
             :title="$t('threatmodel.buttons.zoomIn')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="zoomOut"
+            :on-btn-click="zoomOut"
             icon="search-minus"
             :title="$t('threatmodel.buttons.zoomOut')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="toggleGrid"
+            :on-btn-click="toggleGrid"
             icon="th"
             :title="$t('threatmodel.buttons.toggleGrid')"
-            text="" />
+            text=""
+        />
 
-        <b-dropdown right :text="$t('forms.export')" id="export-graph-btn">
-            <b-dropdown-item @click="exportPNG" id="export-graph-png">
-                PNG
-            </b-dropdown-item>
-            <b-dropdown-item @click="exportJPEG" id="export-graph-jpeg">
-                JPEG
-            </b-dropdown-item>
-            <b-dropdown-item @click="exportSVG" id="export-graph-svg">
-                SVG
-            </b-dropdown-item>
+        <b-dropdown id="export-graph-btn" right :text="$t('forms.export')">
+            <b-dropdown-item id="export-graph-png" @click="exportPNG"> PNG </b-dropdown-item>
+            <b-dropdown-item id="export-graph-jpeg" @click="exportJPEG"> JPEG </b-dropdown-item>
+            <b-dropdown-item id="export-graph-svg" @click="exportSVG"> SVG </b-dropdown-item>
         </b-dropdown>
 
-        <td-form-button
-            :onBtnClick="closeDiagram"
-            icon="times"
-            :text="$t('forms.close')" />
+        <td-form-button :on-btn-click="closeDiagram" icon="times" :text="$t('forms.close')" />
 
         <td-form-button
-            :isPrimary="true"
-            :onBtnClick="save"
+            :is-primary="true"
+            :on-btn-click="save"
             icon="save"
-            :text="$t('forms.save')" />
-
+            :text="$t('forms.save')"
+        />
     </b-btn-group>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-
+<script setup>
+import { ref, computed } from 'vue';
 import TdFormButton from '@/components/FormButton.vue';
+import { useThreatmodelStore } from '@/stores/threatmodel';
 
-export default {
-    name: 'TdGraphButtons',
-    components: {
-        TdFormButton
+// Props
+const props = defineProps({
+    graph: {
+        type: Object,
+        required: true,
     },
-    computed: mapState({
-        diagram: (state) => state.threatmodel.selectedDiagram,
-    }),
-    data() {
-        return {
-            gridShowing: true
-        };
-    },
-    props: {
-        graph: {
-            required: true
-        }
-    },
-    methods: {
-        save() {
-            this.$emit('saved');
-        },
-        async closeDiagram() {
-            this.$emit('closed');
-        },
-        noOp() {
-            return;
-        },
-        undo() {
-            if (this.graph.getPlugin('history').canUndo()) {
-                this.graph.getPlugin('history').undo();
-            }
-        },
-        redo() {
-            if (this.graph.getPlugin('history').canRedo()) {
-                this.graph.getPlugin('history').redo();
-            }
-        },
-        zoomIn() {
-            if (this.graph.zoom() < 1.0) {
-                this.graph.zoom(0.1);
-            } else {
-                this.graph.zoom(0.2);
-            }
-            console.debug('zoom to ' + this.graph.zoom());
-        },
-        zoomOut() {
-            if (this.graph.zoom() < 1.0) {
-                this.graph.zoom(-0.1);
-            } else {
-                this.graph.zoom(-0.2);
-            }
-            console.debug('zoom to ' + this.graph.zoom());
-        },
-        deleteSelected() {
-            this.graph.removeCells(this.graph.getSelectedCells());
-        },
-        toggleGrid() {
-            if (this.gridShowing) {
-                this.graph.hideGrid();
-                this.gridShowing = false;
-            } else {
-                this.graph.showGrid();
-                this.gridShowing = true;
-            }
-        },
-        exportPNG() {
-            this.graph.exportPNG(`${this.diagram.title}.png`, {
-                padding: 50
-            });
-        },
-        exportJPEG() {
-            this.graph.exportJPEG(`${this.diagram.title}.jpeg`, {
-                padding: 50
-            });
-        },
-        exportSVG() {
-            this.graph.exportSVG(`${this.diagram.title}.svg`);
-        }
+});
+
+// Emits
+const emit = defineEmits(['saved', 'closed']);
+
+// Store
+const threatmodelStore = useThreatmodelStore();
+
+// State
+const gridShowing = ref(true);
+
+// Computed
+const diagram = computed(() => threatmodelStore.selectedDiagram);
+
+// Methods
+const save = () => {
+    emit('saved');
+};
+
+const closeDiagram = async () => {
+    emit('closed');
+};
+
+const noOp = () => {
+    return;
+};
+
+const undo = () => {
+    if (props.graph.getPlugin('history').canUndo()) {
+        props.graph.getPlugin('history').undo();
     }
 };
 
+const redo = () => {
+    if (props.graph.getPlugin('history').canRedo()) {
+        props.graph.getPlugin('history').redo();
+    }
+};
+
+const zoomIn = () => {
+    if (props.graph.zoom() < 1.0) {
+        props.graph.zoom(0.1);
+    } else {
+        props.graph.zoom(0.2);
+    }
+    console.debug('zoom to ' + props.graph.zoom());
+};
+
+const zoomOut = () => {
+    if (props.graph.zoom() < 1.0) {
+        props.graph.zoom(-0.1);
+    } else {
+        props.graph.zoom(-0.2);
+    }
+    console.debug('zoom to ' + props.graph.zoom());
+};
+
+const deleteSelected = () => {
+    props.graph.removeCells(props.graph.getSelectedCells());
+};
+
+const toggleGrid = () => {
+    if (gridShowing.value) {
+        props.graph.hideGrid();
+        gridShowing.value = false;
+    } else {
+        props.graph.showGrid();
+        gridShowing.value = true;
+    }
+};
+
+const exportPNG = () => {
+    props.graph.exportPNG(`${diagram.value.title}.png`, {
+        padding: 50,
+    });
+};
+
+const exportJPEG = () => {
+    props.graph.exportJPEG(`${diagram.value.title}.jpeg`, {
+        padding: 50,
+    });
+};
+
+const exportSVG = () => {
+    props.graph.exportSVG(`${diagram.value.title}.svg`);
+};
 </script>

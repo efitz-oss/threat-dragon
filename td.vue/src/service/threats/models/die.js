@@ -14,5 +14,5 @@ PROCESS | X | X | X |
 export default {
     distributed: 'threats.model.die.distributed',
     immutable: 'threats.model.die.immutable',
-    ephemeral: 'threats.model.die.ephemeral'
+    ephemeral: 'threats.model.die.ephemeral',
 };

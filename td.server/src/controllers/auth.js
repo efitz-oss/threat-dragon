@@ -1,4 +1,4 @@
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 import * as errors from './errors.js';
 import * as jwtHelper from '../helpers/jwt.helper.js';
 import { getLogger } from '../helpers/logger.helper.js';
@@ -23,7 +23,7 @@ const oauthReturn = (req, res) => {
     logger.debug(`API oauthReturn request: ${logger.transformToString(req)}`);
 
     let returnUrl = `/#/oauth-return?code=${req.query.code}`;
-    if (env.get().config.NODE_ENV === 'development') {
+    if (getEnvironment().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;
     }
     return res.redirect(returnUrl);
@@ -59,8 +59,13 @@ const completeLogin = (req, res) => {
     }
 };
 
-const logout = (req, res) =>
-    responseWrapper.sendResponse(
+const logout = (req, res) => {
+    // Set no-cache headers to help with Safari
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    
+    return responseWrapper.sendResponse(
         () => {
             logger.debug(`API logout request: ${logger.transformToString(req)}`);
 
@@ -84,6 +89,7 @@ const logout = (req, res) =>
         res,
         logger
     );
+};
 
 const refresh = (req, res) => {
     logger.debug(`API refresh request: ${logger.transformToString(req)}`);

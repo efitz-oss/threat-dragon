@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Vue 3 Direct Test</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="direct-app">
+        <h1>{{ message }}</h1>
+        <button @click="count++">Count: {{ count }}</button>
+        <p>If you can see this and the button works, Vue is functioning correctly.</p>
+        <p>The main app is having issues with the module loading system.</p>
+    </div>
+    
+    <script>
+        const { createApp, ref } = Vue;
+        
+        createApp({
+            setup() {
+                const message = ref('Vue 3 Direct Test - Working!');
+                const count = ref(0);
+                return {
+                    message,
+                    count
+                };
+            }
+        }).mount('#direct-app');
+    </script>
+</body>
+</html>

@@ -1,4 +1,5 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 import TdCoverSheet from '@/components/printed-report/Coversheet.vue';
 
@@ -10,23 +11,23 @@ describe('components/printed-report/Coversheet.vue', () => {
         owner: 'Bob',
         reviewer: 'Marley',
         contributors: ['Alice', 'Babs'],
-        branding: true
+        branding: true,
     });
 
     const setup = (data) => {
-        const localVue = createLocalVue();
         wrapper = shallowMount(TdCoverSheet, {
-            localVue,
-            propsData: {
+            props: {
                 title: data.title,
                 owner: data.owner,
                 reviewer: data.reviewer,
                 contributors: data.contributors,
-                branding: data.branding
+                branding: data.branding,
             },
-            mocks: {
-                $t: key => key
-            }
+            global: {
+                mocks: {
+                    $t: (key) => key,
+                },
+            },
         });
     };
 
@@ -41,33 +42,31 @@ describe('components/printed-report/Coversheet.vue', () => {
         });
 
         it('displays the owner', () => {
-            expect(wrapper.find('.td-owner').text())
-                .toEqual(`threatmodel.owner: ${summary.owner}`);
+            expect(wrapper.find('.td-owner').text()).toEqual(`threatmodel.owner: ${summary.owner}`);
         });
 
         it('displays the reviewer', () => {
-            expect(wrapper.find('.td-reviewer').text())
-                .toEqual(`threatmodel.reviewer: ${summary.reviewer}`);
+            expect(wrapper.find('.td-reviewer').text()).toEqual(
+                `threatmodel.reviewer: ${summary.reviewer}`
+            );
         });
 
         it('displays the contributors', () => {
-            expect(wrapper.find('.td-contributors').text())
-                .toEqual(`threatmodel.contributors: ${summary.contributors.join(', ')}`);
+            expect(wrapper.find('.td-contributors').text()).toEqual(
+                `threatmodel.contributors: ${summary.contributors.join(', ')}`
+            );
         });
 
         it('displays the date generated', () => {
-            expect(wrapper.find('.td-date-generated').text())
-                .toContain(`report.dateGenerated: `);
+            expect(wrapper.find('.td-date-generated').text()).toContain(`report.dateGenerated: `);
         });
 
         it('displays the brand image', () => {
-            expect(wrapper.find('.td-brand-logo').exists())
-                .toEqual(true);
+            expect(wrapper.find('.td-brand-logo').exists()).toEqual(true);
         });
 
         it('displays the brand text', () => {
-            expect(wrapper.find('.td-brand-text').text())
-                .toEqual('OWASP Threat Dragon');
+            expect(wrapper.find('.td-brand-text').text()).toEqual('OWASP Threat Dragon');
         });
     });
 
@@ -75,17 +74,15 @@ describe('components/printed-report/Coversheet.vue', () => {
         beforeEach(() => {
             summary = getSummary();
             summary.branding = false;
-            setup(summary);            
+            setup(summary);
         });
 
         it('hides the brand image', () => {
-            expect(wrapper.find('.td-brand-logo').exists())
-                .toEqual(false);
+            expect(wrapper.find('.td-brand-logo').exists()).toEqual(false);
         });
 
         it('hides the brand text', () => {
-            expect(wrapper.find('.td-brand-text').exists())
-                .toEqual(false);
+            expect(wrapper.find('.td-brand-text').exists()).toEqual(false);
         });
     });
 });

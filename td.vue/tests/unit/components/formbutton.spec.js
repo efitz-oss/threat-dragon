@@ -1,31 +1,29 @@
-import { BootstrapVue } from 'bootstrap-vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
 
-import TdFormButton from '@/components/FormButton.vue';
+import FormButton from '@/components/FormButton.vue';
 
 describe('components/FormButton.vue', () => {
     const onBtnClick = () => {},
-        icon = 'icon',
-        iconPreface = 'foo',
-        text = 'bar',
+        icon = 'save',
+        text = 'Save',
         isPrimary = true;
 
-    let wrapper, localVue;
+    let wrapper;
 
     beforeEach(() => {
-        localVue = createLocalVue();
-        localVue.use(BootstrapVue);
-        localVue.component('font-awesome-icon', FontAwesomeIcon);
-        wrapper = shallowMount(TdFormButton, {
-            localVue,
-            propsData: {
+        wrapper = mount(FormButton, {
+            props: {
                 onBtnClick,
                 icon,
-                iconPreface,
                 text,
-                isPrimary
-            }
+                isPrimary,
+            },
+            global: {
+                stubs: {
+                    Button: true,
+                },
+            },
         });
     });
 
@@ -34,7 +32,8 @@ describe('components/FormButton.vue', () => {
     });
 
     it('requires the onBtnClick prop', () => {
-        expect(TdFormButton.props.onBtnClick.required).toBe(true);
+        const propDef = wrapper.vm.$options.props.onBtnClick;
+        expect(propDef.required).toBe(true);
     });
 
     it('reads the icon value', () => {
@@ -42,24 +41,8 @@ describe('components/FormButton.vue', () => {
     });
 
     it('does not require the icon prop', () => {
-        expect(TdFormButton.props.icon.required).toBe(false);
-    });
-
-    it('reads the iconPreface value', () => {
-        expect(wrapper.props().iconPreface).toEqual(iconPreface);
-    });
-
-    it('does not require the iconPreface value', () => {
-        expect(TdFormButton.props.iconPreface.required).toBe(false);
-    });
-
-    it('has a default value for iconPreface', () => {
-        expect(TdFormButton.props.iconPreface.default).toEqual('fas');
-    });
-    
-    it('sets the font awesome icon value', () => {
-        const fa = wrapper.findComponent(FontAwesomeIcon);
-        expect(fa.attributes(icon)).toEqual(`${iconPreface},${icon}`);
+        const propDef = wrapper.vm.$options.props.icon;
+        expect(propDef.required).toBe(false);
     });
 
     it('reads the text value', () => {
@@ -67,14 +50,37 @@ describe('components/FormButton.vue', () => {
     });
 
     it('requires the text value', () => {
-        expect(TdFormButton.props.text.required).toBe(true);
+        const propDef = wrapper.vm.$options.props.text;
+        expect(propDef.required).toBe(true);
     });
 
     it('does not require isPrimary', () => {
-        expect(TdFormButton.props.isPrimary.required).toBe(false);
+        const propDef = wrapper.vm.$options.props.isPrimary;
+        expect(propDef.required).toBe(false);
     });
 
     it('sets isPrimary to false by default', () => {
-        expect(TdFormButton.props.isPrimary.default).toBe(false);
+        const propDef = wrapper.vm.$options.props.isPrimary;
+        expect(propDef.default).toBe(false);
+    });
+
+    it('applies primary class when isPrimary is true', () => {
+        const button = wrapper.find('.p-button-primary');
+        expect(button.exists()).toBe(true);
+    });
+
+    it('applies secondary class when isPrimary is false', async () => {
+        await wrapper.setProps({ isPrimary: false });
+        const button = wrapper.find('.p-button-secondary');
+        expect(button.exists()).toBe(true);
+    });
+
+    it('triggers the onBtnClick event when clicked', async () => {
+        const mockFn = vi.fn();
+        await wrapper.setProps({ onBtnClick: mockFn });
+
+        // Since we're using a stubbed Button component, need to find it properly
+        await wrapper.findComponent({ name: 'Button' }).trigger('click');
+        expect(mockFn).toHaveBeenCalled();
     });
 });

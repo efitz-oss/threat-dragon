@@ -1,57 +1,60 @@
 const ind = {
     auth: {
-        sessionExpired: 'Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.'
+        sessionExpired: 'Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.',
     },
     nav: {
-        v2Warning: 'Model ancaman Versi 2.0 tidak kompatibel ke belakang dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimpor akan ditingkatkan ke skema versi 2.0',
+        v2Warning:
+            'Model ancaman Versi 2.0 tidak kompatibel ke belakang dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimpor akan ditingkatkan ke skema versi 2.0',
         loggedInAs: 'Masuk sebagai',
-        logOut: 'Keluar'
+        logOut: 'Keluar',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo Threat Dragon',
-        description: 'OWASP Threat Dragon adalah aplikasi gratis, sumber terbuka, lintas-platform untuk membuat model ancaman. Gunakan untuk menggambar diagram pemodelan ancaman dan mengidentifikasi ancaman untuk sistem Anda. Dengan penekanan pada fleksibilitas dan kesederhanaan, mudah diakses untuk semua jenis pengguna.'
+        description:
+            'OWASP Threat Dragon adalah aplikasi gratis, sumber terbuka, lintas-platform untuk membuat model ancaman. Gunakan untuk menggambar diagram pemodelan ancaman dan mengidentifikasi ancaman untuk sistem Anda. Dengan penekanan pada fleksibilitas dan kesederhanaan, mudah diakses untuk semua jenis pengguna.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Mulai'
+            loginWith: 'Mulai',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'Masuk dengan'
+            loginWith: 'Masuk dengan',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'Masuk dengan'
+            loginWith: 'Masuk dengan',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'Masuk dengan'
+            loginWith: 'Masuk dengan',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Masuk dengan'
+            loginWith: 'Masuk dengan',
         },
         local: {
             displayName: 'Sesi Lokal',
-            loginWith: 'Masuk ke'
-        }
+            loginWith: 'Masuk ke',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Selamat datang!',
-            description: 'Anda siap untuk memulai membuat desain aplikasi Anda lebih aman. Anda dapat membuka model ancaman yang ada atau membuat yang baru dengan memilih salah satu opsi di bawah.'
+            description:
+                'Anda siap untuk memulai membuat desain aplikasi Anda lebih aman. Anda dapat membuka model ancaman yang ada atau membuat yang baru dengan memilih salah satu opsi di bawah.',
         },
         actions: {
             openExisting: 'Buka model ancaman yang ada',
             createNew: 'Buat model ancaman kosong baru',
             readDemo: 'Jelajahi model ancaman sampel',
-            importExisting: 'Impor model ancaman melalui JSON'
-        }
+            importExisting: 'Impor model ancaman melalui JSON',
+        },
     },
     demo: {
-        select: 'Pilih model ancaman demo dari daftar di bawah'
+        select: 'Pilih model ancaman demo dari daftar di bawah',
     },
     desktop: {
         file: {
@@ -63,7 +66,7 @@ const ind = {
             open: 'Buka Model',
             recentDocs: 'Buka Baru-baru ini',
             save: 'Simpan Model',
-            saveAs: 'Simpan Model Sebagai'
+            saveAs: 'Simpan Model Sebagai',
         },
         help: {
             heading: 'Bantuan',
@@ -72,13 +75,13 @@ const ind = {
             sheets: 'Lembaran Curang OWASP',
             github: 'Kunjungi kami di GitHub',
             submit: 'Kirim Isu',
-            check: 'Periksa pembaruan ...'
-        }
+            check: 'Periksa pembaruan ...',
+        },
     },
     repository: {
         select: 'Pilih',
         from: 'repositori dari daftar di bawah',
-        noneFound: 'Tidak ada repositori yang ditemukan. Untuk memulai, buat repositori baru di'
+        noneFound: 'Tidak ada repositori yang ditemukan. Untuk memulai, buat repositori baru di',
     },
     branch: {
         select: 'Pilih cabang dari',
@@ -100,7 +103,7 @@ const ind = {
         branch: 'cabang',
         or: 'atau',
         repo: 'repo',
-        newThreatModel: 'Buat Model Ancaman Baru'
+        newThreatModel: 'Buat Model Ancaman Baru',
     },
     threatmodel: {
         contributors: 'Kontributor',
@@ -118,33 +121,33 @@ const ind = {
             generic: {
                 defaultTitle: 'Diagram generik baru',
                 defaultDescription: 'Deskripsi diagram generik baru',
-                select: 'Generik'
+                select: 'Generik',
             },
             stride: {
                 defaultTitle: 'Diagram STRIDE baru',
                 defaultDescription: 'Deskripsi diagram STRIDE baru',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'Diagram LINDDUN baru',
                 defaultDescription: 'Deskripsi diagram LINDDUN baru',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'Diagram PLOT4ai baru',
                 defaultDescription: 'Deskripsi diagram PLOT4ai baru',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'Diagram DIE baru',
                 defaultDescription: 'Deskripsi diagram DIE baru',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'Diagram CIA baru',
                 defaultDescription: 'Deskripsi diagram CIA baru',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Ancaman',
         errors: {
@@ -152,7 +155,7 @@ const ind = {
             invalidJson: 'JSON tidak valid. Harap periksa model Anda dan coba lagi.',
             onlyJsonAllowed: 'Hanya file yang berakhir dengan .json yang didukung.',
             open: 'Kesalahan membuka Model Ancaman ini. Periksa konsol pengembang untuk informasi lebih lanjut',
-            save: 'Kesalahan menyimpan Model Ancaman. Periksa konsol pengembang untuk informasi lebih lanjut'
+            save: 'Kesalahan menyimpan Model Ancaman. Periksa konsol pengembang untuk informasi lebih lanjut',
         },
         opened: 'Model ancaman berhasil dibuka',
         saved: 'Model ancaman berhasil disimpan',
@@ -176,7 +179,7 @@ const ind = {
             protocol: 'Protokol',
             publicNetwork: 'Jaringan Publik',
             storesCredentials: 'Menyimpan Kredensial',
-            storesInventory: 'Menyimpan Persediaan'
+            storesInventory: 'Menyimpan Persediaan',
         },
         buttons: {
             delete: 'Hapus yang dipilih',
@@ -185,46 +188,46 @@ const ind = {
             toggleGrid: 'Aktifkan grid',
             undo: 'Batalkan lagi',
             zoomIn: 'Perbesar',
-            zoomOut: 'Perkecil'
+            zoomOut: 'Perkecil',
         },
         shortcuts: {
             title: 'Pintasan',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'Salin'
+                action: 'Salin',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'Tempel'
+                action: 'Tempel',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'Batalkan'
+                action: 'Batalkan',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'Lakukan lagi'
+                action: 'Lakukan lagi',
             },
             delete: {
                 shortcut: 'hapus',
-                action: 'Hapus'
+                action: 'Hapus',
             },
             pan: {
                 shortcut: 'geser + klik kiri (tahan/tarik)',
-                action: 'Geser'
+                action: 'Geser',
             },
             multiSelect: {
                 shortcut: 'klik kiri pada ruang kosong dan tarik',
-                action: 'Pilih beberapa'
+                action: 'Pilih beberapa',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + roda mouse',
-                action: 'Perbesar/Perkecil'
+                action: 'Perbesar/Perkecil',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Batas',
@@ -232,7 +235,7 @@ const ind = {
             entities: 'Entitas',
             metadata: 'Metadata',
             search: 'Cari',
-            notFound: 'Belum ada, ingin membuka isu? :)'
+            notFound: 'Belum ada, ingin membuka isu? :)',
         },
         shapes: {
             actor: 'Aktor',
@@ -241,8 +244,8 @@ const ind = {
             process: 'Proses',
             store: 'Penyimpanan',
             text: 'Teks Deskriptif',
-            trustBoundary: 'Batas Kepercayaan'
-        }
+            trustBoundary: 'Batas Kepercayaan',
+        },
     },
     forms: {
         apply: 'Terapkan',
@@ -272,7 +275,7 @@ const ind = {
         saveModelAs: 'Simpan Model Sebagai',
         search: 'Cari',
         next: 'Berikutnya',
-        previous: 'sebelumnya'
+        previous: 'sebelumnya',
     },
     threats: {
         model: {
@@ -280,13 +283,13 @@ const ind = {
                 header: '--- CIA ---',
                 confidentiality: 'Kerahasiaan',
                 integrity: 'Integritas',
-                availability: 'Ketersediaan'
+                availability: 'Ketersediaan',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Didistribusikan',
                 immutable: 'Tidak dapat diubah',
-                ephemeral: 'Ephemeral'
+                ephemeral: 'Ephemeral',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -296,7 +299,7 @@ const ind = {
                 detectability: 'Detectability',
                 disclosureOfInformation: 'Disclosure of information',
                 unawareness: 'Unawareness',
-                nonCompliance: 'Pelanggaran'
+                nonCompliance: 'Pelanggaran',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -307,7 +310,7 @@ const ind = {
                 safety: 'Keselamatan',
                 unawareness: 'Unawareness',
                 ethicsHumanRights: 'Etika & Hak Asasi Manusia',
-                nonCompliance: 'Pelanggaran'
+                nonCompliance: 'Pelanggaran',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -316,8 +319,8 @@ const ind = {
                 repudiation: 'Repudiation',
                 informationDisclosure: 'Information disclosure',
                 denialOfService: 'Denial of service',
-                elevationOfPrivilege: 'Elevation of privilege'
-            }
+                elevationOfPrivilege: 'Elevation of privilege',
+            },
         },
         generic: {
             default: 'Ancaman generik baru',
@@ -325,7 +328,7 @@ const ind = {
             die: 'Ancaman DIE baru',
             linddun: 'Ancaman LINDDUN baru',
             plot4ai: 'Ancaman PLOT4ai baru',
-            stride: 'Ancaman STRIDE baru'
+            stride: 'Ancaman STRIDE baru',
         },
         edit: 'Edit Ancaman',
         confirmDeleteTitle: 'Konfirmasi Hapus',
@@ -345,20 +348,20 @@ const ind = {
             score: 'Skor',
             status: 'Status',
             title: 'Judul',
-            type: 'Tipe'
+            type: 'Tipe',
         },
         status: {
             notApplicable: 'N/A',
             open: 'Terbuka',
-            mitigated: 'Diredam'
+            mitigated: 'Diredam',
         },
         priority: {
             tbd: 'TBD',
             low: 'Rendah',
             medium: 'Sedang',
             high: 'Tinggi',
-            critical: 'Kritis'
-        }
+            critical: 'Kritis',
+        },
     },
     report: {
         options: {
@@ -367,7 +370,7 @@ const ind = {
             showModelDiagrams: 'Tampilkan diagram model',
             showEmpty: 'Tampilkan elemen kosong',
             showProperties: 'Show element properties',
-            showBranding: 'Logo Threat Dragon'
+            showBranding: 'Logo Threat Dragon',
         },
         title: 'Laporan model ancaman untuk',
         dateGenerated: 'Tanggal Dibuat',
@@ -383,19 +386,19 @@ const ind = {
             openMedium: 'Terbuka / Prioritas Sedang',
             openLow: 'Terbuka / Prioritas Rendah',
             openTbd: 'Terbuka / Prioritas TBD',
-            openUnknown: 'Terbuka / Prioritas Tidak Diketahui'
-        }
+            openUnknown: 'Terbuka / Prioritas Tidak Diketahui',
+        },
     },
     upgrade: {
         modal: {
             header: 'Pembaruan Model Ancaman',
             welcome: 'Selamat datang di versi 2 OWASP Threat Dragon!',
             p1: 'Versi 2 menggunakan perpustakaan gambar yang berbeda, yang akan mengubah cara bagian dari model ancaman Anda disimpan. Meskipun sebagian besar diagram akan terlihat sama seperti di versi Threat Dragon sebelumnya, ada kasus di mana mereka mungkin perlu disesuaikan sedikit.',
-            p2: 'Setelah menutup modal ini, Anda akan melihat bagaimana setiap diagram dalam model ini dirender dalam format versi 2. Harap perhatikan setiap diagram yang mungkin perlu Anda sesuaikan. Ini adalah peningkatan satu kali, dan Anda tidak akan melihat pesan ini lagi setelah menyimpan model ini.'
+            p2: 'Setelah menutup modal ini, Anda akan melihat bagaimana setiap diagram dalam model ini dirender dalam format versi 2. Harap perhatikan setiap diagram yang mungkin perlu Anda sesuaikan. Ini adalah peningkatan satu kali, dan Anda tidak akan melihat pesan ini lagi setelah menyimpan model ini.',
         },
         instructions: 'Bagus! Mari kita bawa Anda ke model Anda.',
-        continue: 'Lanjut ke Model Ancaman'
-    }
+        continue: 'Lanjut ke Model Ancaman',
+    },
 };
 
 export default ind;

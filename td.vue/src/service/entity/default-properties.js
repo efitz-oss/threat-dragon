@@ -6,21 +6,21 @@ const actor = {
     reasonOutOfScope: '',
     hasOpenThreats: false,
     providesAuthentication: false,
-    threats: []
+    threats: [],
 };
 
 const boundary = {
     type: 'tm.Boundary',
     name: 'Trust Boundary',
     description: '',
-    isTrustBoundary: true
+    isTrustBoundary: true,
 };
 
 const boundaryBox = {
     type: 'tm.BoundaryBox',
     name: 'Trust Boundary',
     description: '',
-    isTrustBoundary: true
+    isTrustBoundary: true,
 };
 
 const flow = {
@@ -34,7 +34,7 @@ const flow = {
     isEncrypted: false,
     isPublicNetwork: false,
     protocol: '',
-    threats: []
+    threats: [],
 };
 
 const tmProcess = {
@@ -48,7 +48,7 @@ const tmProcess = {
     handlesGoodsOrServices: false,
     isWebApplication: false,
     privilegeLevel: '',
-    threats: []
+    threats: [],
 };
 
 const store = {
@@ -63,12 +63,12 @@ const store = {
     isSigned: false,
     storesCredentials: false,
     storesInventory: false,
-    threats: []
+    threats: [],
 };
 
 const text = {
     type: 'tm.Text',
-    name: 'Descriptive text'
+    name: 'Descriptive text',
 };
 
 const propsByType = {
@@ -79,11 +79,11 @@ const propsByType = {
     'tm.FlowStencil': flow,
     'tm.Process': tmProcess,
     'tm.Store': store,
-    'tm.Text': text
+    'tm.Text': text,
 };
 
 const getByType = (type) => {
-    if (!Object.keys(propsByType).some(x => x === type)) {
+    if (!Object.keys(propsByType).some((x) => x === type)) {
         throw new Error(`Unknown entity: ${type}`);
     }
     return propsByType[type];
@@ -97,5 +97,5 @@ export default {
     getByType,
     store,
     text,
-    tmProcess
+    tmProcess,
 };

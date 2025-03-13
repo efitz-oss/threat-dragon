@@ -1,6 +1,6 @@
 <template>
-  <div id="props-card">
-    <!--
+    <div id="props-card">
+        <!--
             All entities have the following properties:
                 - Name (text input)
                 - Description (text area)
@@ -35,257 +35,399 @@
                 - isPublicNetwork
         -->
 
-    <b-row v-show="!cellRef">
-      <b-col>
-        <p>{{ $t('threatmodel.properties.emptyState') }}</p>
-      </b-col>
-    </b-row>
+        <div v-show="!cellRef" class="grid">
+            <div class="col-12">
+                <p>{{ $t('threatmodel.properties.emptyState') }}</p>
+            </div>
+        </div>
 
-    <b-form v-if="!!cellRef && cellRef.data">
-      <b-form-row>
-        <b-col md="6">
-          <b-form-group
-            id="name-group"
-            label-cols="auto"
-            :label="
-              cellRef.data && cellRef.data.type === 'tm.Text'
-                ? $t('threatmodel.properties.text')
-                : $t('threatmodel.properties.name')
-            "
-            label-for="name"
-          >
-            <b-form-textarea
-              id="name"
-              v-model="cellRef.data.name"
-              @update="onChangeName()"
-              :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
-              graphPro
-            ></b-form-textarea>
-          </b-form-group>
-        </b-col>
+        <form v-if="!!cellRef && cellRef.data" class="p-fluid">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="name">
+                            {{
+                                cellRef.data && cellRef.data.type === 'tm.Text'
+                                    ? $t('threatmodel.properties.text')
+                                    : $t('threatmodel.properties.name')
+                            }}
+                        </label>
+                        <Textarea
+                            id="name"
+                            v-model="cellRef.data.name"
+                            :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
+                            @update:model-value="onChangeName()"
+                        />
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type !== 'tm.Text'" md="6">
-          <b-form-group
-            id="description-group"
-            label-cols="auto"
-            :label="$t('threatmodel.properties.description')"
-            label-for="description"
-          >
-            <b-form-textarea
-              id="description"
-              v-model="cellRef.data.description"
-              @change="onChangeProperties()"
-            ></b-form-textarea>
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type !== 'tm.Text'" class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="description">{{
+                            $t('threatmodel.properties.description')
+                        }}</label>
+                        <Textarea
+                            id="description"
+                            v-model="cellRef.data.description"
+                            @update:model-value="onChangeProperties()"
+                        />
+                    </div>
+                </div>
 
-        <b-col
-          v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text' && cellRef.data.type !== 'tm.Flow'"
-          md="6"
-        >
-          <b-form-group label-cols="auto" id="outofscope-group">
-            <b-form-checkbox id="outofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">{{
-              $t('threatmodel.properties.outOfScope')
-            }}</b-form-checkbox>
-          </b-form-group>
-        </b-col>
+                <div
+                    v-if="
+                        !cellRef.data.isTrustBoundary &&
+                        cellRef.data.type !== 'tm.Text' &&
+                        cellRef.data.type !== 'tm.Flow'
+                    "
+                    class="col-12 md:col-6"
+                >
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="outofscope"
+                                v-model="cellRef.data.outOfScope"
+                                :binary="true"
+                                @update:model-value="onChangeScope()"
+                            />
+                            <label for="outofscope">{{
+                                $t('threatmodel.properties.outOfScope')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Flow'" md="6">
-          <b-form-group label-cols="auto" id="flowoutofscope-group">
-            <b-form-checkbox id="flowoutofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">{{
-              $t('threatmodel.properties.outOfScope')
-            }}</b-form-checkbox>
-            <b-form-checkbox id="bidirection" v-model="cellRef.data.isBidirectional" @change="onChangeBidirection()">{{
-              $t('threatmodel.properties.bidirection')
-            }}</b-form-checkbox>
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Flow'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="flowoutofscope"
+                                v-model="cellRef.data.outOfScope"
+                                :binary="true"
+                                @update:model-value="onChangeScope()"
+                            />
+                            <label for="flowoutofscope">{{
+                                $t('threatmodel.properties.outOfScope')
+                            }}</label>
+                        </div>
+                        <div class="field-checkbox mt-2">
+                            <Checkbox
+                                id="bidirection"
+                                v-model="cellRef.data.isBidirectional"
+                                :binary="true"
+                                @update:model-value="onChangeBidirection()"
+                            />
+                            <label for="bidirection">{{
+                                $t('threatmodel.properties.bidirection')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text'" md="6">
-          <b-form-group
-            id="reasonoutofscope-group"
-            label-cols="auto"
-            :label="$t('threatmodel.properties.reasonOutOfScope')"
-            label-for="reasonoutofscope"
-          >
-            <b-form-textarea
-              id="reasonoutofscope"
-              :disabled="!cellRef.data.outOfScope"
-              v-model="cellRef.data.reasonOutOfScope"
-              @change="onChangeProperties()"
-            ></b-form-textarea>
-          </b-form-group>
-        </b-col>
+                <div
+                    v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text'"
+                    class="col-12 md:col-6"
+                >
+                    <div class="field">
+                        <label for="reasonoutofscope">{{
+                            $t('threatmodel.properties.reasonOutOfScope')
+                        }}</label>
+                        <Textarea
+                            id="reasonoutofscope"
+                            v-model="cellRef.data.reasonOutOfScope"
+                            :disabled="!cellRef.data.outOfScope"
+                            @update:model-value="onChangeProperties()"
+                        />
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Process'">
-          <b-form-group
-            id="privilegelevel-group"
-            label-cols="auto"
-            :label="$t('threatmodel.properties.privilegeLevel')"
-            label-for="privilegelevel"
-          >
-            <b-form-input
-              id="privilegelevel"
-              v-model="cellRef.data.privilegeLevel"
-              @change="onChangeProperties()"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Process'" class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="privilegelevel">{{
+                            $t('threatmodel.properties.privilegeLevel')
+                        }}</label>
+                        <InputText
+                            id="privilegelevel"
+                            v-model="cellRef.data.privilegeLevel"
+                            type="text"
+                            @update:model-value="onChangeProperties()"
+                        />
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Process'">
-          <b-form-group label-cols="auto" id="process-handles-group">
-            <b-form-checkbox
-              id="handlesCardPayment"
-              v-model="cellRef.data.handlesCardPayment"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.handlesCardPayment') }}</b-form-checkbox
-            >
-            <b-form-checkbox
-              id="handlesGoodsOrServices"
-              v-model="cellRef.data.handlesGoodsOrServices"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.handlesGoodsOrServices') }}</b-form-checkbox
-            >
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Process'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="handlesCardPayment"
+                                v-model="cellRef.data.handlesCardPayment"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="handlesCardPayment">{{
+                                $t('threatmodel.properties.handlesCardPayment')
+                            }}</label>
+                        </div>
+                        <div class="field-checkbox mt-2">
+                            <Checkbox
+                                id="handlesGoodsOrServices"
+                                v-model="cellRef.data.handlesGoodsOrServices"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="handlesGoodsOrServices">{{
+                                $t('threatmodel.properties.handlesGoodsOrServices')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Process'">
-          <b-form-group label-cols="auto" id="web-app-group">
-            <b-form-checkbox
-              id="isWebApplication"
-              v-model="cellRef.data.isWebApplication"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.isWebApplication') }}</b-form-checkbox
-            >
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Process'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="isWebApplication"
+                                v-model="cellRef.data.isWebApplication"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="isWebApplication">{{
+                                $t('threatmodel.properties.isWebApplication')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Store'">
-          <b-form-group label-cols="auto" id="isalog-group">
-            <b-form-checkbox id="isalog" v-model="cellRef.data.isALog" @change="onChangeProperties()">{{
-              $t('threatmodel.properties.isALog')
-            }}</b-form-checkbox>
-            <b-form-checkbox
-              id="storesCredentials"
-              v-model="cellRef.data.storesCredentials"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.storesCredentials') }}</b-form-checkbox
-            >
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Store'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="isalog"
+                                v-model="cellRef.data.isALog"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="isalog">{{ $t('threatmodel.properties.isALog') }}</label>
+                        </div>
+                        <div class="field-checkbox mt-2">
+                            <Checkbox
+                                id="storesCredentials"
+                                v-model="cellRef.data.storesCredentials"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="storesCredentials">{{
+                                $t('threatmodel.properties.storesCredentials')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Store'">
-          <b-form-group label-cols="auto" id="isEncrypted-group">
-            <b-form-checkbox id="isEncrypted" v-model="cellRef.data.isEncrypted" @change="onChangeProperties()">{{
-              $t('threatmodel.properties.isEncrypted')
-            }}</b-form-checkbox>
-            <b-form-checkbox id="isSigned" v-model="cellRef.data.isSigned" @change="onChangeProperties()">{{
-              $t('threatmodel.properties.isSigned')
-            }}</b-form-checkbox>
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Store'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="isEncrypted"
+                                v-model="cellRef.data.isEncrypted"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="isEncrypted">{{
+                                $t('threatmodel.properties.isEncrypted')
+                            }}</label>
+                        </div>
+                        <div class="field-checkbox mt-2">
+                            <Checkbox
+                                id="isSigned"
+                                v-model="cellRef.data.isSigned"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="isSigned">{{
+                                $t('threatmodel.properties.isSigned')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Store'">
-          <b-form-group label-cols="auto" id="storesInventory-group">
-            <b-form-checkbox
-              id="storesInventory"
-              v-model="cellRef.data.storesInventory"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.storesInventory') }}</b-form-checkbox
-            >
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Store'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="storesInventory"
+                                v-model="cellRef.data.storesInventory"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="storesInventory">{{
+                                $t('threatmodel.properties.storesInventory')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Actor'">
-          <b-form-group label-cols="auto" id="providesAuthentication-group">
-            <b-form-checkbox
-              id="providesAuthentication"
-              v-model="cellRef.data.providesAuthentication"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.providesAuthentication') }}</b-form-checkbox
-            >
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Actor'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="providesAuthentication"
+                                v-model="cellRef.data.providesAuthentication"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="providesAuthentication">{{
+                                $t('threatmodel.properties.providesAuthentication')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Flow'">
-          <b-form-group
-            id="protocol-group"
-            label-cols="auto"
-            :label="$t('threatmodel.properties.protocol')"
-            label-for="protocol"
-          >
-            <b-form-input
-              id="protocol"
-              v-model="cellRef.data.protocol"
-              @change="onChangeProperties()"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Flow'" class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="protocol">{{ $t('threatmodel.properties.protocol') }}</label>
+                        <InputText
+                            id="protocol"
+                            v-model="cellRef.data.protocol"
+                            type="text"
+                            @update:model-value="onChangeProperties()"
+                        />
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Flow'">
-          <b-form-group label-cols="auto" id="isEncrypted-group">
-            <b-form-checkbox id="isEncrypted" v-model="cellRef.data.isEncrypted" @change="onChangeProperties()">{{
-              $t('threatmodel.properties.isEncrypted')
-            }}</b-form-checkbox>
-          </b-form-group>
-        </b-col>
+                <div v-if="cellRef.data.type === 'tm.Flow'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="isEncrypted"
+                                v-model="cellRef.data.isEncrypted"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="isEncrypted">{{
+                                $t('threatmodel.properties.isEncrypted')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
 
-        <b-col v-if="cellRef.data.type === 'tm.Flow'">
-          <b-form-group label-cols="auto" id="isPublicNetwork-group">
-            <b-form-checkbox
-              id="isPublicNetwork"
-              v-model="cellRef.data.isPublicNetwork"
-              @change="onChangeProperties()"
-              >{{ $t('threatmodel.properties.publicNetwork') }}</b-form-checkbox
-            >
-          </b-form-group>
-        </b-col>
-      </b-form-row>
-    </b-form>
-  </div>
+                <div v-if="cellRef.data.type === 'tm.Flow'" class="col-12 md:col-6">
+                    <div class="field">
+                        <div class="field-checkbox">
+                            <Checkbox
+                                id="isPublicNetwork"
+                                v-model="cellRef.data.isPublicNetwork"
+                                :binary="true"
+                                @update:model-value="onChangeProperties()"
+                            />
+                            <label for="isPublicNetwork">{{
+                                $t('threatmodel.properties.publicNetwork')
+                            }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </template>
 
-<style lang="scss">
-label {
-  font-size: 12px !important;
-}
-</style>
+<script setup>
+    import { computed, nextTick } from 'vue';
+    import dataChanged from '@/service/x6/graph/data-changed.js';
+    import { useCellStore } from '@/stores/cell';
 
-<script>
-import { mapState } from 'vuex';
-import dataChanged from '@/service/x6/graph/data-changed.js';
+    // PrimeVue components
+    import Checkbox from 'primevue/checkbox';
+    import InputText from 'primevue/inputtext';
+    import Textarea from 'primevue/textarea';
 
-export default {
-    name: 'TdGraphProperties',
-    computed: mapState({
-        cellRef: (state) => state.cell.ref
-    }),
-    methods: {
-        updateComponent() {
-            // should not need to need to force an update
-            this.$forceUpdate();
-        },
-        onChangeName() {
-            dataChanged.updateName(this.cellRef);
-            this.updateComponent();
-        },
-        onChangeBidirection() {
-            dataChanged.updateProperties(this.cellRef);
-            dataChanged.updateStyleAttrs(this.cellRef);
-            this.updateComponent();
-        },
-        onChangeProperties() {
-            dataChanged.updateProperties(this.cellRef);
-            this.updateComponent();
-        },
-        onChangeScope() {
-            document.getElementById('reasonoutofscope').disabled = !this.cellRef.data.outOfScope;
-            dataChanged.updateProperties(this.cellRef);
-            dataChanged.updateStyleAttrs(this.cellRef);
-            this.updateComponent();
+    // Store
+    const cellStore = useCellStore();
+
+    // Computed properties
+    const cellRef = computed(() => cellStore.cellRef);
+
+    // Methods
+    const updateComponent = async () => {
+        // Force a re-render by using nextTick
+        await nextTick();
+    };
+
+    const onChangeName = () => {
+        dataChanged.updateName(cellRef.value);
+        updateComponent();
+    };
+
+    const onChangeBidirection = () => {
+        dataChanged.updateProperties(cellRef.value);
+        dataChanged.updateStyleAttrs(cellRef.value);
+        updateComponent();
+    };
+
+    const onChangeProperties = () => {
+        dataChanged.updateProperties(cellRef.value);
+        updateComponent();
+    };
+
+    const onChangeScope = () => {
+        if (document.getElementById('reasonoutofscope')) {
+            document.getElementById('reasonoutofscope').disabled = !cellRef.value.data.outOfScope;
+        }
+        dataChanged.updateProperties(cellRef.value);
+        dataChanged.updateStyleAttrs(cellRef.value);
+        updateComponent();
+    };
+</script>
+
+<style lang="scss" scoped>
+    @import '@/styles/primevue-variables.scss';
+
+    label {
+        font-size: 0.75rem !important;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .field {
+        margin-bottom: 1rem;
+    }
+
+    .field-checkbox {
+        display: flex;
+        align-items: center;
+
+        label {
+            margin-left: 0.5rem;
+            margin-bottom: 0;
         }
     }
-};
-</script>
+
+    .mt-2 {
+        margin-top: 0.5rem;
+    }
+
+    :deep(.p-inputtext) {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--surface-300);
+        border-radius: 4px;
+
+        &:focus {
+            box-shadow: 0 0 0 2px var(--primary-color-transparent, rgba(55, 136, 216, 0.2));
+            border-color: var(--primary-color, #3788d8);
+        }
+
+        &:disabled {
+            background-color: var(--surface-200);
+            opacity: 0.7;
+        }
+    }
+
+    :deep(.p-checkbox) {
+        width: 1.25rem;
+        height: 1.25rem;
+
+        .p-checkbox-box {
+            border-radius: 4px;
+        }
+    }
+</style>

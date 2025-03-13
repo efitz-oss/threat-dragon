@@ -1,57 +1,60 @@
 const ukr = {
     auth: {
-        sessionExpired: 'Your session has expired. Please log in again to continue.'
+        sessionExpired: 'Your session has expired. Please log in again to continue.',
     },
     nav: {
-        v2Warning: 'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
+        v2Warning:
+            'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Logged in as',
-        logOut: 'Log out'
+        logOut: 'Log out',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'OWASP Threat Dragon is a free, open-source, cross-platform application for creating threat models. Use it to draw threat modeling diagrams and to identify threats for your system. With an emphasis on flexibility and simplicity it is easily accessible for all types of users.'
+        description:
+            'OWASP Threat Dragon is a free, open-source, cross-platform application for creating threat models. Use it to draw threat modeling diagrams and to identify threats for your system. With an emphasis on flexibility and simplicity it is easily accessible for all types of users.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Start'
+            loginWith: 'Start',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'Login with'
+            loginWith: 'Login with',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'Login with'
+            loginWith: 'Login with',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'Login with'
+            loginWith: 'Login with',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Login with'
+            loginWith: 'Login with',
         },
         local: {
             displayName: 'Local Session',
-            loginWith: 'Login to'
-        }
+            loginWith: 'Login to',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Welcome!',
-            description: 'You\'re ready to start making your application designs more secure. You can open an existing threat model or create a new one by choosing one of the options below. '
+            description:
+                "You're ready to start making your application designs more secure. You can open an existing threat model or create a new one by choosing one of the options below. ",
         },
         actions: {
             openExisting: 'Open an existing threat model',
             createNew: 'Create a new, empty threat model',
             readDemo: 'Explore a sample threat model',
-            importExisting: 'Import a threat model via JSON'
-        }
+            importExisting: 'Import a threat model via JSON',
+        },
     },
     demo: {
-        select: 'Select a demo threat model from the list below'
+        select: 'Select a demo threat model from the list below',
     },
     desktop: {
         file: {
@@ -63,7 +66,7 @@ const ukr = {
             open: 'Open Model',
             recentDocs: 'Open Recent',
             save: 'Save Model',
-            saveAs: 'Save Model As'
+            saveAs: 'Save Model As',
         },
         help: {
             heading: 'Help',
@@ -72,13 +75,13 @@ const ukr = {
             sheets: 'OWASP Cheat Sheets',
             github: 'Visit us on GitHub',
             submit: 'Submit an Issue',
-            check: 'Check for updates ...'
-        }
+            check: 'Check for updates ...',
+        },
     },
     repository: {
         select: 'Select a',
         from: 'repository from the list below',
-        noneFound: 'No repositories found. To get started, create a new repository on'
+        noneFound: 'No repositories found. To get started, create a new repository on',
     },
     branch: {
         select: 'Select a branch from',
@@ -100,7 +103,7 @@ const ukr = {
         branch: 'branch',
         or: 'or',
         repo: 'repo',
-        newThreatModel: 'Create a New Threat Model'
+        newThreatModel: 'Create a New Threat Model',
     },
     threatmodel: {
         contributors: 'Contributors',
@@ -118,33 +121,33 @@ const ukr = {
             generic: {
                 defaultTitle: 'New generic diagram',
                 defaultDescription: 'New generic diagram description',
-                select: 'Generic'
+                select: 'Generic',
             },
             stride: {
                 defaultTitle: 'New STRIDE diagram',
                 defaultDescription: 'New STRIDE diagram description',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'New LINDDUN diagram',
                 defaultDescription: 'New LINDDUN diagram description',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'New PLOT4ai diagram',
                 defaultDescription: 'New PLOT4ai diagram description',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'New DIE diagram',
                 defaultDescription: 'New DIE diagram description',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'New CIA diagram',
                 defaultDescription: 'New CIA diagram description',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Threats',
         errors: {
@@ -152,7 +155,7 @@ const ukr = {
             invalidJson: 'Invalid JSON. Please check your model and try again.',
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
-            save: 'Error saving the Threat Model. Check the developer console for more information'
+            save: 'Error saving the Threat Model. Check the developer console for more information',
         },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',
@@ -176,7 +179,7 @@ const ukr = {
             protocol: 'Protocol',
             publicNetwork: 'Public Network',
             storesCredentials: 'Stores Credentials',
-            storesInventory: 'Stores Inventory'
+            storesInventory: 'Stores Inventory',
         },
         buttons: {
             delete: 'Delete selected',
@@ -185,46 +188,46 @@ const ukr = {
             toggleGrid: 'Toggle grid',
             undo: 'Undo edit',
             zoomIn: 'Zoom in',
-            zoomOut: 'Zoom out'
+            zoomOut: 'Zoom out',
         },
         shortcuts: {
             title: 'Shortcuts',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'Copy'
+                action: 'Copy',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'Paste'
+                action: 'Paste',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'Undo'
+                action: 'Undo',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'Redo'
+                action: 'Redo',
             },
             delete: {
                 shortcut: 'del',
-                action: 'Delete'
+                action: 'Delete',
             },
             pan: {
                 shortcut: 'shift + left-click (hold/drag)',
-                action: 'Pan'
+                action: 'Pan',
             },
             multiSelect: {
                 shortcut: 'left-click on empty space and drag',
-                action: 'Multi-select'
+                action: 'Multi-select',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + mousewheel',
-                action: 'Zoom'
+                action: 'Zoom',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Boundaries',
@@ -232,7 +235,7 @@ const ukr = {
             entities: 'Entities',
             metadata: 'Metadata',
             search: 'Search',
-            notFound: 'We don\'t have that yet, want to open an issue? :)'
+            notFound: "We don't have that yet, want to open an issue? :)",
         },
         shapes: {
             actor: 'Actor',
@@ -241,8 +244,8 @@ const ukr = {
             process: 'Process',
             store: 'Store',
             text: 'Descriptive text',
-            trustBoundary: 'Trust Boundary'
-        }
+            trustBoundary: 'Trust Boundary',
+        },
     },
     forms: {
         apply: 'Apply',
@@ -271,8 +274,8 @@ const ukr = {
         saveModel: 'Save Model',
         saveModelAs: 'Save Model As',
         search: 'Search',
-        next:'Next',
-        previous:'Previous'
+        next: 'Next',
+        previous: 'Previous',
     },
     threats: {
         model: {
@@ -280,13 +283,13 @@ const ukr = {
                 header: '--- CIA ---',
                 confidentiality: 'Confidentiality',
                 integrity: 'Integrity',
-                availability: 'Availability'
+                availability: 'Availability',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Distributed',
                 immutable: 'Immutable',
-                ephemeral: 'Ephemeral'
+                ephemeral: 'Ephemeral',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -296,7 +299,7 @@ const ukr = {
                 detectability: 'Detectability',
                 disclosureOfInformation: 'Disclosure of information',
                 unawareness: 'Unawareness',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -307,7 +310,7 @@ const ukr = {
                 safety: 'Safety',
                 unawareness: 'Unawareness',
                 ethicsHumanRights: 'Ethics & Human Rights',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -316,8 +319,8 @@ const ukr = {
                 repudiation: 'Repudiation',
                 informationDisclosure: 'Information disclosure',
                 denialOfService: 'Denial of service',
-                elevationOfPrivilege: 'Elevation of privilege'
-            }
+                elevationOfPrivilege: 'Elevation of privilege',
+            },
         },
         generic: {
             default: 'New generic threat',
@@ -325,7 +328,7 @@ const ukr = {
             die: 'New DIE threat',
             linddun: 'New LINDDUN threat',
             plot4ai: 'New PLOT4ai threat',
-            stride: 'New STRIDE threat'
+            stride: 'New STRIDE threat',
         },
         edit: 'Edit Threat',
         confirmDeleteTitle: 'Confirm Delete',
@@ -345,20 +348,20 @@ const ukr = {
             score: 'Score',
             status: 'Status',
             title: 'Title',
-            type: 'Type'
+            type: 'Type',
         },
         status: {
             notApplicable: 'N/A',
             open: 'Open',
-            mitigated: 'Mitigated'
+            mitigated: 'Mitigated',
         },
         priority: {
             tbd: 'TBD',
             low: 'Low',
             medium: 'Medium',
             high: 'High',
-            critical: 'Critical'
-        }
+            critical: 'Critical',
+        },
     },
     report: {
         options: {
@@ -367,7 +370,7 @@ const ukr = {
             showModelDiagrams: 'Show model diagrams',
             showEmpty: 'Show empty elements',
             showProperties: 'Show element properties',
-            showBranding: 'Threat Dragon logo'
+            showBranding: 'Threat Dragon logo',
         },
         title: 'Threat model report for',
         dateGenerated: 'Date Generated',
@@ -383,19 +386,19 @@ const ukr = {
             openMedium: 'Open / Medium Priority',
             openLow: 'Open / Low Priority',
             openTbd: 'Open / TBD Priority',
-            openUnknown: 'Open / Unknown Priority'
-        }
+            openUnknown: 'Open / Unknown Priority',
+        },
     },
     upgrade: {
         modal: {
             header: 'Threatmodel Update',
             welcome: 'Welcome to version 2 of OWASP Threat Dragon!',
             p1: 'Version 2 uses a different drawing library, which will change the way parts of your threat models are saved. While most diagrams will look the same as they did in previous versions of Threat Dragon, there are cases where they may need to be adjusted slightly.',
-            p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.'
+            p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.',
         },
-        instructions: 'Great! Let\'s get you to your model.',
-        continue: 'Continue to Threat Model'
-    }
+        instructions: "Great! Let's get you to your model.",
+        continue: 'Continue to Threat Model',
+    },
 };
 
 export default ukr;

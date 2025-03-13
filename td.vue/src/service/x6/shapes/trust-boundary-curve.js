@@ -17,11 +17,11 @@ export const TrustBoundaryCurve = Shape.Edge.define({
             strokeWidth: 3,
             strokeDasharray: '10 5',
             sourceMarker: null,
-            targetMarker: null
-        }
+            targetMarker: null,
+        },
     },
     connector: 'smooth',
-    data: defaultProperties.boundary
+    data: defaultProperties.boundary,
 });
 
 TrustBoundaryCurve.prototype.type = 'tm.Boundary';
@@ -34,5 +34,5 @@ TrustBoundaryCurve.prototype.updateStyle = function () {};
 
 export default {
     name,
-    TrustBoundaryCurve
+    TrustBoundaryCurve,
 };

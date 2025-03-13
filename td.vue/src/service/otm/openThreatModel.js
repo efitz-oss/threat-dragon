@@ -3,5 +3,5 @@ import { convert as convertOTMtoTD } from './OTMtoTD.js';
 
 export default {
     convertOTMtoTD,
-    convertTDtoOTM
+    convertTDtoOTM,
 };

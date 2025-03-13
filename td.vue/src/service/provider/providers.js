@@ -12,43 +12,43 @@ const providers = {
         displayName: 'Desktop',
         provider: desktopProvider,
         type: providerTypes.desktop,
-        icon: ['fab', 'vuejs']
+        icon: ['fab', 'vuejs'],
     },
     github: {
         key: 'github',
         displayName: 'GitHub',
         provider: githubProvider,
         type: providerTypes.git,
-        icon: ['fab', 'github']
+        icon: ['fab', 'github'],
     },
     gitlab: {
         key: 'gitlab',
         displayName: 'Gitlab',
         provider: gitlabProvider,
         type: providerTypes.git,
-        icon: ['fab', 'gitlab']
+        icon: ['fab', 'gitlab'],
     },
     bitbucket: {
         key: 'bitbucket',
         displayName: 'Bitbucket',
         provider: bitbucketProvider,
         type: providerTypes.git,
-        icon: ['fab', 'bitbucket']
+        icon: ['fab', 'bitbucket'],
     },
     google: {
         key: 'google',
         displayName: 'Google',
         provider: googleProvider,
         type: providerTypes.google,
-        icon: ['fab', 'google']
+        icon: ['fab', 'google'],
     },
     local: {
         key: 'local',
         displayName: 'Local Session',
         provider: localProvider,
         type: providerTypes.local,
-        icon: ['fab', 'vuejs']
-    }
+        icon: ['fab', 'vuejs'],
+    },
 };
 
 export const allProviders = (() => {
@@ -57,7 +57,7 @@ export const allProviders = (() => {
 
 export const providerNames = (() => {
     const _providers = {};
-    Object.keys(providers).forEach(key => _providers[key] = providers[key].key);
+    Object.keys(providers).forEach((key) => (_providers[key] = providers[key].key));
     return Object.freeze(_providers);
 })();
 
@@ -87,5 +87,5 @@ export const getDashboardActions = (providerKey) => {
 export default {
     allProviders,
     providerNames,
-    getDashboardActions
+    getDashboardActions,
 };

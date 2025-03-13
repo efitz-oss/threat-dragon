@@ -11,8 +11,10 @@ describe('router/index.js', () => {
         let homeRoute;
 
         beforeEach(() => {
-            homeRoute = router.get().getRoutes()
-                .find(x => x.name === 'HomePage');
+            homeRoute = router
+                .get()
+                .getRoutes()
+                .find((x) => x.name === 'HomePage');
         });
 
         it('is the default path', () => {
@@ -28,8 +30,10 @@ describe('router/index.js', () => {
         let dashboardRoute;
 
         beforeEach(() => {
-            dashboardRoute = router.get().getRoutes()
-                .find(x => x.name === 'MainDashboard');
+            dashboardRoute = router
+                .get()
+                .getRoutes()
+                .find((x) => x.name === 'MainDashboard');
         });
 
         it('uses the /dashboard path', () => {
@@ -53,8 +57,10 @@ describe('router/index.js', () => {
         let oauthReturnRoute;
 
         beforeEach(() => {
-            oauthReturnRoute = router.get().getRoutes()
-                .find(x => x.name === 'OAuthReturn');
+            oauthReturnRoute = router
+                .get()
+                .getRoutes()
+                .find((x) => x.name === 'OAuthReturn');
         });
 
         it('uses the /oauth-return path', () => {
@@ -78,8 +84,10 @@ describe('router/index.js', () => {
         let demoSelectRoute;
 
         beforeEach(() => {
-            demoSelectRoute = router.get().getRoutes()
-                .find(x => x.name === 'DemoSelect');
+            demoSelectRoute = router
+                .get()
+                .getRoutes()
+                .find((x) => x.name === 'DemoSelect');
         });
 
         it('uses the /dashboard path', () => {
@@ -98,5 +106,4 @@ describe('router/index.js', () => {
             });
         });
     });
-
 });

@@ -4,8 +4,8 @@ process.env.IS_TEST = true;
 
 const config = {
     runner: 'local',
-    reporters: ['spec','json'],
-    specs: [ './tests/e2e/desktop/*.spec.js' ],
+    reporters: ['spec', 'json'],
+    specs: ['./tests/e2e/desktop/*.spec.js'],
     exclude: [
         // 'path/to/excluded/files'
     ],
@@ -23,9 +23,11 @@ const config = {
             },
         ],
     ],
-    capabilities: [{
-        browserName: 'electron'
-    }],
+    capabilities: [
+        {
+            browserName: 'electron',
+        },
+    ],
     logLevel: 'debug',
     bail: 1,
     hostname: 'localhost',
@@ -39,7 +41,7 @@ const config = {
     mochaOpts: {
         ui: 'bdd',
         timeout: 30000,
-    }
+    },
 };
 
 module.exports = { config };

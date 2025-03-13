@@ -1,8 +1,8 @@
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 import { Gitlab } from '@gitbeaker/rest';
 
 const repoRootDirectory = () =>
-    env.get().config.GITLAB_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
+    getEnvironment().config.GITLAB_REPO_ROOT_DIRECTORY || getEnvironment().config.REPO_ROOT_DIRECTORY;
 
 export class GitlabClientWrapper {
     static getClient(clientOptions) {
@@ -16,8 +16,8 @@ export const getClient = (accessToken) => {
             oauthToken: accessToken,
         },
     };
-    if (env.get().config.GITLAB_HOST) {
-        clientOptions.auth.host = env.get().config.GITLAB_HOST;
+    if (getEnvironment().config.GITLAB_HOST) {
+        clientOptions.auth.host = getEnvironment().config.GITLAB_HOST;
     }
 
     return GitlabClientWrapper.getClient(clientOptions.auth);

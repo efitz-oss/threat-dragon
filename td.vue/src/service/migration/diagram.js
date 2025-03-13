@@ -2,14 +2,13 @@ import cells from './cells.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
 import graphFactory from '@/service/x6/graph/graph.js';
 import events from '@/service/x6/graph/events.js';
-import store from '@/store/index.js';
-import tmActions from '@/store/actions/threatmodel.js';
+import { useThreatmodelStore } from '@/stores/threatmodel';
 import { passiveSupport } from 'passive-events-support/src/utils';
 
 const appVersion = require('../../../package.json').version;
 
 passiveSupport({
-    events: ['touchstart', 'mousewheel']
+    events: ['touchstart', 'mousewheel'],
 });
 
 const drawV1 = (diagram, graph) => {
@@ -33,10 +32,12 @@ const upgradeAndDraw = (diagram, graph) => {
     updated.id = diagram.id;
     updated.diagramType = diagram.diagramType;
     graph.getCells().forEach((cell) => dataChanged.updateStyleAttrs(cell));
-    store.get().dispatch(tmActions.diagramSaved, updated);
-    store.get().dispatch(tmActions.stash);
-    store.get().dispatch(tmActions.notModified);
 
+    // Use Pinia store
+    const threatmodelStore = useThreatmodelStore();
+    threatmodelStore.saveDiagram(updated);
+    threatmodelStore.stash();
+    threatmodelStore.setNotModified();
 };
 
 const drawGraph = (diagram, graph) => {
@@ -62,5 +63,5 @@ const dispose = (graph) => {
 export default {
     dispose,
     draw,
-    edit
+    edit,
 };

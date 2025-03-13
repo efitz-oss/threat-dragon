@@ -5,8 +5,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitRepository');
+            route = gitRoutes.find((x) => x.name === 'gitRepository');
         });
 
         it('uses the expected path', () => {
@@ -23,8 +22,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitBranch');
+            route = gitRoutes.find((x) => x.name === 'gitBranch');
         });
 
         it('uses the expected path', () => {
@@ -41,8 +39,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitThreatModelSelect');
+            route = gitRoutes.find((x) => x.name === 'gitThreatModelSelect');
         });
 
         it('uses the expected path', () => {
@@ -59,8 +56,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitNewThreatModel');
+            route = gitRoutes.find((x) => x.name === 'gitNewThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -77,8 +73,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitThreatModel');
+            route = gitRoutes.find((x) => x.name === 'gitThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -95,8 +90,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitThreatModelEdit');
+            route = gitRoutes.find((x) => x.name === 'gitThreatModelEdit');
         });
 
         it('uses the expected path', () => {
@@ -113,12 +107,13 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitDiagramEdit');
+            route = gitRoutes.find((x) => x.name === 'gitDiagramEdit');
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/git/:provider/:repository/:branch/:threatmodel/edit/:diagram');
+            expect(route.path).toEqual(
+                '/git/:provider/:repository/:branch/:threatmodel/edit/:diagram'
+            );
         });
 
         it('uses the DiagramEdit view as a lazily loaded component', async () => {
@@ -131,8 +126,7 @@ describe('routes/git.js', () => {
         let route;
 
         beforeEach(() => {
-            route = gitRoutes
-                .find(x => x.name === 'gitReport');
+            route = gitRoutes.find((x) => x.name === 'gitReport');
         });
 
         it('uses the expected path', () => {
@@ -144,5 +138,4 @@ describe('routes/git.js', () => {
             expect(cmp.default.name).toEqual('ReportModel');
         });
     });
-
 });

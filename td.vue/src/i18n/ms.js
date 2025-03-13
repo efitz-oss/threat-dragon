@@ -1,57 +1,60 @@
 const ms = {
     auth: {
-        sessionExpired: 'Sesi anda telah tamat. Sila log masuk semula untuk meneruskan.'
+        sessionExpired: 'Sesi anda telah tamat. Sila log masuk semula untuk meneruskan.',
     },
     nav: {
-        v2Warning: 'Model ancaman versi 2.0 tidak sesuai dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimport akan dinaik tarafkan ke skema versi 2.0',
+        v2Warning:
+            'Model ancaman versi 2.0 tidak sesuai dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimport akan dinaik tarafkan ke skema versi 2.0',
         loggedInAs: 'Log masuk sebagai',
-        logOut: 'Log keluar'
+        logOut: 'Log keluar',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo Threat Dragon',
-        description: 'OWASP Threat Dragon adalah aplikasi percuma, sumber terbuka, lintas platform untuk mencipta model ancaman. Gunakannya untuk melukis gambarajah pemodelan ancaman dan mengenal pasti ancaman bagi sistem anda. Dengan penekanan pada kelenturan dan kesederhanaan, ia mudah diakses untuk semua jenis pengguna.'
+        description:
+            'OWASP Threat Dragon adalah aplikasi percuma, sumber terbuka, lintas platform untuk mencipta model ancaman. Gunakannya untuk melukis gambarajah pemodelan ancaman dan mengenal pasti ancaman bagi sistem anda. Dengan penekanan pada kelenturan dan kesederhanaan, ia mudah diakses untuk semua jenis pengguna.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Mula'
+            loginWith: 'Mula',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'Log masuk dengan'
+            loginWith: 'Log masuk dengan',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'Log masuk dengan'
+            loginWith: 'Log masuk dengan',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'Log masuk dengan'
+            loginWith: 'Log masuk dengan',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Log masuk dengan'
+            loginWith: 'Log masuk dengan',
         },
         local: {
             displayName: 'Sesi Tempatan',
-            loginWith: 'Log masuk ke'
-        }
+            loginWith: 'Log masuk ke',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Selamat Datang!',
-            description: 'Anda bersedia untuk memulakan membuat rekabentuk aplikasi anda lebih selamat. Anda boleh membuka model ancaman sedia ada atau membuat yang baru dengan memilih salah satu pilihan di bawah. '
+            description:
+                'Anda bersedia untuk memulakan membuat rekabentuk aplikasi anda lebih selamat. Anda boleh membuka model ancaman sedia ada atau membuat yang baru dengan memilih salah satu pilihan di bawah. ',
         },
         actions: {
             openExisting: 'Buka model ancaman sedia ada',
             createNew: 'Cipta model ancaman baru yang kosong',
             readDemo: 'Teroka model ancaman contoh',
-            importExisting: 'Import model ancaman melalui JSON'
-        }
+            importExisting: 'Import model ancaman melalui JSON',
+        },
     },
     demo: {
-        select: 'Pilih model ancaman demo dari senarai di bawah'
+        select: 'Pilih model ancaman demo dari senarai di bawah',
     },
     desktop: {
         file: {
@@ -63,7 +66,7 @@ const ms = {
             open: 'Buka Model',
             recentDocs: 'Buka Terkini',
             save: 'Simpan Model',
-            saveAs: 'Simpan Model Sebagai'
+            saveAs: 'Simpan Model Sebagai',
         },
         help: {
             heading: 'Bantuan',
@@ -72,13 +75,13 @@ const ms = {
             sheets: 'Lembaran Panduan OWASP',
             github: 'Lawati kami di GitHub',
             submit: 'Hantar Isu',
-            check: 'Semak kemas kini ...'
-        }
+            check: 'Semak kemas kini ...',
+        },
     },
     repository: {
         select: 'Pilih',
         from: 'repositori dari senarai di bawah',
-        noneFound: 'Tiada repositori dijumpai. Untuk memulakan, cipta repositori baru di'
+        noneFound: 'Tiada repositori dijumpai. Untuk memulakan, cipta repositori baru di',
     },
     branch: {
         select: 'Pilih cawangan dari',
@@ -100,7 +103,7 @@ const ms = {
         branch: 'cawangan',
         or: 'atau',
         repo: 'repo',
-        newThreatModel: 'Cipta Model Ancaman Baharu'
+        newThreatModel: 'Cipta Model Ancaman Baharu',
     },
     threatmodel: {
         contributors: 'Penyumbang',
@@ -118,33 +121,33 @@ const ms = {
             generic: {
                 defaultTitle: 'Gambarajah generik baru',
                 defaultDescription: 'Penerangan gambarajah generik baru',
-                select: 'Generik'
+                select: 'Generik',
             },
             stride: {
                 defaultTitle: 'Gambarajah STRIDE baru',
                 defaultDescription: 'Penerangan gambarajah STRIDE baru',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'Gambarajah LINDDUN baru',
                 defaultDescription: 'Penerangan gambarajah LINDDUN baru',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'Gambarajah PLOT4ai baru',
                 defaultDescription: 'Penerangan gambarajah PLOT4ai baru',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'Gambarajah DIE baru',
                 defaultDescription: 'Penerangan gambarajah DIE baru',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'Gambarajah CIA baru',
                 defaultDescription: 'Penerangan gambarajah CIA baru',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Ancaman',
         errors: {
@@ -152,7 +155,7 @@ const ms = {
             invalidJson: 'JSON tidak sah. Sila periksa model anda dan cuba lagi.',
             onlyJsonAllowed: 'Hanya fail yang berakhir dengan .json yang disokong.',
             open: 'Ralat membuka Model Ancaman ini. Semak konsol pembangun untuk maklumat lanjut',
-            save: 'Ralat menyimpan Model Ancaman ini. Semak konsol pembangun untuk maklumat lanjut'
+            save: 'Ralat menyimpan Model Ancaman ini. Semak konsol pembangun untuk maklumat lanjut',
         },
         opened: 'Model ancaman berjaya dibuka',
         saved: 'Model ancaman berjaya disimpan',
@@ -176,7 +179,7 @@ const ms = {
             protocol: 'Protokol',
             publicNetwork: 'Rangkaian Awam',
             storesCredentials: 'Simpan Kredensial',
-            storesInventory: 'Simpan Inventori'
+            storesInventory: 'Simpan Inventori',
         },
         buttons: {
             delete: 'Padam yang dipilih',
@@ -185,46 +188,46 @@ const ms = {
             toggleGrid: 'Togel grid',
             undo: 'Buat asal semula suntingan',
             zoomIn: 'Zum masuk',
-            zoomOut: 'Zum keluar'
+            zoomOut: 'Zum keluar',
         },
         shortcuts: {
             title: 'Pintasan',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'Salin'
+                action: 'Salin',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'Tampal'
+                action: 'Tampal',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'Buat asal semula'
+                action: 'Buat asal semula',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'Buat semula'
+                action: 'Buat semula',
             },
             delete: {
                 shortcut: 'padam',
-                action: 'Padam'
+                action: 'Padam',
             },
             pan: {
                 shortcut: 'shift + klik kiri (tahan/tarik)',
-                action: 'Pan'
+                action: 'Pan',
             },
             multiSelect: {
                 shortcut: 'klik kiri pada ruang kosong dan tarik',
-                action: 'Pilih pelbagai'
+                action: 'Pilih pelbagai',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + roda tetikus',
-                action: 'Zum'
+                action: 'Zum',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Sempadan',
@@ -232,7 +235,7 @@ const ms = {
             entities: 'Entiti',
             metadata: 'Metadata',
             search: 'Carian',
-            notFound: 'Kami belum memilikinya, ingin membuka isu? :)'
+            notFound: 'Kami belum memilikinya, ingin membuka isu? :)',
         },
         shapes: {
             actor: 'Pelakon',
@@ -241,8 +244,8 @@ const ms = {
             process: 'Proses',
             store: 'Simpan',
             text: 'Teks Penerangan',
-            trustBoundary: 'Sempadan Kepercayaan'
-        }
+            trustBoundary: 'Sempadan Kepercayaan',
+        },
     },
     forms: {
         apply: 'Menerapkan',
@@ -272,7 +275,7 @@ const ms = {
         saveModelAs: 'Simpan Model Sebagai',
         search: 'Carian',
         next: 'seterusnya',
-        previous: 'sebelumnya'
+        previous: 'sebelumnya',
     },
     threats: {
         model: {
@@ -280,13 +283,13 @@ const ms = {
                 header: '--- CIA ---',
                 confidentiality: 'Kerahsiaan',
                 integrity: 'Integriti',
-                availability: 'Ketersediaan'
+                availability: 'Ketersediaan',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Teragih',
                 immutable: 'Tidak Berubah',
-                ephemeral: 'Efemeral'
+                ephemeral: 'Efemeral',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -296,7 +299,7 @@ const ms = {
                 detectability: 'Ketahuan',
                 disclosureOfInformation: 'Pendedahan maklumat',
                 unawareness: 'Tanpa sedar',
-                nonCompliance: 'Tidak Mematuhi'
+                nonCompliance: 'Tidak Mematuhi',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -307,7 +310,7 @@ const ms = {
                 safety: 'Keselamatan',
                 unawareness: 'Tanpa sedar',
                 ethicsHumanRights: 'Etika & Hak Asasi Manusia',
-                nonCompliance: 'Tidak Mematuhi'
+                nonCompliance: 'Tidak Mematuhi',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -316,8 +319,8 @@ const ms = {
                 repudiation: 'Penafian',
                 informationDisclosure: 'Pendedahan maklumat',
                 denialOfService: 'Penafian Perkhidmatan',
-                elevationOfPrivilege: 'Kenaikan Hak'
-            }
+                elevationOfPrivilege: 'Kenaikan Hak',
+            },
         },
         generic: {
             default: 'Ancaman generik baru',
@@ -325,7 +328,7 @@ const ms = {
             die: 'Ancaman DIE baru',
             linddun: 'Ancaman LINDDUN baru',
             plot4ai: 'Ancaman PLOT4ai baru',
-            stride: 'Ancaman STRIDE baru'
+            stride: 'Ancaman STRIDE baru',
         },
         edit: 'Sunting Ancaman',
         confirmDeleteTitle: 'Sahkan Padam',
@@ -346,20 +349,20 @@ const ms = {
             score: 'Skor',
             status: 'Status',
             title: 'Tajuk',
-            type: 'Jenis'
+            type: 'Jenis',
         },
         status: {
             notApplicable: 'T/A',
             open: 'Buka',
-            mitigated: 'Ditangani'
+            mitigated: 'Ditangani',
         },
         priority: {
             tbd: 'TBD',
             low: 'Rendah',
             medium: 'Sederhana',
             high: 'Tinggi',
-            critical: 'kritikal'
-        }
+            critical: 'kritikal',
+        },
     },
     report: {
         options: {
@@ -368,7 +371,7 @@ const ms = {
             showModelDiagrams: 'Tunjukkan gambarajah model',
             showEmpty: 'Tunjukkan elemen kosong',
             showProperties: 'Show element properties',
-            showBranding: 'Logo Threat Dragon'
+            showBranding: 'Logo Threat Dragon',
         },
         title: 'Laporan model ancaman untuk',
         dateGenerated: 'Tarikh Dijana',
@@ -384,19 +387,19 @@ const ms = {
             openMedium: 'Buka / Keutamaan Sederhana',
             openLow: 'Buka / Keutamaan Rendah',
             openTbd: 'Buka / Keutamaan TBD',
-            openUnknown: 'Buka / Keutamaan Tidak Diketahui'
-        }
+            openUnknown: 'Buka / Keutamaan Tidak Diketahui',
+        },
     },
     upgrade: {
         modal: {
             header: 'Kemas kini Model Ancaman',
             welcome: 'Selamat datang ke versi 2 OWASP Threat Dragon!',
             p1: 'Versi 2 menggunakan pustaka lukisan yang berbeza, yang akan mengubah cara sebahagian daripada model ancaman anda disimpan. Walaupun kebanyakan gambarajah akan kelihatan sama seperti versi sebelumnya Threat Dragon, terdapat kes di mana mereka mungkin perlu diselaraskan sedikit.',
-            p2: 'Selepas menutup modal ini, anda akan melihat bagaimana setiap gambarajah dalam model ini dipaparkan dalam format versi 2. Sila buat nota gambarajah mana yang perlu anda selaraskan. Ini adalah peningkatan satu kali, dan anda tidak seharusnya melihat mesej ini lagi selepas menyimpan model ini.'
+            p2: 'Selepas menutup modal ini, anda akan melihat bagaimana setiap gambarajah dalam model ini dipaparkan dalam format versi 2. Sila buat nota gambarajah mana yang perlu anda selaraskan. Ini adalah peningkatan satu kali, dan anda tidak seharusnya melihat mesej ini lagi selepas menyimpan model ini.',
         },
         instructions: 'Hebat! Mari bawa anda ke model anda.',
-        continue: 'Teruskan ke Model Ancaman'
-    }
+        continue: 'Teruskan ke Model Ancaman',
+    },
 };
 
 export default ms;

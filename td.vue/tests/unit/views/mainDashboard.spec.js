@@ -14,24 +14,24 @@ describe('MainDashboard.vue', () => {
         localVue = createLocalVue();
         localVue.use(BootstrapVue);
         localVue.use(Vuex);
-        localVue.component('font-awesome-icon', FontAwesomeIcon);
+        localVue.component('FontAwesomeIcon', FontAwesomeIcon);
         mockStore = new Vuex.Store({
             state: {
                 provider: {
-                    selected: 'github'
-                }
-            }
+                    selected: 'github',
+                },
+            },
         });
         wrapper = shallowMount(MainDashboard, {
             localVue,
             stubs: {
                 'font-awesome-icon': { template },
-                'router-link': { template }
+                'router-link': { template },
             },
             mocks: {
-                $t: key => key
+                $t: (key) => key,
             },
-            store: mockStore
+            store: mockStore,
         });
     });
 

@@ -3,7 +3,7 @@ import loaderModule from '@/store/modules/loader.js';
 
 describe('store/modules/loader.js', () => {
     const mocks = {
-        commit: () => {}
+        commit: () => {},
     };
 
     beforeEach(() => {
@@ -13,7 +13,7 @@ describe('store/modules/loader.js', () => {
     afterEach(() => {
         loaderModule.state.loading = false;
     });
-    
+
     describe('state', () => {
         it('defines the loading property', () => {
             expect(loaderModule.state.loading).toEqual(false);
@@ -33,14 +33,13 @@ describe('store/modules/loader.js', () => {
     });
 
     describe('mutations', () => {
-
         describe('finished', () => {
             it('sets the loading property to false', () => {
                 loaderModule.mutations[LOADER_FINISHED](loaderModule.state);
                 expect(loaderModule.state.loading).toEqual(false);
             });
         });
-        
+
         describe('started', () => {
             it('sets the loading property to true', () => {
                 loaderModule.mutations[LOADER_STARTED](loaderModule.state);

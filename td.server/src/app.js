@@ -17,7 +17,7 @@ import { upDir } from './helpers/path.helper.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const siteDir = path.join(__dirname, upDir, upDir, 'dist');
+const siteDir = path.join(__dirname, upDir, upDir, 'td.vue', 'dist');
 const docsDir = path.join(__dirname, upDir, upDir, 'docs');
 
 // set up rate limiter: maximum of 6000 requests per 30 minute interval

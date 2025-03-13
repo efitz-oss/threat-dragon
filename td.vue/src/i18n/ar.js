@@ -1,57 +1,60 @@
 const ara = {
     auth: {
-        sessionExpired: 'انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى للمتابعة.'
+        sessionExpired: 'انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى للمتابعة.',
     },
     nav: {
-        v2Warning: 'نماذج التهديد الإصدار 2.0 غير متوافقة مع الإصدارات السابقة مع نماذج Threat Dragon للإصدار x.1 من ستتم ترقية نماذج الإصدار x.1 المستوردة إلى مخطط الإصدار 2.0،',
+        v2Warning:
+            'نماذج التهديد الإصدار 2.0 غير متوافقة مع الإصدارات السابقة مع نماذج Threat Dragon للإصدار x.1 من ستتم ترقية نماذج الإصدار x.1 المستوردة إلى مخطط الإصدار 2.0،',
         loggedInAs: 'تم تسجيل الدخول كـ ',
-        logOut: 'Log out'
+        logOut: 'Log out',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'شعار Threat Dragon',
-        description: 'OWASP Threat Dragon هو تطبيق مجاني ومفتوح المصدر وقابل للتشغيل على مختلف الأنظمة لإنشاء نماذج تهديد. استخدمه لرسم مخططات تهديد وتحديد التهديدات لنظامك. مع التركيز على المرونة والبساطة ، يُعد سهل الوصول لجميع أنواع المستخدمين.'
+        description:
+            'OWASP Threat Dragon هو تطبيق مجاني ومفتوح المصدر وقابل للتشغيل على مختلف الأنظمة لإنشاء نماذج تهديد. استخدمه لرسم مخططات تهديد وتحديد التهديدات لنظامك. مع التركيز على المرونة والبساطة ، يُعد سهل الوصول لجميع أنواع المستخدمين.',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'ابدأ'
+            loginWith: 'ابدأ',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'تسجيل الدخول باستخدام'
+            loginWith: 'تسجيل الدخول باستخدام',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'تسجيل الدخول باستخدام'
+            loginWith: 'تسجيل الدخول باستخدام',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'تسجيل الدخول باستخدام'
+            loginWith: 'تسجيل الدخول باستخدام',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'تسجيل الدخول باستخدام'
+            loginWith: 'تسجيل الدخول باستخدام',
         },
         local: {
             displayName: 'جلسة محلية',
-            loginWith: 'تسجيل الدخول إلى'
-        }
+            loginWith: 'تسجيل الدخول إلى',
+        },
     },
     dashboard: {
         welcome: {
             title: 'مرحبًا!',
-            description: 'أنت مستعد الآن للبدء في تعزيز أمان تصميمات تطبيقك. يمكنك فتح نموذج تهديد موجود أو إنشاء نموذج جديد عن طريق إحدى الخيارات أدناه.'
+            description:
+                'أنت مستعد الآن للبدء في تعزيز أمان تصميمات تطبيقك. يمكنك فتح نموذج تهديد موجود أو إنشاء نموذج جديد عن طريق إحدى الخيارات أدناه.',
         },
         actions: {
             openExisting: 'فتح نموذج تهديد موجود',
             createNew: 'إنشاء نموذج تهديد جديد فارغ',
             readDemo: 'استكشاف نموذج تهديد تجريبي',
-            importExisting: 'استيراد نموذج التهديد بصيغة  JSON'
-        }
+            importExisting: 'استيراد نموذج التهديد بصيغة  JSON',
+        },
     },
     demo: {
-        select: 'حدد نموذج تهديد تجريبي من القائمة أدناه'
+        select: 'حدد نموذج تهديد تجريبي من القائمة أدناه',
     },
     desktop: {
         file: {
@@ -63,7 +66,7 @@ const ara = {
             open: 'فتح نموذج',
             recentDocs: 'المستندات الأخيرة المفتوحة',
             save: 'حفظ النموذج',
-            saveAs: 'حفظ النموذج كـ '
+            saveAs: 'حفظ النموذج كـ ',
         },
         help: {
             heading: 'مساعدة',
@@ -72,13 +75,13 @@ const ara = {
             sheets: 'أوراق الغش OWASP',
             github: 'زيارتنا على GitHub',
             submit: 'تقديم مشكلة',
-            check: 'التحقق من وجود تحديثات ...'
-        }
+            check: 'التحقق من وجود تحديثات ...',
+        },
     },
     repository: {
         select: 'حدد',
         from: 'مستودع من القائمة أدناه',
-        noneFound: 'لم يتم العثور على مستودعات. للبدء ، أنشئ مستودعًا جديدًا على'
+        noneFound: 'لم يتم العثور على مستودعات. للبدء ، أنشئ مستودعًا جديدًا على',
     },
     branch: {
         select: 'حدد فرعًا من',
@@ -100,7 +103,7 @@ const ara = {
         branch: 'فرع',
         or: 'أو',
         repo: 'مستودع',
-        newThreatModel: 'إنشاء نموذج تهديد جديد'
+        newThreatModel: 'إنشاء نموذج تهديد جديد',
     },
     threatmodel: {
         contributors: 'المساهمون',
@@ -118,33 +121,33 @@ const ara = {
             generic: {
                 defaultTitle: 'مخطط جديد عام',
                 defaultDescription: 'وصف مخطط جديد عام',
-                select: 'عام'
+                select: 'عام',
             },
             stride: {
                 defaultTitle: 'مخطط STRIDE جديد',
                 defaultDescription: 'وصف مخطط STRIDE جديد',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'مخطط LINDDUN جديد',
                 defaultDescription: 'وصف مخطط LINDDUN جديد',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'مخطط PLOT4ai جديد',
                 defaultDescription: 'وصف مخطط PLOT4ai جديد',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'مخطط DIE جديد',
                 defaultDescription: 'وصف مخطط DIE جديد',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'مخطط CIA جديد',
                 defaultDescription: 'وصف مخطط CIA جديد',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'التهديدات',
         errors: {
@@ -176,7 +179,7 @@ const ara = {
             protocol: 'بروتوكول',
             publicNetwork: 'شبكة عامة',
             storesCredentials: 'تخزين بيانات الاعتماد credentials',
-            storesInventory: 'Stores Inventory'
+            storesInventory: 'Stores Inventory',
         },
         buttons: {
             delete: 'حذف المحدد',
@@ -185,46 +188,46 @@ const ara = {
             toggleGrid: 'تبديل الشبكة',
             undo: 'تراجع عن التحرير',
             zoomIn: 'تكبير',
-            zoomOut: 'تصغير'
+            zoomOut: 'تصغير',
         },
         shortcuts: {
             title: 'اختصارات لوحة المفاتيح',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'نسخ'
+                action: 'نسخ',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'لصق'
+                action: 'لصق',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'تراجع'
+                action: 'تراجع',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'إعادة'
+                action: 'إعادة',
             },
             delete: {
                 shortcut: 'del',
-                action: 'حذف'
+                action: 'حذف',
             },
             pan: {
                 shortcut: 'shift + نقرة يسار (تثبيت / سحب)',
-                action: 'تمرير'
+                action: 'تمرير',
             },
             multiSelect: {
                 shortcut: 'نقر يسار فوق مساحة فارغة وسحب',
-                action: 'تحديد متعدد'
+                action: 'تحديد متعدد',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + عجلة الماوس',
-                action: 'تكبير/تصغير'
+                action: 'تكبير/تصغير',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'الحدود',
@@ -232,7 +235,7 @@ const ara = {
             entities: 'الكيانات',
             metadata: 'البيانات الوصفية',
             search: 'البحث',
-            notFound: 'ليس لدينا ذلك حتى الآن، هل تريد فتح مشكلة؟ :)'
+            notFound: 'ليس لدينا ذلك حتى الآن، هل تريد فتح مشكلة؟ :)',
         },
         shapes: {
             actor: 'الممثل',
@@ -241,8 +244,8 @@ const ara = {
             process: 'العملية',
             store: 'التخزين',
             text: 'نص وصفي',
-            trustBoundary: 'حد الثقة'
-        }
+            trustBoundary: 'حد الثقة',
+        },
     },
     forms: {
         apply: 'تطبيق',
@@ -274,7 +277,7 @@ const ara = {
         saveModelAs: 'حفظ النموذج كـ',
         search: 'بحث',
         next: 'التالي',
-        previous: 'السابق'
+        previous: 'السابق',
     },
     threats: {
         model: {
@@ -282,13 +285,13 @@ const ara = {
                 header: '--- CIA ---',
                 confidentiality: 'Confidentiality السرية',
                 integrity: 'Integrity النزاهة',
-                availability: 'Availability التوفر'
+                availability: 'Availability التوفر',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Distributed موزع',
                 immutable: 'Immutable لا يمكن تغييره',
-                ephemeral: 'Ephemeral زائل'
+                ephemeral: 'Ephemeral زائل',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -298,7 +301,7 @@ const ara = {
                 detectability: 'Detectability الكشف',
                 disclosureOfInformation: 'Disclosure of information كشف المعلومات',
                 unawareness: 'Unawareness عدم الوعي',
-                nonCompliance: 'Non-compliance عدم الامتثال'
+                nonCompliance: 'Non-compliance عدم الامتثال',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -309,7 +312,7 @@ const ara = {
                 safety: 'Safety السلامة',
                 unawareness: 'Unawareness عدم الوعي',
                 ethicsHumanRights: 'Ethics & Human Rights الأخلاق وحقوق الإنسان',
-                nonCompliance: 'Non-compliance عدم الامتثال'
+                nonCompliance: 'Non-compliance عدم الامتثال',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -318,8 +321,8 @@ const ara = {
                 repudiation: 'Repudiation رفض',
                 informationDisclosure: 'Information disclosure كشف المعلومات',
                 denialOfService: 'Denial of service إنكار الخدمة',
-                elevationOfPrivilege: 'Elevation of privilege تسلق الامتياز'
-            }
+                elevationOfPrivilege: 'Elevation of privilege تسلق الامتياز',
+            },
         },
         generic: {
             default: 'تهديد عام جديد',
@@ -327,7 +330,7 @@ const ara = {
             die: 'تهديد DIE جديد',
             linddun: 'تهديد LINDDUN جديد',
             plot4ai: 'تهديد PLOT4ai جديد',
-            stride: 'تهديد STRIDE جديد'
+            stride: 'تهديد STRIDE جديد',
         },
         edit: 'تحرير التهديد',
         confirmDeleteTitle: 'تأكيد الحذف',
@@ -347,20 +350,20 @@ const ara = {
             score: 'النقاط',
             status: 'الحالة',
             title: 'العنوان',
-            type: 'النوع'
+            type: 'النوع',
         },
         status: {
             notApplicable: 'غير قابل للتطبيق',
             open: 'مفتوح',
-            mitigated: 'تم التخفيف'
+            mitigated: 'تم التخفيف',
         },
         priority: {
             tbd: 'سيتم الإعلان عنها',
             low: 'منخفض',
             medium: 'متوسط',
             high: 'عالي',
-            critical: 'شديد الأهمية'
-        }
+            critical: 'شديد الأهمية',
+        },
     },
     report: {
         options: {
@@ -369,7 +372,7 @@ const ara = {
             showModelDiagrams: 'إظهار الرسوم التوضيحية للنموذج',
             showEmpty: 'إظهار العناصر الفارغة',
             showProperties: 'Show element properties',
-            showBranding: 'شعار تهديد التنين'
+            showBranding: 'شعار تهديد التنين',
         },
         title: 'تقرير نموذج التهديد لـ',
         dateGenerated: 'تاريخ الإنشاء',
@@ -385,19 +388,19 @@ const ara = {
             openMedium: 'مفتوح / أولوية متوسطة',
             openLow: 'مفتوح / أولوية منخفضة',
             openTbd: 'مفتوح / الأولوية في TBD',
-            openUnknown: 'مفتوح / أولوية غير معروفة'
-        }
+            openUnknown: 'مفتوح / أولوية غير معروفة',
+        },
     },
     upgrade: {
         modal: {
             header: 'تحديث نموذج التهديد',
             welcome: 'مرحبًا بك في الإصدار 2 من OWASP Threat Dragon!',
             p1: 'الإصدار 2 يستخدم مكتبة رسم مختلفة، مما سيغير طريقة حفظ بعض أجزاء نماذج التهديد الخاصة بك. على الرغم من أن معظم الرسوم التوضيحية ستبدو كما كانت في الإصدارات السابقة من Threat Dragon، هناك حالات قد تحتاج فيها إلى ضبطها قليلاً.',
-            p2: 'بعد إغلاق هذا النموذج، سترى كيف يتم عرض كل رسم تخطيطي في هذا النموذج بتنسيق الإصدار 2. يرجى الانتباه إلى أي مخططات قد تحتاج إلى تعديلها، هذه ترقية تتم لمرة واحدة، ومن المفترض ألا ترى هذه الرسالة مرة أخرى بعد حفظ هذا النموذج.'
+            p2: 'بعد إغلاق هذا النموذج، سترى كيف يتم عرض كل رسم تخطيطي في هذا النموذج بتنسيق الإصدار 2. يرجى الانتباه إلى أي مخططات قد تحتاج إلى تعديلها، هذه ترقية تتم لمرة واحدة، ومن المفترض ألا ترى هذه الرسالة مرة أخرى بعد حفظ هذا النموذج.',
         },
         instructions: 'عظيم! دعنا نوصلك إلى النموذج الخاص بك.',
-        continue: 'المتابعة إلى نموذج التهديد'
-    }
+        continue: 'المتابعة إلى نموذج التهديد',
+    },
 };
 
 export default ara;

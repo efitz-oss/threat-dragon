@@ -28,5 +28,4 @@ describe('service/threats/models/linddun.js', () => {
     it('has a translation for non compliance', () => {
         expect(linddun.all.nonCompliance.length).toBeGreaterThan(0);
     });
-
 });

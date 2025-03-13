@@ -21,5 +21,4 @@ describe('upgrade v2 new', () => {
         cy.get('#description').should('be.visible');
         cy.get('button').contains('Close').click();
     });
-
 });

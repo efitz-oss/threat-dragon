@@ -20,7 +20,7 @@ describe('service/x6/graph/keys.js', () => {
                         canUndo: mockCanUndo,
                         canRedo: mockCanRedo,
                         undo: mockUndo,
-                        redo: mockRedo
+                        redo: mockRedo,
                     };
                 }
             },
@@ -29,7 +29,7 @@ describe('service/x6/graph/keys.js', () => {
             paste: jest.fn(),
             cleanSelection: jest.fn(),
             select: jest.fn(),
-            bindKey: jest.fn().mockImplementation((key, fn) => fn())
+            bindKey: jest.fn().mockImplementation((key, fn) => fn()),
         };
     });
 
@@ -149,7 +149,6 @@ describe('service/x6/graph/keys.js', () => {
                 graph.getSelectedCells.mockImplementation(() => cells);
                 keys.bind(graph);
             });
-
 
             it('gets the selected cells', () => {
                 expect(graph.getSelectedCells).toHaveBeenCalled();

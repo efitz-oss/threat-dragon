@@ -5,8 +5,7 @@ describe('routes/desktop.js', () => {
         let route;
 
         beforeEach(() => {
-            route = desktopRoutes
-                .find(x => x.name === 'desktopThreatModel');
+            route = desktopRoutes.find((x) => x.name === 'desktopThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -23,8 +22,7 @@ describe('routes/desktop.js', () => {
         let route;
 
         beforeEach(() => {
-            route = desktopRoutes
-                .find(x => x.name === 'desktopThreatModelEdit');
+            route = desktopRoutes.find((x) => x.name === 'desktopThreatModelEdit');
         });
 
         it('uses the expected path', () => {
@@ -41,8 +39,7 @@ describe('routes/desktop.js', () => {
         let route;
 
         beforeEach(() => {
-            route = desktopRoutes
-                .find(x => x.name === 'desktopDiagramEdit');
+            route = desktopRoutes.find((x) => x.name === 'desktopDiagramEdit');
         });
 
         it('uses the expected path', () => {
@@ -55,13 +52,11 @@ describe('routes/desktop.js', () => {
         });
     });
 
-
     describe('New threat model', () => {
         let route;
 
         beforeEach(() => {
-            route = desktopRoutes
-                .find(x => x.name === 'desktopNewThreatModel');
+            route = desktopRoutes.find((x) => x.name === 'desktopNewThreatModel');
         });
 
         it('uses the expected path', () => {
@@ -78,8 +73,7 @@ describe('routes/desktop.js', () => {
         let route;
 
         beforeEach(() => {
-            route = desktopRoutes
-                .find(x => x.name === 'desktopThreatModelImport');
+            route = desktopRoutes.find((x) => x.name === 'desktopThreatModelImport');
         });
 
         it('uses the expected path', () => {
@@ -96,8 +90,7 @@ describe('routes/desktop.js', () => {
         let route;
 
         beforeEach(() => {
-            route = desktopRoutes
-                .find(x => x.name === 'desktopReport');
+            route = desktopRoutes.find((x) => x.name === 'desktopReport');
         });
 
         it('uses the expected path', () => {
@@ -109,5 +102,4 @@ describe('routes/desktop.js', () => {
             expect(cmp.default.name).toEqual('ReportModel');
         });
     });
-
 });

@@ -38,7 +38,7 @@ describe('service/x6/shapes/trust-boundary-curve.js', () => {
         it('sets the name', () => {
             const name = 'tbcName';
             victim.setName(name);
-            expect(victim.setLabels).toHaveBeenCalledWith([ name ]);
+            expect(victim.setLabels).toHaveBeenCalledWith([name]);
         });
     });
 

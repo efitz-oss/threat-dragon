@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron');
 
 if (process.env.IS_TEST === 'true') {
     require('wdio-electron-service/preload');
@@ -21,5 +21,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onOpenModel: (callback) => ipcRenderer.on('open-model', callback),
     onOpenModelRequest: (callback) => ipcRenderer.on('open-model-request', callback),
     onPrintModelRequest: (callback) => ipcRenderer.on('print-model-request', callback),
-    onSaveModelRequest: (callback) => ipcRenderer.on('save-model-request', callback)
+    onSaveModelRequest: (callback) => ipcRenderer.on('save-model-request', callback),
 });

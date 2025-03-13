@@ -9,7 +9,7 @@ describe('service/migration/data.js', () => {
     const getCell = () => ({
         name: 'test',
         description: 'foo',
-        isTrustBoundary: false
+        isTrustBoundary: false,
     });
 
     beforeEach(() => {
@@ -50,7 +50,7 @@ describe('service/migration/data.js', () => {
         cell = getCell();
         delete cell.name;
         cell.type = 'tm.Actor';
-        cell.attrs = { text: { text: 'my store' }};
+        cell.attrs = { text: { text: 'my store' } };
         res = data.map({}, cell);
 
         expect(res.data.name).toEqual('my store');
@@ -60,7 +60,7 @@ describe('service/migration/data.js', () => {
         cell = getCell();
         delete cell.name;
         cell.type = 'tm.Actor';
-        cell.labels = [{ attrs: { text: { text: 'my store' }}}];
+        cell.labels = [{ attrs: { text: { text: 'my store' } } }];
         res = data.map({}, cell);
 
         expect(res.data.name).toEqual('my store');
@@ -89,7 +89,7 @@ describe('service/migration/data.js', () => {
         cell.type = 'tm.Process';
         cell.threats = [{ modelType: 'foo' }];
         res = data.map({}, cell);
-        
+
         expect(res.data.threats).toHaveLength(1);
     });
 
@@ -99,7 +99,7 @@ describe('service/migration/data.js', () => {
         cell.type = 'tm.Process';
         cell.threats = [{ modelType: 'foo', id: threatId }];
         res = data.map({}, cell);
-        
+
         expect(res.data.threats[0].id).toEqual(threatId);
     });
 
@@ -110,7 +110,7 @@ describe('service/migration/data.js', () => {
         cell.modelType = 'LINDDUN';
         cell.threats = [{ type: 'Foo', id: threatId }];
         res = data.map({}, cell);
-        
+
         expect(res.data.threats[0].modelType).toEqual('LINDDUN');
     });
 
@@ -120,7 +120,7 @@ describe('service/migration/data.js', () => {
         cell.type = 'tm.Process';
         cell.threats = [{ type: 'Linkability', id: threatId }];
         res = data.map({}, cell);
-        
+
         expect(res.data.threats[0].modelType).toEqual('LINDDUN');
     });
 });

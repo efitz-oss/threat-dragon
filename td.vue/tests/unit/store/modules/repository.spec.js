@@ -1,4 +1,8 @@
-import { REPOSITORY_CLEAR, REPOSITORY_FETCH, REPOSITORY_SELECTED } from '@/store/actions/repository.js';
+import {
+    REPOSITORY_CLEAR,
+    REPOSITORY_FETCH,
+    REPOSITORY_SELECTED,
+} from '@/store/actions/repository.js';
 import repoModule, { clearState } from '@/store/modules/repository.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
 
@@ -8,9 +12,9 @@ describe('store/modules/repository.js', () => {
         dispatch: () => {},
         rootState: {
             auth: {
-                jwt: 'test'
-            }
-        }
+                jwt: 'test',
+            },
+        },
     };
 
     beforeEach(() => {
@@ -51,15 +55,17 @@ describe('store/modules/repository.js', () => {
         });
 
         describe('fetch', () => {
-            const repos = [ 'foo', 'bar' ];
+            const repos = ['foo', 'bar'];
             const pagination = {
                 page: 1,
                 next: true,
-                prev: false
+                prev: false,
             };
 
             beforeEach(async () => {
-                jest.spyOn(threatmodelApi, 'reposAsync').mockResolvedValue({ data: { repos, pagination }});
+                jest.spyOn(threatmodelApi, 'reposAsync').mockResolvedValue({
+                    data: { repos, pagination },
+                });
                 await repoModule.actions[REPOSITORY_FETCH](mocks, 1);
             });
 
@@ -68,15 +74,12 @@ describe('store/modules/repository.js', () => {
             });
 
             it('commits the fetch action', () => {
-                expect(mocks.commit).toHaveBeenCalledWith(
-                    REPOSITORY_FETCH,
-                    {
-                        'repos': repos,
-                        'page': pagination.page,
-                        'pageNext': pagination.next,
-                        'pagePrev': pagination.prev
-                    }
-                );
+                expect(mocks.commit).toHaveBeenCalledWith(REPOSITORY_FETCH, {
+                    repos: repos,
+                    page: pagination.page,
+                    pageNext: pagination.next,
+                    pagePrev: pagination.prev,
+                });
             });
         });
 

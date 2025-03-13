@@ -1,9 +1,60 @@
-import BootstrapVue from 'bootstrap-vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// Mock ReadOnlyDiagram component to avoid dependency on x6 modules
+vi.mock('@/components/ReadOnlyDiagram.vue', () => ({
+    default: {
+        name: 'TdReadOnlyDiagram',
+        template: '<div class="mock-diagram"></div>',
+        props: ['diagram'],
+    },
+}));
+
+// Mock ReportEntity component
+vi.mock('@/components/report/ReportEntity.vue', () => ({
+    default: {
+        name: 'TdReportEntity',
+        template: '<div class="mock-report-entity"></div>',
+        props: [
+            'entity',
+            'outOfScope',
+            'showMitigated',
+            'showOutOfScope',
+            'showProperties',
+            'showEmpty',
+        ],
+    },
+}));
+
+// Mock PrintReportEntity component
+vi.mock('@/components/printed-report/ReportEntity.vue', () => ({
+    default: {
+        name: 'TdPrintReportEntity',
+        template: '<div class="mock-print-report-entity"></div>',
+        props: [
+            'entity',
+            'outOfScope',
+            'showMitigated',
+            'showOutOfScope',
+            'showProperties',
+            'showEmpty',
+        ],
+    },
+}));
 
 import TdDiagramDetail from '@/components/report/DiagramDetail.vue';
 import TdReadOnlyDiagram from '@/components/ReadOnlyDiagram.vue';
 import TdReportEntity from '@/components/report/ReportEntity.vue';
+
+// Stubs for Bootstrap-Vue components
+const BRowStub = {
+    template: '<div class="row"><slot></slot></div>',
+    props: ['class'],
+};
+
+const BColStub = {
+    template: '<div class="col"><slot></slot></div>',
+};
 
 describe('components/report/DiagramDetail.vue', () => {
     let propsData, wrapper;
@@ -11,26 +62,29 @@ describe('components/report/DiagramDetail.vue', () => {
     const getData = () => ({
         diagram: {
             title: 'foo',
-            cells: []
+            cells: [],
         },
         showDiagram: true,
         showMitigated: true,
         showOutOfScope: true,
-        showEmpty: true
+        showEmpty: true,
     });
 
     const setup = (data) => {
-        const localVue = createLocalVue();
-        localVue.use(BootstrapVue);
         wrapper = shallowMount(TdDiagramDetail, {
-            localVue,
-            propsData: {
+            props: {
                 diagram: data.diagram,
                 showDiagram: data.showDiagram,
                 showMitigated: data.showMitigated,
                 showOutOfScope: data.showOutOfScope,
-                showEmpty: data.showEmpty
-            }
+                showEmpty: data.showEmpty,
+            },
+            global: {
+                stubs: {
+                    'b-row': BRowStub,
+                    'b-col': BColStub,
+                },
+            },
         });
     };
 
@@ -41,13 +95,11 @@ describe('components/report/DiagramDetail.vue', () => {
         });
 
         it('displays the diagram title', () => {
-            expect(wrapper.find('.td-diagram-title').text())
-                .toEqual(propsData.diagram.title);
+            expect(wrapper.find('.td-diagram-title').text()).toEqual(propsData.diagram.title);
         });
 
         it('shows the diagram', () => {
-            expect(wrapper.findComponent(TdReadOnlyDiagram).exists())
-                .toEqual(true);
+            expect(wrapper.findComponent(TdReadOnlyDiagram).exists()).toEqual(true);
         });
     });
 
@@ -59,13 +111,11 @@ describe('components/report/DiagramDetail.vue', () => {
         });
 
         it('displays the diagram title', () => {
-            expect(wrapper.find('.diagram-page-title').exists())
-                .toEqual(false);
+            expect(wrapper.find('.diagram-page-title').exists()).toEqual(false);
         });
 
         it('shows the diagram', () => {
-            expect(wrapper.findComponent(TdReadOnlyDiagram).exists())
-                .toEqual(false);
+            expect(wrapper.findComponent(TdReadOnlyDiagram).exists()).toEqual(false);
         });
     });
 
@@ -73,10 +123,7 @@ describe('components/report/DiagramDetail.vue', () => {
         let cells;
 
         it('shows empty elements', () => {
-            cells = [
-                { data: { threats: [] } },
-                { data: { threats: [ {} ] } },
-            ];
+            cells = [{ data: { threats: [] } }, { data: { threats: [{}] } }];
             propsData = getData();
             propsData.diagram.cells = cells;
             setup(propsData);
@@ -84,10 +131,7 @@ describe('components/report/DiagramDetail.vue', () => {
         });
 
         it('hides empty elements', () => {
-            cells = [
-                { data: { threats: [] } },
-                { data: { threats: [ {} ] } },
-            ];
+            cells = [{ data: { threats: [] } }, { data: { threats: [{}] } }];
             propsData = getData();
             propsData.diagram.cells = cells;
             propsData.showEmpty = false;
@@ -97,8 +141,8 @@ describe('components/report/DiagramDetail.vue', () => {
 
         it('shows out of scope elements', () => {
             cells = [
-                { data: { outOfScope: false, threats: [ {} ] } },
-                { data: { outOfScope: true, threats: [ {} ] } },
+                { data: { outOfScope: false, threats: [{}] } },
+                { data: { outOfScope: true, threats: [{}] } },
             ];
             propsData = getData();
             propsData.diagram.cells = cells;
@@ -109,8 +153,8 @@ describe('components/report/DiagramDetail.vue', () => {
 
         it('hides out of scope elements', () => {
             cells = [
-                { data: { outOfScope: false, threats: [ {} ] } },
-                { data: { outOfScope: true, threats: [ {} ] } },
+                { data: { outOfScope: false, threats: [{}] } },
+                { data: { outOfScope: true, threats: [{}] } },
             ];
             propsData = getData();
             propsData.diagram.cells = cells;
@@ -122,9 +166,9 @@ describe('components/report/DiagramDetail.vue', () => {
 
         it('shows mitigated threats', () => {
             cells = [
-                { data: { threats: [ { status: 'Open' } ] } },
-                { data: { threats: [ { status: 'Mitigated' } ] } },
-                { data: { threats: [ { status: 'Mitigated'}, { status: 'Open' } ] } }
+                { data: { threats: [{ status: 'Open' }] } },
+                { data: { threats: [{ status: 'Mitigated' }] } },
+                { data: { threats: [{ status: 'Mitigated' }, { status: 'Open' }] } },
             ];
             propsData = getData();
             propsData.diagram.cells = cells;
@@ -135,9 +179,9 @@ describe('components/report/DiagramDetail.vue', () => {
 
         it('hides mitigated threats', () => {
             cells = [
-                { data: { threats: [ { status: 'Open' } ] } },
-                { data: { threats: [ { status: 'Mitigated' } ] } },
-                { data: { threats: [ { status: 'Mitigated'}, { status: 'Open' } ] } }
+                { data: { threats: [{ status: 'Open' }] } },
+                { data: { threats: [{ status: 'Mitigated' }] } },
+                { data: { threats: [{ status: 'Mitigated' }, { status: 'Open' }] } },
             ];
             propsData = getData();
             propsData.diagram.cells = cells;

@@ -1,12 +1,10 @@
-import { BBadge, BCard, BootstrapVue } from 'bootstrap-vue';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import Vuex from 'vuex';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
 import TdGraphThreats from '@/components/GraphThreats.vue';
 
 describe('components/GraphThreats.vue', () => {
-    let emitter, localVue, wrapper;
+    let wrapper;
 
     const getDefaultPropsData = () => ({
         status: 'Open',
@@ -17,24 +15,45 @@ describe('components/GraphThreats.vue', () => {
         mitigation: 'we will mitigate it eventually',
         modelType: 'CIA',
         number: 42,
-        id: 'asdf-asdf-asdf-asdf'
+        id: 'asdf-asdf-asdf-asdf',
     });
 
-    beforeEach(() => {
-        localVue = createLocalVue();
-        localVue.use(Vuex);
-        localVue.use(BootstrapVue);
-        localVue.component('font-awesome-icon', FontAwesomeIcon);
-    });
-
-    const getWrapper = (propsData) => shallowMount(TdGraphThreats, {
-        localVue,
-        mocks: {
-            $t: key => key,
-            $emit: emitter = jest.fn()
-        },
-        propsData
-    });
+    const getWrapper = (propsData) =>
+        shallowMount(TdGraphThreats, {
+            props: propsData,
+            global: {
+                stubs: {
+                    'b-card': {
+                        template: '<div class="card"><slot /></div>',
+                    },
+                    'b-card-text': {
+                        template: '<div><slot /></div>',
+                    },
+                    'b-row': {
+                        template: '<div class="row"><slot /></div>',
+                    },
+                    'b-col': {
+                        template: '<div class="col"><slot /></div>',
+                    },
+                    'b-badge': {
+                        template: '<span class="badge"><slot /></span>',
+                    },
+                    'font-awesome-icon': {
+                        template:
+                            '<i :class="getIconClasses()" :data-icon="icon" :data-title="title"></i>',
+                        props: ['icon', 'title', 'class'],
+                        methods: {
+                            getIconClasses() {
+                                return [this.class, 'icon-stub'];
+                            },
+                        },
+                    },
+                },
+                mocks: {
+                    $t: (key) => key,
+                },
+            },
+        });
 
     describe('props', () => {
         it('has the status prop', () => {
@@ -70,66 +89,48 @@ describe('components/GraphThreats.vue', () => {
         it('displays a red exclamation triangle for open', () => {
             const propsData = getDefaultPropsData();
             wrapper = getWrapper(propsData);
-            const icon = wrapper.findAllComponents(FontAwesomeIcon)
-                .filter(x => x.attributes('icon') === 'exclamation-triangle')
-                .filter(x => x.classes('red-icon'))
-                .at(0);
-            expect(icon.exists()).toEqual(true);
+            const icon = wrapper.find('i[data-icon="exclamation-triangle"][class*="red-icon"]');
+            expect(icon.exists()).toBe(true);
         });
 
         it('displays a green check for mitigated', () => {
             const propsData = getDefaultPropsData();
             propsData.status = 'Mitigated';
             wrapper = getWrapper(propsData);
-            const icon = wrapper.findAllComponents(FontAwesomeIcon)
-                .filter(x => x.attributes('icon') === 'check')
-                .filter(x => x.classes('green-icon'))
-                .at(0);
-            expect(icon.exists()).toEqual(true);
+            const icon = wrapper.find('i[data-icon="check"][class*="green-icon"]');
+            expect(icon.exists()).toBe(true);
         });
 
         it('displays a green check for not applicable', () => {
             const propsData = getDefaultPropsData();
             propsData.status = 'NotApplicable';
             wrapper = getWrapper(propsData);
-            const icon = wrapper.findAllComponents(FontAwesomeIcon)
-                .filter(x => x.attributes('icon') === 'check')
-                .filter(x => x.classes('green-icon'))
-                .at(0);
-            expect(icon.exists()).toEqual(true);
+            const icon = wrapper.find('i[data-icon="check"][class*="green-icon"]');
+            expect(icon.exists()).toBe(true);
         });
 
         it('displays a red circle for high severity', () => {
             const propsData = getDefaultPropsData();
             propsData.severity = 'High';
             wrapper = getWrapper(propsData);
-            const icon = wrapper.findAllComponents(FontAwesomeIcon)
-                .filter(x => x.attributes('icon') === 'circle')
-                .filter(x => x.classes('red-icon'))
-                .at(0);
-            expect(icon.exists()).toEqual(true);
+            const icon = wrapper.find('i[data-icon="circle"][class*="red-icon"]');
+            expect(icon.exists()).toBe(true);
         });
 
         it('displays a yellow circle for medium severity', () => {
             const propsData = getDefaultPropsData();
             propsData.severity = 'Medium';
             wrapper = getWrapper(propsData);
-            const icon = wrapper.findAllComponents(FontAwesomeIcon)
-                .filter(x => x.attributes('icon') === 'circle')
-                .filter(x => x.classes('yellow-icon'))
-                .at(0);
-            expect(icon.exists()).toEqual(true);
+            const icon = wrapper.find('i[data-icon="circle"][class*="yellow-icon"]');
+            expect(icon.exists()).toBe(true);
         });
 
         it('displays a green circle for low severity', () => {
             const propsData = getDefaultPropsData();
             propsData.severity = 'Low';
             wrapper = getWrapper(propsData);
-            const icon = wrapper.findAllComponents(FontAwesomeIcon)
-                .filter(x => x.attributes('icon') === 'circle')
-                .filter(x => x.classes('green-icon'))
-                .at(0);
-            expect(icon.exists()).toEqual(true);
+            const icon = wrapper.find('i[data-icon="circle"][class*="green-icon"]');
+            expect(icon.exists()).toBe(true);
         });
     });
 
@@ -145,11 +146,11 @@ describe('components/GraphThreats.vue', () => {
         });
 
         it('displays the type', () => {
-            expect(wrapper.findComponent(BCard).text()).toContain(propsData.type);
+            expect(wrapper.find('.card').text()).toContain(propsData.type);
         });
 
         it('displays the model type', () => {
-            expect(wrapper.findComponent(BBadge).text()).toEqual('CIA');
+            expect(wrapper.find('.badge').text()).toEqual('CIA');
         });
     });
 
@@ -162,7 +163,8 @@ describe('components/GraphThreats.vue', () => {
         });
 
         it('emits the threatSelected event with the threat id', () => {
-            expect(emitter).toHaveBeenCalledWith('threatSelected', propsData.id,'old');
+            expect(wrapper.emitted('threatSelected')).toBeTruthy();
+            expect(wrapper.emitted('threatSelected')[0]).toEqual([propsData.id, 'old']);
         });
     });
 });

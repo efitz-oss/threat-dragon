@@ -15,16 +15,16 @@ export const TrustBoundaryBox = Shape.Rect.define({
             strokeWidth: 3,
             strokeDasharray: '10 5',
             fill: 'transparent',
-            fillOpacity: 0
+            fillOpacity: 0,
         },
         label: {
             text: '',
-            textAnchor : 'bottom',
-            textVerticalAnchor : 'top',
+            textAnchor: 'bottom',
+            textVerticalAnchor: 'top',
             refX: '15%',
-            refY: '12'
-        }
-    }
+            refY: '12',
+        },
+    },
 });
 
 TrustBoundaryBox.prototype.type = 'tm.BoundaryBox';
@@ -37,5 +37,5 @@ TrustBoundaryBox.prototype.updateStyle = function () {};
 
 export default {
     name,
-    TrustBoundaryBox
+    TrustBoundaryBox,
 };

@@ -1,4 +1,5 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
 import TdExecutiveSummary from '@/components/printed-report/ExecutiveSummary.vue';
 
@@ -13,21 +14,21 @@ describe('components/printed-report/ExecutiveSummary.vue', () => {
             { status: 'NotApplicable', severity: 'Low' },
             { status: 'Open', severity: 'Low' },
             { status: 'Open', severity: '' },
-            { status: 'Mitigated', severity: '' }
-        ]
+            { status: 'Mitigated', severity: '' },
+        ],
     });
 
     const setup = (data) => {
-        const localVue = createLocalVue();
         wrapper = shallowMount(TdExecutiveSummary, {
-            localVue,
-            propsData: {
+            props: {
                 summary: data.summary,
-                threats: data.threats
+                threats: data.threats,
             },
-            mocks: {
-                $t: t => t
-            }
+            global: {
+                mocks: {
+                    $t: (t) => t,
+                },
+            },
         });
     };
 
@@ -37,23 +38,19 @@ describe('components/printed-report/ExecutiveSummary.vue', () => {
     });
 
     it('displays the executive summary title', () => {
-        expect(wrapper.find('.page-title').text())
-            .toEqual('report.executiveSummary');
+        expect(wrapper.find('.page-title').text()).toEqual('report.executiveSummary');
     });
 
     it('displays the description title', () => {
-        expect(wrapper.find('.td-description').text())
-            .toEqual('threatmodel.description');
+        expect(wrapper.find('.td-description').text()).toEqual('threatmodel.description');
     });
 
     it('displays the summary', () => {
-        expect(wrapper.find('.td-summary').text())
-            .toEqual(propsData.summary);
+        expect(wrapper.find('.td-summary').text()).toEqual(propsData.summary);
     });
 
     it('displays the report summary subtitle', () => {
-        expect(wrapper.find('.td-report-summary').text())
-            .toEqual('report.summary');
+        expect(wrapper.find('.td-report-summary').text()).toEqual('report.summary');
     });
 
     it('gets only the open threats', () => {
@@ -61,37 +58,30 @@ describe('components/printed-report/ExecutiveSummary.vue', () => {
     });
 
     it('counts the total threats', () => {
-        expect(wrapper.find('.td-summary-total').text())
-            .toEqual('6');
+        expect(wrapper.find('.td-summary-total').text()).toEqual('6');
     });
 
     it('counts the mitigated threats', () => {
-        expect(wrapper.find('.td-summary-mitigated').text())
-            .toEqual('1');
+        expect(wrapper.find('.td-summary-mitigated').text()).toEqual('1');
     });
 
     it('counts the unmitigated threats', () => {
-        expect(wrapper.find('.td-summary-not-mitigated').text())
-            .toEqual('5');
+        expect(wrapper.find('.td-summary-not-mitigated').text()).toEqual('5');
     });
 
     it('counts the open high severity threats', () => {
-        expect(wrapper.find('.td-summary-open-high').text())
-            .toEqual('1');
+        expect(wrapper.find('.td-summary-open-high').text()).toEqual('1');
     });
 
     it('counts the open medium severity threats', () => {
-        expect(wrapper.find('.td-summary-open-medium').text())
-            .toEqual('1');
+        expect(wrapper.find('.td-summary-open-medium').text()).toEqual('1');
     });
 
     it('counts the open low severity threats', () => {
-        expect(wrapper.find('.td-summary-open-low').text())
-            .toEqual('1');
+        expect(wrapper.find('.td-summary-open-low').text()).toEqual('1');
     });
 
     it('counts the open unknown severity threats', () => {
-        expect(wrapper.find('.td-summary-open-unknown').text())
-            .toEqual('1');
+        expect(wrapper.find('.td-summary-open-unknown').text()).toEqual('1');
     });
 });

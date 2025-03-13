@@ -11,19 +11,16 @@ describe('create a new threat model', () => {
     });
 
     it('can edit the owner', () => {
-        cy.get('#owner').should('be.visible')
-            .should('not.be', 'disabled')
-            .type('owner');
+        cy.get('#owner').should('be.visible').should('not.be', 'disabled').type('owner');
     });
 
     it('can edit the reviewer', () => {
-        cy.get('#reviewer').should('be.visible')
-            .should('not.be', 'disabled')
-            .type('reviewer');
+        cy.get('#reviewer').should('be.visible').should('not.be', 'disabled').type('reviewer');
     });
 
     it('can edit the description', () => {
-        cy.get('#description').should('be.visible')
+        cy.get('#description')
+            .should('be.visible')
             .should('not.be', 'disabled')
             .type('description');
     });

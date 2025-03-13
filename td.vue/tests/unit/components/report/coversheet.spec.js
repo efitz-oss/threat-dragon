@@ -1,5 +1,18 @@
-import { BootstrapVue } from 'bootstrap-vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// Mock the threatmodel store
+vi.mock('@/stores/threatmodel', () => ({
+    useThreatmodelStore: vi.fn(() => ({
+        title: 'Mock Title',
+        summary: {
+            title: 'Mock Title',
+            owner: 'Mock Owner',
+            reviewer: 'Mock Reviewer',
+            contributors: ['Contributor1', 'Contributor2'],
+        },
+    })),
+}));
 
 import TdCoverSheet from '@/components/report/Coversheet.vue';
 import TdThreatModelSummaryCard from '@/components/ThreatModelSummaryCard.vue';
@@ -12,24 +25,37 @@ describe('components/report/Coversheet.vue', () => {
         owner: 'Bob',
         reviewer: 'Marley',
         contributors: ['Alice', 'Babs'],
-        branding: true
+        branding: true,
     });
 
+    // Create stubs for Bootstrap-Vue components
+    const BRowStub = {
+        template: '<div class="row"><slot></slot></div>',
+        props: ['class'],
+    };
+
+    const BColStub = {
+        template: '<div class="col"><slot></slot></div>',
+    };
+
     const setup = (data) => {
-        const localVue = createLocalVue();
-        localVue.use(BootstrapVue);
         wrapper = shallowMount(TdCoverSheet, {
-            localVue,
-            propsData: {
+            props: {
                 title: data.title,
                 owner: data.owner,
                 reviewer: data.reviewer,
                 contributors: data.contributors,
-                branding: data.branding
+                branding: data.branding,
             },
-            mocks: {
-                $t: key => key
-            }
+            global: {
+                stubs: {
+                    'b-row': BRowStub,
+                    'b-col': BColStub,
+                },
+                mocks: {
+                    $t: (key) => key,
+                },
+            },
         });
     };
 
@@ -44,8 +70,7 @@ describe('components/report/Coversheet.vue', () => {
         });
 
         it('displays the summary card', () => {
-            expect(wrapper.findComponent(TdThreatModelSummaryCard).exists())
-                .toEqual(true);
+            expect(wrapper.findComponent(TdThreatModelSummaryCard).exists()).toEqual(true);
         });
     });
 
@@ -53,19 +78,15 @@ describe('components/report/Coversheet.vue', () => {
         beforeEach(() => {
             summary = getSummary();
             summary.branding = false;
-            setup(summary);            
+            setup(summary);
         });
 
         it('hides the brand text', () => {
-            expect(wrapper.find('.td-brand-text').exists())
-                .toEqual(false);
+            expect(wrapper.find('.td-brand-text').exists()).toEqual(false);
         });
 
         it('displays the summary card', () => {
-            expect(wrapper.findComponent(TdThreatModelSummaryCard).exists())
-                .toEqual(true);
+            expect(wrapper.findComponent(TdThreatModelSummaryCard).exists()).toEqual(true);
         });
     });
-
-    
 });

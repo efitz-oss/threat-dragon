@@ -1,9 +1,14 @@
-var appFactory = require('./src/app.js');
+import { create } from './src/app.js';
 
-var app = appFactory.default.create();
+const app = create();
 
-var server = app.listen(app.get('port'), function() {
-    console.log('Development server listening at ' + server.address().address + ' on port ' +  server.address().port);
+const server = app.listen(app.get('port'), function() {
+    const address = server.address();
+    if (address) {
+        console.log('Development server listening at ' + address.address + ' on port ' + address.port);
+    } else {
+        console.log('Development server listening on port ' + app.get('port'));
+    }
 });
 
 process.once('SIGUSR2', 

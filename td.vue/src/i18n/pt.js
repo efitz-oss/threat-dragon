@@ -1,57 +1,60 @@
 const por = {
     auth: {
-        sessionExpired: 'Your session has expired. Please log in again to continue.'
+        sessionExpired: 'Your session has expired. Please log in again to continue.',
     },
     nav: {
-        v2Warning: 'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
+        v2Warning:
+            'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Logado como',
-        logOut: 'Log out'
+        logOut: 'Log out',
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo do Threat Dragon',
-        description: 'Threat Dragon é uma ferramenta gratuita e open-souce de modelagem de ameaças da OWASP e que pode ser utilizada via desktop para Windows, MacOS e Linux ou como uma aplicação web. A aplicação de desktop é excelente se você quiser experimentá-la sem conceder acesso aos seus repositórios do GitHub. No entanto, se você escolher a versão web, poderá liberar o incrível poder do GitHub em seus modelos de ameaça (threat model)! Obviamente, para fazer isso, será necessário realizar o login no GitHub e permitir o acesso ao repositório de interesse!'
+        description:
+            'Threat Dragon é uma ferramenta gratuita e open-souce de modelagem de ameaças da OWASP e que pode ser utilizada via desktop para Windows, MacOS e Linux ou como uma aplicação web. A aplicação de desktop é excelente se você quiser experimentá-la sem conceder acesso aos seus repositórios do GitHub. No entanto, se você escolher a versão web, poderá liberar o incrível poder do GitHub em seus modelos de ameaça (threat model)! Obviamente, para fazer isso, será necessário realizar o login no GitHub e permitir o acesso ao repositório de interesse!',
     },
     providers: {
         desktop: {
             displayName: 'Threat Dragon',
-            loginWith: 'Start'
+            loginWith: 'Start',
         },
         github: {
             displayName: 'GitHub',
-            loginWith: 'Login com'
+            loginWith: 'Login com',
         },
         gitlab: {
             displayName: 'GitLab',
-            loginWith: 'Login com'
+            loginWith: 'Login com',
         },
         bitbucket: {
             displayName: 'Bitbucket',
-            loginWith: 'Login com'
+            loginWith: 'Login com',
         },
         google: {
             displayName: 'Google',
-            loginWith: 'Login com'
+            loginWith: 'Login com',
         },
         local: {
             displayName: 'Sessão Local',
-            loginWith: 'Login com'
-        }
+            loginWith: 'Login com',
+        },
     },
     dashboard: {
         welcome: {
             title: 'Desejamos boas-vindas! Ficamos felizes em te ter por aqui!',
-            description: 'Com OWASP Threat Dragon, você terá os mecanismos para tornar os designs de seus aplicativos mais seguros! Você pode abrir um modelo de ameaça (threat model) existente ou criar um modelo do zero! Basta escolher uma das opções abaixo!'
+            description:
+                'Com OWASP Threat Dragon, você terá os mecanismos para tornar os designs de seus aplicativos mais seguros! Você pode abrir um modelo de ameaça (threat model) existente ou criar um modelo do zero! Basta escolher uma das opções abaixo!',
         },
         actions: {
             openExisting: 'Abrir um modelo de ameaça (threat model) existente',
             createNew: 'Criar um novo modelo de ameaça (threat model) do zero',
             readDemo: 'Baixar e explorar um exemplo de modelo de ameaça (threat model)',
-            importExisting: 'Import a threat model via JSON'
-        }
+            importExisting: 'Import a threat model via JSON',
+        },
     },
     demo: {
-        select: 'Select a demo threat model from the list below'
+        select: 'Select a demo threat model from the list below',
     },
     desktop: {
         file: {
@@ -63,7 +66,7 @@ const por = {
             open: 'Open Model',
             recentDocs: 'Open Recent',
             save: 'Save Model',
-            saveAs: 'Save Model As'
+            saveAs: 'Save Model As',
         },
         help: {
             heading: 'Help',
@@ -72,13 +75,13 @@ const por = {
             sheets: 'OWASP Cheat Sheets',
             github: 'Visit us on GitHub',
             submit: 'Submit an Issue',
-            check: 'Check for updates ...'
-        }
+            check: 'Check for updates ...',
+        },
     },
     repository: {
         select: 'Selecionar',
         from: 'repositório da lista abaixo',
-        noneFound: 'No repositories found. To get started, create a new repository on'
+        noneFound: 'No repositories found. To get started, create a new repository on',
     },
     branch: {
         select: 'Selecionar uma branch',
@@ -100,7 +103,7 @@ const por = {
         branch: 'branch',
         or: 'ou',
         repo: 'repositório',
-        newThreatModel: 'Create a New Threat Model'
+        newThreatModel: 'Create a New Threat Model',
     },
     threatmodel: {
         contributors: 'Contribuidores',
@@ -118,33 +121,33 @@ const por = {
             generic: {
                 defaultTitle: 'New generic diagram',
                 defaultDescription: 'New generic diagram description',
-                select: 'Generic'
+                select: 'Generic',
             },
             stride: {
                 defaultTitle: 'New STRIDE diagram',
                 defaultDescription: 'New STRIDE diagram description',
-                select: 'STRIDE'
+                select: 'STRIDE',
             },
             linddun: {
                 defaultTitle: 'New LINDDUN diagram',
                 defaultDescription: 'New LINDDUN diagram description',
-                select: 'LINDDUN'
+                select: 'LINDDUN',
             },
             plot4ai: {
                 defaultTitle: 'New PLOT4ai diagram',
                 defaultDescription: 'New PLOT4ai diagram description',
-                select: 'PLOT4ai'
+                select: 'PLOT4ai',
             },
             die: {
                 defaultTitle: 'New DIE diagram',
                 defaultDescription: 'New DIE diagram description',
-                select: 'DIE'
+                select: 'DIE',
             },
             cia: {
                 defaultTitle: 'New CIA diagram',
                 defaultDescription: 'New CIA diagram description',
-                select: 'CIA'
-            }
+                select: 'CIA',
+            },
         },
         threats: 'Threats',
         errors: {
@@ -152,7 +155,7 @@ const por = {
             invalidJson: 'Invalid JSON. Please check your model and try again.',
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
-            save: 'Error saving the Threat Model. Check the developer console for more information'
+            save: 'Error saving the Threat Model. Check the developer console for more information',
         },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',
@@ -176,7 +179,7 @@ const por = {
             protocol: 'Protocolo',
             publicNetwork: 'Rede Pública',
             storesCredentials: 'Armazenamento de Credenciais',
-            storesInventory: 'Stores Inventory'
+            storesInventory: 'Stores Inventory',
         },
         buttons: {
             delete: 'Delete selected',
@@ -185,46 +188,46 @@ const por = {
             toggleGrid: 'Toggle grid',
             undo: 'Undo edit',
             zoomIn: 'Zoom in',
-            zoomOut: 'Zoom out'
+            zoomOut: 'Zoom out',
         },
         shortcuts: {
             title: 'Atalhos',
             copy: {
                 shortcut: '(ctrl/cmd) + c',
-                action: 'Copiar'
+                action: 'Copiar',
             },
             paste: {
                 shortcut: '(ctrl/cmd) + v',
-                action: 'Colar'
+                action: 'Colar',
             },
             undo: {
                 shortcut: '(ctrl/cmd) + z',
-                action: 'Desfazer'
+                action: 'Desfazer',
             },
             redo: {
                 shortcut: '(ctrl/cmd) + y',
-                action: 'Refazer'
+                action: 'Refazer',
             },
             delete: {
                 shortcut: 'del',
-                action: 'Deletar'
+                action: 'Deletar',
             },
             pan: {
                 shortcut: 'shift + botão esquerdo do mouse (segurar e arrastar)',
-                action: 'Movimentar-se por toda a imagem do diagrama'
+                action: 'Movimentar-se por toda a imagem do diagrama',
             },
             multiSelect: {
                 shortcut: 'clique no botão esquerdo mouse no espaço vazio e arrastar',
-                action: 'Seleção múltipla'
+                action: 'Seleção múltipla',
             },
             zoom: {
                 shortcut: '(ctrl/cmd) + rolagem do mouse',
-                action: 'Zoom'
+                action: 'Zoom',
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
-            }
+                action: 'Save',
+            },
         },
         stencil: {
             boundaries: 'Limites',
@@ -232,7 +235,7 @@ const por = {
             entities: 'Entidades',
             metadata: 'Metadados',
             search: 'Pesquisar',
-            notFound: 'Ainda não temos isso! :( Mas, gostaria de abrir uma issue? :)'
+            notFound: 'Ainda não temos isso! :( Mas, gostaria de abrir uma issue? :)',
         },
         shapes: {
             actor: 'Ator',
@@ -241,8 +244,8 @@ const por = {
             process: 'Processo',
             store: 'Armazenamento',
             text: 'Texto facultativo',
-            trustBoundary: 'Limite de Confiança'
-        }
+            trustBoundary: 'Limite de Confiança',
+        },
     },
     forms: {
         apply: 'Apply',
@@ -272,7 +275,7 @@ const por = {
         saveModelAs: 'Save Model As',
         search: 'Search',
         next: 'próximo',
-        previous: 'anterior'
+        previous: 'anterior',
     },
     threats: {
         model: {
@@ -280,13 +283,13 @@ const por = {
                 header: '--- CIA ---',
                 confidentiality: 'Confidentiality',
                 integrity: 'Integrity',
-                availability: 'Availability'
+                availability: 'Availability',
             },
             die: {
                 header: '--- DIE ---',
                 distributed: 'Distributed',
                 immutable: 'Immutable',
-                ephemeral: 'Ephemeral'
+                ephemeral: 'Ephemeral',
             },
             linddun: {
                 header: '--- LINDDUN ---',
@@ -296,7 +299,7 @@ const por = {
                 detectability: 'Detectability',
                 disclosureOfInformation: 'Disclosure of information',
                 unawareness: 'Unawareness',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             plot4ai: {
                 header: '--- PLOT4ai ---',
@@ -307,7 +310,7 @@ const por = {
                 safety: 'Safety',
                 unawareness: 'Unawareness',
                 ethicsHumanRights: 'Ethics & Human Rights',
-                nonCompliance: 'Non-compliance'
+                nonCompliance: 'Non-compliance',
             },
             stride: {
                 header: '--- STRIDE ---',
@@ -316,16 +319,16 @@ const por = {
                 repudiation: 'Repudiation',
                 informationDisclosure: 'Information disclosure',
                 denialOfService: 'Denial of service',
-                elevationOfPrivilege: 'Elevation of privilege'
-            }
+                elevationOfPrivilege: 'Elevation of privilege',
+            },
         },
         generic: {
             dafault: 'Nova ameaça genérica',
-            cia : 'Nova ameaça da CIA',
-            die : 'Nova ameaça da DIE',
-            linddun : 'Nova ameaça LINDDUN',
-            plot4ai : 'Nova ameaça PLOT4ai',
-            stride: 'Nova ameaça STRIDE'
+            cia: 'Nova ameaça da CIA',
+            die: 'Nova ameaça da DIE',
+            linddun: 'Nova ameaça LINDDUN',
+            plot4ai: 'Nova ameaça PLOT4ai',
+            stride: 'Nova ameaça STRIDE',
         },
         edit: 'Edit Threat',
         confirmDeleteTitle: 'Confirm Delete',
@@ -345,20 +348,20 @@ const por = {
             score: 'Score',
             status: 'Status',
             title: 'Title',
-            type: 'Type'
+            type: 'Type',
         },
         status: {
             notApplicable: 'N/A',
             open: 'Open',
-            mitigated: 'Mitigated'
+            mitigated: 'Mitigated',
         },
         priority: {
             tbd: 'TBD',
             low: 'Low',
             medium: 'Medium',
             high: 'High',
-            critical: 'Critical'
-        }
+            critical: 'Critical',
+        },
     },
     report: {
         options: {
@@ -367,35 +370,35 @@ const por = {
             showModelDiagrams: 'Show model diagrams',
             showEmpty: 'Show empty elements',
             showProperties: 'Show element properties',
-            showBranding: 'Threat Dragon logo'
+            showBranding: 'Threat Dragon logo',
         },
         title: 'Relatório do modelo de ameaças para',
-        dateGenerated : 'Data Gerada',
-        executiveSummary : 'Resumo Executivo',
-        notProvided : 'Não fornecido',
+        dateGenerated: 'Data Gerada',
+        executiveSummary: 'Resumo Executivo',
+        notProvided: 'Não fornecido',
         summary: 'Resumo',
-        threatStats : {
+        threatStats: {
             total: 'Ameaças totais',
             mitigated: 'Total Mitigado',
-            notMitigated : 'Não atenuado',
-            openCritical : 'Abrir / Crítica Prioridade',
-            openHigh : 'Abrir / Alta Prioridade',
-            openMedium : 'Abrir / Prioridade Média',
-            openLow : 'Abrir / Baixa Prioridade',
-            openTbd : 'Abrir / TBD Prioridade',
-            openUnknown : 'Prioridade Aberta / Desconhecida'
-        }
+            notMitigated: 'Não atenuado',
+            openCritical: 'Abrir / Crítica Prioridade',
+            openHigh: 'Abrir / Alta Prioridade',
+            openMedium: 'Abrir / Prioridade Média',
+            openLow: 'Abrir / Baixa Prioridade',
+            openTbd: 'Abrir / TBD Prioridade',
+            openUnknown: 'Prioridade Aberta / Desconhecida',
+        },
     },
     upgrade: {
         modal: {
             header: 'Threatmodel Update',
             welcome: 'Welcome to version 2 of OWASP Threat Dragon!',
             p1: 'Version 2 uses a different drawing library, which will change the way parts of your threat models are saved. While most diagrams will look the same as they did in previous versions of Threat Dragon, there are cases where they may need to be adjusted slightly.',
-            p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.'
+            p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.',
         },
-        instructions: 'Great! Let\'s get you to your model.',
-        continue: 'Continue to Threat Model'
-    }
+        instructions: "Great! Let's get you to your model.",
+        continue: 'Continue to Threat Model',
+    },
 };
 
 export default por;

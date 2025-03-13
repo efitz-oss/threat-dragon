@@ -1,10 +1,10 @@
-import loggerHelper from '../helpers/logger.helper.js';
+import { getLogger } from '../helpers/logger.helper.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { upDir } from '../helpers/path.helper.js';
 
-const logger = loggerHelper.get('controllers/homecontroller.js');
+const logger = getLogger('controllers/homecontroller.js');
 
 /**
  * Setup dirname equivalent for ESM
@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
  * The path to the index.html file
  * @type {String}
  */
-const indexHtmlPath = path.join(__dirname, upDir, upDir, upDir, 'dist', 'index.html');
+const indexHtmlPath = path.join(__dirname, upDir, upDir, upDir, 'td.vue', 'dist', 'index.html');
 
 /**
  * Serves the index.html page for the SPA

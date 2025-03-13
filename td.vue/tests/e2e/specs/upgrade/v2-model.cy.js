@@ -27,5 +27,4 @@ describe('upgrade v2 demo', () => {
         cy.get('.td-diagram-thumb').click();
         cy.url().should('contain', '/edit/Main%20Request%20Data%20Flow');
     });
-
 });

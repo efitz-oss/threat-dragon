@@ -1,353 +1,400 @@
 <template>
-    <b-row>
-        <b-col v-if="model && model.summary">
-            <b-card
-                :header="`${$t('threatmodel.editing')}: ${model.summary.title}`"
-                id="parent-card"
-            >
-                <b-form @submit="onSubmit">
+    <div class="grid">
+        <div class="col-12" v-if="model && model.summary">
+            <Card id="parent-card">
+                <template #header>
+                    <div class="card-header">{{ $t('threatmodel.editing') }}: {{ model.summary.title }}</div>
+                </template>
+                <template #content>
+                    <form @submit="onSubmit" class="p-fluid">
+                        <div class="grid">
+                            <div class="col-12">
+                                <div class="field">
+                                    <label for="title">{{ $t('threatmodel.title') }}</label>
+                                    <InputText
+                                        id="title"
+                                        v-model="model.summary.title"
+                                        type="text"
+                                        required
+                                        @update:modelValue="onModifyModel()"
+                                    />
+                                </div>
+                            </div>
 
-                    <b-form-row>
-                        <b-col>
-                            <b-form-group
-                                id="title-group"
-                                :label="$t('threatmodel.title')"
-                                label-for="title">
-                                <b-form-input
-                                    id="title"
-                                    v-model="model.summary.title"
-                                    @input="onModifyModel()"
-                                    type="text"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                    </b-form-row>
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <label for="owner">{{ $t('threatmodel.owner') }}</label>
+                                    <InputText
+                                        id="owner"
+                                        v-model="model.summary.owner"
+                                        type="text"
+                                        @update:modelValue="onModifyModel()"
+                                    />
+                                </div>
+                            </div>
 
-                    <b-form-row>
-                        <b-col md=6>
-                            <b-form-group
-                                id="owner-group"
-                                :label="$t('threatmodel.owner')"
-                                label-for="owner">
-                                <b-form-input
-                                    id="owner"
-                                    v-model="model.summary.owner"
-                                    @input="onModifyModel()"
-                                    type="text"
-                                ></b-form-input>
-                            </b-form-group>
-                        </b-col>
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <label for="reviewer">{{ $t('threatmodel.reviewer') }}</label>
+                                    <InputText
+                                        id="reviewer"
+                                        v-model="model.detail.reviewer"
+                                        type="text"
+                                        @update:modelValue="onModifyModel()"
+                                    />
+                                </div>
+                            </div>
 
-                        <b-col md=6>
-                            <b-form-group
-                                id="reviewer-group"
-                                :label="$t('threatmodel.reviewer')"
-                                label-for="reviewer">
-                                <b-form-input
-                                    id="reviewer"
-                                    v-model="model.detail.reviewer"
-                                    @input="onModifyModel()"
-                                    type="text"
-                                ></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                    </b-form-row>
+                            <div class="col-12">
+                                <div class="field">
+                                    <label for="description">{{ $t('threatmodel.description') }}</label>
+                                    <Textarea
+                                        id="description"
+                                        v-model="model.summary.description"
+                                        rows="4"
+                                        @update:modelValue="onModifyModel()"
+                                    />
+                                </div>
+                            </div>
 
-                    <b-form-row>
-                        <b-col>
-                            <b-form-group
-                                id="description-group"
-                                :label="$t('threatmodel.description')"
-                                label-for="description">
-                                <b-form-textarea
-                                    id="description"
-                                    v-model="model.summary.description"
-                                    @input="onModifyModel()"
-                                    type="text"
-                                ></b-form-textarea>
-                            </b-form-group>
-                        </b-col>
-                    </b-form-row>
+                            <div class="col-12">
+                                <div class="field">
+                                    <label for="contributors">{{ $t('threatmodel.contributors') }}</label>
+                                    <Chips
+                                        id="contributors"
+                                        v-model="contributors"
+                                        :placeholder="$t('threatmodel.contributorsPlaceholder')"
+                                        separator=",;"
+                                        @update:modelValue="onModifyModel()"
+                                    />
+                                </div>
+                            </div>
 
-                    <b-form-row>
-                        <b-col>
-                            <b-form-group
-                                id="contributors-group"
-                                :label="$t('threatmodel.contributors')"
-                                label-for="contributors">
-                                <b-form-tags
-                                    id="contributors"
-                                    :placeholder="$t('threatmodel.contributorsPlaceholder')"
-                                    v-model="contributors"
-                                    @input="onModifyModel()"
-                                    variant="primary"
-                                    separator=",;"
-                                    tag-class="mx-2"
-                                ></b-form-tags>
-                            </b-form-group>
-                        </b-col>
-                    </b-form-row>
+                            <div class="col-12">
+                                <h5>{{ $t('threatmodel.diagram.diagrams') }}</h5>
+                            </div>
 
-                    <b-form-row>
-                        <b-col>
-                            <h5>{{ $t('threatmodel.diagram.diagrams') }}</h5>
-                        </b-col>
-                    </b-form-row>
-
-                    <b-form-row>
-                        <b-col md=8
-                            v-for="(diagram, idx) in model.detail.diagrams"
-                            :key="idx"
-                        >
-                            <b-input-group
-                                :id="`diagram-group-${idx}`"
-                                :label-for="`diagram-${idx}`"
-                                class="mb-3"
+                            <div 
+                                v-for="(diagram, idx) in model.detail.diagrams" 
+                                :key="idx" 
+                                class="col-12 md:col-8 mb-3"
                             >
-                                <b-input-group-prepend>
-                                    <b-dropdown variant="secondary" class="select-diagram-type" :text="model.detail.diagrams[idx].diagramType">
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'CIA')">{{ $t('threatmodel.diagram.cia.select') }}</b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'DIE')">{{ $t('threatmodel.diagram.die.select') }}</b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'LINDDUN')">{{ $t('threatmodel.diagram.linddun.select') }}</b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'PLOT4ai')">{{ $t('threatmodel.diagram.plot4ai.select') }}</b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'STRIDE')">{{ $t('threatmodel.diagram.stride.select') }}</b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'Generic')">{{ $t('threatmodel.diagram.generic.select') }}</b-dropdown-item-button>
-                                    </b-dropdown>
-                                </b-input-group-prepend>
-                                <b-form-input
-                                    v-model="model.detail.diagrams[idx].title"
-                                    type="text"
-                                    class="td-diagram"
-                                ></b-form-input>
-                                <b-form-input
-                                    v-model="model.detail.diagrams[idx].description"
-                                    :placeholder="model.detail.diagrams[idx].placeholder"
-                                    type="text"
-                                    class="td-diagram-description"
-                                ></b-form-input>
-                                <b-input-group-append>
-                                    <b-button variant="secondary" class="td-remove-diagram" @click="onRemoveDiagramClick(idx)">
-                                        <font-awesome-icon icon="times"></font-awesome-icon>
+                                <div :id="`diagram-group-${idx}`" class="p-inputgroup">
+                                    <Button
+                                        class="select-diagram-type"
+                                        severity="secondary"
+                                        :label="model.detail.diagrams[idx].diagramType"
+                                        @click="menu.toggle($event)"
+                                    />
+                                    <Menu :id="`diagram-type-menu-${idx}`" :model="getDiagramMenuItems(idx)" :popup="true" />
+                                    
+                                    <InputText
+                                        v-model="model.detail.diagrams[idx].title"
+                                        type="text"
+                                        class="td-diagram"
+                                    />
+                                    <InputText
+                                        v-model="model.detail.diagrams[idx].description"
+                                        :placeholder="model.detail.diagrams[idx].placeholder"
+                                        type="text"
+                                        class="td-diagram-description"
+                                    />
+                                    <Button
+                                        severity="secondary"
+                                        class="td-remove-diagram"
+                                        @click="onRemoveDiagramClick(idx)"
+                                    >
+                                        <font-awesome-icon icon="times" class="mr-1" />
                                         {{ $t('forms.remove') }}
-                                    </b-button>
-                                </b-input-group-append>
-                            </b-input-group>
-                        </b-col>
-                    </b-form-row>
+                                    </Button>
+                                </div>
+                            </div>
 
-                    <b-form-row>
-                        <b-col md=6>
-                            <a href="javascript:void(0)" @click="onAddDiagramClick" class="add-diagram-link m-2">
-                                <font-awesome-icon icon="plus"></font-awesome-icon>
-                                {{ $t('threatmodel.diagram.addNewDiagram') }}
-                            </a>
-                        </b-col>
-                    </b-form-row>
+                            <div class="col-12 md:col-6">
+                                <a
+                                    href="javascript:void(0)"
+                                    class="add-diagram-link m-2"
+                                    @click="onAddDiagramClick"
+                                >
+                                    <font-awesome-icon icon="plus" class="mr-1" />
+                                    {{ $t('threatmodel.diagram.addNewDiagram') }}
+                                </a>
+                            </div>
 
-                    <b-form-row>
-                        <b-col class="text-right mt-5">
-                            <b-btn-group>
-                                <td-form-button
-                                    id="td-save-btn"
-                                    :isPrimary="true"
-                                    :onBtnClick="onSaveClick"
-                                    icon="save"
-                                    :text="$t('forms.save')" />
-                                <td-form-button
-                                    id="td-reload-btn"
-                                    :onBtnClick="onReloadClick"
-                                    icon="undo"
-                                    :text="$t('forms.reload')" />
-                                <td-form-button
-                                    id="td-close-btn"
-                                    :onBtnClick="onCloseClick"
-                                    icon="times"
-                                    :text="$t('forms.close')" />
-                            </b-btn-group>
-                        </b-col>
-                    </b-form-row>
-
-                </b-form>
-            </b-card>
-        </b-col>
-    </b-row>
+                            <div class="col-12 text-right mt-5">
+                                <span class="p-buttonset">
+                                    <td-form-button
+                                        id="td-save-btn"
+                                        :is-primary="true"
+                                        :on-btn-click="onSaveClick"
+                                        icon="save"
+                                        :text="$t('forms.save')"
+                                    />
+                                    <td-form-button
+                                        id="td-reload-btn"
+                                        :on-btn-click="onReloadClick"
+                                        icon="undo"
+                                        :text="$t('forms.reload')"
+                                    />
+                                    <td-form-button
+                                        id="td-close-btn"
+                                        :on-btn-click="onCloseClick"
+                                        icon="times"
+                                        :text="$t('forms.close')"
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </template>
+            </Card>
+        </div>
+    </div>
 </template>
 
-<style lang="scss" scoped>
-.add-diagram-link {
-    color: $orange;
-    font-size: 14px;
-}
-
-.remove-diagram-btn {
-    font-size: 12px;
-}
-
-.select-diagram-type {
-    font-size: 12px;
-}
-</style>
-
-<script>
-import { mapState } from 'vuex';
-
+<script setup>
+import { computed, ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProviderStore } from '@/stores/provider';
+import { useThreatmodelStore } from '@/stores/threatmodel';
+import { useAppStore } from '@/stores/app';
 import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
-import tmActions from '@/store/actions/threatmodel.js';
 
-export default {
-    name: 'ThreatModelEdit',
-    components: {
-        TdFormButton
+// PrimeVue components
+import Card from 'primevue/card';
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Chips from 'primevue/chips';
+import Button from 'primevue/button';
+import Menu from 'primevue/menu';
+import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
+
+// Composables
+const route = useRoute();
+const router = useRouter();
+const providerStore = useProviderStore();
+const threatmodelStore = useThreatmodelStore();
+const appStore = useAppStore();
+const confirm = useConfirm();
+const toast = useToast();
+const menu = ref();
+
+// Computed
+const fileHandle = computed(() => threatmodelStore.fileHandle);
+const fileName = computed(() => threatmodelStore.fileName);
+const model = computed(() => threatmodelStore.data);
+const providerType = computed(() => getProviderType(providerStore.selected));
+const diagramTop = computed(() => threatmodelStore.data.detail.diagramTop);
+const version = computed(() => appStore.packageBuildVersion);
+const modelChanged = computed(() => threatmodelStore.modelChanged);
+
+// Contributors is a special case with getter/setter
+const contributorsValue = ref(threatmodelStore.contributors);
+const contributors = computed({
+    get() {
+        return threatmodelStore.contributors;
     },
-    computed: {
-        ...mapState({
-            fileHandle: (state) => state.threatmodel.fileHandle,
-            fileName: (state) => state.threatmodel.fileName,
-            model: (state) => state.threatmodel.data,
-            providerType: (state) => getProviderType(state.provider.selected),
-            diagramTop: (state) => state.threatmodel.data.detail.diagramTop,
-            version: (state) => state.packageBuildVersion
-        }),
-        contributors: {
-            get() {
-                return this.$store.getters.contributors;
-            },
-            set(contributors) {
-                this.$store.dispatch(tmActions.contributorsUpdated, contributors);
-            }
-        }
+    set(value) {
+        threatmodelStore.updateContributors(value);
+        contributorsValue.value = value;
     },
-    async mounted() {
-        this.init();
-    },
-    methods: {
-        init() {
-            this.$store.dispatch(tmActions.notModified);
-        },
-        onSubmit() {
-            // noop
-        },
-        async onSaveClick(evt) {
-            evt.preventDefault();
-            if (this.$route.name === 'gitThreatModelCreate' || this.$route.name === 'googleThreatModelCreate') {
-                await this.$store.dispatch(tmActions.create);
-            } else {
-                await this.$store.dispatch(tmActions.saveModel);
-            }
-            // stop the save button from leaving the threat model edit view
-            // this.$router.push({ name: `${this.providerType}ThreatModel`, params: this.$route.params });
-        },
-        async onReloadClick(evt) {
-            evt.preventDefault();
-            await this.restoreAsync();
-        },
-        async onCloseClick(evt) {
-            evt.preventDefault();
-            if (await this.restoreAsync()) {
-                this.$router.push({ name: `${this.providerType}ThreatModel`, params: this.$route.params });
-            }
-        },
-        onAddDiagramClick(evt) {
-            evt.preventDefault();
-            let newDiagram = {
-                id: this.diagramTop,
-                title: this.$t('threatmodel.diagram.stride.defaultTitle'),
-                diagramType: 'STRIDE',
-                placeholder: this.$t('threatmodel.diagram.stride.defaultDescription'),
-                thumbnail: './public/content/images/thumbnail.stride.jpg',
-                version: this.version,
-                cells: []
-            };
-            this.$store.dispatch(tmActions.update, { diagramTop: this.diagramTop + 1 });
-            this.model.detail.diagrams.push(newDiagram);
-            this.$store.dispatch(tmActions.modified);
-        },
-        onDiagramTypeClick(idx, type) {
-            let defaultTitle;
-            let placeholder;
-            let thumbnail;
-            switch (type) {
+});
 
-	            case 'CIA':
-	                thumbnail = './public/content/images/thumbnail.cia.jpg';
-	                defaultTitle = this.$t('threatmodel.diagram.cia.defaultTitle');
-	                placeholder = this.$t('threatmodel.diagram.cia.defaultDescription');
-	                break;
+// Methods
+const init = () => {
+    threatmodelStore.setNotModified();
+};
 
-	            case 'DIE':
-	                thumbnail = './public/content/images/thumbnail.die.jpg';
-	                defaultTitle = this.$t('threatmodel.diagram.die.defaultTitle');
-	                placeholder = this.$t('threatmodel.diagram.die.defaultDescription');
-	                break;
+const onSubmit = () => {
+    // noop
+};
 
-	            case 'LINDDUN':
-	                thumbnail = './public/content/images/thumbnail.linddun.jpg';
-	                defaultTitle = this.$t('threatmodel.diagram.linddun.defaultTitle');
-	                placeholder = this.$t('threatmodel.diagram.linddun.defaultDescription');
-	                break;
+const onSaveClick = async (evt) => {
+    evt.preventDefault();
+    if (route.name === 'gitThreatModelCreate' || route.name === 'googleThreatModelCreate') {
+        await threatmodelStore.createModel();
+    } else {
+        await threatmodelStore.saveModel();
+    }
+    // stop the save button from leaving the threat model edit view
+    // router.push({ name: `${providerType.value}ThreatModel`, params: route.params });
+};
 
-	            case 'PLOT4ai':
-	                thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
-	                defaultTitle = this.$t('threatmodel.diagram.plot4ai.defaultTitle');
-	                placeholder = this.$t('threatmodel.diagram.plot4ai.defaultDescription');
-	                break;
+const onReloadClick = async (evt) => {
+    evt.preventDefault();
+    await restoreAsync();
+};
 
-	            case 'STRIDE':
-	                thumbnail = './public/content/images/thumbnail.stride.jpg';
-	                defaultTitle = this.$t('threatmodel.diagram.stride.defaultTitle');
-	                placeholder = this.$t('threatmodel.diagram.stride.defaultDescription');
-	                break;
-
-	            default:
-	                thumbnail = './public/content/images/thumbnail.jpg';
-	                defaultTitle = this.$t('threatmodel.diagram.generic.defaultTitle');
-	                placeholder = this.$t('threatmodel.diagram.generic.defaultDescription');
-	                type = this.$t('threatmodel.diagram.generic.select');
-            }
-            this.model.detail.diagrams[idx].diagramType = type;
-            this.model.detail.diagrams[idx].placeholder = placeholder;
-            this.model.detail.diagrams[idx].thumbnail = thumbnail;
-            // if the diagram title is still default, then change it to the new default title
-            if (this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.cia.defaultTitle')
-                || this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.die.defaultTitle')
-                || this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.linddun.defaultTitle')
-                || this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.plot4ai.defaultTitle')
-                || this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.stride.defaultTitle')
-                || this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.generic.defaultTitle')
-            ) {
-                this.model.detail.diagrams[idx].title = defaultTitle;
-            }
-            this.$store.dispatch(tmActions.modified);
-        },
-        onRemoveDiagramClick(idx) {
-            this.model.detail.diagrams.splice(idx, 1);
-            this.$store.dispatch(tmActions.modified);
-        },
-        onModifyModel() {
-            this.$store.dispatch(tmActions.modified);
-        },
-        async restoreAsync() {
-            if (!this.$store.getters.modelChanged || await this.getConfirmModal()) {
-                await this.$store.dispatch(tmActions.diagramClosed);
-                this.$store.dispatch(tmActions.restore);
-                this.$store.dispatch(tmActions.notModified);
-                return true;
-            }
-            return false;
-        },
-        getConfirmModal() {
-            return this.$bvModal.msgBoxConfirm(this.$t('forms.discardMessage'), {
-                title: this.$t('forms.discardTitle'),
-                okVariant: 'danger',
-                okTitle: this.$t('forms.ok'),
-                cancelTitle: this.$t('forms.cancel'),
-                hideHeaderClose: true,
-                centered: true
-            });
-        }
+const onCloseClick = async (evt) => {
+    evt.preventDefault();
+    if (await restoreAsync()) {
+        router.push({ name: `${providerType.value}ThreatModel`, params: route.params });
     }
 };
 
+const onAddDiagramClick = (evt) => {
+    evt.preventDefault();
+    const newDiagram = {
+        id: diagramTop.value,
+        title: $t('threatmodel.diagram.stride.defaultTitle'),
+        diagramType: 'STRIDE',
+        placeholder: $t('threatmodel.diagram.stride.defaultDescription'),
+        thumbnail: './public/content/images/thumbnail.stride.jpg',
+        version: version.value,
+        cells: [],
+    };
+    threatmodelStore.updateModel({ diagramTop: diagramTop.value + 1 });
+    model.value.detail.diagrams.push(newDiagram);
+    threatmodelStore.setModified();
+};
+
+const onDiagramTypeClick = (idx, type) => {
+    let defaultTitle;
+    let placeholder;
+    let thumbnail;
+    switch (type) {
+    case 'CIA':
+        thumbnail = './public/content/images/thumbnail.cia.jpg';
+        defaultTitle = $t('threatmodel.diagram.cia.defaultTitle');
+        placeholder = $t('threatmodel.diagram.cia.defaultDescription');
+        break;
+
+    case 'DIE':
+        thumbnail = './public/content/images/thumbnail.die.jpg';
+        defaultTitle = $t('threatmodel.diagram.die.defaultTitle');
+        placeholder = $t('threatmodel.diagram.die.defaultDescription');
+        break;
+
+    case 'LINDDUN':
+        thumbnail = './public/content/images/thumbnail.linddun.jpg';
+        defaultTitle = $t('threatmodel.diagram.linddun.defaultTitle');
+        placeholder = $t('threatmodel.diagram.linddun.defaultDescription');
+        break;
+
+    case 'PLOT4ai':
+        thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
+        defaultTitle = $t('threatmodel.diagram.plot4ai.defaultTitle');
+        placeholder = $t('threatmodel.diagram.plot4ai.defaultDescription');
+        break;
+
+    case 'STRIDE':
+        thumbnail = './public/content/images/thumbnail.stride.jpg';
+        defaultTitle = $t('threatmodel.diagram.stride.defaultTitle');
+        placeholder = $t('threatmodel.diagram.stride.defaultDescription');
+        break;
+
+    default:
+        thumbnail = './public/content/images/thumbnail.jpg';
+        defaultTitle = $t('threatmodel.diagram.generic.defaultTitle');
+        placeholder = $t('threatmodel.diagram.generic.defaultDescription');
+        type = $t('threatmodel.diagram.generic.select');
+    }
+    model.value.detail.diagrams[idx].diagramType = type;
+    model.value.detail.diagrams[idx].placeholder = placeholder;
+    model.value.detail.diagrams[idx].thumbnail = thumbnail;
+
+    // if the diagram title is still default, then change it to the new default title
+    if (
+        model.value.detail.diagrams[idx].title === $t('threatmodel.diagram.cia.defaultTitle') ||
+            model.value.detail.diagrams[idx].title === $t('threatmodel.diagram.die.defaultTitle') ||
+            model.value.detail.diagrams[idx].title ===
+                $t('threatmodel.diagram.linddun.defaultTitle') ||
+            model.value.detail.diagrams[idx].title ===
+                $t('threatmodel.diagram.plot4ai.defaultTitle') ||
+            model.value.detail.diagrams[idx].title ===
+                $t('threatmodel.diagram.stride.defaultTitle') ||
+            model.value.detail.diagrams[idx].title ===
+                $t('threatmodel.diagram.generic.defaultTitle')
+    ) {
+        model.value.detail.diagrams[idx].title = defaultTitle;
+    }
+    threatmodelStore.setModified();
+};
+
+const onRemoveDiagramClick = (idx) => {
+    model.value.detail.diagrams.splice(idx, 1);
+    threatmodelStore.setModified();
+};
+
+const onModifyModel = () => {
+    threatmodelStore.setModified();
+};
+
+const getDiagramMenuItems = (idx) => {
+    return [
+        {
+            label: $t('threatmodel.diagram.cia.select'),
+            command: () => onDiagramTypeClick(idx, 'CIA')
+        },
+        {
+            label: $t('threatmodel.diagram.die.select'),
+            command: () => onDiagramTypeClick(idx, 'DIE')
+        },
+        {
+            label: $t('threatmodel.diagram.linddun.select'),
+            command: () => onDiagramTypeClick(idx, 'LINDDUN')
+        },
+        {
+            label: $t('threatmodel.diagram.plot4ai.select'),
+            command: () => onDiagramTypeClick(idx, 'PLOT4ai')
+        },
+        {
+            label: $t('threatmodel.diagram.stride.select'),
+            command: () => onDiagramTypeClick(idx, 'STRIDE')
+        },
+        {
+            label: $t('threatmodel.diagram.generic.select'),
+            command: () => onDiagramTypeClick(idx, 'Generic')
+        }
+    ];
+};
+
+const getConfirmModal = () => {
+    return new Promise((resolve) => {
+        confirm.require({
+            message: $t('forms.discardMessage'),
+            header: $t('forms.discardTitle'),
+            icon: 'pi pi-exclamation-triangle',
+            acceptClass: 'p-button-danger',
+            acceptLabel: $t('forms.ok'),
+            rejectLabel: $t('forms.cancel'),
+            accept: () => resolve(true),
+            reject: () => resolve(false)
+        });
+    });
+};
+
+const restoreAsync = async () => {
+    if (!modelChanged.value || (await getConfirmModal())) {
+        await threatmodelStore.closeDiagram();
+        threatmodelStore.restoreModel();
+        threatmodelStore.setNotModified();
+        return true;
+    }
+    return false;
+};
+
+// Lifecycle
+onMounted(() => {
+    init();
+});
 </script>
+
+<style lang="scss" scoped>
+    @import '@/styles/primevue-variables.scss';
+
+    .add-diagram-link {
+        color: $orange;
+        font-size: 14px;
+    }
+
+    .remove-diagram-btn {
+        font-size: 12px;
+    }
+
+    .select-diagram-type {
+        font-size: 12px;
+    }
+</style>

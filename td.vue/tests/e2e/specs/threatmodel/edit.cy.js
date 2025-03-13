@@ -3,7 +3,10 @@ describe('editing threat models', () => {
         beforeEach(() => {
             cy.get('#local-login-btn').click();
             cy.get('a[href="#/local/threatmodel/new"]').click();
-            cy.url().should('equal', Cypress.config().baseUrl + '#/local/New%20Threat%20Model/edit');
+            cy.url().should(
+                'equal',
+                Cypress.config().baseUrl + '#/local/New%20Threat%20Model/edit'
+            );
         });
 
         it('can edit the title', () => {
@@ -12,19 +15,16 @@ describe('editing threat models', () => {
         });
 
         it('can edit the owner', () => {
-            cy.get('#owner').should('be.visible')
-                .should('not.be', 'disabled')
-                .type('owner');
+            cy.get('#owner').should('be.visible').should('not.be', 'disabled').type('owner');
         });
 
         it('can edit the reviewer', () => {
-            cy.get('#reviewer').should('be.visible')
-                .should('not.be', 'disabled')
-                .type('reviewer');
+            cy.get('#reviewer').should('be.visible').should('not.be', 'disabled').type('reviewer');
         });
 
         it('can edit the description', () => {
-            cy.get('#description').should('be.visible')
+            cy.get('#description')
+                .should('be.visible')
                 .should('not.be', 'disabled')
                 .type('description');
         });
@@ -53,7 +53,10 @@ describe('editing threat models', () => {
         beforeEach(() => {
             cy.get('#local-login-btn').click();
             cy.get('a[href="#/local/threatmodel/new"]').click();
-            cy.url().should('equal', Cypress.config().baseUrl + '#/local/New%20Threat%20Model/edit');
+            cy.url().should(
+                'equal',
+                Cypress.config().baseUrl + '#/local/New%20Threat%20Model/edit'
+            );
         });
 
         afterEach(() => {
@@ -76,13 +79,19 @@ describe('editing threat models', () => {
 
                 it('does not reset if the user selects cancel', () => {
                     cy.get('.modal-footer .btn-secondary').contains('Cancel').click();
-                    cy.url().should('equal', Cypress.config().baseUrl + '#/local/New%20Threat%20Model/edit');
+                    cy.url().should(
+                        'equal',
+                        Cypress.config().baseUrl + '#/local/New%20Threat%20Model/edit'
+                    );
                     cy.contains(`Editing: ${newName}`);
                 });
 
                 it('resets data and goes back if the user selects ok', () => {
                     cy.get('.modal-footer .btn-danger').contains('OK').click();
-                    cy.url().should('equal', Cypress.config().baseUrl + '#/local/New%20Threat%20Model');
+                    cy.url().should(
+                        'equal',
+                        Cypress.config().baseUrl + '#/local/New%20Threat%20Model'
+                    );
                     cy.contains('New Threat Model');
                 });
             });

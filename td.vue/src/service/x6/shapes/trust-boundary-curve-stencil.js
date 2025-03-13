@@ -15,16 +15,16 @@ export const TrustBoundaryCurveStencil = Shape.Path.define({
     markup: [
         {
             tagName: 'path',
-            selector: 'boundary'
+            selector: 'boundary',
         },
         {
             tagName: 'text',
-            selector: 'label'
+            selector: 'label',
         },
         {
             tagName: 'rect',
-            selector: 'customBoundary'
-        }
+            selector: 'customBoundary',
+        },
     ],
     attrs: {
         boundary: {
@@ -32,7 +32,7 @@ export const TrustBoundaryCurveStencil = Shape.Path.define({
             stroke: '#333333',
             fill: 'transparent',
             strokeDasharray: '10 5',
-            refD: 'M 30 20 C 70 20 70 100 110 100'
+            refD: 'M 30 20 C 70 20 70 100 110 100',
         },
         customBoundary: {
             opacity: 0,
@@ -42,10 +42,10 @@ export const TrustBoundaryCurveStencil = Shape.Path.define({
         label: {
             text: tc('threatmodel.shapes.trustBoundary'),
             fill: '#333',
-            textVerticalAnchor: 'middle'
-        }
+            textVerticalAnchor: 'middle',
+        },
     },
-    data: defaultProperties.boundary
+    data: defaultProperties.boundary,
 });
 
 TrustBoundaryCurveStencil.prototype.type = 'tm.BoundaryStencil';
@@ -59,5 +59,5 @@ TrustBoundaryCurveStencil.prototype.updateStyle = function () {};
 
 export default {
     name,
-    TrustBoundaryCurveStencil
+    TrustBoundaryCurveStencil,
 };

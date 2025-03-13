@@ -2,25 +2,25 @@ import { providerTypes } from './providerTypes.js';
 
 const providerType = providerTypes.google;
 
-const getDashboardActions = () => ([
+const getDashboardActions = () => [
     {
         to: `/${providerType}/google/folder`,
         key: 'openExisting',
         icon: 'google-drive',
-        iconPreface: 'fab'
+        iconPreface: 'fab',
     },
     {
         to: `/${providerType}/google/folder?action=create`,
         key: 'createNew',
-        icon: 'plus'
+        icon: 'plus',
     },
     {
         to: '/demo/select',
         key: 'readDemo',
-        icon: 'cloud-download-alt'
-    }
-]);
+        icon: 'cloud-download-alt',
+    },
+];
 
 export default {
-    getDashboardActions
+    getDashboardActions,
 };

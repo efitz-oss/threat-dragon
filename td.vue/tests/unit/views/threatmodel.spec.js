@@ -7,14 +7,14 @@ import ThreatModelSummaryCard from '@/components/ThreatModelSummaryCard.vue';
 import { THREATMODEL_DIAGRAM_SELECTED } from '@/store/actions/threatmodel.js';
 
 describe('views/Threatmodel.vue', () => {
-    const contributors = ['foo', 'bar' ];
+    const contributors = ['foo', 'bar'];
     const owner = 'owner';
     const reviewer = 'reviewer';
     const title = 'title';
     const description = 'Something about a threat model';
     const diagrams = [
         { title: 'd1', description: 'd1 description', diagramType: 'CIA' },
-        { title: 'd2', description: 'd2 description', diagramType: 'STRIDE' }
+        { title: 'd2', description: 'd2 description', diagramType: 'STRIDE' },
     ];
     const path = '/git/github/foo/bar/baz';
 
@@ -35,37 +35,37 @@ describe('views/Threatmodel.vue', () => {
                         summary: {
                             title,
                             owner,
-                            description
+                            description,
                         },
                         detail: {
-                            contributors: contributors.map(x =>  ({ name: x })),
+                            contributors: contributors.map((x) => ({ name: x })),
                             diagrams,
-                            reviewer
-                        }
-                    }
-                }
+                            reviewer,
+                        },
+                    },
+                },
             },
             actions: {
-                [THREATMODEL_DIAGRAM_SELECTED]: () => { }
-            }
+                [THREATMODEL_DIAGRAM_SELECTED]: () => {},
+            },
         });
 
         mockRouter = {
             push: jest.fn(),
-            path
+            path,
         };
 
         wrapper = mount(ThreatModel, {
             localVue,
             store: mockStore,
             stubs: {
-                'font-awesome-icon': { template: '<div />' }
+                'font-awesome-icon': { template: '<div />' },
             },
             mocks: {
-                $t: key => key,
+                $t: (key) => key,
                 $route: mockRouter,
-                $router: mockRouter
-            }
+                $router: mockRouter,
+            },
         });
     });
 
@@ -90,7 +90,9 @@ describe('views/Threatmodel.vue', () => {
             });
 
             it('navigates to the edit view', () => {
-                expect(mockRouter.push).toHaveBeenCalledWith(expect.objectContaining({ name: 'gitThreatModelEdit' }));
+                expect(mockRouter.push).toHaveBeenCalledWith(
+                    expect.objectContaining({ name: 'gitThreatModelEdit' })
+                );
             });
         });
 
@@ -104,7 +106,10 @@ describe('views/Threatmodel.vue', () => {
             });
 
             it('routes to the report view', () => {
-                expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitReport', params: mockRouter.params});
+                expect(mockRouter.push).toHaveBeenCalledWith({
+                    name: 'gitReport',
+                    params: mockRouter.params,
+                });
             });
         });
 
@@ -130,7 +135,9 @@ describe('views/Threatmodel.vue', () => {
             });
 
             it('returns the thumbnail for the diagram type', () => {
-                expect(ThreatModel.methods.getThumbnailUrl({ diagramType: 'foo' })).toEqual(`${base}.foo.jpg`);
+                expect(ThreatModel.methods.getThumbnailUrl({ diagramType: 'foo' })).toEqual(
+                    `${base}.foo.jpg`
+                );
             });
         });
 
@@ -140,7 +147,9 @@ describe('views/Threatmodel.vue', () => {
             });
 
             it('routes to the diagram edit based on the current route', () => {
-                expect(mockRouter.push).toHaveBeenCalledWith(`${path}/edit/${encodeURIComponent(diagrams[0].title)}`);
+                expect(mockRouter.push).toHaveBeenCalledWith(
+                    `${path}/edit/${encodeURIComponent(diagrams[0].title)}`
+                );
             });
         });
     });

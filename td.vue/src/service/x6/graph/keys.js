@@ -3,10 +3,7 @@
  * @description Adds key bindings to the graph
  */
 
-import store from '@/store/index.js';
-
-import { THREATMODEL_SAVE } from '@/store/actions/threatmodel.js';
-
+import { useThreatmodelStore } from '@/stores/threatmodel';
 
 const del = (graph) => () => graph.removeCells(graph.getSelectedCells());
 
@@ -43,7 +40,8 @@ const paste = (graph) => () => {
 
 const save = () => (evt) => {
     evt?.preventDefault();
-    store.get().dispatch(THREATMODEL_SAVE);
+    const threatmodelStore = useThreatmodelStore();
+    threatmodelStore.save();
 };
 
 const bind = (graph) => {
@@ -56,5 +54,5 @@ const bind = (graph) => {
 };
 
 export default {
-    bind
+    bind,
 };

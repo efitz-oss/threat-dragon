@@ -1,6 +1,6 @@
 import { BitbucketEnv } from '../env/Bitbucket.js';
 import { EncryptionEnv } from '../env/Encryption.js';
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 import { GithubEnv } from '../env/Github.js';
 import { GitlabEnv } from '../env/Gitlab.js';
 import { GoogleEnv } from '../env/Google.js';
@@ -13,13 +13,14 @@ const tryLoadDotEnv = () => {
     const encryption = new EncryptionEnv();
     const threatDragon = new ThreatDragonEnv();
     const google = new GoogleEnv();
-    env.get().addProvider(github);
-    env.get().addProvider(gitlab);
-    env.get().addProvider(encryption);
-    env.get().addProvider(bitbucket);
-    env.get().addProvider(threatDragon);
-    env.get().addProvider(google);
-    env.get().hydrate();
+    const env = getEnvironment();
+    env.addProvider(github);
+    env.addProvider(gitlab);
+    env.addProvider(encryption);
+    env.addProvider(bitbucket);
+    env.addProvider(threatDragon);
+    env.addProvider(google);
+    env.hydrate();
 };
 
 export default { tryLoadDotEnv };

@@ -10,10 +10,10 @@ export const ports = {
                     strokeWidth: 1,
                     fill: '#fff',
                     style: {
-                        visibility: 'hidden'
-                    }
-                }
-            }
+                        visibility: 'hidden',
+                    },
+                },
+            },
         },
         right: {
             position: 'right',
@@ -25,10 +25,10 @@ export const ports = {
                     strokeWidth: 1,
                     fill: '#fff',
                     style: {
-                        visibility: 'hidden'
-                    }
-                }
-            }
+                        visibility: 'hidden',
+                    },
+                },
+            },
         },
         bottom: {
             position: 'bottom',
@@ -40,10 +40,10 @@ export const ports = {
                     strokeWidth: 1,
                     fill: '#fff',
                     style: {
-                        visibility: 'hidden'
-                    }
-                }
-            }
+                        visibility: 'hidden',
+                    },
+                },
+            },
         },
         left: {
             position: 'left',
@@ -55,25 +55,24 @@ export const ports = {
                     strokeWidth: 1,
                     fill: '#fff',
                     style: {
-                        visibility: 'hidden'
-                    }
-                }
-            }
-        }
+                        visibility: 'hidden',
+                    },
+                },
+            },
+        },
     },
     items: [
         {
-            group: 'top'
+            group: 'top',
         },
         {
-            group: 'right'
+            group: 'right',
         },
         {
-            group: 'bottom'
+            group: 'bottom',
         },
         {
-            group: 'left'
-        }
-    ]
+            group: 'left',
+        },
+    ],
 };
-

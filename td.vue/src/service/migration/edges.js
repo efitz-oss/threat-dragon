@@ -9,7 +9,7 @@ const getEdgeLabels = (cell) => {
     cell.labels.forEach((label) => {
         res.push({
             position: label.position,
-            attrs: { label: { text: labels.getText(cell, label) } }
+            attrs: { label: { text: labels.getText(cell, label) } },
         });
     });
 
@@ -31,11 +31,11 @@ const map = (constructor) => (cell) => {
         vertices: cell.vertices,
         connector: 'smooth',
         attrs: {},
-        labels: getEdgeLabels(cell)
+        labels: getEdgeLabels(cell),
     });
 };
 
 export default {
     map,
-    applyData
+    applyData,
 };

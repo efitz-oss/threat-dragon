@@ -12,12 +12,12 @@ describe('NewThreatModel.vue', () => {
             localVue.use(Vuex);
             mockStore = new Vuex.Store({
                 state: {
-                    provider: { selected: 'local' }
+                    provider: { selected: 'local' },
                 },
                 actions: {
-                    'THREATMODEL_CLEAR': () => {},
-                    'THREATMODEL_SELECTED': () => {}
-                }
+                    THREATMODEL_CLEAR: () => {},
+                    THREATMODEL_SELECTED: () => {},
+                },
             });
             jest.spyOn(mockStore, 'dispatch');
             router = { push: jest.fn() };
@@ -27,9 +27,9 @@ describe('NewThreatModel.vue', () => {
                 mocks: {
                     $router: router,
                     $route: {
-                        params: { foo: 'bar' }
-                    }
-                }
+                        params: { foo: 'bar' },
+                    },
+                },
             });
         });
 
@@ -38,7 +38,10 @@ describe('NewThreatModel.vue', () => {
         });
 
         it('selects the new threatModel', () => {
-            expect(mockStore.dispatch).toHaveBeenCalledWith('THREATMODEL_SELECTED', expect.anything());
+            expect(mockStore.dispatch).toHaveBeenCalledWith(
+                'THREATMODEL_SELECTED',
+                expect.anything()
+            );
         });
 
         it('navigates to the edit page', () => {
@@ -46,8 +49,8 @@ describe('NewThreatModel.vue', () => {
                 name: 'localThreatModelEdit',
                 params: {
                     foo: 'bar',
-                    threatmodel: 'New Threat Model'
-                }
+                    threatmodel: 'New Threat Model',
+                },
             });
         });
     });
@@ -58,12 +61,12 @@ describe('NewThreatModel.vue', () => {
             localVue.use(Vuex);
             mockStore = new Vuex.Store({
                 state: {
-                    provider: { selected: 'github' }
+                    provider: { selected: 'github' },
                 },
                 actions: {
-                    'THREATMODEL_CLEAR': () => {},
-                    'THREATMODEL_SELECTED': () => {}
-                }
+                    THREATMODEL_CLEAR: () => {},
+                    THREATMODEL_SELECTED: () => {},
+                },
             });
             jest.spyOn(mockStore, 'dispatch');
             router = { push: jest.fn() };
@@ -73,9 +76,9 @@ describe('NewThreatModel.vue', () => {
                 mocks: {
                     $router: router,
                     $route: {
-                        params: { foo: 'bar' }
-                    }
-                }
+                        params: { foo: 'bar' },
+                    },
+                },
             });
         });
 
@@ -84,7 +87,10 @@ describe('NewThreatModel.vue', () => {
         });
 
         it('selects the new threatModel', () => {
-            expect(mockStore.dispatch).toHaveBeenCalledWith('THREATMODEL_SELECTED', expect.anything());
+            expect(mockStore.dispatch).toHaveBeenCalledWith(
+                'THREATMODEL_SELECTED',
+                expect.anything()
+            );
         });
 
         it('navigates to the edit page for creation', () => {
@@ -92,8 +98,8 @@ describe('NewThreatModel.vue', () => {
                 name: 'gitThreatModelCreate',
                 params: {
                     foo: 'bar',
-                    threatmodel: 'New Threat Model'
-                }
+                    threatmodel: 'New Threat Model',
+                },
             });
         });
     });

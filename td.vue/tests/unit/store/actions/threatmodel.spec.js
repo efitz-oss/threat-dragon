@@ -12,7 +12,7 @@ import {
     THREATMODEL_RESTORE,
     THREATMODEL_STASH,
     THREATMODEL_SAVE,
-    THREATMODEL_UPDATE
+    THREATMODEL_UPDATE,
 } from '@/store/actions/threatmodel.js';
 
 describe('store/actions/threatmodel.js', () => {

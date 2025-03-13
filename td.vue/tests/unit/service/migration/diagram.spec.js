@@ -10,13 +10,13 @@ describe('service/migration/diagram.js', () => {
     let diagramMock, graphMock, storeMock;
     const nodesMock = ['one', 'two'];
     const edgesMock = ['three'];
-    const cellsMock = [ 'cell1' ];
+    const cellsMock = ['cell1'];
 
     beforeEach(() => {
         diagramMock = {
             title: 'Test',
             thumbnail: 'foo.png',
-            id: '12345'
+            id: '12345',
         };
         graphMock = {
             fromJSON: jest.fn(),
@@ -26,7 +26,7 @@ describe('service/migration/diagram.js', () => {
             getCells: jest.fn().mockReturnValue(cellsMock),
             startBatch: jest.fn(),
             stopBatch: jest.fn(),
-            dispose: jest.fn()
+            dispose: jest.fn(),
         };
         storeMock = { dispatch: jest.fn() };
         graphFactory.getReadonlyGraph = jest.fn().mockReturnValue(graphMock);
@@ -75,8 +75,10 @@ describe('service/migration/diagram.js', () => {
             });
 
             it('dispatches the diagramSaved event to the store', () => {
-                expect(storeMock.dispatch)
-                    .toHaveBeenCalledWith(tmActions.diagramSaved, diagramMock);
+                expect(storeMock.dispatch).toHaveBeenCalledWith(
+                    tmActions.diagramSaved,
+                    diagramMock
+                );
             });
         });
 

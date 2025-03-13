@@ -1,301 +1,409 @@
 <template>
     <div>
-        <b-modal
+        <Dialog
             v-if="!!threat"
-            id="threat-edit"
-            size="lg"
-            ok-variant="primary"
-            header-bg-variant="primary"
-            header-text-variant="light"
-            :title="modalTitle"
-            ref="editModal"
+            v-model:visible="dialogVisible"
+            :modal="true"
+            :header="modalTitle"
+            :style="{ width: '75vw' }"
+            :closable="true"
+            :close-on-escape="true"
         >
-            <b-form>
-                <b-form-row>
-                    <b-col>
-                        <b-form-group
-                            id="title-group"
-                            :label="$t('threats.properties.title')"
-                            label-for="title">
-                            <b-form-input
-                                id="title"
-                                v-model="threat.title"
-                                type="text"
-                                required
-                            ></b-form-input>
-                        </b-form-group>
-                    </b-col>
-                </b-form-row>
+            <div class="p-fluid">
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="field">
+                            <label for="title">{{ $t('threats.properties.title') }}</label>
+                            <InputText id="title" v-model="threat.title" required />
+                        </div>
+                    </div>
+                </div>
 
-                <b-form-row>
-                    <b-col>
-                        <b-form-group
-                            id="threat-type-group"
-                            :label="$t('threats.properties.type')"
-                            label-for="threat-type">
-                            <b-form-select
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="field">
+                            <label for="threat-type">{{ $t('threats.properties.type') }}</label>
+                            <Dropdown
                                 id="threat-type"
                                 v-model="threat.type"
-                                :options="threatTypes">
-                            </b-form-select>
-                        </b-form-group>
-                    </b-col>
-                </b-form-row>
+                                :options="threatTypes"
+                                placeholder="Select a threat type"
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                <b-form-row>
-                    <b-col md=5>
-                        <b-form-group
-                            id="status-group"
-                            class="float-left"
-                            :label="$t('threats.properties.status')"
-                            label-for="status">
-                            <b-form-radio-group
-                                id="status"
-                                v-model="threat.status"
-                                :options="statuses"
-                                buttons
-                            ></b-form-radio-group>
-                        </b-form-group>
-                    </b-col>
+                <div class="grid">
+                    <div class="col-5">
+                        <div class="field">
+                            <label for="status">{{ $t('threats.properties.status') }}</label>
+                            <div class="p-selectbutton-group">
+                                <SelectButton
+                                    id="status"
+                                    v-model="threat.status"
+                                    :options="statuses"
+                                    option-label="text"
+                                    option-value="value"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-                    <b-col md=2>
-                        <b-form-group
-                            id="score-group"
-                            :label="$t('threats.properties.score')"
-                            label-for="score">
-                            <b-form-input
-                                id="score"
-                                v-model="threat.score"
-                                type="text"
-                            ></b-form-input>
-                        </b-form-group>
-                    </b-col>
+                    <div class="col-2">
+                        <div class="field">
+                            <label for="score">{{ $t('threats.properties.score') }}</label>
+                            <InputText id="score" v-model="threat.score" />
+                        </div>
+                    </div>
 
-                    <b-col md=5>
-                        <b-form-group
-                            id="priority-group"
-                            class="float-right"
-                            :label="$t('threats.properties.priority')"
-                            label-for="priority">
-                            <b-form-radio-group
-                                id="priority"
-                                v-model="threat.severity"
-                                :options="priorities"
-                                buttons
-                            ></b-form-radio-group>
-                        </b-form-group>
-                    </b-col>
-                </b-form-row>
+                    <div class="col-5">
+                        <div class="field">
+                            <label for="priority">{{ $t('threats.properties.priority') }}</label>
+                            <div class="p-selectbutton-group">
+                                <SelectButton
+                                    id="priority"
+                                    v-model="threat.severity"
+                                    :options="priorities"
+                                    option-label="text"
+                                    option-value="value"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <b-form-row>
-                    <b-col>
-                        <b-form-group
-                            id="description-group"
-                            :label="$t('threats.properties.description')"
-                            label-for="description">
-                            <b-form-textarea
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="field">
+                            <label for="description">{{
+                                $t('threats.properties.description')
+                            }}</label>
+                            <Textarea
                                 id="description"
                                 v-model="threat.description"
-                                rows="5">
-                            </b-form-textarea>
-                        </b-form-group>
-                    </b-col>
-                </b-form-row>
+                                rows="5"
+                                auto-resize
+                            />
+                        </div>
+                    </div>
+                </div>
 
-                <b-form-row>
-                    <b-col>
-                        <b-form-group
-                            id="mitigation-group"
-                            :label="$t('threats.properties.mitigation')"
-                            label-for="mitigation">
-                            <b-form-textarea
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="field">
+                            <label for="mitigation">{{
+                                $t('threats.properties.mitigation')
+                            }}</label>
+                            <Textarea
                                 id="mitigation"
                                 v-model="threat.mitigation"
-                                rows="5">
-                            </b-form-textarea>
-                        </b-form-group>
-                    </b-col>
-                </b-form-row>
-            </b-form>
+                                rows="5"
+                                auto-resize
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <template #modal-footer>
-                <div class="w-100">
-                <b-button
-                    v-if="!newThreat"
-                    variant="danger"
-                    class="float-left"
-                    @click="confirmDelete()"
-                >
-                    {{ $t('forms.delete') }}
-                </b-button>
-                <b-button
-                    v-if="newThreat"
-                    variant="danger"
-                    class="float-left"
-                    @click="immediateDelete()"
-                >
-                    {{ $t('forms.remove') }}
-                </b-button>
-                 <b-button
-                    variant="secondary"
-                    class="float-right"
-                    @click="updateThreat()"
-                >
-                    {{ $t('forms.apply') }}
-                </b-button>
-                <b-button
-                v-if="!newThreat"
-                variant="secondary"
-                class="float-right mr-2"
-                @click="hideModal()"
-            >
-                {{ $t('forms.cancel') }}
-            </b-button>
+            <template #footer>
+                <div class="dialog-footer">
+                    <div class="left-buttons">
+                        <Button
+                            v-if="!newThreat"
+                            severity="danger"
+                            :label="$t('forms.delete')"
+                            @click="confirmDelete()"
+                        />
+                        <Button
+                            v-if="newThreat"
+                            severity="danger"
+                            :label="$t('forms.remove')"
+                            @click="immediateDelete()"
+                        />
+                    </div>
+                    <div class="right-buttons">
+                        <Button
+                            v-if="!newThreat"
+                            severity="secondary"
+                            :label="$t('forms.cancel')"
+                            class="p-button-outlined mr-2"
+                            @click="hideModal()"
+                        />
+                        <Button
+                            severity="secondary"
+                            :label="$t('forms.apply')"
+                            @click="updateThreat()"
+                        />
+                    </div>
                 </div>
             </template>
-        </b-modal>
+        </Dialog>
     </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useConfirm } from 'primevue/useconfirm';
 
-import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
-import tmActions from '@/store/actions/threatmodel.js';
+// PrimeVue components
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
+import SelectButton from 'primevue/selectbutton';
+import Textarea from 'primevue/textarea';
+
+// App imports
 import dataChanged from '@/service/x6/graph/data-changed.js';
 import threatModels from '@/service/threats/models/index.js';
+import { useCellStore } from '@/stores/cell';
+import { useThreatmodelStore } from '@/stores/threatmodel';
 
-export default {
-    name: 'TdThreatEditDialog',
-    computed: {
-        ...mapState({
-            cellRef: (state) => state.cell.ref,
-            threatTop: (state) => state.threatmodel.data.detail.threatTop
-        }),
-        threatTypes() {
-            if (!this.cellRef || !this.threat || !this.threat.modelType) {
-                return [];
-            }
+// Composables
+const { t } = useI18n();
+const confirm = useConfirm();
+const cellStore = useCellStore();
+const threatmodelStore = useThreatmodelStore();
 
-            const res = [];
-            const threatTypes = threatModels.getThreatTypesByElement(this.threat.modelType, this.cellRef.data.type);
-            Object.keys(threatTypes).forEach((type) => {
-                res.push(this.$t(type));
-            }, this);
-            if(!res.includes(this.threat.type))
-                res.push(this.threat.type);
-            return res;
-        },
-        statuses() {
-            return [
-                { value: 'NotApplicable', text: this.$t('threats.status.notApplicable') },
-                { value: 'Open', text: this.$t('threats.status.open') },
-                { value: 'Mitigated', text: this.$t('threats.status.mitigated') }
-            ];
-        },
-        priorities() {
-            return [
-                { value: 'TBD', text: this.$t('threats.priority.tbd') },
-                { value: 'Low', text: this.$t('threats.priority.low') },
-                { value: 'Medium', text: this.$t('threats.priority.medium') },
-                { value: 'High', text: this.$t('threats.priority.high') },
-                { value: 'Critical', text: this.$t('threats.priority.critical') }
-            ];
-        },
-        modalTitle() { return this.$t('threats.edit') + ' #' + this.number; }
-    },
-    data() {
-        return {
-            threat: {},
-            modelTypes: [
-                'CIA',
-                'DIE',
-                'LINDDUN',
-                'PLOT4ai',
-                'STRIDE'
-            ],
-            number: 0
-        };
-    },
-    methods: {
-        editThreat(threatId,state) {
-            const crnthreat = this.cellRef.data.threats.find(x => x.id === threatId);
-            this.threat = {...crnthreat};
-            if (!this.threat) {
-                // this should never happen with a valid threatId
-                console.warn('Trying to access a non-existent threatId: ' + threatId);
-            } else {
-                this.number = this.threat.number;
-                this.newThreat = state==='new';
-                this.$refs.editModal.show();
-            }
-        },
-        updateThreat() {
-            const threatRef = this.cellRef.data.threats.find(x => x.id === this.threat.id);
-            if (threatRef) {
-                const objRef = this.cellRef.data;
-                if(!objRef.threatFrequency){
-                    const tmpfreq = threatModels.getFrequencyMapByElement(this.threat.modelType,this.cellRef.data.type);
-                    if(tmpfreq!==null)
-                        objRef.threatFrequency = tmpfreq;
-                }
-                if(objRef.threatFrequency){
-                    Object.keys(objRef.threatFrequency).forEach((k)=>{
-                        if(this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`)===this.threat.type)
-                            objRef.threatFrequency[k]++;
-                    });
-                }
-                threatRef.status = this.threat.status;
-                threatRef.severity = this.threat.severity;
-                threatRef.title = this.threat.title;
-                threatRef.type = this.threat.type;
-                threatRef.description = this.threat.description;
-                threatRef.mitigation = this.threat.mitigation;
-                threatRef.modelType = this.threat.modelType;
-                threatRef.new = false;
-                threatRef.number = this.number;
-                threatRef.score = this.threat.score;
-                this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-                this.$store.dispatch(tmActions.modified);
-                dataChanged.updateStyleAttrs(this.cellRef);
-            }
-            this.hideModal();
-        },
-        deleteThreat() {
-            if(!this.threat.new){
-                const threatMap = this.cellRef.data.threatFrequency;
-                Object.keys(threatMap).forEach((k)=>{
-                    if(this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`)===this.threat.type)
-                        threatMap[k]--;
-                });
-            }
-            this.cellRef.data.threats = this.cellRef.data.threats.filter(x => x.id !== this.threat.id);
-            this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
-            this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-            this.$store.dispatch(tmActions.modified);
-            dataChanged.updateStyleAttrs(this.cellRef);
-        },
-        hideModal() {
-            this.$refs.editModal.hide();
-        },
-        async confirmDelete() {
-            const confirmed = await this.$bvModal.msgBoxConfirm(this.$t('threats.confirmDeleteMessage'), {
-                title: this.$t('threats.confirmDeleteTitle'),
-                okTitle: this.$t('forms.delete'),
-                cancelTitle: this.$t('forms.cancel'),
-                okVariant: 'danger'
-            });
+// State
+const dialogVisible = ref(false);
+const threat = ref({});
+const modelTypes = ['CIA', 'DIE', 'LINDDUN', 'PLOT4ai', 'STRIDE'];
+const number = ref(0);
+const newThreat = ref(false);
 
-            if (!confirmed) { return; }
+// Computed properties
+const cellRef = computed(() => cellStore.cellRef);
+const threatTop = computed(() => threatmodelStore.data.detail.threatTop);
 
-            this.deleteThreat();
-            this.hideModal();
-        },
-        async immediateDelete() {
-            this.deleteThreat();
-            this.hideModal();
-        }
+const threatTypes = computed(() => {
+    if (!cellRef.value || !threat.value || !threat.value.modelType) {
+        return [];
+    }
+
+    const res = [];
+    const types = threatModels.getThreatTypesByElement(
+        threat.value.modelType,
+        cellRef.value.data.type
+    );
+    Object.keys(types).forEach((type) => {
+        res.push(t(type));
+    });
+
+    if (!res.includes(threat.value.type)) {
+        res.push(threat.value.type);
+    }
+
+    return res;
+});
+
+const statuses = computed(() => [
+    { value: 'NotApplicable', text: t('threats.status.notApplicable') },
+    { value: 'Open', text: t('threats.status.open') },
+    { value: 'Mitigated', text: t('threats.status.mitigated') },
+]);
+
+const priorities = computed(() => [
+    { value: 'TBD', text: t('threats.priority.tbd') },
+    { value: 'Low', text: t('threats.priority.low') },
+    { value: 'Medium', text: t('threats.priority.medium') },
+    { value: 'High', text: t('threats.priority.high') },
+    { value: 'Critical', text: t('threats.priority.critical') },
+]);
+
+const modalTitle = computed(() => t('threats.edit') + ' #' + number.value);
+
+// Methods
+const editThreat = (threatId, state) => {
+    const crnthreat = cellRef.value.data.threats.find((x) => x.id === threatId);
+    threat.value = { ...crnthreat };
+
+    if (!threat.value) {
+        // this should never happen with a valid threatId
+        console.warn('Trying to access a non-existent threatId: ' + threatId);
+    } else {
+        number.value = threat.value.number;
+        newThreat.value = state === 'new';
+        dialogVisible.value = true;
     }
 };
 
+const updateThreat = () => {
+    const threatRef = cellRef.value.data.threats.find((x) => x.id === threat.value.id);
+
+    if (threatRef) {
+        const objRef = cellRef.value.data;
+
+        if (!objRef.threatFrequency) {
+            const tmpfreq = threatModels.getFrequencyMapByElement(
+                threat.value.modelType,
+                cellRef.value.data.type
+            );
+
+            if (tmpfreq !== null) {
+                objRef.threatFrequency = tmpfreq;
+            }
+        }
+
+        if (objRef.threatFrequency) {
+            Object.keys(objRef.threatFrequency).forEach((k) => {
+                if (
+                    t(`threats.model.${threat.value.modelType.toLowerCase()}.${k}`) ===
+                        threat.value.type
+                ) {
+                    objRef.threatFrequency[k]++;
+                }
+            });
+        }
+
+        threatRef.status = threat.value.status;
+        threatRef.severity = threat.value.severity;
+        threatRef.title = threat.value.title;
+        threatRef.type = threat.value.type;
+        threatRef.description = threat.value.description;
+        threatRef.mitigation = threat.value.mitigation;
+        threatRef.modelType = threat.value.modelType;
+        threatRef.new = false;
+        threatRef.number = number.value;
+        threatRef.score = threat.value.score;
+
+        cellStore.updateCellData(cellRef.value.data);
+        threatmodelStore.setModified();
+        dataChanged.updateStyleAttrs(cellRef.value);
+    }
+
+    hideModal();
+};
+
+const deleteThreat = () => {
+    if (!threat.value.new) {
+        const threatMap = cellRef.value.data.threatFrequency;
+        Object.keys(threatMap).forEach((k) => {
+            if (
+                t(`threats.model.${threat.value.modelType.toLowerCase()}.${k}`) ===
+                    threat.value.type
+            ) {
+                threatMap[k]--;
+            }
+        });
+    }
+
+    cellRef.value.data.threats = cellRef.value.data.threats.filter(
+        (x) => x.id !== threat.value.id
+    );
+    cellRef.value.data.hasOpenThreats = cellRef.value.data.threats.length > 0;
+
+    cellStore.updateCellData(cellRef.value.data);
+    threatmodelStore.setModified();
+    dataChanged.updateStyleAttrs(cellRef.value);
+};
+
+const hideModal = () => {
+    dialogVisible.value = false;
+};
+
+const confirmDelete = async () => {
+    return new Promise((resolve) => {
+        confirm.require({
+            message: t('threats.confirmDeleteMessage'),
+            header: t('threats.confirmDeleteTitle'),
+            icon: 'pi pi-exclamation-triangle',
+            acceptClass: 'p-button-danger',
+            acceptLabel: t('forms.delete'),
+            rejectLabel: t('forms.cancel'),
+            accept: () => {
+                deleteThreat();
+                hideModal();
+                resolve(true);
+            },
+            reject: () => {
+                resolve(false);
+            },
+        });
+    });
+};
+
+const immediateDelete = () => {
+    deleteThreat();
+    hideModal();
+};
+
+// Expose methods to the template
+defineExpose({
+    editThreat,
+});
 </script>
+
+<style lang="scss" scoped>
+    @import '@/styles/primevue-variables.scss';
+
+    :deep(.p-dialog-header) {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    :deep(.p-dialog-content) {
+        padding: 1.5rem;
+    }
+
+    .dialog-footer {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .left-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .right-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .mr-2 {
+        margin-right: 0.5rem;
+    }
+
+    .field {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .p-selectbutton-group {
+        display: flex;
+        flex-wrap: wrap;
+
+        :deep(.p-selectbutton) {
+            display: flex;
+
+            .p-button {
+                flex: 1;
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        :deep(.p-dialog) {
+            width: 95vw !important;
+            margin: 0 auto;
+        }
+
+        .grid {
+            flex-direction: column;
+        }
+
+        .col-5,
+        .col-2 {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+</style>

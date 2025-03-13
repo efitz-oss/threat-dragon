@@ -1,9 +1,9 @@
 import pkg from 'bitbucket';
 const { Bitbucket } = pkg;
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 
 const repoRootDirectory = () =>
-    env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY ?? env.get().config.REPO_ROOT_DIRECTORY;
+    getEnvironment().config.BITBUCKET_REPO_ROOT_DIRECTORY ?? getEnvironment().config.REPO_ROOT_DIRECTORY;
 
 export class BitbucketClientWrapper {
     static getClient(clientOptions) {
@@ -12,7 +12,7 @@ export class BitbucketClientWrapper {
 }
 
 export const getClient = (accessToken) => {
-    const enterpriseHostname = env.get().config.BITBUCKET_ENTERPRISE_HOSTNAME;
+    const enterpriseHostname = getEnvironment().config.BITBUCKET_ENTERPRISE_HOSTNAME;
     if (enterpriseHostname) {
         throw new Error(`Bitbucket Enterprise is not supported yet`);
     }
@@ -26,7 +26,7 @@ export const getClient = (accessToken) => {
 
 export const reposAsync = async (page, accessToken, searchQuerys = []) => {
     //Migrated
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
     const repos = await getClient(accessToken).repositories.list({
         workspace: workspace,
         page: page,
@@ -57,7 +57,7 @@ const searchAsync = (page, accessToken, searchQuerys) =>
 export const userAsync = (accessToken) => getClient(accessToken).users.getAuthedUser();
 
 export const branchesAsync = async (repoInfo, accessToken) => {
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
     const client = getClient(accessToken);
     const branches = await client.repositories.listBranches({
         workspace: workspace,
@@ -75,7 +75,7 @@ export const branchesAsync = async (repoInfo, accessToken) => {
 };
 
 export const modelsAsync = async (branchInfo, accessToken) => {
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
 
@@ -100,7 +100,7 @@ export const modelsAsync = async (branchInfo, accessToken) => {
 };
 
 export const modelAsync = async (modelInfo, accessToken) => {
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
     const { data } = await client.repositories.getBranch({
@@ -120,7 +120,7 @@ export const modelAsync = async (modelInfo, accessToken) => {
 };
 
 export const createAsync = async (modelInfo, accessToken) => {
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
 
@@ -138,7 +138,7 @@ export const createAsync = async (modelInfo, accessToken) => {
 };
 
 export const updateAsync = async (modelInfo, accessToken) => {
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
 
@@ -162,7 +162,7 @@ export const deleteAsync = async (modelInfo, accessToken) => {
 };
 
 const createBranchAsync = (repoInfo, accessToken) => {
-    const workspace = env.get().config.BITBUCKET_WORKSPACE;
+    const workspace = getEnvironment().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
     const repo = getRepoFullName(repoInfo);

@@ -15,10 +15,12 @@ describe('service/x6/graph/events.js', () => {
         graph = {
             evts: {},
             off: jest.fn(),
-            on: function(evt, cb) { this.evts[evt] = cb; },
+            on: function (evt, cb) {
+                this.evts[evt] = cb;
+            },
             addEdge: jest.fn(),
             resetSelection: jest.fn(),
-            select: jest.fn()
+            select: jest.fn(),
         };
         jest.spyOn(graph, 'on');
         cell = {
@@ -36,21 +38,25 @@ describe('service/x6/graph/events.js', () => {
             id: 'foobar',
             position: jest.fn().mockReturnValue({ x: 1, y: 2 }),
             setLabels: jest.fn(),
-            setName: jest.fn()
+            setName: jest.fn(),
         };
         cell.getData.mockImplementation(() => ({ name: 'test' }));
         node = {
-            data: { isTrustBoundary: true }
+            data: { isTrustBoundary: true },
         };
         edge = {
             remove: jest.fn(),
             data: { name: 'edgeName' },
-            constructor: { name: 'Edge' }
+            constructor: { name: 'Edge' },
         };
 
         // Mock shapes
         shapes.Flow = {
-            fromEdge: jest.fn().mockReturnValue({ data: { name: 'flowName' }, setLabels: jest.fn(), setName: jest.fn() })
+            fromEdge: jest.fn().mockReturnValue({
+                data: { name: 'flowName' },
+                setLabels: jest.fn(),
+                setName: jest.fn(),
+            }),
         };
 
         // Set up DOM
@@ -167,7 +173,13 @@ describe('service/x6/graph/events.js', () => {
             it('adds the expected tools', () => {
                 cell.isNode.mockImplementation(() => false);
                 graph.evts['cell:mouseenter']({ cell });
-                expect(cell.addTools).toHaveBeenCalledWith(['boundary', 'button-remove', 'vertices', 'source-arrowhead', 'target-arrowhead']);
+                expect(cell.addTools).toHaveBeenCalledWith([
+                    'boundary',
+                    'button-remove',
+                    'vertices',
+                    'source-arrowhead',
+                    'target-arrowhead',
+                ]);
             });
         });
     });
@@ -208,7 +220,7 @@ describe('service/x6/graph/events.js', () => {
                 cell.type = shapes.TrustBoundaryCurveStencil.prototype.type;
             });
 
-            it('gets the cell\'s position', () => {
+            it("gets the cell's position", () => {
                 graph.evts['cell:added']({ cell });
                 expect(cell.position).toHaveBeenCalledTimes(1);
             });
@@ -354,7 +366,12 @@ describe('service/x6/graph/events.js', () => {
             const width = 800;
             const height = 600;
             graph.evts['resize']({ width, height });
-            expect(console.debug).toHaveBeenCalledWith('canvas resized to width ', width, ' height ', height);
+            expect(console.debug).toHaveBeenCalledWith(
+                'canvas resized to width ',
+                width,
+                ' height ',
+                height
+            );
         });
     });
 
@@ -408,4 +425,3 @@ describe('service/x6/graph/events.js', () => {
         });
     });
 });
-

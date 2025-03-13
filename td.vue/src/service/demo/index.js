@@ -17,9 +17,9 @@ const models = [
     { name: 'Payments Processing Platform', model: payment },
     { name: 'Renting Car Startup', model: rentingCar },
     { name: 'Three Tier Web Application', model: threeTierWebApp },
-    { name: 'New Blank Model', model: v2NewThreatModel }
+    { name: 'New Blank Model', model: v2NewThreatModel },
 ];
 
 export default {
-    models
+    models,
 };

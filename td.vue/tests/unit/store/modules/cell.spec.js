@@ -4,7 +4,7 @@ import cellModule, { clearState } from '@/store/modules/cell.js';
 describe('store/modules/cell.js', () => {
     const mocks = {
         commit: () => {},
-        dispatch: () => {}
+        dispatch: () => {},
     };
 
     beforeEach(() => {
@@ -88,8 +88,9 @@ describe('store/modules/cell.js', () => {
             });
 
             it('does not throw an error', () => {
-                expect(() => cellModule.mutations[CELL_DATA_UPDATED](cellModule.state, {}))
-                    .not.toThrow();
+                expect(() =>
+                    cellModule.mutations[CELL_DATA_UPDATED](cellModule.state, {})
+                ).not.toThrow();
             });
         });
     });

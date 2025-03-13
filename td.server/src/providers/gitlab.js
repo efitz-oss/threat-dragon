@@ -4,7 +4,7 @@
  */
 import axios from 'axios';
 
-import { getEnvironment as env } from '../env/Env.js';
+import { getEnvironment } from '../env/Env.js';
 import * as repositories from '../repositories/index.js';
 
 const name = 'gitlab';
@@ -13,13 +13,13 @@ const name = 'gitlab';
  * Determines if the GitHub provider is configured
  * @returns {Boolean}
  */
-const isConfigured = () => Boolean(env.get().config.GITLAB_CLIENT_ID);
+const isConfigured = () => Boolean(getEnvironment().config.GITLAB_CLIENT_ID);
 
 /**
  * Gets the Gitlab endpoint, which will be gitlab.com by default OR a custom endpoint for Gitlab enterprise scenarios
  * @returns {String}
  */
-const getGitlabUrl = () => env.get().config.GITLAB_HOST || 'https://gitlab.com';
+const getGitlabUrl = () => getEnvironment().config.GITLAB_HOST || 'https://gitlab.com';
 
 /**
  * Gets the Gitlab OAuth Login URL
@@ -27,8 +27,8 @@ const getGitlabUrl = () => env.get().config.GITLAB_HOST || 'https://gitlab.com';
  */
 const getOauthRedirectUrl = () => {
     const scope =
-        env.get().config.GITLAB_SCOPE || 'read_user read_repository write_repository profile';
-    return `${getGitlabUrl()}/oauth/authorize?scope=${scope}&redirect_uri=${env.get().config.GITLAB_REDIRECT_URI}&response_type=code&client_id=${env.get().config.GITLAB_CLIENT_ID}`;
+        getEnvironment().config.GITLAB_SCOPE || 'read_user read_repository write_repository profile';
+    return `${getGitlabUrl()}/oauth/authorize?scope=${scope}&redirect_uri=${getEnvironment().config.GITLAB_REDIRECT_URI}&response_type=code&client_id=${getEnvironment().config.GITLAB_CLIENT_ID}`;
 };
 
 /**
@@ -38,7 +38,7 @@ const getOauthRedirectUrl = () => {
  */
 const getOauthReturnUrl = (code) => {
     let returnUrl = `/#/oauth-return?code=${code}`;
-    if (env.get().config.NODE_ENV === 'development') {
+    if (getEnvironment().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;
     }
     return returnUrl;
@@ -53,10 +53,10 @@ const getOauthReturnUrl = (code) => {
 const completeLoginAsync = async (code) => {
     const url = `${getGitlabUrl()}/oauth/token`;
     const body = {
-        client_id: env.get().config.GITLAB_CLIENT_ID,
-        client_secret: env.get().config.GITLAB_CLIENT_SECRET,
+        client_id: getEnvironment().config.GITLAB_CLIENT_ID,
+        client_secret: getEnvironment().config.GITLAB_CLIENT_SECRET,
         grant_type: 'authorization_code',
-        redirect_uri: env.get().config.GITLAB_REDIRECT_URI,
+        redirect_uri: getEnvironment().config.GITLAB_REDIRECT_URI,
         // grant_type
         // code_verifier: 'CODE_VERIFIER',
         code,

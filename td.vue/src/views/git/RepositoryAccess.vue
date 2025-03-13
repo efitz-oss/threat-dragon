@@ -1,78 +1,82 @@
 <template>
     <td-selection-page
-        :filter.sync="searchQuery"
+        :filter="searchQuery"
         :items="repositories"
         :page="page"
-        :pageNext="pageNext"
-        :pagePrev="pagePrev"
-        :onItemClick="onRepoClick"
+        :page-next="pageNext"
+        :page-prev="pagePrev"
+        :on-item-click="onRepoClick"
         :paginate="paginate"
-        :emptyStateText="`${$t('repository.noneFound')} ${$t('providers.' + provider + '.displayName')}`">
-        {{ $t('repository.select') }} {{ $t(`providers.${provider}.displayName`) }} {{ $t('repository.from') }}
+        :empty-state-text="`${$t('repository.noneFound')} ${$t('providers.' + provider + '.displayName')}`"
+        @update:filter="searchQuery = $event"
+    >
+        {{ $t('repository.select') }} {{ $t(`providers.${provider}.displayName`) }}
+        {{ $t('repository.from') }}
     </td-selection-page>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProviderStore } from '@/stores/provider';
+import { useRepoStore } from '@/stores/repository';
 import { getProviderType } from '@/service/provider/providers.js';
-import providerActions from '@/store/actions/provider.js';
-import repoActions from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 
-export default {
-    name: 'RepositoryAccess',
-    components: {
-        TdSelectionPage
-    },
-    data() {
-        return {
-            searchQuery: '',
-            searchTimeout: null,
-        };
-    },
-    computed: mapState({
-        provider: (state) => state.provider.selected,
-        providerType: (state) => getProviderType(state.provider.selected),
-        repositories: (state) => state.repo.all,
-        page: (state) => Number(state.repo.page),
-        pageNext: (state) => state.repo.pageNext,
-        pagePrev: (state) => state.repo.pagePrev
-    }),
-    watch: {
-        searchQuery(newQuery) {
-            clearTimeout(this.searchTimeout);
-            this.searchTimeout = setTimeout(() => {
-                console.log('Suche nach:', newQuery);
-                this.$store.dispatch(repoActions.fetch, {
-                    page: 1,
-                    searchQuery: newQuery,
-                });
-            }, 500);
-        },
-    },
-    mounted() {
-        if (this.provider !== this.$route.params.provider) {
-            this.$store.dispatch(providerActions.selected, this.$route.params.provider);
-        }
-        let page = 1;
-        if (this.$route.query.page) {
-            page = this.$route.query.page;
-        }
+// Composables
+const route = useRoute();
+const router = useRouter();
+const providerStore = useProviderStore();
+const repoStore = useRepoStore();
 
-        this.$store.dispatch(repoActions.fetch, page);
-    },
-    methods: {
-        onRepoClick(repoName) {
-            this.$store.dispatch(repoActions.selected, repoName);
-            const params = Object.assign({}, this.$route.params, {
-                repository: repoName
-            });
-            this.$router.push({ name: `${this.providerType}Branch`, params, query: this.$route.query });
-        },
-        paginate(page) {
-            this.$store.dispatch(repoActions.fetch, page, this.searchQuery);
-        }
-    }
+// State
+const searchQuery = ref('');
+const searchTimeout = ref(null);
+
+// Computed
+const provider = computed(() => providerStore.selected);
+const providerType = computed(() => getProviderType(providerStore.selected));
+const repositories = computed(() => repoStore.all);
+const page = computed(() => Number(repoStore.page));
+const pageNext = computed(() => repoStore.pageNext);
+const pagePrev = computed(() => repoStore.pagePrev);
+
+// Watch
+watch(searchQuery, (newQuery) => {
+    clearTimeout(searchTimeout.value);
+    searchTimeout.value = setTimeout(() => {
+        console.log('Suche nach:', newQuery);
+        repoStore.fetch({
+            page: 1,
+            searchQuery: newQuery,
+        });
+    }, 500);
+});
+
+// Methods
+const onRepoClick = (repoName) => {
+    repoStore.selectRepository(repoName);
+    const params = Object.assign({}, route.params, {
+        repository: repoName,
+    });
+    router.push({ name: `${providerType.value}Branch`, params, query: route.query });
 };
+
+const paginate = (pageNum) => {
+    repoStore.fetch(pageNum, searchQuery.value);
+};
+
+// Lifecycle
+onMounted(() => {
+    if (provider.value !== route.params.provider) {
+        providerStore.selectProvider(route.params.provider);
+    }
+
+    let pageNum = 1;
+    if (route.query.page) {
+        pageNum = route.query.page;
+    }
+
+    repoStore.fetch(pageNum);
+});
 </script>

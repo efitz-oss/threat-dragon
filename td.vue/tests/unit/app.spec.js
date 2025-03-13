@@ -20,12 +20,12 @@ describe('App.vue', () => {
         mockStore = new Vuex.Store({
             state: {
                 loader: {
-                    loading: false
-                }
+                    loading: false,
+                },
             },
             actions: {
-                [LOADER_FINISHED]: () => {}
-            }
+                [LOADER_FINISHED]: () => {},
+            },
         });
         wrapper = shallowMount(App, {
             localVue,
@@ -33,8 +33,8 @@ describe('App.vue', () => {
             stubs: ['router-view'],
             store: mockStore,
             mocks: {
-                $t: key => key
-            }
+                $t: (key) => key,
+            },
         });
     });
 

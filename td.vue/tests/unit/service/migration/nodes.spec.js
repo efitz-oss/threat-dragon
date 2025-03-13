@@ -7,19 +7,19 @@ describe('service/migration/nodes.js', () => {
         angle: 0,
         size: {
             width: 5,
-            height: 10
+            height: 10,
         },
         position: {
             x: 2,
-            y: 12
+            y: 12,
         },
         id: 'asdf',
         z: -2,
         attrs: {
             text: {
-                text: 'asdf'
-            }
-        }
+                text: 'asdf',
+            },
+        },
     });
 
     describe('map', () => {
@@ -31,51 +31,67 @@ describe('service/migration/nodes.js', () => {
         });
 
         it('sets the angle', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                angle: cell.angle
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    angle: cell.angle,
+                })
+            );
         });
 
         it('sets the width', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                width: cell.size.width
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    width: cell.size.width,
+                })
+            );
         });
 
         it('sets the height', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                height: cell.size.height
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    height: cell.size.height,
+                })
+            );
         });
 
         it('sets the x', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                x: cell.position.x
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    x: cell.position.x,
+                })
+            );
         });
 
         it('sets the y', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                y: cell.position.y
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    y: cell.position.y,
+                })
+            );
         });
 
         it('sets the id', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                id: cell.id
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: cell.id,
+                })
+            );
         });
 
         it('sets the zIndex', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                zIndex: cell.z
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    zIndex: cell.z,
+                })
+            );
         });
 
         it('sets the label', () => {
-            expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-                label: cell.attrs.text.text
-            }));
+            expect(constructor).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    label: cell.attrs.text.text,
+                })
+            );
         });
     });
 
@@ -86,8 +102,10 @@ describe('service/migration/nodes.js', () => {
         mapFn = nodes.map(constructor);
         mapFn(cell);
 
-        expect(constructor).toHaveBeenCalledWith(expect.objectContaining({
-            label: ''
-        }));
+        expect(constructor).toHaveBeenCalledWith(
+            expect.objectContaining({
+                label: '',
+            })
+        );
     });
 });

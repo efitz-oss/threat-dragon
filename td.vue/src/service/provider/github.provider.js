@@ -2,25 +2,25 @@ import { providerTypes } from './providerTypes.js';
 
 const providerType = providerTypes.git;
 
-const getDashboardActions = () => ([
+const getDashboardActions = () => [
     {
         to: `/${providerType}/github/repository`,
         key: 'openExisting',
         icon: 'github',
-        iconPreface: 'fab'
+        iconPreface: 'fab',
     },
     {
         to: `/${providerType}/github/repository?action=create`,
         key: 'createNew',
-        icon: 'plus'
+        icon: 'plus',
     },
     {
         to: '/demo/select',
         key: 'readDemo',
-        icon: 'cloud-download-alt'
-    }
-]);
+        icon: 'cloud-download-alt',
+    },
+];
 
 export default {
-    getDashboardActions
+    getDashboardActions,
 };

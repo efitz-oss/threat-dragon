@@ -1,18 +1,38 @@
-import { BootstrapVue, BDropdown } from 'bootstrap-vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Vuex from 'vuex';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
 
-import TdFormButton from '@/components/FormButton.vue';
+// Mock Pinia store
+vi.mock('@/stores/threatmodel', () => ({
+    useThreatmodelStore: vi.fn(() => ({
+        selectedDiagram: {
+            title: 'Test Diagram',
+        },
+    })),
+}));
+
+import { useThreatmodelStore } from '@/stores/threatmodel';
 import TdGraphButtons from '@/components/GraphButtons.vue';
 
 describe('components/GraphButtons.vue', () => {
-    let btn, graph, localVue, wrapper, mockUndo, mockRedo, mockCanUndo, mockCanRedo;
+    let graph, wrapper, mockUndo, mockRedo, mockCanUndo, mockCanRedo;
+    let mockThreatmodelStore;
 
     beforeEach(() => {
-        mockUndo = jest.fn();
-        mockRedo = jest.fn();
-        mockCanUndo = jest.fn().mockReturnValue(true);
-        mockCanRedo = jest.fn().mockReturnValue(true);
+        // Create mocks
+        mockUndo = vi.fn();
+        mockRedo = vi.fn();
+        mockCanUndo = vi.fn().mockReturnValue(true);
+        mockCanRedo = vi.fn().mockReturnValue(true);
+
+        // Create mock store
+        mockThreatmodelStore = {
+            selectedDiagram: {
+                title: 'Test Diagram',
+            },
+        };
+        useThreatmodelStore.mockReturnValue(mockThreatmodelStore);
+
+        // Mock graph object
         graph = {
             history: {},
             getPlugin: (name) => {
@@ -21,87 +41,94 @@ describe('components/GraphButtons.vue', () => {
                         canUndo: mockCanUndo,
                         canRedo: mockCanRedo,
                         undo: mockUndo,
-                        redo: mockRedo
+                        redo: mockRedo,
                     };
                 }
-            }
+            },
+            zoom: vi.fn().mockReturnValue(1.0),
+            getSelectedCells: vi.fn(),
+            removeCells: vi.fn(),
+            hideGrid: vi.fn(),
+            showGrid: vi.fn(),
+            exportPNG: vi.fn(),
+            exportJPEG: vi.fn(),
+            exportSVG: vi.fn(),
         };
-        localVue = createLocalVue();
-        localVue.use(BootstrapVue);
-        localVue.use(Vuex);
-        wrapper = shallowMount(TdGraphButtons, {
-            localVue,
-            mocks: {
-                $t: (t) => t
+
+        // Mount component with Vue 3 Test Utils
+        wrapper = mount(TdGraphButtons, {
+            props: {
+                graph,
             },
-            propsData: {
-                graph
+            global: {
+                stubs: {
+                    'td-form-button': {
+                        template:
+                            '<button :id="id" :title="title" :icon="icon" :text="text" @click="$emit(\'btn-click\')"><slot /></button>',
+                        props: [
+                            'id',
+                            'text',
+                            'title',
+                            'icon',
+                            'isPrimary',
+                            'isOutline',
+                            'onBtnClick',
+                        ],
+                        emits: ['btn-click'],
+                    },
+                    'b-btn-group': {
+                        template: '<div class="btn-group"><slot /></div>',
+                    },
+                    'b-dropdown': {
+                        template: '<div class="dropdown" :id="id" :text="text"><slot /></div>',
+                        props: ['text', 'id'],
+                        inheritAttrs: false,
+                    },
+                    'b-dropdown-item': {
+                        template: '<button :id="id" @click="$emit(\'click\')"><slot /></button>',
+                        props: ['id'],
+                        emits: ['click'],
+                    },
+                    'font-awesome-icon': true,
+                },
+                mocks: {
+                    $t: (t) => t,
+                },
             },
-            store: new Vuex.Store({
-                state: {
-                    provider: {
-                        selected: 'github'
-                    }
-                }
-            })
         });
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
-    const getButtonByIcon = (icon) =>
-        wrapper
-            .findAllComponents(TdFormButton)
-            .filter((x) => x.attributes('icon') === icon)
-            .at(0);
-
     describe('save', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('save');
-            wrapper.vm.save();
+        beforeEach(async () => {
+            await wrapper.vm.save();
         });
 
-        it('has the save translation text', () => {
-            expect(btn.attributes('text')).toEqual('forms.save');
+        it('emits saved event', () => {
+            expect(wrapper.emitted().saved).toBeTruthy();
         });
     });
 
     describe('close', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('times');
-            wrapper.vm.closeDiagram();
+        beforeEach(async () => {
+            await wrapper.vm.closeDiagram();
         });
 
-        it('has the save translation text', () => {
-            expect(btn.attributes('text')).toEqual('forms.close');
+        it('emits closed event', () => {
+            expect(wrapper.emitted().closed).toBeTruthy();
         });
     });
 
-    describe('keyboard shortcuts', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('keyboard');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
+    describe('noOp', () => {
         it('is a noOp', () => {
             expect(() => wrapper.vm.noOp()).not.toThrow();
         });
     });
 
     describe('undo', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('undo');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
         describe('graph can undo', () => {
             beforeEach(() => {
                 wrapper.vm.undo();
@@ -114,7 +141,7 @@ describe('components/GraphButtons.vue', () => {
 
         describe('graph cannot undo', () => {
             beforeEach(() => {
-                mockCanUndo = jest.fn().mockReturnValue(false);
+                mockCanUndo.mockReturnValue(false);
                 wrapper.vm.undo();
             });
 
@@ -125,14 +152,6 @@ describe('components/GraphButtons.vue', () => {
     });
 
     describe('redo', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('redo');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
         describe('graph can redo', () => {
             beforeEach(() => {
                 wrapper.vm.redo();
@@ -145,60 +164,32 @@ describe('components/GraphButtons.vue', () => {
 
         describe('graph cannot redo', () => {
             beforeEach(() => {
-                mockCanRedo = jest.fn().mockReturnValue(false);
+                mockCanRedo.mockReturnValue(false);
                 wrapper.vm.redo();
             });
 
-            it('calls redo', () => {
+            it('does not call redo', () => {
                 expect(mockRedo).not.toHaveBeenCalled();
             });
         });
     });
 
     describe('zoom in', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('search-plus');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
         it('zooms in the graph', () => {
-            graph.zoom = jest.fn();
             wrapper.vm.zoomIn();
             expect(graph.zoom).toHaveBeenCalledWith(0.2);
         });
     });
 
     describe('zoom out', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('search-minus');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
         it('zooms out the graph', () => {
-            graph.zoom = jest.fn();
             wrapper.vm.zoomOut();
             expect(graph.zoom).toHaveBeenCalledWith(-0.2);
         });
     });
 
     describe('delete', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('trash');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
         it('removes the selected cells', () => {
-            graph.getSelectedCells = jest.fn();
-            graph.removeCells = jest.fn();
             wrapper.vm.deleteSelected();
             expect(graph.getSelectedCells).toHaveBeenCalled();
             expect(graph.removeCells).toHaveBeenCalled();
@@ -206,18 +197,8 @@ describe('components/GraphButtons.vue', () => {
     });
 
     describe('toggle grid', () => {
-        beforeEach(() => {
-            btn = getButtonByIcon('th');
-        });
-
-        it('does not have any text', () => {
-            expect(btn.attributes('text')).toEqual('');
-        });
-
         describe('hide', () => {
             beforeEach(() => {
-                graph.hideGrid = jest.fn();
-                graph.showGrid = jest.fn();
                 wrapper.vm.toggleGrid();
             });
 
@@ -234,28 +215,20 @@ describe('components/GraphButtons.vue', () => {
         });
     });
 
-    describe('export', () => {
-        beforeEach(() => {
-            btn = wrapper
-                .findAllComponents(BDropdown)
-                .filter((x) => x.attributes('id') === 'export-graph-btn')
-                .at(0);
+    describe('export functions', () => {
+        it('exports PNG with diagram title', () => {
+            wrapper.vm.exportPNG();
+            expect(graph.exportPNG).toHaveBeenCalledWith('Test Diagram.png', { padding: 50 });
         });
 
-        it('has the export translation text', () => {
-            expect(btn.attributes('text')).toEqual('forms.export');
+        it('exports JPEG with diagram title', () => {
+            wrapper.vm.exportJPEG();
+            expect(graph.exportJPEG).toHaveBeenCalledWith('Test Diagram.jpeg', { padding: 50 });
         });
 
-        it('has a dropdown item for PNG', () => {
-            expect(btn.find('#export-graph-png').exists()).toBe(true);
-        });
-
-        it('has a dropdown item for JPEG', () => {
-            expect(btn.find('#export-graph-jpeg').exists()).toBe(true);
-        });
-
-        it('has a dropdown item for SVG', () => {
-            expect(btn.find('#export-graph-svg').exists()).toBe(true);
+        it('exports SVG with diagram title', () => {
+            wrapper.vm.exportSVG();
+            expect(graph.exportSVG).toHaveBeenCalledWith('Test Diagram.svg');
         });
     });
 });

@@ -3,17 +3,21 @@ import { createLocalVue, mount } from '@vue/test-utils';
 import Vuex from 'vuex';
 
 import ThreatModelEdit from '@/views/ThreatModelEdit.vue';
-import { THREATMODEL_CONTRIBUTORS_UPDATED, THREATMODEL_RESTORE, THREATMODEL_NOT_MODIFIED,  } from '@/store/actions/threatmodel.js';
+import {
+    THREATMODEL_CONTRIBUTORS_UPDATED,
+    THREATMODEL_RESTORE,
+    THREATMODEL_NOT_MODIFIED,
+} from '@/store/actions/threatmodel.js';
 
 describe('views/ThreatmodelEdit.vue', () => {
-    const contributors = ['foo', 'bar' ];
+    const contributors = ['foo', 'bar'];
     const owner = 'owner';
     const reviewer = 'reviewer';
     const title = 'title';
     const description = 'Something about a threat model';
     const diagrams = [
         { title: 'd1', description: 'd1 description', diagramType: 'CIA' },
-        { title: 'd2', description: 'd2 description', diagramType: 'STRIDE' }
+        { title: 'd2', description: 'd2 description', diagramType: 'STRIDE' },
     ];
     const path = '/git/github/foo/bar/baz';
 
@@ -33,42 +37,42 @@ describe('views/ThreatmodelEdit.vue', () => {
                         summary: {
                             title,
                             owner,
-                            description
+                            description,
                         },
                         detail: {
-                            contributors: contributors.map(x =>  ({ name: x })),
+                            contributors: contributors.map((x) => ({ name: x })),
                             diagrams,
-                            reviewer
-                        }
-                    }
-                }
+                            reviewer,
+                        },
+                    },
+                },
             },
             actions: {
-                [THREATMODEL_CONTRIBUTORS_UPDATED]: () => { },
-                [THREATMODEL_RESTORE]: () => {}
+                [THREATMODEL_CONTRIBUTORS_UPDATED]: () => {},
+                [THREATMODEL_RESTORE]: () => {},
             },
             getters: {
-                modelChanged: () => modelChanged
-            }
+                modelChanged: () => modelChanged,
+            },
         });
 
         mockRouter = {
             push: jest.fn(),
-            path
+            path,
         };
 
         wrapper = mount(ThreatModelEdit, {
             localVue,
             store: mockStore,
             stubs: {
-                'font-awesome-icon': { template: '<div />' }
+                'font-awesome-icon': { template: '<div />' },
             },
             mocks: {
-                $t: key => key,
+                $t: (key) => key,
                 $route: mockRouter,
                 $router: mockRouter,
-                $toast: { info: jest.fn() }
-            }
+                $toast: { info: jest.fn() },
+            },
         });
     });
 
@@ -127,7 +131,6 @@ describe('views/ThreatmodelEdit.vue', () => {
         });
 
         describe('reload', () => {
-
             beforeEach(() => {
                 mockStore.dispatch = jest.fn();
             });
@@ -195,11 +198,10 @@ describe('views/ThreatmodelEdit.vue', () => {
                 it('routes back to the threatmodel view', () => {
                     expect(mockRouter.push).toHaveBeenCalledWith({
                         name: 'localThreatModel',
-                        params: mockRouter.params
+                        params: mockRouter.params,
                     });
                 });
             });
-
 
             describe('without confirmation', () => {
                 beforeEach(async () => {
@@ -232,7 +234,9 @@ describe('views/ThreatmodelEdit.vue', () => {
             });
 
             it('adds a new diagram', () => {
-                expect(mockStore.state.threatmodel.data.detail.diagrams).toHaveLength(diagramCount  + 1);
+                expect(mockStore.state.threatmodel.data.detail.diagrams).toHaveLength(
+                    diagramCount + 1
+                );
             });
         });
 
@@ -246,7 +250,9 @@ describe('views/ThreatmodelEdit.vue', () => {
             });
 
             it('removes the diagram', () => {
-                expect(mockStore.state.threatmodel.data.detail.diagrams).toHaveLength(diagramCount  - 1);
+                expect(mockStore.state.threatmodel.data.detail.diagrams).toHaveLength(
+                    diagramCount - 1
+                );
             });
         });
     });
@@ -272,22 +278,19 @@ describe('views/ThreatmodelEdit.vue', () => {
             });
 
             it('sets the message box config', () => {
-                expect(wrapper.vm.$bvModal.msgBoxConfirm).toHaveBeenCalledWith(
-                    expect.anything(),
-                    {
-                        title: 'forms.discardTitle',
-                        okVariant: 'danger',
-                        okTitle: 'forms.ok',
-                        cancelTitle: 'forms.cancel',
-                        hideHeaderClose: true,
-                        centered: true
-                    }
-                );
+                expect(wrapper.vm.$bvModal.msgBoxConfirm).toHaveBeenCalledWith(expect.anything(), {
+                    title: 'forms.discardTitle',
+                    okVariant: 'danger',
+                    okTitle: 'forms.ok',
+                    cancelTitle: 'forms.cancel',
+                    hideHeaderClose: true,
+                    centered: true,
+                });
             });
         });
 
         describe('contributors setter', () => {
-            const newContribs = [ '1a', '2b', '3c' ];
+            const newContribs = ['1a', '2b', '3c'];
             beforeEach(() => {
                 mockStore.dispatch = jest.fn();
                 wrapper.setData({ contributors: newContribs });

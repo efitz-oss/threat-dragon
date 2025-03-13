@@ -1,0 +1,39 @@
+/* Font loading and global font settings */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+/* Set Ubuntu font as default for entire application */
+html, body {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure components also use Ubuntu */
+.p-component, 
+.p-menubar,
+.p-menuitem,
+.p-button,
+.p-card,
+.router-link-active,
+nav,
+header,
+button,
+input,
+select,
+a {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+/* Set heading fonts */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 700;
+}
+
+/* Apply font to specific PrimeVue components */
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-text,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-icon,
+.p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-content .p-menuitem-link .p-menuitem-text {
+  font-family: 'Ubuntu', sans-serif;
+}

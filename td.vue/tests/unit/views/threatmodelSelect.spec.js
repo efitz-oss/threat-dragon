@@ -7,11 +7,16 @@ import { REPOSITORY_CLEAR, REPOSITORY_SELECTED } from '@/store/actions/repositor
 import { THREATMODEL_FETCH_ALL } from '@/store/actions/threatmodel.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 import ThreatModelSelect from '@/views/git/ThreatModelSelect.vue';
-import { THREATMODEL_CLEAR, THREATMODEL_CREATE, THREATMODEL_FETCH, THREATMODEL_SELECTED } from '../../../src/store/actions/threatmodel';
-
+import {
+    THREATMODEL_CLEAR,
+    THREATMODEL_CREATE,
+    THREATMODEL_FETCH,
+    THREATMODEL_SELECTED,
+} from '../../../src/store/actions/threatmodel';
 
 describe('views/ThreatModelSelect.vue', () => {
-    const branch = 'aBranch', repo = 'someRepo';
+    const branch = 'aBranch',
+        repo = 'someRepo';
     let wrapper, localVue, mockStore, mockRouter;
 
     beforeEach(() => {
@@ -29,40 +34,41 @@ describe('views/ThreatModelSelect.vue', () => {
             mocks: {
                 $route: mockRoute,
                 $router: mockRouter,
-                $t: key => key
-            }
+                $t: (key) => key,
+            },
         });
     };
 
-    const getMockStore = () => new Vuex.Store({
-        state: {
-            repo: {
-                selected: repo
+    const getMockStore = () =>
+        new Vuex.Store({
+            state: {
+                repo: {
+                    selected: repo,
+                },
+                branch: {
+                    selected: branch,
+                    all: ['b1', 'b2', 'b3'],
+                },
+                provider: {
+                    selected: 'github',
+                },
+                threatmodel: {
+                    all: [],
+                },
             },
-            branch: {
-                selected: branch,
-                all: ['b1', 'b2', 'b3']
+            actions: {
+                [BRANCH_CLEAR]: () => {},
+                [BRANCH_SELECTED]: () => {},
+                [PROVIDER_SELECTED]: () => {},
+                [REPOSITORY_CLEAR]: () => {},
+                [REPOSITORY_SELECTED]: () => {},
+                [THREATMODEL_CLEAR]: () => {},
+                [THREATMODEL_CREATE]: () => {},
+                [THREATMODEL_FETCH]: () => {},
+                [THREATMODEL_FETCH_ALL]: () => {},
+                [THREATMODEL_SELECTED]: () => {},
             },
-            provider: {
-                selected: 'github'
-            },
-            threatmodel: {
-                all: []
-            }
-        },
-        actions: {
-            [BRANCH_CLEAR]: () => { },
-            [BRANCH_SELECTED]: () => { },
-            [PROVIDER_SELECTED]: () => { },
-            [REPOSITORY_CLEAR]: () => { },
-            [REPOSITORY_SELECTED]: () => { },
-            [THREATMODEL_CLEAR]: () => { },
-            [THREATMODEL_CREATE]: () => { },
-            [THREATMODEL_FETCH]: () => { },
-            [THREATMODEL_FETCH_ALL]: () => { },
-            [THREATMODEL_SELECTED]: () => { }
-        }
-    });
+        });
 
     describe('mounted', () => {
         it('sets the provider from the route', () => {
@@ -70,8 +76,8 @@ describe('views/ThreatModelSelect.vue', () => {
                 params: {
                     branch,
                     provider: 'local',
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(PROVIDER_SELECTED, 'local');
         });
@@ -81,8 +87,8 @@ describe('views/ThreatModelSelect.vue', () => {
                 params: {
                     branch,
                     provider: mockStore.state.provider.selected,
-                    repository: 'fakeRepoBad'
-                }
+                    repository: 'fakeRepoBad',
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(REPOSITORY_SELECTED, 'fakeRepoBad');
         });
@@ -92,18 +98,18 @@ describe('views/ThreatModelSelect.vue', () => {
                 params: {
                     branch: 'notTheRightOne',
                     provider: mockStore.state.provider.selected,
-                    repository: 'fakeRepoBad'
-                }
+                    repository: 'fakeRepoBad',
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(BRANCH_SELECTED, 'notTheRightOne');
         });
-        
+
         it('fetches the threat models', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_FETCH_ALL);
         });
@@ -115,8 +121,8 @@ describe('views/ThreatModelSelect.vue', () => {
                 params: {
                     branch,
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
         });
 
@@ -125,7 +131,9 @@ describe('views/ThreatModelSelect.vue', () => {
         });
 
         it('displays the translated text', () => {
-            expect(wrapper.findComponent(TdSelectionPage).text()).toContain('threatmodelSelect.select');
+            expect(wrapper.findComponent(TdSelectionPage).text()).toContain(
+                'threatmodelSelect.select'
+            );
         });
     });
 
@@ -134,8 +142,8 @@ describe('views/ThreatModelSelect.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             wrapper.vm.selectRepoClick();
         });
@@ -145,7 +153,10 @@ describe('views/ThreatModelSelect.vue', () => {
         });
 
         it('navigates to the repo select page', () => {
-            expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitRepository', params: { provider: 'github' } });
+            expect(mockRouter.push).toHaveBeenCalledWith({
+                name: 'gitRepository',
+                params: { provider: 'github' },
+            });
         });
     });
 
@@ -154,8 +165,8 @@ describe('views/ThreatModelSelect.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             wrapper.vm.selectBranchClick();
         });
@@ -169,8 +180,8 @@ describe('views/ThreatModelSelect.vue', () => {
                 name: 'gitBranch',
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
         });
     });
@@ -182,8 +193,8 @@ describe('views/ThreatModelSelect.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             wrapper.vm.onThreatmodelClick(tm);
         });
@@ -198,8 +209,8 @@ describe('views/ThreatModelSelect.vue', () => {
                 params: {
                     provider: mockStore.state.provider.selected,
                     repository: mockStore.state.repo.selected,
-                    threatmodel: tm
-                }
+                    threatmodel: tm,
+                },
             });
         });
     });
@@ -209,8 +220,8 @@ describe('views/ThreatModelSelect.vue', () => {
             getLocalVue({
                 params: {
                     provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+                    repository: mockStore.state.repo.selected,
+                },
             });
             wrapper.vm.newThreatModel();
         });
@@ -220,7 +231,7 @@ describe('views/ThreatModelSelect.vue', () => {
         });
 
         it('creates the threat model', () => {
-            expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_CREATE, expect.anything()); 
+            expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_CREATE, expect.anything());
         });
 
         it('navigates to the edit page', () => {
@@ -229,8 +240,8 @@ describe('views/ThreatModelSelect.vue', () => {
                 params: {
                     provider: mockStore.state.provider.selected,
                     repository: mockStore.state.repo.selected,
-                    threatmodel: 'New Threat Model'
-                }
+                    threatmodel: 'New Threat Model',
+                },
             });
         });
     });

@@ -9,19 +9,23 @@ and also provides the electron desktop project
 
 ### Compiles and hot-reloads for development
 
-`npm run serve`
+`npm run dev`
 
 ### Compiles and minifies for production
 
 `npm run build`
 
+### Analyze bundle size
+
+`npm run build:analyze`
+
 ### Builds the desktop application
 
-`npm run electron:build`
+`npm run build:desktop`
 
 ### Runs the desktop application for development
 
-`npm run electron:serve`
+`npm run start:desktop`
 
 Clean the distribution with
 
@@ -29,16 +33,24 @@ Clean the distribution with
 
 ### Run unit tests
 
-`npm test`
+`npm test` (uses optimized fast test configuration)
 
 For continuous testing:
 
-`npm run test:unit -- --watch`
+`npm run test:fast:watch`
 
-Jest coverage will only show coverage for files containing executable javascript.
-This means that vue components without any JS logic will not be included in the coverage report.
-This is a known limitation, so if you are reading this and there is a workaround
-or you know of another way of getting better coverage for `.vue` files, please open an issue or submit a PR! :)
+For test coverage:
+
+`npm run test:fast:coverage`
+
+For visual test interface:
+
+`npm run test:fast:ui`
+
+Coverage reports are generated using Vitest's built-in coverage functionality.
+This provides better coverage for Vue components than the previous Jest setup.
+
+See [Test Optimization Guide](tests/TEST_OPTIMIZATION.md) for details on the optimized test infrastructure.
 
 ### Run e2e tests
 
@@ -48,9 +60,18 @@ or you know of another way of getting better coverage for `.vue` files, please o
 
 `npm run lint`
 
+## Build Performance
+
+This project uses Vite for fast builds and development:
+
+- Development server starts in milliseconds
+- Hot Module Replacement (HMR) is nearly instantaneous
+- Production builds use aggressive code splitting and optimization
+- Smart dependency pre-bundling reduces rebuild times
+
 ## Styles
 
-SCSS is used.  For most things, you can use a scoped scss style block inside your `.vue` file.
+SCSS is used. For most things, you can use a scoped scss style block inside your `.vue` file.
 For global variables, put it in the appropriately named file in the `src/styles` directory.
 Any variables or mixins defined there will be available in all components.
 
@@ -61,9 +82,11 @@ These are defined in `src/plugins/fontawesome-vue.js`.
 To bring in a new icon, import it from the appropriate node_module, and then add it to the `library.add(...)` call.
 You do not need to import anything in your components or pages, they are globally available.
 
-## Bootstrap
+## PrimeVue
 
-This project uses [bootstrap-vue](https://bootstrap-vue.org/docs), and it is available globally as well.
+This project uses [PrimeVue](https://primevue.org/) as its primary UI component framework.
+The migration from Bootstrap-Vue to PrimeVue has been completed as part of the Vue 3 migration.
+All components are now using PrimeVue.
 
 ## Adding providers
 
@@ -74,8 +97,10 @@ This will need the following:
 - `dashboardActions`: An array of objects that describe the actions a user can take from the dashboard
     (after selecting the provider)
 
-## Local Storage
+## State Management
 
-[vuex-persist](https://github.com/championswimmer/vuex-persist) is used to save stores (state)
-from vuex to session storage. By default, all stores are persisted to session storage.
-This is configured in [vuex-persist](src/plugins/vuex-persist.js).
+This project uses [Pinia](https://pinia.vuejs.org/) for state management.
+Pinia provides better TypeScript support, more intuitive API, and improved developer experience compared to Vuex.
+State is persisted using the `pinia-plugin-persistedstate` plugin.
+
+The migration from Vuex to Pinia has been completed as part of the Vue 3 migration.

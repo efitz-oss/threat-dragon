@@ -1,41 +1,65 @@
-import { LOCALE_SELECTED } from '@/store/actions/locale.js';
-import localeModule from '@/store/modules/locale.js';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { setActivePinia, createPinia } from 'pinia';
 
-describe('store/modules/locale.js', () => {
-    const mocks = {
-        commit: () => {}
-    };
+import { useLocaleStore, LOCALE_SELECTED } from '@/stores/locale.js';
 
+describe('stores/locale.js', () => {
     beforeEach(() => {
-        jest.spyOn(mocks, 'commit');
+        // Create a fresh Pinia instance for each test
+        setActivePinia(createPinia());
     });
 
     describe('state', () => {
-        it('defines a state object', () => {
-            expect(localeModule.state).toBeInstanceOf(Object);
+        it('initializes with default locale set to eng', () => {
+            const localeStore = useLocaleStore();
+
+            expect(localeStore.locale).toBe('eng');
         });
     });
 
     describe('actions', () => {
-        it('commits the selected action', () => {
-            localeModule.actions[LOCALE_SELECTED](mocks, 'blah');
-            expect(mocks.commit).toHaveBeenCalledWith(LOCALE_SELECTED, 'blah');
-        });
-    });
-
-    describe('mutations', () => {
-        describe('selected', () => {    
-            beforeEach(() => {
-                localeModule.mutations[LOCALE_SELECTED](localeModule.state, 'foobar');
-            });
-
+        describe('selectLocale', () => {
             it('sets the locale', () => {
-                expect(localeModule.state.locale).toEqual('foobar');
+                const localeStore = useLocaleStore();
+                const newLocale = 'fra';
+
+                // Call selectLocale action
+                localeStore.selectLocale(newLocale);
+
+                // Verify state updated
+                expect(localeStore.locale).toBe(newLocale);
             });
         });
     });
 
-    it('defines a getters object', () => {
-        expect(localeModule.getters).toBeInstanceOf(Object);
+    describe('legacy dispatch pattern', () => {
+        it('supports legacy LOCALE_SELECTED action through dispatch helper', () => {
+            // Import the dispatchLocaleAction function that provides backward compatibility
+            const { dispatchLocaleAction } = require('@/stores/locale.js');
+
+            const store = useLocaleStore();
+            const newLocale = 'esp';
+
+            // Spy on the store action
+            vi.spyOn(store, 'selectLocale');
+
+            // Mock useLocaleStore to return our store with the spy
+            const originalUseLocaleStore = global.useLocaleStore;
+            global.useLocaleStore = vi.fn().mockReturnValue(store);
+
+            try {
+                // Use the legacy dispatch pattern
+                dispatchLocaleAction(LOCALE_SELECTED, newLocale);
+
+                // Verify the action was called
+                expect(store.selectLocale).toHaveBeenCalledWith(newLocale);
+
+                // Verify state was updated
+                expect(store.locale).toBe(newLocale);
+            } finally {
+                // Restore the original useLocaleStore
+                global.useLocaleStore = originalUseLocaleStore;
+            }
+        });
     });
 });

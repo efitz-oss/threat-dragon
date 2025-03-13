@@ -123,35 +123,25 @@ describe('service/threats/index.js', () => {
 
     describe('hasOpenThreats', () => {
         it('returns false if there is no data', () => {
-            expect(threats.hasOpenThreats(null))
-                .toEqual(false);
+            expect(threats.hasOpenThreats(null)).toEqual(false);
         });
 
         it('returns false if there are no threats', () => {
-            expect(threats.hasOpenThreats({}))
-                .toEqual(false);
+            expect(threats.hasOpenThreats({})).toEqual(false);
         });
 
         it('returns false if there are not open threats', () => {
             const data = {
-                threats: [
-                    { status: 'Mitigated' },
-                    { status: 'NotApplicable' }
-                ]
+                threats: [{ status: 'Mitigated' }, { status: 'NotApplicable' }],
             };
-            expect(threats.hasOpenThreats(data))
-                .toEqual(false);
+            expect(threats.hasOpenThreats(data)).toEqual(false);
         });
 
         it('returns false if there are threats', () => {
             const data = {
-                threats: [
-                    { status: 'Mitigated' },
-                    { status: 'Open' }
-                ]
+                threats: [{ status: 'Mitigated' }, { status: 'Open' }],
             };
-            expect(threats.hasOpenThreats(data))
-                .toEqual(true);
+            expect(threats.hasOpenThreats(data)).toEqual(true);
         });
     });
 
@@ -163,100 +153,118 @@ describe('service/threats/index.js', () => {
      * PLOT4ai has therefor not been added to these unit-tests
      */
     describe('convertToTranslationString', () => {
-
         it('converts Confidentiality to the translation string', () => {
-            expect(threats.convertToTranslationString('Confidentiality'))
-                .toEqual('threats.model.cia.confidentiality');
+            expect(threats.convertToTranslationString('Confidentiality')).toEqual(
+                'threats.model.cia.confidentiality'
+            );
         });
 
         it('converts Integrity to the translation string', () => {
-            expect(threats.convertToTranslationString('Integrity'))
-                .toEqual('threats.model.cia.integrity');
+            expect(threats.convertToTranslationString('Integrity')).toEqual(
+                'threats.model.cia.integrity'
+            );
         });
 
         it('converts Availability to the translation string', () => {
-            expect(threats.convertToTranslationString('Availability'))
-                .toEqual('threats.model.cia.availability');
+            expect(threats.convertToTranslationString('Availability')).toEqual(
+                'threats.model.cia.availability'
+            );
         });
 
         it('converts Distributed to the translation string', () => {
-            expect(threats.convertToTranslationString('Distributed'))
-                .toEqual('threats.model.die.distributed');
+            expect(threats.convertToTranslationString('Distributed')).toEqual(
+                'threats.model.die.distributed'
+            );
         });
 
         it('converts Immutable to the translation string', () => {
-            expect(threats.convertToTranslationString('Immutable'))
-                .toEqual('threats.model.die.immutable');
+            expect(threats.convertToTranslationString('Immutable')).toEqual(
+                'threats.model.die.immutable'
+            );
         });
 
         it('converts Ephemeral to the translation string', () => {
-            expect(threats.convertToTranslationString('Ephemeral'))
-                .toEqual('threats.model.die.ephemeral');
+            expect(threats.convertToTranslationString('Ephemeral')).toEqual(
+                'threats.model.die.ephemeral'
+            );
         });
 
         it('converts Linkability to the translation string', () => {
-            expect(threats.convertToTranslationString('Linkability'))
-                .toEqual('threats.model.linddun.linkability');
+            expect(threats.convertToTranslationString('Linkability')).toEqual(
+                'threats.model.linddun.linkability'
+            );
         });
 
         it('converts Identifiability to the translation string', () => {
-            expect(threats.convertToTranslationString('Identifiability'))
-                .toEqual('threats.model.linddun.identifiability');
+            expect(threats.convertToTranslationString('Identifiability')).toEqual(
+                'threats.model.linddun.identifiability'
+            );
         });
 
         it('converts Non-repudiation to the translation string', () => {
-            expect(threats.convertToTranslationString('Non-repudiation'))
-                .toEqual('threats.model.linddun.nonRepudiation');
+            expect(threats.convertToTranslationString('Non-repudiation')).toEqual(
+                'threats.model.linddun.nonRepudiation'
+            );
         });
 
         it('converts Detectability to the translation string', () => {
-            expect(threats.convertToTranslationString('Detectability'))
-                .toEqual('threats.model.linddun.detectability');
+            expect(threats.convertToTranslationString('Detectability')).toEqual(
+                'threats.model.linddun.detectability'
+            );
         });
 
         it('converts Disclosure of information to the translation string', () => {
-            expect(threats.convertToTranslationString('Disclosure of information'))
-                .toEqual('threats.model.linddun.disclosureOfInformation');
+            expect(threats.convertToTranslationString('Disclosure of information')).toEqual(
+                'threats.model.linddun.disclosureOfInformation'
+            );
         });
 
         it('converts Unawareness to the translation string', () => {
-            expect(threats.convertToTranslationString('Unawareness'))
-                .toEqual('threats.model.linddun.unawareness');
+            expect(threats.convertToTranslationString('Unawareness')).toEqual(
+                'threats.model.linddun.unawareness'
+            );
         });
 
         it('converts Non-compliance to the translation string', () => {
-            expect(threats.convertToTranslationString('Non-compliance'))
-                .toEqual('threats.model.linddun.nonCompliance');
+            expect(threats.convertToTranslationString('Non-compliance')).toEqual(
+                'threats.model.linddun.nonCompliance'
+            );
         });
 
         it('converts Spoofing to the translation string', () => {
-            expect(threats.convertToTranslationString('Spoofing'))
-                .toEqual('threats.model.stride.spoofing');
+            expect(threats.convertToTranslationString('Spoofing')).toEqual(
+                'threats.model.stride.spoofing'
+            );
         });
 
         it('converts Tampering to the translation string', () => {
-            expect(threats.convertToTranslationString('Tampering'))
-                .toEqual('threats.model.stride.tampering');
+            expect(threats.convertToTranslationString('Tampering')).toEqual(
+                'threats.model.stride.tampering'
+            );
         });
 
         it('converts Repudiation to the translation string', () => {
-            expect(threats.convertToTranslationString('Repudiation'))
-                .toEqual('threats.model.stride.repudiation');
+            expect(threats.convertToTranslationString('Repudiation')).toEqual(
+                'threats.model.stride.repudiation'
+            );
         });
 
         it('converts Information disclosure to the translation string', () => {
-            expect(threats.convertToTranslationString('Information disclosure'))
-                .toEqual('threats.model.stride.informationDisclosure');
+            expect(threats.convertToTranslationString('Information disclosure')).toEqual(
+                'threats.model.stride.informationDisclosure'
+            );
         });
 
         it('converts Denial of service to the translation string', () => {
-            expect(threats.convertToTranslationString('Denial of service'))
-                .toEqual('threats.model.stride.denialOfService');
+            expect(threats.convertToTranslationString('Denial of service')).toEqual(
+                'threats.model.stride.denialOfService'
+            );
         });
 
         it('converts Elevation of privilege to the translation string', () => {
-            expect(threats.convertToTranslationString('Elevation of privilege'))
-                .toEqual('threats.model.stride.elevationOfPrivilege');
+            expect(threats.convertToTranslationString('Elevation of privilege')).toEqual(
+                'threats.model.stride.elevationOfPrivilege'
+            );
         });
     });
 
@@ -273,10 +281,7 @@ describe('service/threats/index.js', () => {
 
         it('does not filter any threats if showMitigated is selected', () => {
             const data = {
-                threats: [
-                    { status: 'Open' },
-                    { status: 'Mitigated' }
-                ]
+                threats: [{ status: 'Open' }, { status: 'Mitigated' }],
             };
             const res = threats.filterForDiagram(data, { showMitigated: true });
             expect(res).toHaveLength(data.threats.length);
@@ -284,10 +289,7 @@ describe('service/threats/index.js', () => {
 
         it('filters mitigated threats', () => {
             const data = {
-                threats: [
-                    { status: 'Open' },
-                    { status: 'Mitigated' }
-                ]
+                threats: [{ status: 'Open' }, { status: 'Mitigated' }],
             };
             const res = threats.filterForDiagram(data, { showMitigated: false });
             expect(res).toHaveLength(1);
@@ -296,7 +298,7 @@ describe('service/threats/index.js', () => {
 
     describe('filter', () => {
         it('returns an empty array if there are no cells with data', () => {
-            const diagrams = [{ cells: [{}]}];
+            const diagrams = [{ cells: [{}] }];
             const res = threats.filter(diagrams, {});
             expect(res).toEqual([]);
         });
@@ -308,8 +310,7 @@ describe('service/threats/index.js', () => {
         });
 
         it('returns all threats if no filters are provided', () => {
-
-            const diagrams = [{ cells: [{ data: { threats: [{ status: 'mitigated' }]} }] }];
+            const diagrams = [{ cells: [{ data: { threats: [{ status: 'mitigated' }] } }] }];
             const res = threats.filter(diagrams, {});
             expect(res).toHaveLength(1);
         });

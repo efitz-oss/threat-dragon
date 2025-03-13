@@ -8,12 +8,12 @@ describe('store/modules/branch.js', () => {
         dispatch: () => {},
         rootState: {
             auth: {
-                jwt: 'test'
+                jwt: 'test',
             },
             repo: {
-                selected: 'foobar'
-            }
-        }
+                selected: 'foobar',
+            },
+        },
     };
 
     beforeEach(() => {
@@ -54,15 +54,17 @@ describe('store/modules/branch.js', () => {
         });
 
         describe('fetch', () => {
-            const branches = [ 'foo', 'bar' ];
+            const branches = ['foo', 'bar'];
             const pagination = {
                 page: 1,
                 next: true,
-                prev: false
+                prev: false,
             };
 
             beforeEach(async () => {
-                jest.spyOn(threatmodelApi, 'branchesAsync').mockResolvedValue({ data: { branches, pagination }});
+                jest.spyOn(threatmodelApi, 'branchesAsync').mockResolvedValue({
+                    data: { branches, pagination },
+                });
                 await branchModule.actions[BRANCH_FETCH](mocks);
             });
 
@@ -71,15 +73,12 @@ describe('store/modules/branch.js', () => {
             });
 
             it('commits the fetch action', () => {
-                expect(mocks.commit).toHaveBeenCalledWith(
-                    BRANCH_FETCH,
-                    {
-                        'branches': branches,
-                        'page': pagination.page,
-                        'pageNext': pagination.next,
-                        'pagePrev': pagination.prev
-                    } 
-                );
+                expect(mocks.commit).toHaveBeenCalledWith(BRANCH_FETCH, {
+                    branches: branches,
+                    page: pagination.page,
+                    pageNext: pagination.next,
+                    pagePrev: pagination.prev,
+                });
             });
         });
 

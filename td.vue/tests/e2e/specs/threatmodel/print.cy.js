@@ -20,5 +20,4 @@ describe('print', () => {
         cy.get('#td-print-btn').click({ force: true });
         cy.get('@print').should('have.been.calledOnce');
     });
-
 });

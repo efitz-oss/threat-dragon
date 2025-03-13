@@ -1,138 +1,149 @@
 <template>
-    <b-modal
-        id="add-new-branch"
-        size="md"
-        ok-variant="primary"
-        header-bg-variant="primary"
-        header-text-variant="light"
-        :title="modalTitle"
-        visible
-        centered
-        @hide="closeDialog"
-        hide-footer
+    <Dialog
+        v-model:visible="visible"
+        class="branch-dialog p-fluid"
+        :header="$t('branch.addNew')"
+        :modal="true"
     >
         <form @submit.prevent="addBranch">
-            <b-row>
-                <b-col lg="12" class="pb-2">
-                    <b-form-group id="input-group-1" :label="$t('branch.name')" label-for="branchName">
-                        <b-form-input
-                            type="text"
-                            id="branchName"
-                            v-model="newBranchName"
-                            @input="validate"
-                            :state="isError"
-                            lazy-formatter
-                            trim
-                            required
-                        />
-                        <b-form-invalid-feedback :state="isError">
-                            {{ branchNameError }}
-                        </b-form-invalid-feedback>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col lg="12" class="pb-2">
-                    <b-form-group id="input-group-2" :label="$t('branch.refBranch')" label-for="refBranch">
-                        <b-form-select id="refBranch" v-model="refBranch" :options="branchNames" size="md"
-                                       required/>
-                    </b-form-group>
-                </b-col>
-            </b-row>
+            <div class="field">
+                <label for="branchName">{{ $t('branch.name') }}</label>
+                <InputText
+                    id="branchName"
+                    v-model="newBranchName"
+                    :class="{ 'p-invalid': isError === false }"
+                    required
+                    @input="validate"
+                />
+                <small v-if="isError === false" class="p-error">{{ branchNameError }}</small>
+            </div>
+            <div class="field">
+                <label for="refBranch">{{ $t('branch.refBranch') }}</label>
+                <Dropdown
+                    id="refBranch"
+                    v-model="refBranch"
+                    :options="branchNames"
+                    option-label="value"
+                    required
+                />
+            </div>
         </form>
-        <hr/>
-        <div class="d-flex justify-content-end">
-            <b-overlay
-                :show="wait"
-                variant="light"
-                blur="true"
-                opacity="0.8"
-                spinner-small
-            >
-                <b-button variant="primary" type="submit" @click="addBranch" class="m-1">{{ $t('branch.add') }}</b-button>
-            </b-overlay>
-            <b-button variant="secondary" @click="closeDialog" class="m-1">{{ $t('branch.cancel') }}</b-button>
-        </div>
-    </b-modal>
+        <template #footer>
+            <Button
+                :label="$t('branch.cancel')"
+                icon="pi pi-times"
+                class="p-button-text"
+                @click="closeDialog"
+            />
+            <Button
+                :label="$t('branch.add')"
+                icon="pi pi-check"
+                :loading="wait"
+                @click="addBranch"
+            />
+        </template>
+    </Dialog>
 </template>
-<script>
-import branchActions from '@/store/actions/branch.js';
 
-export default {
-    name: 'AddBranchModal',
-    props: {
-        branches: {
-            type: Array,
-            validator: (value) => {
-                return value.every((branch) => {
-                    return typeof branch === 'string' || (branch.value && typeof branch.value === 'string');
-                });
-            },
-            required: true
-        }
-    },
-    data() {
-        return {
-            newBranchName: '',
-            refBranch: '',
-            modalTitle: this.$t('branch.addNew'),
-            branchNameError: '',
-            isError: null,
-            wait: false
-        };
-    },
-    computed: {
-        branchNames() {
-            return this.branches.map(branch => branch.value || branch);
-        }
-    },
-    mounted() {
-        this.refBranch = this.branchNames.slice(-1)[0];
-    },
-    watch: {
-        branches: function (newBranches) {
-            if (newBranches.length > 0) {
-                this.refBranch = this.branchNames.slice(-1)[0];
-            }
-        }
-    },
-    methods: {
-        closeDialog() {
-            this.$emit('close-dialog');
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue';
+import { useBranchStore } from '@/stores/branch';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
+import i18n from '@/i18n/index.js';
+
+const props = defineProps({
+    branches: {
+        type: Array,
+        validator: (value) => {
+            return value.every((branch) => {
+                return (
+                    typeof branch === 'string' ||
+                        (branch.value && typeof branch.value === 'string')
+                );
+            });
         },
-        validate() {
-            if (this.newBranchName === '') {
-                this.branchNameError = this.$t('branch.nameRequired');
-                this.isError = false;
-            } else if (this.branchNames.includes(this.newBranchName)) {
-                this.branchNameError = this.$t('branch.nameExists');
-                this.isError = false;
-            } else {
-                this.branchNameError = '';
-                this.isError = true;
-            }
-        },
-        async addBranch() {
-            this.wait = true;
-            this.validate();
-            if (!this.isError) {
-                this.wait = false;
-                return;
-            }
-            this.$store.dispatch(branchActions.create, {branchName: this.newBranchName, refBranch: this.refBranch});
+        required: true,
+    },
+});
 
-            // sometimes the branch is not immediately available, so we wait for it (only for 30 seconds)
-            for (let i = 0; i < 30; i++) {
-                await this.$store.dispatch(branchActions.fetch, 1);
-                if (this.branchNames.includes(this.newBranchName)) {
-                    break;
-                }
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
+const emit = defineEmits(['close-dialog']);
 
-            this.wait = false;
-            this.closeDialog();
+const visible = ref(true);
+const newBranchName = ref('');
+const refBranch = ref('');
+const branchNameError = ref('');
+const isError = ref(null);
+const wait = ref(false);
+
+const branchStore = useBranchStore();
+
+const branchNames = computed(() => {
+    return props.branches.map((branch) => branch.value || branch);
+});
+
+onMounted(() => {
+    refBranch.value = branchNames.value.slice(-1)[0];
+});
+
+watch(
+    () => props.branches,
+    (newBranches) => {
+        if (newBranches.length > 0) {
+            refBranch.value = branchNames.value.slice(-1)[0];
         }
     }
+);
+
+const closeDialog = () => {
+    visible.value = false;
+    emit('close-dialog');
+};
+
+const validate = () => {
+    if (newBranchName.value === '') {
+        branchNameError.value = i18n.global.t('branch.nameRequired');
+        isError.value = false;
+    } else if (branchNames.value.includes(newBranchName.value)) {
+        branchNameError.value = i18n.global.t('branch.nameExists');
+        isError.value = false;
+    } else {
+        branchNameError.value = '';
+        isError.value = true;
+    }
+};
+
+const addBranch = async () => {
+    wait.value = true;
+    validate();
+    if (!isError.value) {
+        wait.value = false;
+        return;
+    }
+
+    await branchStore.createBranch({
+        branchName: newBranchName.value,
+        refBranch: refBranch.value,
+    });
+
+    // sometimes the branch is not immediately available, so we wait for it (only for 30 seconds)
+    for (let i = 0; i < 30; i++) {
+        await branchStore.fetchBranches(1);
+        if (branchNames.value.includes(newBranchName.value)) {
+            break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    wait.value = false;
+    closeDialog();
 };
 </script>
+
+<style lang="scss" scoped>
+    .branch-dialog {
+        width: 450px;
+    }
+</style>
