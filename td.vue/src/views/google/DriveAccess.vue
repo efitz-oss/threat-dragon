@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
-import { useToast } from 'vue-toast-notification';
+import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useToast } from "vue-toast-notification";
 import api from '@/service/api/api.js';
 
 const store = useStore();
@@ -16,17 +16,35 @@ let isLoading = ref(false);
 const getGoogleAccessToken = async () => {
   try {
     isLoading.value = true;
+    console.log('Requesting Google token with JWT:', store.state.auth.jwt ? 'JWT exists' : 'No JWT found');
+    
+    // Check if we're actually authenticated
+    if (!store.state.auth.jwt) {
+      toast.error('You need to sign in with Google before using Google Drive');
+      return null;
+    }
+    
     const response = await fetch('/api/google/token', {
       headers: {
         'Authorization': `Bearer ${store.state.auth.jwt}`
       }
     });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.data.accessToken;
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Token endpoint response status:', response.status, errorText);
+      throw new Error(`Server returned ${response.status}: ${errorText}`);
     }
-    throw new Error('Failed to retrieve Google access token');
+    
+    const data = await response.json();
+    console.log('Token endpoint response:', data.status === 200 ? 'Success' : 'Failed');
+    
+    if (!data.data || !data.data.accessToken) {
+      console.error('No access token in response:', data);
+      throw new Error('No access token in response');
+    }
+    
+    return data.data.accessToken;
   } catch (error) {
     console.error('Error fetching Google access token:', error);
     toast.error('Failed to get access to Google Drive. Please try again or sign in again.');
@@ -39,9 +57,9 @@ const getGoogleAccessToken = async () => {
 // Added google picker api
 const loadPickerAPI = () => {
   if (typeof gapi !== 'undefined') {
-    gapi.load('picker', { callback: () => console.log('Google Picker API loaded') });
+    gapi.load("picker", { callback: () => console.log('Google Picker API loaded') });
   } else {
-    console.error('Google API not loaded');
+    console.error("Google API not loaded");
   }
 };
 
@@ -50,12 +68,12 @@ const handleAuth = async () => {
     isLoading.value = true;
     // Get the access token from our server instead of requesting a new one
     const token = await getGoogleAccessToken();
-
+    
     if (!token) {
       console.error('Failed to get Google access token');
       return;
     }
-
+    
     accessToken.value = token;
     createPicker();
   } catch (error) {
@@ -71,7 +89,7 @@ const createPicker = () => {
     console.error('No access token available for Google Picker');
     return;
   }
-
+  
   if (typeof google === 'undefined' || !google.picker) {
     console.error('Google Picker API not loaded');
     toast.error('Google Picker API failed to load');
@@ -98,7 +116,7 @@ const pickerCallback = async (data) => {
   }
 
   const file = data.docs[0];
-  if (file && file.mimeType === 'application/json') {
+  if (file && file.mimeType === "application/json") {
     try {
       isLoading.value = true;
       const fileContent = await fetchFileContent(file.id);
@@ -111,7 +129,7 @@ const pickerCallback = async (data) => {
       isLoading.value = false;
     }
   } else {
-    console.warn('Invalid file type selected. Please select a JSON file.');
+    console.warn("Invalid file type selected. Please select a JSON file.");
     toast.warning('Please select a JSON file');
   }
 };
@@ -126,20 +144,20 @@ const fetchFileContent = async (fileId) => {
       },
     }
   );
-
+  
   if (!response.ok) {
     const errorText = await response.text();
     console.error('Google Drive API error:', errorText);
     throw new Error('Failed to fetch file content from Google Drive');
   }
-
+  
   return await response.text();
 };
 
 const sendToBackend = async (fileId, fileContent) => {
   try {
     // Use api service which automatically includes JWT token
-    await api.postAsync(`/api/googleproviderthreatmodel/${fileId}/data`,
+    await api.postAsync(`/api/googleproviderthreatmodel/${fileId}/data`, 
       { fileId, fileContent });
     return true;
   } catch (error) {
@@ -150,13 +168,13 @@ const sendToBackend = async (fileId, fileContent) => {
 
 onMounted(() => {
   // Load the Google APIs
-  const script = document.createElement('script');
-  script.src = 'https://apis.google.com/js/api.js';
+  const script = document.createElement("script");
+  script.src = "https://apis.google.com/js/api.js";
   script.onload = loadPickerAPI;
   document.body.appendChild(script);
 
-  const gisScript = document.createElement('script');
-  gisScript.src = 'https://accounts.google.com/gsi/client';
+  const gisScript = document.createElement("script");
+  gisScript.src = "https://accounts.google.com/gsi/client";
   document.body.appendChild(gisScript);
 });
 </script>

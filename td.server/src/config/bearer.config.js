@@ -25,6 +25,7 @@ const getBearerToken = (authHeader) => {
 };
 
 const middleware = (req, res, next) => {
+    logger.debug(`Bearer token middleware processing request for: ${req.url}`);
 
     const token = getBearerToken(req.headers.authorization);
     if (!token) {
@@ -33,7 +34,22 @@ const middleware = (req, res, next) => {
     }
 
     try {
-        const { provider, user } = jwt.verifyToken(token);
+        logger.debug('Verifying JWT token');
+        const decodedData = jwt.verifyToken(token);
+        
+        if (!decodedData) {
+            logger.warn('JWT verification returned no data');
+            return errors.unauthorized(res, logger);
+        }
+        
+        const { provider, user } = decodedData;
+        
+        // Debug provider info
+        logger.debug(`Provider from JWT: ${JSON.stringify({
+            exists: !!provider,
+            name: provider?.name || 'unknown',
+            hasAccessToken: provider && !!provider.access_token
+        })}`);
 
         req.provider = provider;
         req.user = user;
