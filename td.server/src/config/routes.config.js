@@ -1,9 +1,11 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 
 import auth from '../controllers/auth.js';
 import bearer from './bearer.config.js';
 import configController from "../controllers/configcontroller";
 import googleProviderThreatmodelController from '../controllers/googleProviderThreatmodelController.js';
+import googleTokenController from '../controllers/googleTokenController.js';
 import healthcheck from '../controllers/healthz.js';
 import homeController from '../controllers/homecontroller.js';
 import threatmodelController from '../controllers/threatmodelcontroller.js';
@@ -55,6 +57,14 @@ const routes = (router) => {
     router.post('/api/googleproviderthreatmodel/:folder/create', googleProviderThreatmodelController.create);
     router.put('/api/googleproviderthreatmodel/:file/update', googleProviderThreatmodelController.update);
     router.get('/api/googleproviderthreatmodel/:file/data', googleProviderThreatmodelController.model);
+    
+    // Google Token endpoint with rate limiting to prevent abuse
+    const tokenLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 20, // limit each IP to 20 requests per windowMs
+        message: 'Too many token requests, please try again later'
+    });
+    router.get('/api/google/token', tokenLimiter, googleTokenController.getGoogleToken);
 };
 
 const config = (app) => {
