@@ -60,13 +60,24 @@ const routes = (router) => {
 };
 
 const config = (app) => {
-    // First, add the Google token route directly to the app
+    // Create a completely unique path for Google token access
+    // This custom path is unlikely to conflict with any other routes
     const tokenLimiter = rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutes
         max: 20, // limit each IP to 20 requests per windowMs
         message: 'Too many token requests, please try again later'
     });
-    app.get('/api/google/token', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
+    
+    // Define multiple variants of the path to ensure one works
+    app.get('/api/custom-google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
+    app.get('/custom-google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
+    app.get('/google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
+    
+    // Log routes for debugging
+    console.log('Registered custom Google token routes:');
+    console.log('- /api/custom-google-token-access');
+    console.log('- /custom-google-token-access');
+    console.log('- /google-token-access');
     
     // Then configure the normal router
     const router = express.Router();

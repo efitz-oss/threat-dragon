@@ -24,16 +24,41 @@ const getGoogleAccessToken = async () => {
       return null;
     }
     
-    const response = await fetch('/api/google/token', {
-      headers: {
-        'Authorization': `Bearer ${store.state.auth.jwt}`
-      }
-    });
+    // Try multiple endpoints, starting with the most specific
+    const endpoints = [
+      '/api/custom-google-token-access',
+      '/custom-google-token-access',
+      '/google-token-access'
+    ];
     
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Token endpoint response status:', response.status, errorText);
-      throw new Error(`Server returned ${response.status}: ${errorText}`);
+    let response = null;
+    let lastError = null;
+    
+    // Try each endpoint until one works
+    for (const endpoint of endpoints) {
+      console.log(`Trying to fetch Google token from endpoint: ${endpoint}`);
+      try {
+        response = await fetch(endpoint, {
+          headers: {
+            'Authorization': `Bearer ${store.state.auth.jwt}`
+          }
+        });
+        
+        if (response.ok) {
+          console.log(`Successfully accessed endpoint: ${endpoint}`);
+          break;
+        } else {
+          console.warn(`Endpoint ${endpoint} returned status: ${response.status}`);
+          lastError = new Error(`Server returned ${response.status} from ${endpoint}`);
+        }
+      } catch (err) {
+        console.warn(`Error accessing endpoint ${endpoint}:`, err);
+        lastError = err;
+      }
+    }
+    
+    if (!response || !response.ok) {
+      throw lastError || new Error('All endpoints failed');
     }
     
     const data = await response.json();
