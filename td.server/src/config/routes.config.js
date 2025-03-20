@@ -39,14 +39,6 @@ const routes = (router) => {
     router.post('/api/logout', auth.logout);
     router.post('/api/token/refresh', auth.refresh);
 
-    // Google Token endpoint with rate limiting to prevent abuse
-    const tokenLimiter = rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 20, // limit each IP to 20 requests per windowMs
-        message: 'Too many token requests, please try again later'
-    });
-    router.get('/api/google/token', tokenLimiter, googleTokenController.getGoogleToken);
-
     router.get('/api/threatmodel/repos', threatmodelController.repos);
     router.get('/api/threatmodel/:organisation/:repo/branches', threatmodelController.branches);
     router.get('/api/threatmodel/:organisation/:repo/:branch/models', threatmodelController.models);
@@ -68,6 +60,15 @@ const routes = (router) => {
 };
 
 const config = (app) => {
+    // First, add the Google token route directly to the app
+    const tokenLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 20, // limit each IP to 20 requests per windowMs
+        message: 'Too many token requests, please try again later'
+    });
+    app.get('/api/google/token', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
+    
+    // Then configure the normal router
     const router = express.Router();
     unauthRoutes(router);
 
