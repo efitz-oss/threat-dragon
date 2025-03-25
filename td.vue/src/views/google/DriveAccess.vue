@@ -16,12 +16,25 @@ let isLoading = ref(false);
 const getGoogleAccessToken = async () => {
   try {
     isLoading.value = true;
+<<<<<<< Updated upstream
     console.log('Requesting Google token with JWT:', store.state.auth.jwt ? 'JWT exists' : 'No JWT found');
     
     // Check if we're actually authenticated
     if (!store.state.auth.jwt) {
       toast.error('You need to sign in with Google before using Google Drive');
       return null;
+=======
+    const response = await fetch('/api/google/token', {
+      headers: {
+        'Authorization': `Bearer ${store.state.auth.jwt}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(" Access Token from Backend:", data.data.accessToken);
+      return data.data.accessToken;
+>>>>>>> Stashed changes
     }
     
     // Try multiple endpoints, starting with the most specific
@@ -147,6 +160,7 @@ const pickerCallback = async (data) => {
       const fileContent = await fetchFileContent(file.id);
       await sendToBackend(file.id, fileContent);
       toast.success('File imported successfully!');
+      console.log("fileContent", fileContent)
     } catch (error) {
       console.error('Error processing file:', error);
       toast.error('Failed to import file from Google Drive');
@@ -169,7 +183,10 @@ const fetchFileContent = async (fileId) => {
       },
     }
   );
+<<<<<<< Updated upstream
   
+=======
+>>>>>>> Stashed changes
   if (!response.ok) {
     const errorText = await response.text();
     console.error('Google Drive API error:', errorText);
@@ -182,7 +199,11 @@ const fetchFileContent = async (fileId) => {
 const sendToBackend = async (fileId, fileContent) => {
   try {
     // Use api service which automatically includes JWT token
+<<<<<<< Updated upstream
     await api.postAsync(`/api/googleproviderthreatmodel/${fileId}/data`, 
+=======
+    await api.getAsync(`/api/googleproviderthreatmodel/${fileId}/data`,
+>>>>>>> Stashed changes
       { fileId, fileContent });
     return true;
   } catch (error) {
