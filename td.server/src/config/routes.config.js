@@ -56,7 +56,7 @@ const routes = (router) => {
     router.get('/api/googleproviderthreatmodel/folders', googleProviderThreatmodelController.folders);
     router.post('/api/googleproviderthreatmodel/:folder/create', googleProviderThreatmodelController.create);
     router.put('/api/googleproviderthreatmodel/:file/update', googleProviderThreatmodelController.update);
-    router.get('/api/googleproviderthreatmodel/:file/data', googleProviderThreatmodelController.model);
+    router.post('/api/googleproviderthreatmodel/:file/data', googleProviderThreatmodelController.model);
 };
 
 const config = (app) => {
