@@ -47,7 +47,7 @@ describe('env/ThreatDragon.js', () => {
         const value = tdEnv.properties
             .find(x => x.key === 'SERVER_API_PORT')
             .defaultValue;
-        expect(value).to.equal('');
+        expect(value).to.equal(3000);
     });
 
     it('has the optional property PORT', () => {

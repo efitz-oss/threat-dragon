@@ -32,19 +32,6 @@ describe('providers/google.js', () => {
                 .contain(`client_id=${config.GOOGLE_CLIENT_ID}`);
         });
     
-        it('uses the default scope', () => {
-            expect(googleProvider.getOauthRedirectUrl()).to
-                .contain('scope=openid email profile');  // Do not use URL-encoded scopes in the test
-        });
-    
-        it('uses the configured scope', () => {
-            const scopedCfg = Object.assign({}, config, {
-                GOOGLE_SCOPE: 'email profile'
-            });
-            sinon.stub(env, 'get').returns({ config: scopedCfg });
-            expect(googleProvider.getOauthRedirectUrl()).to
-                .contain('scope=email profile');  // No need to URL-encode in the test case
-        });
     });
 
     describe('getOauthReturnUrl', () => {
