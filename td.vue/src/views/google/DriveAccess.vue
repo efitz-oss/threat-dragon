@@ -44,6 +44,7 @@ const getGoogleAccessToken = async () => {
             'Authorization': `Bearer ${store.state.auth.jwt}`
           }
         });
+        console.log ("response,,,", response)
         
         if (response.ok) {
           console.log(`Successfully accessed endpoint: ${endpoint}`);
@@ -63,14 +64,16 @@ const getGoogleAccessToken = async () => {
     }
     
     const data = await response.json();
+     console.log ("data...response////", data.data.accessToken)
     console.log('Token endpoint response:', data.status === 200 ? 'Success' : 'Failed');
     
     if (!data.data || !data.data.accessToken) {
       console.error('No access token in response:', data);
       throw new Error('No access token in response');
     }
+    const token1 = data.data.accessToken
     
-    return data.data.accessToken;
+    return token1;
   } catch (error) {
     console.error('Error fetching Google access token:', error);
     toast.error('Failed to get access to Google Drive. Please try again or sign in again.');
@@ -94,6 +97,7 @@ const handleAuth = async () => {
     isLoading.value = true;
     // Get the access token from our server instead of requesting a new one
     const token = await getGoogleAccessToken();
+    console.log ("token here", token)
     
     if (!token) {
       console.error('Failed to get Google access token');
@@ -141,6 +145,7 @@ const pickerCallback = async (data) => {
   }
 
   const file = data.docs[0];
+  console.log ("file.id here..", file.id)
   if (file && file.mimeType === "application/json") {
     try {
       isLoading.value = true;
@@ -161,6 +166,7 @@ const pickerCallback = async (data) => {
 };
 
 const fetchFileContent = async (fileId) => {
+console.log ("fileId here.... + accessToken.value", fileId, accessToken.value)
   // Use the token we got from the server to fetch the file content
   const response = await fetch(
     `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
@@ -170,7 +176,7 @@ const fetchFileContent = async (fileId) => {
       },
     }
   );
-
+console.log ("response", response)
   if (!response.ok) {
     const errorText = await response.text();
     console.error('Google Drive API error:', errorText);
