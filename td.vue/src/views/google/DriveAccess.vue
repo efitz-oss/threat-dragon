@@ -7,6 +7,7 @@ import api from '@/service/api/api.js';
 const store = useStore();
 const toast = useToast();
 const apiKey = process.env.VUE_APP_GOOGLE_API_KEY || '';
+const APP_ID = process.env.VUE_APP_ID || '';
 
 let accessToken = ref(null);
 let isLoading = ref(false);
@@ -86,12 +87,11 @@ const createPicker = () => {
     return;
   }
   try {
-    const appId = '581284642744';
     const picker = new google.picker.PickerBuilder()
       .addView(google.picker.ViewId.DOCS)
       .setOAuthToken(accessToken.value)
       .setAppId(appId)
-      .setDeveloperKey(apiKey)
+      .setDeveloperKey(APP_ID)
       .setCallback(pickerCallback)
       .build();
     picker.setVisible(true);
