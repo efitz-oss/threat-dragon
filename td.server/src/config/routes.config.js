@@ -4,6 +4,7 @@ import rateLimit from 'express-rate-limit';
 import auth from '../controllers/auth.js';
 import bearer from './bearer.config.js';
 import configController from "../controllers/configcontroller";
+import loggerHelper from '../helpers/logger.helper.js';
 import googleProviderThreatmodelController from '../controllers/googleProviderThreatmodelController.js';
 import googleTokenController from '../controllers/googleTokenController.js';
 import healthcheck from '../controllers/healthz.js';
@@ -73,11 +74,12 @@ const config = (app) => {
     app.get('/custom-google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
     app.get('/google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
     
-    // Log routes for debugging
-    console.log('Registered custom Google token routes:');
-    console.log('- /api/custom-google-token-access');
-    console.log('- /custom-google-token-access');
-    console.log('- /google-token-access');
+    // Log routes for debugging with logger
+    const logger = loggerHelper.get('config/routes.config.js');
+    logger.info('Registered custom Google token routes:');
+    logger.info('- /api/custom-google-token-access');
+    logger.info('- /custom-google-token-access');
+    logger.info('- /google-token-access');
     
     // Then configure the normal router
     const router = express.Router();

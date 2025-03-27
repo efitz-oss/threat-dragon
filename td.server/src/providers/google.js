@@ -4,7 +4,6 @@
  */
 import axios from 'axios';
 import env from '../env/Env.js';
-import jwtHelper from '../helpers/jwt.helper.js';
 
 const name = 'google';
 
