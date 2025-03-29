@@ -1,13 +1,14 @@
 import appFactory from './src/app.js';
 
 const app = appFactory.create();
+const port = process.env.SERVER_API_PORT || process.env.PORT || 3000;
 
 const server = app.listen(app.get('port'), function() {
     const address = server.address();
     if (address) {
-        console.log('Development server listening at ' + address.address + ' on port ' + address.port);
+        console.log('Express API server listening at ' + address.address + ' on port ' + address.port);
     } else {
-        console.log('Development server listening on port ' + app.get('port'));
+        console.log('Express API server listening on port ' + app.get('port'));
     }
 });
 

@@ -20,25 +20,14 @@ const getGoogleAccessToken = async () => {
             toast.error('You need to sign in with Google before using Google Drive');
             return null;
         }
-        const endpoints = [
-            '/api/custom-google-token-access',
-            '/custom-google-token-access',
-            '/google-token-access'
-        ];
-        let response = null;
-        let lastError = null;
-        for (const endpoint of endpoints) {
-            try {
-                response = await fetch(endpoint, {
-                    headers: { 'Authorization': `Bearer ${store.state.auth.jwt}` }
-                });
-                if (response.ok) break;
-                lastError = new Error(`Server returned ${response.status} from ${endpoint}`);
-            } catch (err) {
-                lastError = err;
+        try {
+            const response = await fetch('/api/google-token', {
+                headers: { 'Authorization': `Bearer ${store.state.auth.jwt}` }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status} from /api/google-token`);
             }
-        }
-        if (!response || !response.ok) throw lastError || new Error('All endpoints failed');
 
         const data = await response.json();
         if (!data.data || !data.data.accessToken) throw new Error('No access token in response');

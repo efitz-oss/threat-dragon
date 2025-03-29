@@ -70,17 +70,13 @@ const config = (app) => {
         trustProxy: false // Disable the trustProxy validation warning
     });
     
-    // Define multiple variants of the path to ensure one works
-    app.get('/api/custom-google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
-    app.get('/custom-google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
-    app.get('/google-token-access', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
+    // Define a single consistent route for Google token access
+    app.get('/api/google-token', bearer.middleware, tokenLimiter, googleTokenController.getGoogleToken);
     
-    // Log routes for debugging with logger
+    // Log route for debugging with logger
     const logger = loggerHelper.get('config/routes.config.js');
-    logger.info('Registered custom Google token routes:');
-    logger.info('- /api/custom-google-token-access');
-    logger.info('- /custom-google-token-access');
-    logger.info('- /google-token-access');
+    logger.info('Registered Google token route:');
+    logger.info('- /api/google-token');
     
     // Then configure the normal router
     const router = express.Router();

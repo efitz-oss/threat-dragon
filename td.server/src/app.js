@@ -79,13 +79,13 @@ const create = () => {
         // Get port from environment, or use default value of 3000
         const serverApiPort = env.get().config.SERVER_API_PORT || env.get().config.PORT || 3000;
         app.set('port', serverApiPort);
-        logger.info('Express server listening on ' + app.get('port'));
+        logger.info('Express API server listening on ' + app.get('port'));
 
-        logger.info('OWASP Threat Dragon application started');
+        logger.info('OWASP Threat Dragon API server started');
         return app;
     } catch (e) {
         if (!logger) { logger = console; }
-        logger.error('OWASP Threat Dragon failed to start');
+        logger.error('OWASP Threat Dragon API server failed to start');
         logger.error(e.message);
         throw e;
     }
