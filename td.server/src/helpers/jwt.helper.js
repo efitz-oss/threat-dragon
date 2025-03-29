@@ -58,11 +58,7 @@ const decode = (token, key) => {
 
 const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 
-<<<<<<< HEAD
-const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-=======
 const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
->>>>>>> refs/remotes/origin/drive-token-reuse
 
 export default {
     decode,
