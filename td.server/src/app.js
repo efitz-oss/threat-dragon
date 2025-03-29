@@ -36,10 +36,25 @@ const create = () => {
         logger = loggerHelper.get('app.js');
 
         const app = expressHelper.getInstance();
-        app.set('trust proxy', true);
-        // rate limiting only for production environemnts, otherwise automated e2e tests fail
+        
+        // Configure trust proxy more securely
+        // Only trust specific proxies, usually your load balancer IP
+        // For AWS, you might want to use the VPC CIDR range
+        app.set('trust proxy', env.get().config.TRUST_PROXY_LIST || '127.0.0.1');
+        
+        // rate limiting only for production environments, otherwise automated e2e tests fail
         if (process.env.NODE_ENV === 'production') {
-            app.use(limiter);
+            // Configure rate limiter with trustProxy: false to avoid validation error
+            const rateConfig = {
+                windowMs: 30 * 60 * 1000, // 30 minutes
+                max: 6000,
+                standardHeaders: true,
+                legacyHeaders: false,
+                // Set to false as we've configured trust proxy above
+                trustProxy: false
+            };
+            const configuredLimiter = rateLimit(rateConfig);
+            app.use(configuredLimiter);
             logger.info('Apply rate limiting in production environments');
         } else {
             logger.warn('Rate limiting disabled for development environments');

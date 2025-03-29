@@ -66,7 +66,8 @@ const config = (app) => {
     const tokenLimiter = rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutes
         max: 20, // limit each IP to 20 requests per windowMs
-        message: 'Too many token requests, please try again later'
+        message: 'Too many token requests, please try again later',
+        trustProxy: false // Disable the trustProxy validation warning
     });
     
     // Define multiple variants of the path to ensure one works
