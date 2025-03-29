@@ -17,27 +17,39 @@ export default {
         onMounted(async () => {
             console.log('OAuthCallback.vue mounted');
             const code = new URLSearchParams(window.location.search).get('code');
-            const provider = store.state.provider.selected; // Retrieve provider from Vuex
-
+            // Assume Google provider when we're in the OAuth callback with a code
+            // This is a fallback in case the provider isn't in the store
+            let provider = store.state.provider.selected; 
+            
+            console.log('Provider from store:', provider);
             if (!provider) {
-                console.error('Missing provider in Vuex store.');
-                router.push({ name: 'HomePage' });
-                return;
+                // We know we're coming from a Google login flow based on the recent changes
+                console.warn('Missing provider in Vuex store. Defaulting to "google"');
+                provider = 'google';
+                
+                // Set the provider in the store to ensure consistency
+                store.dispatch('PROVIDER_SELECTED', 'google');
             }
 
             if (code) {
                 try {
+                    console.log('Completing login with provider:', provider, 'and code:', code.substring(0, 5) + '...');
                     // Send the provider and authorization code to the backend
                     const response = await loginAPI.completeLoginAsync(provider, code);
+                    console.log('Login completed successfully, received response');
 
                     // Dispatch the AUTH_SET_JWT action to set the tokens in the store
                     store.dispatch('AUTH_SET_JWT', response); 
+                    console.log('JWT set in store, redirecting to dashboard');
 
                     // Redirect to a secure page or dashboard
                     router.push({ name: 'MainDashboard' });
                 } catch (error) {
                     console.error('Error completing login:', error);
-                    // Handle error
+                    console.error('Error details:', error.response?.data || error.message);
+                    // Stay on the callback page but display an error message
+                    alert('Login failed. Please try again.');
+                    router.push({ name: 'HomePage' });
                 }
             } else {
                 console.error('Authorization code not found.');

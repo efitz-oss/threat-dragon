@@ -23,7 +23,9 @@ const getGoogleToken = (req, res) => responseWrapper.sendResponseAsync(async () 
     providerExists: Boolean(req.provider),
     providerName: req.provider?.name || 'none',
     hasAccessToken: Boolean(req.provider?.access_token),
-    providerKeys: req.provider ? Object.keys(req.provider) : []
+    providerKeys: req.provider ? Object.keys(req.provider) : [],
+    hasUser: Boolean(req.user),
+    userKeys: req.user ? Object.keys(req.user) : []
   })}`);
   
   // For security, only log partial token if it exists
