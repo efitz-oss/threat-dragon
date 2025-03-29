@@ -32,6 +32,7 @@ const devServerConfig = hasTlsCredentials
                 changeOrigin: true,
             },
         },
+        // by using the app hostname and the proxy hostname, we avoid most invalid header errors
         allowedHosts: [appHostname, proxyHostname],
     }
     : {
@@ -48,7 +49,7 @@ const devServerConfig = hasTlsCredentials
     };
 
 configuredAppPort = devServerConfig.port;
-console.log(`Vue app is configured to run on ${hasTlsCredentials ? `HTTPS (Port ${configuredAppPort})` : `HTTP (Port ${configuredAppPort})`}`);
+console.log(`Vue app is configured to run on ${hasTlsCredentials ? `https (Port ${configuredAppPort})` : `http (Port ${configuredAppPort})`}`);
 
 
 module.exports = {
