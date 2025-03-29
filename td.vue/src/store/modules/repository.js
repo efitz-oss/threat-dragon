@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import {
     REPOSITORY_CLEAR,
     REPOSITORY_FETCH,
@@ -26,7 +24,8 @@ const state = {
 
 const actions = {
     [REPOSITORY_CLEAR]: ({ commit }) => commit(REPOSITORY_CLEAR),
-    [REPOSITORY_FETCH]: async ({ commit, dispatch }, {page, searchQuery}) => {
+    [REPOSITORY_FETCH]: async ({ commit, dispatch }, payload) => {
+        const { page, searchQuery } = typeof payload === 'object' ? payload : { page: payload, searchQuery: null };
         dispatch(REPOSITORY_CLEAR);
         const resp = await threatmodelApi.reposAsync(page, searchQuery);
         commit(REPOSITORY_FETCH, {
@@ -42,8 +41,8 @@ const actions = {
 const mutations = {
     [REPOSITORY_CLEAR]: (state) => clearState(state),
     [REPOSITORY_FETCH]: (state, { repos, page, pageNext, pagePrev }) => {
-        state.all.length = 0;
-        repos.forEach((repo, idx) => Vue.set(state.all, idx, repo));
+        // Replace Vue.set with direct array assignment (Vue 3 reactivity)
+        state.all = [...repos];
         state.page = page;
         state.pageNext = pageNext;
         state.pagePrev = pagePrev;

@@ -46,9 +46,9 @@ const middleware = (req, res, next) => {
         
         // Debug provider info
         logger.debug(`Provider from JWT: ${JSON.stringify({
-            exists: !!provider,
+            exists: Boolean(provider),
             name: provider?.name || 'unknown',
-            hasAccessToken: provider && !!provider.access_token
+            hasAccessToken: provider && Boolean(provider.access_token)
         })}`);
 
         req.provider = provider;

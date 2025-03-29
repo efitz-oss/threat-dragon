@@ -26,7 +26,7 @@ describe('service/loginApi.js', () => {
         });
 
         it('calls the complete login endpoint', () => {
-            expect(api.getAsync).toHaveBeenCalledWith(`/api/oauth/${provider}?code=${code}`);
+            expect(api.postAsync).toHaveBeenCalledWith(`/api/oauth/${provider}/completeLogin`, { code });
         });
     });
 

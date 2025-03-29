@@ -9,7 +9,7 @@ import homeController from '../../src/controllers/homecontroller.js';
 import { getMockApp } from '../mocks/express.mocks.js';
 import routeConfig from '../../src/config/routes.config.js';
 import threatmodelController from '../../src/controllers/threatmodelcontroller.js';
-import configcontroller from "../../src/controllers/configcontroller";
+import configcontroller from "../../src/controllers/configcontroller.js";
 import googleProviderThreatmodelController from '../../src/controllers/googleProviderThreatmodelController.js';
 
 describe('config/routes.config.js routes', () => {
@@ -71,9 +71,9 @@ describe('config/routes.config.js routes', () => {
     });
 
     describe('github sign in', () => {
-        it('routes GET /api/oauth/provider', () => {
-            expect(mockRouter.get).to.have.been.calledWith(
-                '/api/oauth/:provider',
+        it('routes POST /api/oauth/provider/completeLogin', () => {
+            expect(mockRouter.post).to.have.been.calledWith(
+                '/api/oauth/:provider/completeLogin',
                 auth.completeLogin
             );
         });
@@ -167,8 +167,8 @@ describe('config/routes.config.js routes', () => {
             );
         });
     
-        it('routes GET /api/googleproviderthreatmodel/:file/data', () => {
-            expect(mockRouter.get).to.have.been.calledWith(
+        it('routes POST /api/googleproviderthreatmodel/:file/data', () => {
+            expect(mockRouter.post).to.have.been.calledWith(
                 '/api/googleproviderthreatmodel/:file/data',
                 googleProviderThreatmodelController.model
             );

@@ -1,7 +1,7 @@
-import bitbucketrepo from "./bitbucketrepo";
-import githubrepo from "./githubrepo";
-import gitlabrepo from "./gitlabrepo";
-import googledrive from "./googledrive";
+import bitbucketrepo from "./bitbucketrepo.js";
+import githubrepo from "./githubrepo.js";
+import gitlabrepo from "./gitlabrepo.js";
+import googledrive from "./googledrive.js";
 
 /**
  * An immutable object containing all

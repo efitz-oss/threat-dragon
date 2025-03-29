@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 
 import auth from '../controllers/auth.js';
 import bearer from './bearer.config.js';
-import configController from "../controllers/configcontroller";
+import configController from "../controllers/configcontroller.js";
 import loggerHelper from '../helpers/logger.helper.js';
 import googleProviderThreatmodelController from '../controllers/googleProviderThreatmodelController.js';
 import googleTokenController from '../controllers/googleTokenController.js';

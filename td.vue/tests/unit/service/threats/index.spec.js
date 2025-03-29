@@ -1,3 +1,32 @@
+// Mock the store imports with a simple factory function
+jest.mock('@/store/index.js', () => {
+    const dispatch = jest.fn();
+    const state = {
+        cell: {
+            ref: {
+                data: {
+                    threatFrequency: {}
+                }
+            }
+        }
+    };
+    
+    return {
+        __esModule: true,
+        default: { 
+            get: jest.fn().mockReturnValue({
+                state,
+                dispatch
+            })
+        },
+        store: {
+            state,
+            dispatch
+        }
+    };
+});
+
+// Then import the modules to test
 import threats, { createNewTypedThreat } from '@/service/threats/index.js';
 
 describe('service/threats/index.js', () => {

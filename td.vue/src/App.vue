@@ -11,6 +11,7 @@
 
 <style lang="scss">
 @use '@/styles/sizes.scss' as sizes;
+/* Font imports don't need to be changed - they're standard CSS imports, not Sass imports */
 @import url("https://fonts.googleapis.com/css?family=Ubuntu:400,700");
 
 #app {
@@ -36,6 +37,17 @@ export default {
     }),
     mounted() {
         this.$store.dispatch(LOADER_FINISHED);
+        
+        // Listen for schema warnings from non-component code
+        document.addEventListener('schema-warning', (event) => {
+            if (event.detail && event.detail.message) {
+                this.$toast.warning(event.detail.message, { timeout: false });
+            }
+        });
     },
+    beforeUnmount() {
+        // Clean up event listener
+        document.removeEventListener('schema-warning');
+    }
 };
 </script>

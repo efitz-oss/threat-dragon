@@ -20,9 +20,9 @@ const getGoogleToken = (req, res) => responseWrapper.sendResponseAsync(async () 
   
   // Log the full provider details to debug
   logger.debug(`Provider details in JWT: ${JSON.stringify({
-    providerExists: !!req.provider,
+    providerExists: Boolean(req.provider),
     providerName: req.provider?.name || 'none',
-    hasAccessToken: !!req.provider?.access_token,
+    hasAccessToken: Boolean(req.provider?.access_token),
     providerKeys: req.provider ? Object.keys(req.provider) : []
   })}`);
   

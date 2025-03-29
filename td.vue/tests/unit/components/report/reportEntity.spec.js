@@ -1,6 +1,7 @@
-import { BootstrapVue, BTable } from 'bootstrap-vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
-
+import { mount } from '@vue/test-utils';
+import { 
+    BRow, BCol, BTableSimple, BThead, BTbody, BTr, BTh, BTd 
+} from 'bootstrap-vue-next';
 import TdReportEntity from '@/components/report/ReportEntity.vue';
 
 describe('components/report/ReportEntity.vue', () => {
@@ -39,17 +40,49 @@ describe('components/report/ReportEntity.vue', () => {
         }
     });
 
+    /**
+     * Vue 3 Migration: Updated to use proper component stubs with templates
+     * for bootstrap-vue-next components
+     */
     const setup = (data) => {
-        const localVue = createLocalVue();
-        localVue.use(BootstrapVue);
-        wrapper = shallowMount(TdReportEntity, {
-            localVue,
-            propsData: {
+        wrapper = mount(TdReportEntity, {
+            global: {
+                components: {
+                    BRow, BCol, BTableSimple, BThead, BTbody, BTr, BTh, BTd
+                },
+                stubs: {
+                    BRow: {
+                        template: '<div class="b-row-stub"><slot /></div>'
+                    },
+                    BCol: {
+                        template: '<div class="b-col-stub"><slot /></div>'
+                    },
+                    BTableSimple: {
+                        template: '<table class="b-table-simple-stub"><slot /></table>'
+                    },
+                    BThead: {
+                        template: '<thead class="b-thead-stub"><slot /></thead>'
+                    },
+                    BTbody: {
+                        template: '<tbody class="b-tbody-stub"><slot /></tbody>'
+                    },
+                    BTr: {
+                        template: '<tr class="b-tr-stub"><slot /></tr>'
+                    },
+                    BTh: {
+                        template: '<th class="b-th-stub"><slot /></th>'
+                    },
+                    BTd: {
+                        template: '<td class="b-td-stub"><slot /></td>'
+                    }
+                },
+                mocks: {
+                    $t: t => t
+                }
+            },
+            props: {
                 outOfScope: data.outOfScope,
                 entity: data.entity
-            },
-            mocks: {
-                $t: t => t
             }
         });
     };
@@ -75,8 +108,8 @@ describe('components/report/ReportEntity.vue', () => {
         });
         
         it('has a table with the threats', () => {
-            expect(wrapper.findComponent(BTable).exists())
-                .toEqual(true);
+            expect(wrapper.find('.b-table-simple-stub').exists())
+                .toBe(true);
         });
     });
 
@@ -88,8 +121,8 @@ describe('components/report/ReportEntity.vue', () => {
         });
         
         it('has a table with the threats', () => {
-            expect(wrapper.findComponent(BTable).exists())
-                .toEqual(true);
+            expect(wrapper.find('.b-table-simple-stub').exists())
+                .toBe(true);
         });
     });
 });

@@ -38,19 +38,19 @@
 </style>
 
 <script>
-import { mapState } from "vuex";
-import TdDashboardAction from "@/components/DashboardAction.vue";
-import { getDashboardActions } from "@/service/provider/providers.js";
+import { mapState } from 'vuex';
+import TdDashboardAction from '@/components/DashboardAction.vue';
+import { getDashboardActions } from '@/service/provider/providers.js';
 export default {
-    name: "MainDashboard",
+    name: 'MainDashboard',
     components: {
         TdDashboardAction,
     },
     computed: mapState({
         actions: (state) => {
-        const providerKey = state.provider.selected || "local";
-        return getDashboardActions(providerKey);
-    },
+            const providerKey = state.provider.selected || 'local';
+            return getDashboardActions(providerKey);
+        },
     }),
 };
 </script>

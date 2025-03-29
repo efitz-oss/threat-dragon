@@ -18,7 +18,7 @@ const createAsync = async (providerName, providerOptions, user) => {
 
     const refreshToken = jwt.sign(
         { provider, user },
-        env.get().config.ENCRYPTION_JWT_SIGNING_KEY,
+        env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY,
         { expiresIn: '7d' } // 7 days
     );
 
@@ -56,13 +56,9 @@ const decode = (token, key) => {
 };
 
 
-const verifyToken = (token) => {
-    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-};
+const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 
-const verifyRefresh = (token) => {
-    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-};
+const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
 
 export default {
     decode,
