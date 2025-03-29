@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { upDir } from '../helpers/path.helper.js';
 
@@ -13,6 +14,8 @@ export class Env {
      * @param {string} name
      */
     constructor (name) {
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
         this._providers = [];
         this._defaultEnvFilePath = path.join(__dirname, upDir, upDir, upDir, '.env');
         this._config = {};

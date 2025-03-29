@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 import env from '../env/Env.js';
-import repositories from "../repositories";
+import repositories from "../repositories/index.js";
 
 const name = 'bitbucket';
 

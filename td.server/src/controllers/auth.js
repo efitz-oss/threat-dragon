@@ -23,11 +23,11 @@ const login = (req, res) => {
 
 const oauthReturn = (req, res) => {
     logger.debug(`API oauthReturn request: ${logger.transformToString(req)}`);
-    let returnUrl = `/oauth-return?code=${req.query.code}`;
+    let returnUrl = `/#/oauth-return?code=${req.query.code}`;
     if (env.get().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;
     }
-    return res.redirect( returnUrl);
+    return res.redirect(returnUrl);
 };
 
 

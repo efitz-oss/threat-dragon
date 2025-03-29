@@ -83,7 +83,7 @@ export default {
         },
         isGoogleProvider: Boolean
     },
-    setup(props) {
+    setup(props, { emit }) {
         const filter = ref('');
         const pageRef = ref(props.page);
         const displayedItems = computed(() => {

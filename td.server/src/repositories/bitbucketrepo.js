@@ -1,4 +1,5 @@
-import {Bitbucket} from 'bitbucket';
+import pkg from 'bitbucket';
+const {Bitbucket} = pkg;
 import env from '../env/Env.js';
 
 const repoRootDirectory = () => env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;

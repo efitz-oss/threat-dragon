@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import {
     BRANCH_CLEAR,
     BRANCH_CREATE,
@@ -46,7 +44,8 @@ const actions = {
 const mutations = {
     [BRANCH_CLEAR]: (state) => clearState(state),
     [BRANCH_FETCH]: (state, {branches, page, pageNext, pagePrev }) => {
-        branches.forEach((branch, idx) => Vue.set(state.all, idx, branch));
+        // Replace Vue.set with direct assignment (Vue 3 reactivity)
+        state.all = [...branches];
         state.page = page;
         state.pageNext = pageNext;
         state.pagePrev = pagePrev;

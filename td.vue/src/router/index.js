@@ -48,6 +48,6 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(), // This removes the hash from URLs
     routes,
-  });
+});
 
 export default router;

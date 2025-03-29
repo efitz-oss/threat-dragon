@@ -72,9 +72,9 @@
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@use '@/styles/colors.scss' as colors;
 .new-threat-by-type {
-    color: $orange;
+    color: colors.$orange;
     font-size: 16px;
     padding: 15px;
 }

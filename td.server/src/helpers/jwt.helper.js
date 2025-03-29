@@ -1,6 +1,7 @@
-import jwt from 'jsonwebtoken';
 import encryptionHelper from './encryption.helper.js';
 import env from '../env/Env.js';
+import jwt from 'jsonwebtoken';
+import loggerHelper from '../helpers/logger.helper.js';
 
 const createAsync = async (providerName, providerOptions, user) => {
     const encryptedProviderOptions = await encryptionHelper.encryptPromise(JSON.stringify(providerOptions));
@@ -17,7 +18,7 @@ const createAsync = async (providerName, providerOptions, user) => {
 
     const refreshToken = jwt.sign(
         { provider, user },
-        env.get().config.ENCRYPTION_JWT_SIGNING_KEY,
+        env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY,
         { expiresIn: '7d' } // 7 days
     );
 
@@ -38,9 +39,6 @@ const decodeProvider = (encodedProvider) => {
 const decode = (token, key) => {
 
     try {
-        // Decode without verifying to inspect the token
-        const decodedToken = jwt.decode(token, { complete: true });
-
         // Verify the token
         const { provider, user } = jwt.verify(token, key);
 
@@ -50,20 +48,17 @@ const decode = (token, key) => {
             user
         };
     } catch (error) {
-        console.error('Error verifying token:', error.message);
-        console.error('Error stack:', error.stack);
+        const logger = loggerHelper.get('helpers/jwt.helper.js');
+        logger.error(`Error verifying token: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
         throw new Error('Invalid JWT');
     }
 };
 
 
-const verifyToken = (token) => {
-    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-};
+const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 
-const verifyRefresh = (token) => {
-    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-};
+const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
 
 export default {
     decode,

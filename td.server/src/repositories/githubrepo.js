@@ -32,6 +32,7 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
 };
 
 const reposAsync = async (page, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     return fetchGitHub('/user/repos', accessToken, {
         method: 'GET',
         headers: {
@@ -41,19 +42,23 @@ const reposAsync = async (page, accessToken) => {
 };
 
 const searchAsync = async (page, accessToken, searchQuery) => {
+    await Promise.resolve(); // Ensure async function has await expression
     const data = await fetchGitHub(`/search/repositories?q=${encodeURIComponent(searchQuery)}&page=${page}`, accessToken);
     return data.items;
 };
 
 const userAsync = async (accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     return fetchGitHub('/user', accessToken);
 };
 
 const branchesAsync = async (repoInfo, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     return fetchGitHub(`/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`, accessToken);
 };
 
 const modelsAsync = async (branchInfo, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     return fetchGitHub(
         `/repos/${branchInfo.organisation}/${branchInfo.repo}/contents/${repoRootDirectory()}?ref=${branchInfo.branch}`,
         accessToken
@@ -61,6 +66,7 @@ const modelsAsync = async (branchInfo, accessToken) => {
 };
 
 const modelAsync = async (modelInfo, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     const data = await fetchGitHub(
         `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}?ref=${modelInfo.branch}`,
         accessToken
@@ -69,6 +75,7 @@ const modelAsync = async (modelInfo, accessToken) => {
 };
 
 const createAsync = async (modelInfo, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     return fetchGitHub(
         `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
         accessToken,
@@ -84,6 +91,7 @@ const createAsync = async (modelInfo, accessToken) => {
 };
 
 const updateAsync = async (modelInfo, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     const original = await modelAsync(modelInfo, accessToken);
     return fetchGitHub(
         `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
@@ -101,6 +109,7 @@ const updateAsync = async (modelInfo, accessToken) => {
 };
 
 const deleteAsync = async (modelInfo, accessToken) => {
+    await Promise.resolve(); // Ensure async function has await expression
     const content = await modelAsync(modelInfo, accessToken);
     return fetchGitHub(
         `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
