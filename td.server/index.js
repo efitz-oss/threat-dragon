@@ -1,7 +1,12 @@
-var appFactory = require('./dist/app.js');
+import appFactory from './dist/app.js';
 
-var app = appFactory.default.create();
+const app = appFactory.create();
 
-var server = app.listen(app.get('port'), function() {
-    console.log('Express server listening at ' + server.address().address + ' on port ' +  server.address().port);
+const server = app.listen(app.get('port'), function() {
+    const address = server.address();
+    if (address) {
+        console.log('Express server listening at ' + address.address + ' on port ' + address.port);
+    } else {
+        console.log('Express server listening on port ' + app.get('port'));
+    }
 });

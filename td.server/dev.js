@@ -1,8 +1,8 @@
-var appFactory = require('./src/app.js');
+import appFactory from './src/app.js';
 
-var app = appFactory.default.create();
+const app = appFactory.create();
 
-var server = app.listen(app.get('port'), function() {
+const server = app.listen(app.get('port'), function() {
     const address = server.address();
     if (address) {
         console.log('Development server listening at ' + address.address + ' on port ' + address.port);
