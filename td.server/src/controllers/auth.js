@@ -22,32 +22,65 @@ const login = (req, res) => {
 };
 
 const oauthReturn = (req, res) => {
+    logger.info(`OAuth return received with code: ${req.query.code ? `${req.query.code.substring(0, 10)}...` : 'none'}`);
     logger.debug(`API oauthReturn request: ${logger.transformToString(req)}`);
-    let returnUrl = `/#/oauth-return?code=${req.query.code}`;
+    
+    // Get the base URL from the configured server or the request
+    let baseUrl = '';
     if (env.get().config.NODE_ENV === 'development') {
-        returnUrl = `http://localhost:8080${returnUrl}`;
+        baseUrl = 'http://localhost:8080';
+    } else {
+        // Try to determine the redirect URL from configured headers
+        const host = req.get('x-forwarded-host') || req.get('host');
+        const protocol = (req.get('x-forwarded-proto') || req.protocol) + '://';
+        if (host) {
+            baseUrl = protocol + host;
+        }
+        logger.debug(`Determined base URL for OAuth return: ${baseUrl}`);
     }
+    
+    const returnUrl = `${baseUrl}/#/oauth-return?code=${req.query.code}`;
+    logger.info(`Redirecting to: ${returnUrl}`);
+    
     return res.redirect(returnUrl);
 };
 
 
 const completeLogin = (req, res) => {
+    logger.info(`API completeLogin received for provider: ${req.params.provider}`);
+    logger.info(`Code received: ${req.body.code ? `${req.body.code.substring(0, 10)}...` : 'none'}`);
     logger.debug(`API completeLogin request: ${logger.transformToString(req)}`);
 
     try {
         const provider = providers.get(req.params.provider);
+        logger.info(`Provider ${req.params.provider} found: ${Boolean(provider)}`);
 
         // Errors in here will return as server errors as opposed to bad requests
         return responseWrapper.sendResponseAsync(async () => {
-            const { user, opts } = await provider.completeLoginAsync(req.body.code);
-            const { accessToken, refreshToken } = await jwtHelper.createAsync(provider.name, opts, user);
-            tokenRepo.add(refreshToken);
-            return {
-                accessToken,
-                refreshToken
-            };
+            try {
+                logger.info(`Getting user info from ${req.params.provider} with authorization code`);
+                const { user, opts } = await provider.completeLoginAsync(req.body.code);
+                logger.info(`Got user info: ${user?.username || 'unknown'}, ${user?.email || 'no email'}`);
+                
+                logger.info(`Creating JWT for ${provider.name}`);
+                const { accessToken, refreshToken } = await jwtHelper.createAsync(provider.name, opts, user);
+                
+                logger.info(`Adding refresh token to repository`);
+                tokenRepo.add(refreshToken);
+                
+                logger.info(`Login completed successfully for ${user?.username || 'unknown'}`);
+                return {
+                    accessToken,
+                    refreshToken
+                };
+            } catch (error) {
+                logger.error(`Error in completeLoginAsync: ${error.message}`);
+                logger.error(error.stack);
+                throw error;
+            }
         }, req, res, logger);
     } catch (err) {
+        logger.error(`Error in completeLogin: ${err.message}`);
         return errors.badRequest(err.message, res, logger);
     }
 };
