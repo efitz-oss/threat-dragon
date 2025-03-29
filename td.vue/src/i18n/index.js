@@ -31,7 +31,10 @@ const get = () => {
             }
         });
     }
-    return i18n;
+    return {
+        ...i18n,
+        t: (key) => i18n.global.t(key)
+    };
 };
 
 // Export the get function
