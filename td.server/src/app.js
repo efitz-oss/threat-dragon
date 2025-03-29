@@ -1,9 +1,10 @@
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 
 import env from './env/Env.js';
-import envConfig from './config/env.config';
+import envConfig from './config/env.config.js';
 import expressHelper from './helpers/express.helper.js';
 import https from './config/https.config.js';
 import loggerHelper from './helpers/logger.helper.js';
@@ -12,6 +13,8 @@ import routes from './config/routes.config.js';
 import securityHeaders from './config/securityheaders.config.js';
 import { upDir } from './helpers/path.helper.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const siteDir = path.join(__dirname, upDir, upDir, 'dist');
 const docsDir = path.join(__dirname, upDir, upDir, 'docs');
 

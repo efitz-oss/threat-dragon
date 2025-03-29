@@ -1,31 +1,35 @@
 <template>
-    <b-container fluid>
-        <div class="welcome-jumbotron">
+    <b-container fluid data-testid="home-page">
+        <div class="welcome-jumbotron" data-testid="welcome-jumbotron">
             <b-row class="text-center mb-2">
                 <b-col md="12">
-                    <h1 class="display-3 text-center">{{ $t("home.title") }}</h1>
+                    <h1 class="display-3 text-center" data-testid="home-title">
+                        {{ $t("home.title") }}
+                    </h1>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="4">
                     <b-img class="td-cupcake"
                            id="home-td-logo"
+                           data-testid="home-logo"
                            :alt="$t('home.imgAlt')"
                            :src="require('@/assets/threatdragon_logo_image.svg')"
                     />
                 </b-col>
                 <b-col md="8">
                     <b-row>
-                        <p class="td-description mt-5">
+                        <p class="td-description mt-5" data-testid="home-description">
                             {{ $t("home.description") }}
                         </p>
                     </b-row>
                     <b-row>
-                        <b-col class="mt-5 ml-5 text-center">
+                        <b-col class="mt-5 ml-5 text-center" data-testid="login-buttons">
                             <td-provider-login-button
                                 v-for="(provider, idx) in providers"
                                 :key="idx"
                                 :provider="provider"
+                                data-testid="provider-login-button"
                             />
                         </b-col>
                     </b-row>

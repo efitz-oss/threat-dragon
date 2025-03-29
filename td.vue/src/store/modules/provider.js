@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import isElectron from 'is-electron';
 
 import {
@@ -46,8 +45,8 @@ const actions = {
 const mutations = {
     [PROVIDER_CLEAR]: (state) => clearState(state),
     [PROVIDER_FETCH]: (state, providers) => {
-        state.all.length = 0;
-        providers.forEach((provider, idx) => Vue.set(state.all, idx, provider));
+        // Replace Vue.set with direct array assignment (Vue 3 reactivity)
+        state.all = [...providers];
     },
     [PROVIDER_SELECTED]: (state, { providerName, providerUri }) => {
         state.selected = providerName;

@@ -1,6 +1,6 @@
-import env from "../env/Env";
+import env from "../env/Env.js";
 import loggerHelper from '../helpers/logger.helper.js';
-import responseWrapper from "./responseWrapper";
+import responseWrapper from "./responseWrapper.js";
 
 const logger = loggerHelper.get('controllers/configcontroller.js');
 

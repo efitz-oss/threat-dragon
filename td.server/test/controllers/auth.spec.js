@@ -121,7 +121,7 @@ describe('controllers/auth.js', () => {
 
             beforeEach(async () => {
                 mockRequest.params.provider = 'foobar';
-                mockRequest.query.code = '12345';
+                mockRequest.body = { code: '12345' };
                 sinon.stub(providers, 'get').returns(providerStub);
                 sinon.stub(providerStub, 'completeLoginAsync').resolves(providerResp);
                 sinon.stub(jwtHelper, 'createAsync').resolves(tokensStub);
@@ -133,7 +133,7 @@ describe('controllers/auth.js', () => {
             });
 
             it('has the provider complete the login using the code', () => {
-                expect(providerStub.completeLoginAsync).to.have.been.calledWith(mockRequest.query.code);
+                expect(providerStub.completeLoginAsync).to.have.been.calledWith(mockRequest.body.code);
             });
 
             it('generates the access and refresh tokens', () => {

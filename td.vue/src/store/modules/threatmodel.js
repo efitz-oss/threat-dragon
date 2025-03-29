@@ -1,10 +1,9 @@
-import Vue from 'vue';
-
 import demo from '@/service/demo/index.js';
 import isElectron from 'is-electron';
 import { getProviderType } from '@/service/provider/providers';
 import i18n from '@/i18n/index.js';
 import { providerTypes } from '@/service/provider/providerTypes';
+import { useToast } from 'vue-toast-notification';
 import {
     THREATMODEL_CLEAR,
     THREATMODEL_CONTRIBUTORS_UPDATED,
@@ -39,6 +38,9 @@ const state = {
     selectedDiagram: {}
 };
 
+// Initialize toast service
+const toast = useToast();
+
 const stashThreatModel = (theState, threatModel) => {
     console.debug('Stash threat model');
     theState.data = threatModel;
@@ -60,7 +62,7 @@ const actions = {
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
                 const res = await googleDriveApi.createAsync(rootState.folder.selected, state.data, `${state.data.summary.title}.json`);
                 dispatch(FOLDER_SELECTED, res.data);
-                Vue.$toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName);
+                toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName);
             } else {
                 await threatmodelApi.createAsync(
                     rootState.repo.selected,
@@ -68,14 +70,14 @@ const actions = {
                     state.data.summary.title,
                     state.data
                 );
-                Vue.$toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName);
+                toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName);
             }
             dispatch(THREATMODEL_STASH);
             commit(THREATMODEL_NOT_MODIFIED);
         } catch (ex) {
             console.error('Failed to save new threat model!');
             console.error(ex);
-            Vue.$toast.error(i18n.get().t('threatmodel.errors.save'));
+            toast.error(i18n.get().t('threatmodel.errors.save'));
         }
     },
     [THREATMODEL_DIAGRAM_APPLIED]: ({ commit }) => commit(THREATMODEL_DIAGRAM_APPLIED),
@@ -130,7 +132,7 @@ const actions = {
         // Identify if threat model is in OTM format
         if (Object.hasOwn(state.data, 'otmVersion')) {
             //  convert dragon to OTM format not yet available
-            Vue.$toast.warning('Saving in Open Threat Model format not yet supported');
+            toast.warning('Saving in Open Threat Model format not yet supported');
             // continue to saving in dragon format
         }
         try {
@@ -152,11 +154,11 @@ const actions = {
             }
             dispatch(THREATMODEL_STASH);
             commit(THREATMODEL_NOT_MODIFIED);
-            Vue.$toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName, { timeout: 1000 });
+            toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName, { timeout: 1000 });
         } catch (ex) {
             console.error('Failed to save threat model!');
             console.error(ex);
-            Vue.$toast.error(i18n.get().t('threatmodel.errors.save'));
+            toast.error(i18n.get().t('threatmodel.errors.save'));
         }
     },
     [THREATMODEL_SELECTED]: ({ commit }, threatModel) => commit(THREATMODEL_SELECTED, threatModel),
@@ -169,7 +171,8 @@ const mutations = {
     [THREATMODEL_CLEAR]: (state) => clearState(state),
     [THREATMODEL_CONTRIBUTORS_UPDATED]: (state, contributors) => {
         state.data.detail.contributors.length = 0;
-        contributors.forEach((name, idx) => Vue.set(state.data.detail.contributors, idx, { name }));
+        // Replace Vue.set with direct array assignment for Vue 3 reactivity
+        state.data.detail.contributors = contributors.map(name => ({ name }));
     },
     [THREATMODEL_DIAGRAM_APPLIED]: (state) => {
         if (Object.keys(state.modifiedDiagram).length !== 0) {
@@ -198,10 +201,10 @@ const mutations = {
         const idx = state.data.detail.diagrams.findIndex(x => x.id === diagram.id);
         console.debug('Threatmodel diagram saved: ' + diagram.id + ' at index: ' + idx);
         // beware: this will trigger a redraw of the diagram, ?possibly to the wrong canvas size?
-        Vue.set(state, 'selectedDiagram', diagram);
+        state.selectedDiagram = diagram;
         // beware ^^
-        Vue.set(state.data.detail.diagrams, idx, diagram);
-        Vue.set(state.data, 'version', diagram.version);
+        state.data.detail.diagrams[idx] = diagram;
+        state.data.version = diagram.version;
         stashThreatModel(state, state.data);
     },
     [THREATMODEL_DIAGRAM_SELECTED]: (state, diagram) => {

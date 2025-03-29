@@ -53,10 +53,13 @@ export default {
         this.init();
     },
     created() {
-        window.addEventListener('resize', debounce(this.resize, debounceTimeoutMs));
+        // Store the debounced function reference so we can remove it properly
+        this.debouncedResize = debounce(this.resize, debounceTimeoutMs);
+        window.addEventListener('resize', this.debouncedResize);
     },
-    destroyed() {
-        window.removeEventListener('resize', this.resize);
+    unmounted() {
+        // Vue 3 uses unmounted instead of destroyed
+        window.removeEventListener('resize', this.debouncedResize);
         diagramService.dispose(this.graph);
     }
 };

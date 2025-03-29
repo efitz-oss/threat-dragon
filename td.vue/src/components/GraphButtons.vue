@@ -7,8 +7,7 @@
             text="" />
 
         <td-form-button
-            :onBtnClick="noOp"
-            v-b-modal.shortcuts
+            :onBtnClick="showShortcuts"
             icon="keyboard"
             :title="$t('threatmodel.buttons.shortcuts')"
             text="" />
@@ -101,6 +100,10 @@ export default {
         },
         noOp() {
             return;
+        },
+        showShortcuts() {
+            // Vue 3 Migration: Replace v-b-modal directive with method call
+            this.$root.$emit('bv::show::modal', 'shortcuts');
         },
         undo() {
             if (this.graph.getPlugin('history').canUndo()) {

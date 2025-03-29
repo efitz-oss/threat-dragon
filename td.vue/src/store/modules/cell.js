@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import {
     CELL_DATA_UPDATED,
     CELL_SELECTED,
@@ -25,7 +24,8 @@ const mutations = {
     [CELL_SELECTED]: (state, ref) => {
         state.ref = ref;
         if (state.ref && state.ref.data && state.ref.data.threats) {
-            state.ref.data.threats.forEach((threat, idx) => Vue.set(state.threats, idx, threat));
+            // Replace Vue.set with direct array assignment for Vue 3 reactivity
+            state.threats = [...state.ref.data.threats];
         }
     },
     [CELL_UNSELECTED]: (state) => clearState(state),
@@ -37,8 +37,8 @@ const mutations = {
         state.ref.setData(data);
 
         if (data.threats) {
-            state.threats.splice(0);
-            data.threats.forEach((threat, idx) => Vue.set(state.threats, idx, threat));
+            // Replace Vue.set with direct array assignment for Vue 3 reactivity
+            state.threats = [...data.threats];
         }
     }
 };

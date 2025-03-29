@@ -14,9 +14,9 @@ import authActions from './store/actions/auth.js';
 import providerActions from './store/actions/provider.js';
 import tmActions from './store/actions/threatmodel.js';
 
-import './plugins/bootstrap-vue.js';
+import './plugins/bootstrap-vue-next.js'; // Bootstrap-Vue-Next plugin for Vue 3
 import './plugins/fontawesome-vue.js';
-import './plugins/toastification.js';
+import './plugins/toast-notification.js';
 
 Vue.config.productionTip = false;
 

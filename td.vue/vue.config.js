@@ -1,5 +1,4 @@
 const path = require('path');
-const { CycloneDxWebpackPlugin } = require('@cyclonedx/webpack-plugin');
 const fs = require('fs');
 
 require('dotenv').config({ path: process.env.ENV_FILE || path.resolve(__dirname, '../.env') });
@@ -147,16 +146,30 @@ module.exports = {
     },
     configureWebpack: {
         devtool: 'source-map',
-        plugins: [
-            new CycloneDxWebpackPlugin(
-                {
-                    outputLocation: '.sbom',
-                    specVersion: '1.5'
-                }
-            )
-        ],
+        plugins: [],
         output: {
             hashFunction: 'xxhash64'
+        },
+        optimization: {
+            splitChunks: {
+                chunks: 'all',
+                minSize: 20000,
+                maxSize: 244000, // Keep chunks under recommended size (244 KiB)
+                cacheGroups: {
+                    vendors: {
+                        test: /[\\/]node_modules[\\/]/,
+                        priority: -10,
+                        chunks: 'initial',
+                        name: 'vendors'
+                    },
+                    common: {
+                        name: 'common',
+                        minChunks: 2,
+                        priority: -20,
+                        reuseExistingChunk: true
+                    }
+                }
+            }
         }
     }
 };

@@ -254,36 +254,36 @@ export default {
             let placeholder;
             let thumbnail;
             switch (type) {
-                case 'CIA':
-                    thumbnail = './public/content/images/thumbnail.cia.jpg';
-                    defaultTitle = this.$t('threatmodel.diagram.cia.defaultTitle');
-                    placeholder = this.$t('threatmodel.diagram.cia.defaultDescription');
-                    break;
-                case 'DIE':
-                    thumbnail = './public/content/images/thumbnail.die.jpg';
-                    defaultTitle = this.$t('threatmodel.diagram.die.defaultTitle');
-                    placeholder = this.$t('threatmodel.diagram.die.defaultDescription');
-                    break;
-                case 'LINDDUN':
-                    thumbnail = './public/content/images/thumbnail.linddun.jpg';
-                    defaultTitle = this.$t('threatmodel.diagram.linddun.defaultTitle');
-                    placeholder = this.$t('threatmodel.diagram.linddun.defaultDescription');
-                    break;
-                case 'PLOT4ai':
-                    thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
-                    defaultTitle = this.$t('threatmodel.diagram.plot4ai.defaultTitle');
-                    placeholder = this.$t('threatmodel.diagram.plot4ai.defaultDescription');
-                    break;
-                case 'STRIDE':
-                    thumbnail = './public/content/images/thumbnail.stride.jpg';
-                    defaultTitle = this.$t('threatmodel.diagram.stride.defaultTitle');
-                    placeholder = this.$t('threatmodel.diagram.stride.defaultDescription');
-                    break;
-                default:
-                    thumbnail = './public/content/images/thumbnail.jpg';
-                    defaultTitle = this.$t('threatmodel.diagram.generic.defaultTitle');
-                    placeholder = this.$t('threatmodel.diagram.generic.defaultDescription');
-                    type = this.$t('threatmodel.diagram.generic.select');
+            case 'CIA':
+                thumbnail = './public/content/images/thumbnail.cia.jpg';
+                defaultTitle = this.$t('threatmodel.diagram.cia.defaultTitle');
+                placeholder = this.$t('threatmodel.diagram.cia.defaultDescription');
+                break;
+            case 'DIE':
+                thumbnail = './public/content/images/thumbnail.die.jpg';
+                defaultTitle = this.$t('threatmodel.diagram.die.defaultTitle');
+                placeholder = this.$t('threatmodel.diagram.die.defaultDescription');
+                break;
+            case 'LINDDUN':
+                thumbnail = './public/content/images/thumbnail.linddun.jpg';
+                defaultTitle = this.$t('threatmodel.diagram.linddun.defaultTitle');
+                placeholder = this.$t('threatmodel.diagram.linddun.defaultDescription');
+                break;
+            case 'PLOT4ai':
+                thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
+                defaultTitle = this.$t('threatmodel.diagram.plot4ai.defaultTitle');
+                placeholder = this.$t('threatmodel.diagram.plot4ai.defaultDescription');
+                break;
+            case 'STRIDE':
+                thumbnail = './public/content/images/thumbnail.stride.jpg';
+                defaultTitle = this.$t('threatmodel.diagram.stride.defaultTitle');
+                placeholder = this.$t('threatmodel.diagram.stride.defaultDescription');
+                break;
+            default:
+                thumbnail = './public/content/images/thumbnail.jpg';
+                defaultTitle = this.$t('threatmodel.diagram.generic.defaultTitle');
+                placeholder = this.$t('threatmodel.diagram.generic.defaultDescription');
+                type = this.$t('threatmodel.diagram.generic.select');
             }
             this.model.detail.diagrams[idx].diagramType = type;
             this.model.detail.diagrams[idx].placeholder = placeholder;

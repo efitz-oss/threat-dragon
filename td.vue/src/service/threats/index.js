@@ -4,7 +4,13 @@ import models from './models/index.js';
 import { tc } from '../../i18n/index.js';
 import store from '@/store/index.js';
 
-
+// Handle the possibility that store might not have get() method in some contexts
+const getStore = () => {
+    if (typeof store.get === 'function') {
+        return store.get();
+    }
+    return store;
+};
 
 const valuesToTranslations = {
     /* CIA */
@@ -52,7 +58,9 @@ export const createNewTypedThreat = function (modelType, cellType,number) {
     let title, type;
     if(modelType.toLowerCase()==='generic') modelType='default';
     title = tc(`threats.generic.${modelType.toLowerCase()}`);
-    const freqMap = store.get().state.cell?.ref?.data.threatFrequency;
+    const storeInstance = getStore();
+    // Use optional chaining to safely access properties that might be undefined in the test environment
+    const freqMap = storeInstance?.state?.cell?.ref?.data?.threatFrequency;
     if(freqMap){
         let min =freqMap[Object.keys(freqMap)[0]],choice=Object.keys(freqMap)[0];
         Object.keys(freqMap).forEach((k)=>{

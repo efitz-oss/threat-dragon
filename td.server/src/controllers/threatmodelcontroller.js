@@ -1,6 +1,6 @@
 import env from '../env/Env.js';
 import loggerHelper from '../helpers/logger.helper.js';
-import repositories from "../repositories";
+import repositories from "../repositories/index.js";
 import responseWrapper from './responseWrapper.js';
 import { serverError } from './errors.js';
 

@@ -15,7 +15,9 @@ import ind from './id.js';
 import jpn from './ja.js';
 import ms from './ms.js';
 import por from './pt.js';
+import rus from './ru.js';
 import spa from './es.js';
+import ukr from './uk.js';
 import zho from './zh.js';
 
 let i18n = null;
@@ -25,7 +27,7 @@ const get = () => {
         i18n = createI18n({
             locale: 'eng',
             messages: {
-                ara, deu, ell, eng, spa, fin, id, fra, hin, ind, jpn, ms, por, zho
+                ara, deu, ell, eng, spa, fin, id, fra, hin, ind, jpn, ms, por, rus, ukr, zho
             }
         });
     }

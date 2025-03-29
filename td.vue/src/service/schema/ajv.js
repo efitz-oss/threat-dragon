@@ -1,5 +1,4 @@
 import Ajv from 'ajv';
-import Vue from 'vue';
 import i18n from '@/i18n/index.js';
 
 import { schema } from './threat-model-schema';
@@ -23,7 +22,15 @@ export const isValidSchema = (jsonFile) => {
     valid = validate(jsonFile);
     if (valid) {
         console.debug('Schema validate success for V1.x model');
-        Vue.$toast.warning(i18n.get().t('nav.v2Warning'), { timeout: false });
+        // Using import to avoid direct reference to Vue instance
+        // Will be called from component context
+        const warningMessage = i18n.get().t('nav.v2Warning');
+        setTimeout(() => {
+            // Emit a custom event for the warning that components can listen for
+            document.dispatchEvent(new CustomEvent('schema-warning', { 
+                detail: { message: warningMessage }
+            }));
+        }, 0);
         return true;
     }
 

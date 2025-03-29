@@ -9,6 +9,14 @@ import { THREATMODEL_MODIFIED } from '@/store/actions/threatmodel.js';
 import threats from '@/service/threats/index.js';
 import defaultProperties from '@/service/entity/default-properties.js';
 
+// Handle the possibility that store might not have get() method in some contexts
+const getStore = () => {
+    if (typeof store.get === 'function') {
+        return store.get();
+    }
+    return store;
+};
+
 const styles = {
     default: {
         color: '#333333',
@@ -41,8 +49,11 @@ const updateStyleAttrs = (cell) => {
 
     if (cell.data) {
         cell.data.hasOpenThreats = threats.hasOpenThreats(cell.data);
-        store.get().dispatch(CELL_DATA_UPDATED, cell.data);
-        store.get().dispatch(THREATMODEL_MODIFIED);
+        const storeInstance = getStore();
+        if (typeof storeInstance?.dispatch === 'function') {
+            storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
+            storeInstance.dispatch(THREATMODEL_MODIFIED);
+        }
     }
 
     let { color, strokeDasharray, strokeWidth, sourceMarker } = styles.default;
@@ -86,8 +97,11 @@ const updateProperties = (cell) => {
             cell.setData(defaultProperties.getByType(cell.type));
             console.debug('Default properties for ' + cell.shape + ' cell: ' + cell.getData().name);
         }
-        store.get().dispatch(CELL_DATA_UPDATED, cell.data);
-        store.get().dispatch(THREATMODEL_MODIFIED);
+        const storeInstance = getStore();
+        if (typeof storeInstance?.dispatch === 'function') {
+            storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
+            storeInstance.dispatch(THREATMODEL_MODIFIED);
+        }
     } else {
         console.warn('No cell found to update properties');
     }

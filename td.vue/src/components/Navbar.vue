@@ -138,29 +138,29 @@ import { mapGetters, mapState } from 'vuex';
 import { LOGOUT } from '@/store/actions/auth.js';
 import TdLocaleSelect from './LocaleSelect.vue';
 export default {
-  name: 'TdNavbar',
-  components: {
-    TdLocaleSelect,
-  },
-  computed: {
-    ...mapGetters(['username']),
-    ...mapState({
-      config: state => state.config.config
-    }),
-    googleEnabled() {
-      return this.config && this.config.googleEnabled;
-    }
-  },
-  methods: {
-    onLogOut(evt) {
-      evt.preventDefault();
-      this.$store.dispatch(LOGOUT);
-      this.$router.push('/').catch((error) => {
-        if (error.name != 'NavigationDuplicated') {
-          throw error;
-        }
-      });
+    name: 'TdNavbar',
+    components: {
+        TdLocaleSelect,
     },
-  },
+    computed: {
+        ...mapGetters(['username']),
+        ...mapState({
+            config: state => state.config.config
+        }),
+        googleEnabled() {
+            return this.config && this.config.googleEnabled;
+        }
+    },
+    methods: {
+        onLogOut(evt) {
+            evt.preventDefault();
+            this.$store.dispatch(LOGOUT);
+            this.$router.push('/').catch((error) => {
+                if (error.name != 'NavigationDuplicated') {
+                    throw error;
+                }
+            });
+        },
+    },
 };
 </script>

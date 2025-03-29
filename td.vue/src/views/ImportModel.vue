@@ -64,14 +64,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 
-import isElectron from "is-electron";
-import { getProviderType } from "@/service/provider/providers.js";
-import openThreatModel from "@/service/otm/openThreatModel.js";
-import TdFormButton from "@/components/FormButton.vue";
-import tmActions from "@/store/actions/threatmodel.js";
-import { isValidSchema } from "@/service/schema/ajv";
+import isElectron from 'is-electron';
+import { getProviderType } from '@/service/provider/providers.js';
+import openThreatModel from '@/service/otm/openThreatModel.js';
+import TdFormButton from '@/components/FormButton.vue';
+import tmActions from '@/store/actions/threatmodel.js';
+import { isValidSchema } from '@/service/schema/ajv';
 import {
     BRow,
     BCol,
@@ -79,15 +79,15 @@ import {
     BFormGroup,
     BFormTextarea,
     BButtonGroup,
-} from "bootstrap-vue-next";
+} from 'bootstrap-vue-next';
 
 // only search for text files
 const pickerFileOptions = {
     types: [
         {
-            description: "Threat models",
+            description: 'Threat models',
             accept: {
-                "application/json": [".json"],
+                'application/json': ['.json'],
             },
         },
     ],
@@ -95,7 +95,7 @@ const pickerFileOptions = {
 };
 
 export default {
-    name: "ImportModel",
+    name: 'ImportModel',
     components: {
         TdFormButton,
     },
@@ -105,23 +105,23 @@ export default {
         }),
         prompt() {
             return (
-                "{ " +
-                this.$t("threatmodel.dragAndDrop") +
-                this.$t("threatmodel.jsonPaste") +
-                " ... }"
+                '{ ' +
+                this.$t('threatmodel.dragAndDrop') +
+                this.$t('threatmodel.jsonPaste') +
+                ' ... }'
             );
         },
     },
     data() {
         return {
-            tmJson: "",
+            tmJson: '',
         };
     },
     methods: {
         onDropFile(event) {
             if (event.dataTransfer.files.length === 1) {
                 let file = event.dataTransfer.files[0];
-                if (file.name.endsWith(".json")) {
+                if (file.name.endsWith('.json')) {
                     file.text()
                         .then((text) => {
                             this.tmJson = text;
@@ -133,24 +133,24 @@ export default {
                         .catch((e) => this.$toast.error(e));
                 } else {
                     this.$toast.error(
-                        this.$t("threatmodel.errors.onlyJsonAllowed")
+                        this.$t('threatmodel.errors.onlyJsonAllowed')
                     );
                 }
             } else {
                 this.$toast.error(
-                    this.$t("threatmodel.errors.dropSingleFileOnly")
+                    this.$t('threatmodel.errors.dropSingleFileOnly')
                 );
             }
         },
         async onOpenClick() {
-            if ("showOpenFilePicker" in window) {
+            if ('showOpenFilePicker' in window) {
                 // Chrome and Edge browsers return an array of file handles
                 try {
                     const [handle] = await window.showOpenFilePicker(
                         pickerFileOptions
                     );
                     let file = await handle.getFile();
-                    if (file.name.endsWith(".json")) {
+                    if (file.name.endsWith('.json')) {
                         this.tmJson = await file.text();
                         this.$store.dispatch(tmActions.update, {
                             fileName: file.name,
@@ -158,17 +158,17 @@ export default {
                         this.onImportClick(file.name);
                     } else {
                         this.$toast.error(
-                            this.$t("threatmodel.errors.onlyJsonAllowed")
+                            this.$t('threatmodel.errors.onlyJsonAllowed')
                         );
                     }
                 } catch (e) {
                     // any error is most likely due to the picker being cancelled, which is benign so just warn
-                    this.$toast.warning(this.$t("threatmodel.errors.open"));
+                    this.$toast.warning(this.$t('threatmodel.errors.open'));
                     console.warn(e);
                 }
             } else {
                 this.$toast.error(
-                    "File picker is not yet supported on this browser: use Paste or Drag and Drop"
+                    'File picker is not yet supported on this browser: use Paste or Drag and Drop'
                 );
             }
         },
@@ -178,18 +178,18 @@ export default {
             try {
                 jsonModel = JSON.parse(this.tmJson);
             } catch (e) {
-                this.$toast.error(this.$t("threatmodel.errors.invalidJson"));
+                this.$toast.error(this.$t('threatmodel.errors.invalidJson'));
                 console.error(e);
                 return;
             }
 
             // check for schema errors
             if (!isValidSchema(jsonModel)) {
-                this.$toast.warning(this.$t("threatmodel.errors.invalidJson"));
+                this.$toast.warning(this.$t('threatmodel.errors.invalidJson'));
             }
 
             // Identify if threat model is in OTM format and if so, convert OTM to dragon format
-            if (Object.hasOwn(jsonModel, "otmVersion")) {
+            if (Object.hasOwn(jsonModel, 'otmVersion')) {
                 jsonModel = openThreatModel.convertOTMtoTD(jsonModel);
             }
 
@@ -209,8 +209,8 @@ export default {
                 });
             } catch (e) {
                 this.$toast.error(
-                    this.$t("threatmodel.errors.invalidJson") +
-                        " : " +
+                    this.$t('threatmodel.errors.invalidJson') +
+                        ' : ' +
                         e.message
                 );
                 console.error(e);

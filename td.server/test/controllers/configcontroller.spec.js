@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import env from '../../src/env/Env.js';
 import configController, {getConfig} from '../../src/controllers/configcontroller.js';
 import {getMockRequest, getMockResponse} from '../mocks/express.mocks.js';
-import responseWrapper from "../../src/controllers/responseWrapper";
+import responseWrapper from "../../src/controllers/responseWrapper.js";
 
 describe('controllers/configcontroller.js', () => {
     let mockRequest, mockResponse;

@@ -41,7 +41,7 @@
                         v-if="severity === 'Low'" />
                 </b-col>
                 <b-col align-h="end">
-                    <b-badge :v-if="!!modelType">{{ modelType }}</b-badge>
+                    <b-badge v-if="!!modelType">{{ modelType }}</b-badge>
                 </b-col>
             </b-row>
         </b-card-text>

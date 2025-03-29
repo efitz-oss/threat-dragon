@@ -1,12 +1,27 @@
 'use strict';
 
-import { app, dialog } from 'electron';
 import path from 'path';
 import logger from './logger.js';
 import { isMacOS } from './utils.js';
 
-const { shell } = require('electron');
-const fs = require('fs');
+// Use dynamic imports for better testing support
+let app, dialog, shell, fs;
+
+try {
+    // For production environment
+    const electron = require('electron');
+    app = electron.app;
+    dialog = electron.dialog;
+    shell = electron.shell;
+    fs = require('fs');
+} catch (e) {
+    // For testing environment
+    const electron = require('electron');
+    app = electron.app || { addRecentDocument: () => {} };
+    dialog = electron.dialog || { showOpenDialog: () => {}, showSaveDialog: () => {} };
+    shell = electron.shell || { openExternal: () => {} };
+    fs = require('fs') || { readFile: () => {}, writeFile: () => {} };
+}
 
 // provided by electron server bootstrap
 var mainWindow;

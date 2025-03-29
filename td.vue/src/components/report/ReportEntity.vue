@@ -79,10 +79,10 @@
 </style>
 
 <script>
-import threatService from "@/service/threats/index.js";
+import threatService from '@/service/threats/index.js';
 
 export default {
-    name: "TdReportEntity",
+    name: 'TdReportEntity',
     props: {
         entity: Object,
         outOfScope: {
@@ -105,8 +105,8 @@ export default {
     computed: {
         dataType: function () {
             const entityType = this.entity.data.type
-                .replace("tm.", "")
-                .replace("td.", "");
+                .replace('tm.', '')
+                .replace('td.', '');
             return this.$t(
                 `threatmodel.shapes.${this.toCamelCase(entityType)}`
             );
@@ -119,83 +119,83 @@ export default {
 
             return Array.isArray(threats)
                 ? threats.map((threat) => ({
-                      [this.$t("threats.properties.number")]: threat.number,
-                      [this.$t("threats.properties.title")]: threat.title,
-                      [this.$t("threats.properties.type")]: threat.type,
-                      [this.$t("threats.properties.priority")]: threat.severity,
-                      [this.$t("threats.properties.status")]: threat.status,
-                      [this.$t("threats.properties.score")]: threat.score,
-                      [this.$t("threats.properties.description")]:
+                    [this.$t('threats.properties.number')]: threat.number,
+                    [this.$t('threats.properties.title')]: threat.title,
+                    [this.$t('threats.properties.type')]: threat.type,
+                    [this.$t('threats.properties.priority')]: threat.severity,
+                    [this.$t('threats.properties.status')]: threat.status,
+                    [this.$t('threats.properties.score')]: threat.score,
+                    [this.$t('threats.properties.description')]:
                           threat.description,
-                      [this.$t("threats.properties.mitigation")]:
+                    [this.$t('threats.properties.mitigation')]:
                           threat.mitigation,
-                  }))
+                }))
                 : [];
         },
         properties: function () {
-            let properties = "";
+            let properties = '';
             if (this.entity.data.bidirection) {
                 properties +=
-                    this.$t("threatmodel.properties.bidirection") + ", ";
+                    this.$t('threatmodel.properties.bidirection') + ', ';
             }
             if (this.entity.data.handlesCardPayment) {
                 properties +=
-                    this.$t("threatmodel.properties.handlesCardPayment") + ", ";
+                    this.$t('threatmodel.properties.handlesCardPayment') + ', ';
             }
             if (this.entity.data.handlesGoodsOrServices) {
                 properties +=
-                    this.$t("threatmodel.properties.handlesGoodsOrServices") +
-                    ", ";
+                    this.$t('threatmodel.properties.handlesGoodsOrServices') +
+                    ', ';
             }
             if (this.entity.data.isALog) {
-                properties += this.$t("threatmodel.properties.isALog") + ", ";
+                properties += this.$t('threatmodel.properties.isALog') + ', ';
             }
             if (this.entity.data.isEncrypted) {
                 properties +=
-                    this.$t("threatmodel.properties.isEncrypted") + ", ";
+                    this.$t('threatmodel.properties.isEncrypted') + ', ';
             }
             if (this.entity.data.isSigned) {
-                properties += this.$t("threatmodel.properties.isSigned") + ", ";
+                properties += this.$t('threatmodel.properties.isSigned') + ', ';
             }
             if (this.entity.data.isWebApplication) {
                 properties +=
-                    this.$t("threatmodel.properties.isWebApplication") + ", ";
+                    this.$t('threatmodel.properties.isWebApplication') + ', ';
             }
             if (this.entity.data.privilegeLevel) {
                 properties +=
-                    this.$t("threatmodel.properties.privilegeLevel") +
-                    ": " +
+                    this.$t('threatmodel.properties.privilegeLevel') +
+                    ': ' +
                     this.entity.data.privilegeLevel +
-                    ", ";
+                    ', ';
             }
             if (this.entity.data.providesAuthentication) {
                 properties +=
-                    this.$t("threatmodel.properties.providesAuthentication") +
-                    ", ";
+                    this.$t('threatmodel.properties.providesAuthentication') +
+                    ', ';
             }
             if (this.entity.data.protocol) {
                 properties +=
-                    this.$t("threatmodel.properties.protocol") +
-                    " (" +
+                    this.$t('threatmodel.properties.protocol') +
+                    ' (' +
                     this.entity.data.protocol +
-                    "), ";
+                    '), ';
             }
             if (this.entity.data.publicNetwork) {
                 properties +=
-                    this.$t("threatmodel.properties.publicNetwork") + ", ";
+                    this.$t('threatmodel.properties.publicNetwork') + ', ';
             }
             if (this.entity.data.storesCredentials) {
                 properties +=
-                    this.$t("threatmodel.properties.storesCredentials") + ", ";
+                    this.$t('threatmodel.properties.storesCredentials') + ', ';
             }
             if (this.entity.data.storesInventory) {
                 properties +=
-                    this.$t("threatmodel.properties.storesInventory") + ", ";
+                    this.$t('threatmodel.properties.storesInventory') + ', ';
             }
             if (properties.length > 2) {
                 properties = properties.slice(0, -2);
             }
-            return this.$t("threatmodel.properties.title") + ": " + properties;
+            return this.$t('threatmodel.properties.title') + ': ' + properties;
         },
     },
     methods: {
@@ -205,7 +205,7 @@ export default {
                 .replace(/(?:^\w|[A-Z]|\b\w)/g, (ltr, idx) =>
                     idx === 0 ? ltr.toLowerCase() : ltr.toUpperCase()
                 )
-                .replace(/\s+/g, "");
+                .replace(/\s+/g, '');
         },
     },
 };

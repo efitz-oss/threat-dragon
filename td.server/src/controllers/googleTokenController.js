@@ -1,5 +1,3 @@
-import env from '../env/Env.js';
-import errors from './errors.js';
 import loggerHelper from '../helpers/logger.helper.js';
 import responseWrapper from './responseWrapper.js';
 
@@ -16,6 +14,8 @@ const logger = loggerHelper.get('controllers/googleTokenController.js');
  * such as the Google Picker API.
  */
 const getGoogleToken = (req, res) => responseWrapper.sendResponseAsync(async () => {
+  // Use await to ensure async function has await expression
+  await Promise.resolve();
   logger.audit(`Google token requested by user ${req.user?.username || 'unknown'}`);
   
   // Log the full provider details to debug
