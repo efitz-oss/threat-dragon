@@ -57,13 +57,9 @@ const decode = (token, key) => {
 };
 
 
-const verifyToken = (token) => {
-    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-};
+const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 
-const verifyRefresh = (token) => {
-    return decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
-};
+const verifyRefresh = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 
 export default {
     decode,

@@ -31,34 +31,26 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
     return response.json();
 };
 
-const reposAsync = async (page, accessToken) => {
-    return fetchGitHub('/user/repos', accessToken, {
+const reposAsync = async (page, accessToken) => fetchGitHub('/user/repos', accessToken, {
         method: 'GET',
         headers: {
             'Accept': 'application/vnd.github.v3+json'
         }
     });
-};
 
 const searchAsync = async (page, accessToken, searchQuery) => {
     const data = await fetchGitHub(`/search/repositories?q=${encodeURIComponent(searchQuery)}&page=${page}`, accessToken);
     return data.items;
 };
 
-const userAsync = async (accessToken) => {
-    return fetchGitHub('/user', accessToken);
-};
+const userAsync = async (accessToken) => fetchGitHub('/user', accessToken);
 
-const branchesAsync = async (repoInfo, accessToken) => {
-    return fetchGitHub(`/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`, accessToken);
-};
+const branchesAsync = async (repoInfo, accessToken) => fetchGitHub(`/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`, accessToken);
 
-const modelsAsync = async (branchInfo, accessToken) => {
-    return fetchGitHub(
+const modelsAsync = async (branchInfo, accessToken) => fetchGitHub(
         `/repos/${branchInfo.organisation}/${branchInfo.repo}/contents/${repoRootDirectory()}?ref=${branchInfo.branch}`,
         accessToken
     );
-};
 
 const modelAsync = async (modelInfo, accessToken) => {
     const data = await fetchGitHub(
@@ -68,8 +60,7 @@ const modelAsync = async (modelInfo, accessToken) => {
     return [data];
 };
 
-const createAsync = async (modelInfo, accessToken) => {
-    return fetchGitHub(
+const createAsync = async (modelInfo, accessToken) => fetchGitHub(
         `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
         accessToken,
         {
@@ -81,7 +72,6 @@ const createAsync = async (modelInfo, accessToken) => {
             })
         }
     );
-};
 
 const updateAsync = async (modelInfo, accessToken) => {
     const original = await modelAsync(modelInfo, accessToken);

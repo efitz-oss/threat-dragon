@@ -27,7 +27,7 @@ const oauthReturn = (req, res) => {
     if (env.get().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;
     }
-    return res.redirect( returnUrl);
+    return res.redirect(returnUrl);
 };
 
 
