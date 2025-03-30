@@ -41,14 +41,17 @@ const mutations = {
     [AUTH_CLEAR]: (state) => clearState(state),
     [AUTH_SET_JWT]: (state, tokens) => {
         try {
-            console.log('AUTH_SET_JWT mutation called with tokens:', JSON.stringify(tokens));
+            console.log('AUTH_SET_JWT mutation called with tokens present:', Boolean(tokens));
             if (!tokens || !tokens.accessToken || !tokens.refreshToken) {
                 console.error('Invalid tokens received');
                 return;
             }
 
             const { accessToken, refreshToken } = tokens;
-            console.log('Processing accessToken:', accessToken.substring(0, 20) + '...');
+            console.log('Processing tokens:', {
+                accessTokenPresent: Boolean(accessToken),
+                refreshTokenPresent: Boolean(refreshToken)
+            });
             const tokenParts = accessToken.split('.');
             console.log('Token has', tokenParts.length, 'parts');
             const tokenBody = tokenParts[1];
@@ -59,7 +62,8 @@ const mutations = {
             const decodedBody = window.atob(tokenBody);
             console.log('Decoded token body length:', decodedBody.length);
             const jwtBody = JSON.parse(decodedBody);
-            console.log('JWT body parsed, user:', jwtBody.user);
+            // Log only username, not full user object which might contain sensitive info
+            console.log('JWT body parsed, username:', jwtBody.user?.username || 'unknown');
             state.jwt = accessToken;
             state.jwtBody = jwtBody;
             state.user = jwtBody.user;

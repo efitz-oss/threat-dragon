@@ -16,7 +16,19 @@ export default {
 
         onMounted(async () => {
             console.log('OAuthCallback.vue mounted');
-            const code = new URLSearchParams(window.location.search).get('code');
+            
+            // Instead of using search params which might be empty, 
+            // check if the URL has a hash fragment and extract code from there
+            let code;
+            if (window.location.hash && window.location.hash.includes('?code=')) {
+                const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+                code = hashParams.get('code');
+                console.log('Found code in hash fragment:', code ? 'Yes (redacted for security)' : 'none');
+            } else {
+                code = new URLSearchParams(window.location.search).get('code');
+                console.log('Found code in search params:', code ? 'Yes (redacted for security)' : 'none');
+            }
+            
             // Assume Google provider when we're in the OAuth callback with a code
             // This is a fallback in case the provider isn't in the store
             let provider = store.state.provider.selected; 
@@ -33,11 +45,14 @@ export default {
 
             if (code) {
                 try {
-                    console.log('Completing login with provider:', provider, 'and code:', code.substring(0, 5) + '...');
+                    console.log('Completing login with provider:', provider, 'and code: [REDACTED]');
                     // Send the provider and authorization code to the backend
                     console.log('About to call completeLoginAsync with provider:', provider);
                     const response = await loginAPI.completeLoginAsync(provider, code);
-                    console.log('Login completed successfully, received response:', JSON.stringify(response));
+                    console.log('Login completed successfully, tokens received:', {
+                        accessToken: response && response.accessToken ? 'present (redacted)' : 'missing',
+                        refreshToken: response && response.refreshToken ? 'present (redacted)' : 'missing'
+                    });
 
                     // Dispatch the AUTH_SET_JWT action to set the tokens in the store
                     store.dispatch('AUTH_SET_JWT', response); 
@@ -51,8 +66,24 @@ export default {
                 } catch (error) {
                     console.error('Error completing login:', error);
                     console.error('Error details:', error.response?.data || error.message);
-                    // Stay on the callback page but display an error message
-                    alert('Login failed. Please try again.');
+                    
+                    // Provide more specific error message
+                    let errorMessage = 'Login failed. ';
+                    
+                    if (error.message.includes('No authorization code')) {
+                        errorMessage += 'No authorization code was received from Google.';
+                    } else if (error.message.includes('Invalid server response')) {
+                        errorMessage += 'Server returned an invalid response.';
+                    } else if (error.response && error.response.status) {
+                        errorMessage += `Server returned error code ${error.response.status}.`;
+                    } else {
+                        errorMessage += 'Please try again.';
+                    }
+                    
+                    alert(errorMessage);
+                    
+                    // Clear provider to force fresh login
+                    store.dispatch('PROVIDER_CLEAR');
                     router.push({ name: 'HomePage' });
                 }
             } else {

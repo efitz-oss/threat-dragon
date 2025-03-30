@@ -16,12 +16,7 @@ jest.mock('vue-router', () => ({
     })
 }));
 
-// Mock window.location
-const originalLocation = window.location;
-delete window.location;
-window.location = {
-    search: '?code=1234-12345'
-};
+// Will mock window.location in each test case
 
 // Mock loginApi
 jest.mock('@/service/api/loginApi.js', () => ({
@@ -33,14 +28,28 @@ describe('views/OAuthCallback.vue', () => {
     const code = '1234-12345';
     const provider = 'test';
     let wrapper, mockStore;
+    let originalLocation;
 
     beforeEach(() => {
         console.error = jest.fn();
+        console.log = jest.fn();
         mockPush.mockClear();
         loginApi.completeLoginAsync.mockClear();
+        
+        // Save original location
+        originalLocation = window.location;
+        
+        // Setup default window.location mock
+        delete window.location;
+        window.location = {
+            search: '?code=1234-12345',
+            hash: '',
+            href: 'https://example.com/oauth-callback'
+        };
     });
 
-    afterAll(() => {
+    afterEach(() => {
+        // Restore original location after each test
         window.location = originalLocation;
     });
 
@@ -100,8 +109,17 @@ describe('views/OAuthCallback.vue', () => {
                     provider: {
                         selected: null
                     }
+                },
+                actions: {
+                    PROVIDER_SELECTED: jest.fn()
                 }
             });
+            
+            // Spy on the dispatch method
+            jest.spyOn(mockStore, 'dispatch');
+            
+            // Mock API response
+            loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
             
             // Mount the component
             wrapper = mount(OAuthCallback, {
@@ -112,10 +130,55 @@ describe('views/OAuthCallback.vue', () => {
             
             // Wait for mounted hook to execute
             await nextTick();
+            await nextTick(); // Additional nextTick for async code
         });
 
-        it('navigates to home page if provider is missing', () => {
-            expect(mockPush).toHaveBeenCalledWith({ name: 'HomePage' });
+        it('defaults to google provider when provider is missing', () => {
+            expect(mockStore.dispatch).toHaveBeenCalledWith('PROVIDER_SELECTED', 'google');
+            expect(loginApi.completeLoginAsync).toHaveBeenCalledWith('google', code);
+        });
+    });
+    
+    describe('hash fragment code extraction', () => {
+        const hashCode = 'hash-code-12345';
+        
+        beforeEach(async () => {
+            // Setup window location with hash fragment containing code
+            window.location.search = ''; // No query parameters
+            window.location.hash = `#/oauth-return?code=${hashCode}`;
+            
+            // Create vuex store with the provider
+            mockStore = createStore({
+                state: {
+                    provider: {
+                        selected: provider
+                    }
+                },
+                actions: {
+                    AUTH_SET_JWT: jest.fn()
+                }
+            });
+            
+            // Spy on the dispatch method
+            jest.spyOn(mockStore, 'dispatch');
+            
+            // Mock API response
+            loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
+            
+            // Mount the component
+            wrapper = mount(OAuthCallback, {
+                global: {
+                    plugins: [mockStore]
+                }
+            });
+            
+            // Wait for mounted hook to execute
+            await nextTick();
+            await nextTick(); // Additional nextTick for async code
+        });
+        
+        it('extracts code from hash fragment', () => {
+            expect(loginApi.completeLoginAsync).toHaveBeenCalledWith(provider, hashCode);
         });
     });
 
