@@ -1,6 +1,6 @@
 <template>
   <div class="oauth-callback-container">
-    <h3>Processing OAuth callback...</h3>
+    <h3>{{ statusMessage }}</h3>
     <div v-if="authCode" class="manual-login-section">
       <p>If automatic login is not working, you can try manual login:</p>
       <button @click="manualLogin" class="btn btn-primary">
@@ -32,180 +32,147 @@
 </style>
 
 <script>
-import { useStore } from 'vuex'; // Import the Vuex store
-import { onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import loginAPI from '@/service/api/loginApi.js';
 
 export default {
     setup() {
-        const store = useStore(); // Initialize the store
+        const store = useStore();
         const router = useRouter();
-        const route = useRoute();
         
-        // Track the authorization code to enable manual login button
-        let authCode = '';
-        // Track error message for display
-        let errorMessage = '';
-
-        onMounted(async () => {
-            console.log('OAuthCallback.vue mounted');
+        // Create reactive references for the component state
+        const authCode = ref('');
+        const errorMessage = ref('');
+        const statusMessage = ref('Processing OAuth callback...');
+        
+        const extractAuthorizationCode = () => {
+            let code = null;
             
-            // Log full URL for debugging (no auth codes will be exposed)
-            console.log('OAuthCallback mounted with URL:', window.location.href.replace(/code=[^&]+/, 'code=REDACTED'));
-            console.log('Hash fragment:', window.location.hash.replace(/code=[^&]+/, 'code=REDACTED'));
+            // First check the URL hash for an authorization code
+            const hash = window.location.hash;
+            console.log('URL hash:', hash ? hash.replace(/code=[^&]+/, 'code=REDACTED') : 'none');
             
-            // Instead of using search params which might be empty, 
-            // check if the URL has a hash fragment and extract code from there
-            let code;
-            
-            // Try extracting from hash fragment
-            if (window.location.hash) {
-                console.log('Checking hash fragment for code...');
-                
-                // Special handling for the SPA redirect format with '#/'
-                if (window.location.hash.includes('#/oauth-return?code=')) {
-                    console.log('Found oauth-return pattern in hash');
-                    const parts = window.location.hash.split('#/oauth-return?');
+            if (hash) {
+                // Try format: #/oauth-return?code=xyz
+                if (hash.includes('#/oauth-return?code=')) {
+                    const parts = hash.split('#/oauth-return?');
                     if (parts.length > 1) {
-                        const hashParams = new URLSearchParams(parts[1]);
-                        code = hashParams.get('code');
-                        console.log('Extracted code from hash oauth-return:', code ? 'Yes (redacted for security)' : 'none');
+                        const params = new URLSearchParams(parts[1]);
+                        code = params.get('code');
                     }
-                } 
-                // Also check for simpler hash fragment
-                else if (window.location.hash.includes('?code=')) {
-                    console.log('Found ?code= pattern in hash');
-                    const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
-                    code = hashParams.get('code');
-                    console.log('Extracted code from hash with ?code=:', code ? 'Yes (redacted for security)' : 'none');
-                } 
-                // Handle case where hash contains just the code
-                else if (window.location.hash.startsWith('#code=')) {
-                    console.log('Found #code= pattern');
-                    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                    code = hashParams.get('code');
-                    console.log('Extracted code from #code=:', code ? 'Yes (redacted for security)' : 'none');
+                }
+                // Try format: #code=xyz or #?code=xyz
+                else if (hash.includes('code=')) {
+                    const hashContent = hash.startsWith('#?') 
+                        ? hash.substring(2) 
+                        : (hash.startsWith('#') ? hash.substring(1) : hash);
+                    
+                    const params = new URLSearchParams(hashContent);
+                    code = params.get('code');
                 }
             }
             
-            // Fall back to search parameters if hash doesn't contain code
+            // If no code in hash, check search params
             if (!code) {
-                console.log('No code found in hash, checking search params...');
-                code = new URLSearchParams(window.location.search).get('code');
-                console.log('Found code in search params:', code ? 'Yes (redacted for security)' : 'none');
+                const search = window.location.search;
+                console.log('URL search:', search ? search.replace(/code=[^&]+/, 'code=REDACTED') : 'none');
+                
+                if (search) {
+                    const params = new URLSearchParams(search);
+                    code = params.get('code');
+                }
             }
             
-            // Save the code for the manual login button
-            authCode = code;
-            
-            // Get provider info
-            console.log('Store state available:', Boolean(store && store.state));
-            console.log('Provider in store:', store?.state?.provider ? JSON.stringify(store.state.provider) : 'null');
-            
-            // Assume Google provider when we're in the OAuth callback with a code
-            // This is a fallback in case the provider isn't in the store
-            let provider = store.state?.provider?.selected || null;
-            
-            console.log('Provider from store:', provider);
-            
-            // Hard-code to Google for this flow
-            // This ensures we don't need to rely on store state persistence
-            console.warn('Setting provider to "google" for OAuth callback');
-            provider = 'google';
-            
-            // Set the provider in the store to ensure consistency
-            store.dispatch('PROVIDER_SELECTED', 'google');
-
+            console.log('Authorization code found:', Boolean(code));
             if (code) {
-                try {
-                    console.log('Completing login with provider:', provider, 'and code: [REDACTED]');
-                    // Send the provider and authorization code to the backend
-                    console.log('About to call completeLoginAsync with provider:', provider);
-                    const response = await loginAPI.completeLoginAsync(provider, code);
-                    console.log('Login completed successfully, tokens received:', {
-                        accessToken: response && response.accessToken ? 'present (redacted)' : 'missing',
-                        refreshToken: response && response.refreshToken ? 'present (redacted)' : 'missing'
-                    });
-
-                    // Dispatch the AUTH_SET_JWT action to set the tokens in the store
-                    store.dispatch('AUTH_SET_JWT', response); 
-                    console.log('JWT set in store, redirecting to dashboard');
-
-                    // Redirect to a secure page or dashboard
-                    console.log('About to redirect to MainDashboard...');
-                    router.push({ name: 'MainDashboard' })
-                      .then(() => console.log('Navigation to MainDashboard complete'))
-                      .catch(navError => console.error('Navigation error:', navError));
-                } catch (error) {
-                    console.error('Error completing login:', error);
-                    console.error('Error details:', error.response?.data || error.message);
-                    
-                    // Provide more specific error message
-                    errorMessage = 'Login failed. ';
-                    
-                    if (error.message.includes('No authorization code')) {
-                        errorMessage += 'No authorization code was received from Google.';
-                    } else if (error.message.includes('Invalid server response')) {
-                        errorMessage += 'Server returned an invalid response.';
-                    } else if (error.response && error.response.status) {
-                        errorMessage += `Server returned error code ${error.response.status}.`;
-                    } else {
-                        errorMessage += 'Please try again or use the manual login button.';
-                    }
-                    
-                    // Don't redirect to homepage - show the manual login button instead
-                    console.log('Login failed, displaying manual login button');
+                console.log('Code length:', code.length);
+            }
+            
+            return code;
+        };
+        
+        const completeLogin = async (code) => {
+            try {
+                statusMessage.value = 'Completing login...';
+                
+                // Always use google as the provider for OAuth callback
+                const provider = 'google';
+                store.dispatch('PROVIDER_SELECTED', provider);
+                
+                // Complete the login process with the authorization code
+                console.log(`Completing login with provider: ${provider}`);
+                const response = await loginAPI.completeLoginAsync(provider, code);
+                
+                // Store the JWT tokens
+                console.log('Login completed successfully, storing tokens');
+                store.dispatch('AUTH_SET_JWT', response);
+                
+                // Redirect to dashboard
+                statusMessage.value = 'Login successful, redirecting...';
+                router.push({ name: 'MainDashboard' });
+                
+                return true;
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                let errorMsg = 'Login failed. ';
+                if (error.message.includes('No authorization code')) {
+                    errorMsg += 'No authorization code was received.';
+                } else if (error.message.includes('Invalid server response')) {
+                    errorMsg += 'Server returned an invalid response.';
+                } else if (error.response && error.response.status) {
+                    errorMsg += `Server returned error code ${error.response.status}.`;
+                } else {
+                    errorMsg += 'Please try the manual login button below.';
                 }
+                
+                errorMessage.value = errorMsg;
+                statusMessage.value = 'Automatic login failed';
+                
+                return false;
+            }
+        };
+        
+        onMounted(async () => {
+            console.log('OAuthCallback component mounted');
+            
+            // Extract authorization code from URL
+            const code = extractAuthorizationCode();
+            
+            // Store the code for potential manual login
+            authCode.value = code;
+            
+            if (code) {
+                // Attempt automatic login
+                await completeLogin(code);
             } else {
-                console.error('Authorization code not found.');
-                router.push({ name: 'HomePage' });
+                console.error('No authorization code found in URL');
+                errorMessage.value = 'No authorization code found in URL.';
+                statusMessage.value = 'Login failed';
             }
         });
         
-        // Manual login function for the fallback button
         const manualLogin = async () => {
-            try {
-                console.log('Manual login initiated');
-                
-                // Hard-code to Google for this flow
-                const provider = 'google';
-                
-                // Set the provider in the store
-                console.log('Setting provider to google');
-                store.dispatch('PROVIDER_SELECTED', 'google');
-                
-                // Reset error message
-                errorMessage = '';
-                
-                // Only proceed if we have an authorization code
-                if (!authCode) {
-                    errorMessage = 'No authorization code available.';
-                    return;
-                }
-                
-                console.log('Making manual login API call');
-                const response = await loginAPI.completeLoginAsync(provider, authCode);
-                
-                console.log('Manual login successful, setting JWT');
-                store.dispatch('AUTH_SET_JWT', response);
-                
-                // Navigate to dashboard
-                console.log('Redirecting to dashboard');
-                router.push({ name: 'MainDashboard' });
-            } catch (error) {
-                console.error('Manual login failed:', error);
-                
-                // Set error message for display
-                errorMessage = 'Manual login failed: ' + (error.response?.data?.message || error.message);
+            if (!authCode.value) {
+                errorMessage.value = 'No authorization code available for manual login.';
+                return;
             }
+            
+            // Clear previous error
+            errorMessage.value = '';
+            
+            // Attempt login with stored code
+            await completeLogin(authCode.value);
         };
         
         return {
             authCode,
             errorMessage,
+            statusMessage,
             manualLogin
         };
-    },
+    }
 };
 </script>
