@@ -23,30 +23,55 @@ const completeLoginAsync = async (provider, code) => {
         // Make the API call with explicit content type headers
         console.log('Sending POST with payload:', { code: 'REDACTED' });
         
-        const response = await api.postAsync(url, { code });
+        // Make direct fetch call for debugging
+        console.log('Using direct fetch for more control and debugging');
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ code })
+        });
+        
+        console.log('Raw response status:', response.status);
+        console.log('Raw response status text:', response.statusText);
+        console.log('Raw response headers:', [...response.headers.entries()].map(([key, value]) => `${key}: ${value}`).join(', '));
+        
+        // Parse response JSON
+        const responseData = await response.json();
+        console.log('Response parsed successfully');
+        
+        // Check for API error format
+        if (responseData.error) {
+            console.error('Error returned from API:', responseData.error);
+            throw new Error(responseData.error);
+        }
+        
+        // Standard response format should include data property
+        const data = responseData.data || responseData;
         
         // Log success but not the actual tokens for security
-        console.log('completeLoginAsync response received:', {
-            status: response?.status,
-            statusText: response?.statusText,
-            hasData: Boolean(response?.data),
-            dataType: response?.data ? typeof response.data : 'none',
-            accessTokenPresent: response?.data?.accessToken ? 'yes' : 'no',
-            refreshTokenPresent: response?.data?.refreshToken ? 'yes' : 'no'
+        console.log('completeLoginAsync response data:', {
+            hasData: Boolean(data),
+            dataType: typeof data,
+            accessTokenPresent: Boolean(data?.accessToken),
+            refreshTokenPresent: Boolean(data?.refreshToken)
         });
         
         // Validate response format
-        if (!response || !response.data || !response.data.accessToken || !response.data.refreshToken) {
+        if (!data || !data.accessToken || !data.refreshToken) {
             console.error('completeLoginAsync: Invalid response format, missing tokens', {
-                hasResponse: Boolean(response),
-                hasData: Boolean(response?.data),
-                hasAccessToken: Boolean(response?.data?.accessToken),
-                hasRefreshToken: Boolean(response?.data?.refreshToken)
+                hasData: Boolean(data),
+                hasAccessToken: Boolean(data?.accessToken),
+                hasRefreshToken: Boolean(data?.refreshToken),
+                responseKeys: data ? Object.keys(data) : []
             });
-            throw new Error('Invalid server response format');
+            throw new Error('Invalid server response format (missing token data)');
         }
         
-        return response.data; // Expecting { accessToken, refreshToken }
+        return data; // Expecting { accessToken, refreshToken }
     } catch (error) {
         console.error('Error in completeLoginAsync API call:', error.message);
         if (error.response) {
