@@ -13,27 +13,53 @@ const completeLoginAsync = async (provider, code) => {
     
     // Don't log the full code for security
     console.log('Authorization code present:', Boolean(code));
+    console.log('Authorization code length:', code.length);
     
     try {
+        console.log('API base URL:', window.location.origin);
+        const url = `/api/oauth/${provider}/completeLogin`;
+        console.log('Full request URL:', window.location.origin + url);
+        
         // Make the API call with explicit content type headers
-        const response = await api.postAsync(`/api/oauth/${provider}/completeLogin`, { code });
+        console.log('Sending POST with payload:', { code: 'REDACTED' });
+        
+        const response = await api.postAsync(url, { code });
+        
         // Log success but not the actual tokens for security
-        console.log('completeLoginAsync response received with tokens:', 
-            response && response.data ? {
-                accessTokenPresent: Boolean(response.data.accessToken),
-                refreshTokenPresent: Boolean(response.data.refreshToken)
-            } : 'no data');
+        console.log('completeLoginAsync response received:', {
+            status: response?.status,
+            statusText: response?.statusText,
+            hasData: Boolean(response?.data),
+            dataType: response?.data ? typeof response.data : 'none',
+            accessTokenPresent: response?.data?.accessToken ? 'yes' : 'no',
+            refreshTokenPresent: response?.data?.refreshToken ? 'yes' : 'no'
+        });
         
         // Validate response format
         if (!response || !response.data || !response.data.accessToken || !response.data.refreshToken) {
-            console.error('completeLoginAsync: Invalid response format, missing tokens', response);
+            console.error('completeLoginAsync: Invalid response format, missing tokens', {
+                hasResponse: Boolean(response),
+                hasData: Boolean(response?.data),
+                hasAccessToken: Boolean(response?.data?.accessToken),
+                hasRefreshToken: Boolean(response?.data?.refreshToken)
+            });
             throw new Error('Invalid server response format');
         }
         
         return response.data; // Expecting { accessToken, refreshToken }
     } catch (error) {
-        console.error('Error in completeLoginAsync API call:', error);
-        console.error('Error details:', error.response?.data || error.message);
+        console.error('Error in completeLoginAsync API call:', error.message);
+        if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response status text:', error.response.statusText);
+            console.error('Response headers:', JSON.stringify(error.response.headers));
+            console.error('Response data:', error.response.data);
+        } else if (error.request) {
+            console.error('No response received. Request details:', {
+                method: 'POST',
+                url: `/api/oauth/${provider}/completeLogin`
+            });
+        }
         throw error;
     }
 };
