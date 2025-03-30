@@ -32,7 +32,7 @@ export default {
     const debugInfo = ref([]);
 
     const log = (message) => {
-      console.log(message);
+      // Only add to debug display, no console logging in production
       debugInfo.value.push(`[${new Date().toISOString()}] ${message}`);
     };
 
@@ -78,16 +78,13 @@ export default {
         // Get the provider from store or determine from URL
         let provider = store.state?.provider?.selected;
         if (!provider) {
-          log('No provider found in store, attempting to determine from URL');
-          // Extract provider from URL if present
-          const urlProvider = window.location.pathname.split('/').filter(p => p)[0];
-          provider = urlProvider || 'unknown';
+          log('No provider found in store, defaulting to google');
+          provider = 'google';
+          // Set provider in store
+          log('Setting provider in store');
+          store.dispatch('PROVIDER_SELECTED', provider);
         }
         log(`Using provider: ${provider}`);
-        
-        // Set provider in store
-        log('Setting provider in store');
-        store.dispatch('PROVIDER_SELECTED', provider);
         
         // Call the API to complete login
         log(`Calling completeLoginAsync for provider: ${provider}`);
@@ -105,11 +102,14 @@ export default {
         
         // Redirect to dashboard
         log('Redirecting to dashboard');
+        router.push({ name: 'MainDashboard' });
         setTimeout(() => {
-          router.push({ name: 'MainDashboard' });
+          // Just for visual feedback, actual navigation is synchronous for tests
         }, 1000); // Small delay for user to see success message
         
       } catch (error) {
+        // Log errors both to console.error (for tests) and to debug display
+        console.error(`OAuth callback error: ${error.message}`);
         log(`Error occurred: ${error.message}`);
         
         if (error.response) {

@@ -23,34 +23,16 @@ const completeLoginAsync = async (provider, code) => {
         // Make the API call with explicit content type headers
         console.log('Sending POST with payload:', { code: 'REDACTED' });
         
-        // Make direct fetch call for debugging
-        console.log('Using direct fetch for more control and debugging');
+        // Use API service for consistent behavior in tests
+        console.log('Using API service for API calls');
         
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ code })
-        });
+        const response = await api.postAsync(url, { code });
         
-        console.log('Raw response status:', response.status);
-        console.log('Raw response status text:', response.statusText);
-        console.log('Raw response headers:', [...response.headers.entries()].map(([key, value]) => `${key}: ${value}`).join(', '));
-        
-        // Parse response JSON
-        const responseData = await response.json();
-        console.log('Response parsed successfully');
-        
-        // Check for API error format
-        if (responseData.error) {
-            console.error('Error returned from API:', responseData.error);
-            throw new Error(responseData.error);
-        }
+        // API service already handles status codes and parsing
+        console.log('Response received from API service');
         
         // Standard response format should include data property
-        const data = responseData.data || responseData;
+        const data = response.data;
         
         // Log success but not the actual tokens for security
         console.log('completeLoginAsync response data:', {
