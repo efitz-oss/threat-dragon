@@ -32,7 +32,10 @@ const oauthReturn = (req, res) => {
     } else {
         // Try to determine the redirect URL from configured headers
         const host = req.get('x-forwarded-host') || req.get('host');
-        const protocol = (req.get('x-forwarded-proto') || req.protocol) + '://';
+        // Take only the first protocol if multiple are provided in x-forwarded-proto
+        const rawProto = req.get('x-forwarded-proto') || req.protocol;
+        const protocol = (rawProto.split(',')[0].trim()) + '://';
+        
         if (host) {
             baseUrl = protocol + host;
         }
