@@ -1,0 +1,12 @@
+{
+  "overrides": {
+    "libxmljs2": "0.30.0",
+    "http-errors": "2.0.0",
+    "cross-spawn": "^7.0.3",
+    "postcss": "^8.4.31",
+    "yorkie": "npm:husky@^7.0.0",
+    "@vue/component-compiler-utils": "^3.3.0",
+    "ws": "^8.17.1",
+    "puppeteer-core": "^22.12.0"
+  }
+}

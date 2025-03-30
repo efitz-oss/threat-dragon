@@ -242,3 +242,7 @@
 # utility scripts
 !utils
 !utils/**/*
+
+# migration archive
+!migration-archive/
+!migration-archive/**/*
