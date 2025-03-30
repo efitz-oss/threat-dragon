@@ -45,11 +45,11 @@ const oauthReturn = (req, res) => {
         logger.info(`X-Forwarded-Host header: ${req.get('x-forwarded-host') || 'none'}`);
         
         // Take only the first protocol if multiple are provided in x-forwarded-proto
-        const rawProto = req.get('x-forwarded-proto') || req.protocol;
+        const rawProto = req.get('x-forwarded-proto') || req.protocol || 'http';
         logger.info(`Protocol: ${rawProto || 'none'}`);
         logger.info(`X-Forwarded-Proto header: ${req.get('x-forwarded-proto') || 'none'}`);
         
-        const protocol = (rawProto.split(',')[0].trim()) + '://';
+        const protocol = (rawProto.split ? rawProto.split(',')[0].trim() : rawProto) + '://';
         logger.info(`Using protocol: ${protocol}`);
         
         if (host) {
@@ -70,7 +70,10 @@ const oauthReturn = (req, res) => {
         return errors.badRequest('No authorization code present in OAuth return', res, logger);
     }
     
-    const returnUrl = `${baseUrl}/oauth-return?code=${req.query.code}`;
+    const returnUrl = env.get().config.NODE_ENV === 'development' 
+        ? `${baseUrl}/#/oauth-return?code=${req.query.code}`
+        : `/#/oauth-return?code=${req.query.code}`;
+        
     logger.info(`Complete redirect URL: ${returnUrl.replace(/code=[^&]+/, 'code=REDACTED')}`);
     
     logger.info(`Redirecting to client application...`);

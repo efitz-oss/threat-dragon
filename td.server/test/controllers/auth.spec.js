@@ -97,6 +97,9 @@ describe('controllers/auth.js', () => {
         describe('simulated production', () => {
             beforeEach(() => {
                 sinon.stub(env, 'get').returns({ config: { NODE_ENV: 'simulated_production' }});
+                // Set mock request's protocol and host for proper baseUrl construction
+                mockRequest.protocol = 'http';
+                mockRequest.get.withArgs('host').returns('example.com');
                 auth.oauthReturn(mockRequest, mockResponse);
             });
             

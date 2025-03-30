@@ -5,7 +5,7 @@ const healthCheckProtocol = env.get().config.SERVER_API_PROTOCOL || appUsesTls |
 
 const middleware = (req, res, next) => {
     // The 'x-forwarded-proto' check is for Heroku
-    if (!req.secure && req.get('x-forwarded-proto') !== 'https' && healthCheckProtocol === 'https') {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https' && healthCheckProtocol === 'https' && env.get().config.NODE_ENV !== 'development') {
         return res.redirect('https://' + req.get('host') + req.url);
     }
 

@@ -86,7 +86,7 @@ describe('providers/google.js', () => {
         const code = 'mycode';
 
         beforeEach(async () => {
-            sinon.stub(axios, 'post').resolves({ data: { access_token: '' }});
+            sinon.stub(axios, 'post').resolves({ data: { access_token: 'test-token' }});
             sinon.stub(axios, 'get').resolves({ data: { name: 'John Doe', email: 'john.doe@example.com', picture: 'https://example.com/pic.jpg' }});
             sinon.stub(env, 'get').returns({ config });
 
@@ -113,7 +113,7 @@ describe('providers/google.js', () => {
 
         it('fetches the user info from Google', () => {
             expect(axios.get).to.have.been.calledWith(
-                `https://www.googleapis.com/oauth2/v1/userinfo?access_token=`
+                `https://www.googleapis.com/oauth2/v1/userinfo?access_token=test-token`
             );
         });
     });
