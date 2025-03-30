@@ -147,7 +147,13 @@ module.exports = {
     },
     configureWebpack: {
         devtool: 'source-map',
-        plugins: [],
+        plugins: [
+            new (require('webpack')).DefinePlugin({
+                __VUE_OPTIONS_API__: JSON.stringify(true),
+                __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
+            })
+        ],
         output: {
             hashFunction: 'xxhash64'
         },
@@ -170,6 +176,11 @@ module.exports = {
                         reuseExistingChunk: true
                     }
                 }
+            }
+        },
+        resolve: {
+            alias: {
+                vue$: 'vue/dist/vue.runtime.esm-bundler.js'
             }
         }
     }

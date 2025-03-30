@@ -79,3 +79,11 @@ This will need the following:
 [vuex-persist](https://github.com/championswimmer/vuex-persist) is used to save stores / state from vuex to session storage.
 By default, all stores are persisted to session storage.
 This is configured in [vuex-persist](src/plugins/vuex-persist.js).
+
+## Known Issues and Future Improvements
+
+### Vue I18n Legacy API Mode
+
+Vue I18n v11 warns about using the Legacy API mode in the console. To fully fix this warning, the application components need to be migrated from Options API (`$t()`) to Composition API (`useI18n()`) style. This is a significant change that would require updating all Vue components.
+
+The i18n configuration has been updated to use `legacy: false`, but the components still need to be updated to use the Composition API pattern.

@@ -25,6 +25,7 @@ let i18n = null;
 const get = () => {
     if (!i18n) {
         i18n = createI18n({
+            legacy: false, // Use Composition API mode
             locale: 'eng',
             messages: {
                 ara, deu, ell, eng, spa, fin, id, fra, hin, ind, jpn, ms, por, rus, ukr, zho
