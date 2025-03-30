@@ -70,7 +70,8 @@ const oauthReturn = (req, res) => {
         return errors.badRequest('No authorization code present in OAuth return', res, logger);
     }
     
-    const returnUrl = `${baseUrl}/#/oauth-return?code=${req.query.code}`;
+    // With history mode, don't use hash-based routing
+    const returnUrl = `${baseUrl}/oauth-return?code=${req.query.code}`;
     logger.info(`Complete redirect URL: ${returnUrl.replace(/code=[^&]+/, 'code=REDACTED')}`);
     
     logger.info(`Redirecting to client application...`);

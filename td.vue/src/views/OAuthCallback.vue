@@ -40,11 +40,21 @@ export default {
       try {
         log('OAuth callback page loaded');
         
-        // Get code from URL hash or search params
+        // Using history mode, we should always get the code from search params
         let code = null;
         
-        // First check hash (SPA route)
-        if (window.location.hash) {
+        // Check search params for code (history mode)
+        if (window.location.search) {
+          log(`Checking search params: ${window.location.search.replace(/code=[^&]+/, 'code=REDACTED')}`);
+          const params = new URLSearchParams(window.location.search);
+          code = params.get('code');
+          if (code) {
+            log('Found code in search params');
+          }
+        }
+        
+        // Fallback to check hash for code (hash mode)
+        if (!code && window.location.hash) {
           log(`Found hash: ${window.location.hash.replace(/code=[^&]+/, 'code=REDACTED')}`);
           
           // Check for code in hash fragment
@@ -56,13 +66,6 @@ export default {
               code = params.get('code');
             }
           }
-        }
-        
-        // If no code in hash, check search params
-        if (!code && window.location.search) {
-          log(`Checking search params: ${window.location.search.replace(/code=[^&]+/, 'code=REDACTED')}`);
-          const params = new URLSearchParams(window.location.search);
-          code = params.get('code');
         }
         
         if (!code) {
@@ -115,10 +118,12 @@ export default {
     };
 
     onMounted(() => {
-      // Process OAuth callback after a short delay to ensure the page is fully rendered
+      // Process OAuth callback after a longer delay to ensure the page is fully rendered
+      // and give time to see debug logs in the console
+      log('OAuth callback component mounted, waiting 2 seconds before processing...');
       setTimeout(() => {
         handleOAuthCallback();
-      }, 500);
+      }, 2000);
     });
 
     return {
