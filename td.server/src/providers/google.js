@@ -31,7 +31,6 @@ const getOauthRedirectUrl = () => {
  * @returns {String}
  */
 const getOauthReturnUrl = (code) => {
-    // Using history mode, don't use hash-based routing
     let returnUrl = `/oauth-return?code=${code}`;
     if (env.get().config.NODE_ENV === 'development') {
         returnUrl = `http://localhost:8080${returnUrl}`;

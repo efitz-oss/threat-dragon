@@ -75,8 +75,14 @@ export default {
         
         log(`Authorization code found, length: ${code.length}`);
         
-        // Always use google as provider
-        const provider = 'google';
+        // Get the provider from store or determine from URL
+        let provider = store.state?.provider?.selected;
+        if (!provider) {
+          log('No provider found in store, attempting to determine from URL');
+          // Extract provider from URL if present
+          const urlProvider = window.location.pathname.split('/').filter(p => p)[0];
+          provider = urlProvider || 'unknown';
+        }
         log(`Using provider: ${provider}`);
         
         // Set provider in store
@@ -118,12 +124,9 @@ export default {
     };
 
     onMounted(() => {
-      // Process OAuth callback after a longer delay to ensure the page is fully rendered
-      // and give time to see debug logs in the console
-      log('OAuth callback component mounted, waiting 2 seconds before processing...');
-      setTimeout(() => {
-        handleOAuthCallback();
-      }, 2000);
+      // Process OAuth callback immediately
+      log('OAuth callback component mounted');
+      handleOAuthCallback();
     });
 
     return {
