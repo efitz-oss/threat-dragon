@@ -103,9 +103,9 @@ export default {
         // Redirect to dashboard
         log('Redirecting to dashboard');
         router.push({ name: 'MainDashboard' });
-        setTimeout(() => {
-          // Just for visual feedback, actual navigation is synchronous for tests
-        }, 1000); // Small delay for user to see success message
+        
+        // Small delay for visual feedback
+        setTimeout(() => {}, 1000);
         
       } catch (error) {
         // Log errors both to console.error (for tests) and to debug display
