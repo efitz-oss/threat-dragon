@@ -35,15 +35,19 @@ export default {
                 try {
                     console.log('Completing login with provider:', provider, 'and code:', code.substring(0, 5) + '...');
                     // Send the provider and authorization code to the backend
+                    console.log('About to call completeLoginAsync with provider:', provider);
                     const response = await loginAPI.completeLoginAsync(provider, code);
-                    console.log('Login completed successfully, received response');
+                    console.log('Login completed successfully, received response:', JSON.stringify(response));
 
                     // Dispatch the AUTH_SET_JWT action to set the tokens in the store
                     store.dispatch('AUTH_SET_JWT', response); 
                     console.log('JWT set in store, redirecting to dashboard');
 
                     // Redirect to a secure page or dashboard
-                    router.push({ name: 'MainDashboard' });
+                    console.log('About to redirect to MainDashboard...');
+                    router.push({ name: 'MainDashboard' })
+                      .then(() => console.log('Navigation to MainDashboard complete'))
+                      .catch(navError => console.error('Navigation error:', navError));
                 } catch (error) {
                     console.error('Error completing login:', error);
                     console.error('Error details:', error.response?.data || error.message);
