@@ -2,16 +2,26 @@
 
 import { app, protocol, BrowserWindow, Menu, ipcMain } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import menu from './menu.js';
 import logger from './logger.js';
 import { electronURL, isDevelopment, isTest, isMacOS, isWin } from './utils.js';
 
+// Import dependencies directly to simplify the build process
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
+const os = require('os');
+const pkg = require('../../../package.json');
 
-if (isTest) {
-    require('wdio-electron-service/main');
+// Electron DevTools installer is handled by Cypress for testing
+let installExtension, VUEJS_DEVTOOLS;
+try {
+    const devTools = require('electron-devtools-installer');
+    installExtension = devTools.default;
+    VUEJS_DEVTOOLS = devTools.VUEJS_DEVTOOLS;
+} catch (e) {
+    logger.log.warn('electron-devtools-installer not available:', e.toString());
+    installExtension = async () => {};
+    VUEJS_DEVTOOLS = null;
 }
 
 // Scheme must be registered before the app is ready
@@ -102,6 +112,7 @@ app.on('ready', async () => {
         }
     }
 
+    // Handle IPC events from the renderer process
     ipcMain.on('close-app', handleCloseApp);
     ipcMain.on('model-closed', handleModelClosed);
     ipcMain.on('model-open-confirmed', handleModelOpenConfirmed);
@@ -109,6 +120,64 @@ app.on('ready', async () => {
     ipcMain.on('model-print', handleModelPrint);
     ipcMain.on('model-save', handleModelSave);
     ipcMain.on('update-menu', handleUpdateMenu);
+    ipcMain.on('quit-and-install', () => {
+        autoUpdater.quitAndInstall();
+    });
+
+    // Handle the new invoke-based IPC methods (for Cypress testing)
+    ipcMain.handle('get-app-version', () => {
+        return pkg.version;
+    });
+
+    ipcMain.handle('get-app-name', () => {
+        return pkg.productName;
+    });
+
+    ipcMain.handle('get-os-version', () => {
+        return `${os.platform()} ${os.release()}`;
+    });
+
+    ipcMain.handle('open-file', async () => {
+        // This wrapper around dialog.showOpenDialog matches what's needed in tests
+        const result = await menu.openFileDialog();
+        // Return format expected by Cypress tests
+        return { filePaths: result ? [result] : [] };
+    });
+
+    ipcMain.handle('save-file', async (_event, path, content) => {
+        // Delegate to menu functionality
+        return menu.saveFile(path, content);
+    });
+
+    ipcMain.handle('get-threat-model-path', () => {
+        return menu.model.filePath || '';
+    });
+
+    ipcMain.handle('get-provider-logon', () => {
+        return { userName: 'localuser', accessToken: '' };
+    });
+
+    ipcMain.handle('get-recent-model-list', () => {
+        return app.getRecentDocuments();
+    });
+
+    ipcMain.handle('update-recent-model-list', (_event, list) => {
+        // Clear existing
+        app.clearRecentDocuments();
+        // Add new items
+        if (Array.isArray(list)) {
+            list.forEach(file => app.addRecentDocument(file));
+        }
+        return true;
+    });
+
+    // Auto-updater events
+    autoUpdater.on('update-downloaded', () => {
+        const windows = BrowserWindow.getAllWindows();
+        if (windows.length > 0) {
+            windows[0].webContents.send('update-downloaded');
+        }
+    });
 
     createWindow();
 

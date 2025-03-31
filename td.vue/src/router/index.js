@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
 import { gitRoutes } from './git.js';
 import { localRoutes } from './local.js';
@@ -45,8 +45,14 @@ const routes = [
     ...googleRoutes,
 ];
 
+// Use hash history for Electron (desktop) mode, web history for web mode
+const isElectron = typeof window !== 'undefined' && 
+                  (window.electronAPI?.isElectron || window.isElectronMode);
+const historyMode = isElectron ? createWebHashHistory() : createWebHistory();
+console.log('Router using', isElectron ? 'hash history (Electron mode)' : 'web history (browser mode)');
+
 const router = createRouter({
-    history: createWebHistory(), // This removes the hash from URLs
+    history: historyMode,
     routes,
 });
 

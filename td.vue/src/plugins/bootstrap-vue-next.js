@@ -24,5 +24,14 @@ export default {
         Object.entries(components).forEach(([name, component]) => {
             app.component(name, component);
         });
-    },
+    }
+};
+
+// Export the components individually as well
+export {
+    BOverlay, BContainer, BNavbarToggle, BImg, BNavbarBrand, BCollapse,
+    BNavbarNav, BNavItem, BNavbar, BNavText, BTooltip, BDropdownItem,
+    BDropdown, BCol, BRow, BButton, BButtonGroup, BForm, BFormGroup,
+    BFormInput, BFormTextarea, BListGroup, BListGroupItem, BCard, BFormCheckbox, BTableSimple, BThead, BTbody, BTr, BTh, BTd,
+    BModal, BTable, BBadge, BCardText
 };

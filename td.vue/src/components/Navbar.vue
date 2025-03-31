@@ -148,7 +148,7 @@ export default {
             config: state => state.config.config
         }),
         googleEnabled() {
-            return this.config && this.config.googleEnabled;
+            return this.config && this.config.googleEnabled && !this.$store.getters.isElectronMode;
         }
     },
     methods: {

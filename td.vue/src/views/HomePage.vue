@@ -71,7 +71,7 @@
 
 <script>
 import {allProviders} from '@/service/provider/providers.js';
-import isElectron from 'is-electron';
+import { isElectronMode } from '@/utils/environment';
 import TdProviderLoginButton from '@/components/ProviderLoginButton.vue';
 import configActions from '@/store/actions/config.js';
 import {mapState} from 'vuex';
@@ -83,11 +83,14 @@ export default {
                 return state.config.config;
             },
             providers: (state) => {
-                if (isElectron()) {
+                // Always use desktop provider in Electron mode
+                if (state.config.isElectronMode) {
                     return {desktop: allProviders.desktop};
                 }
+                
                 let providers = {};
                 if (state.config.config) {
+                    // Only add providers that are enabled in config
                     if (state.config.config.githubEnabled) {
                         providers.github = allProviders.github;
                     }
@@ -111,8 +114,12 @@ export default {
             },
         }),
     mounted() {
-        if (!isElectron()) {
-            this.$store.dispatch(configActions.fetch);
+        // Config is already loaded in main.js, no need to fetch it again
+        if (!isElectronMode()) {
+            // Double check that config is loaded
+            if (!this.$store.state.config.config) {
+                this.$store.dispatch(configActions.fetch);
+            }
         }
     },
     components: {
