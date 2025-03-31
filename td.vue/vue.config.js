@@ -53,7 +53,7 @@ console.log(`Vue app is configured to run on ${hasTlsCredentials ? `https (Port 
 
 
 module.exports = {
-    publicPath: process.env.NODE_ENV === 'production' ? '/public' : '/',
+    publicPath: process.env.VUE_APP_IS_ELECTRON === 'true' ? './' : (process.env.NODE_ENV === 'production' ? '/public' : '/'),
     productionSourceMap: false,
     devServer: devServerConfig,
     lintOnSave: false,
@@ -65,16 +65,61 @@ module.exports = {
             ]
         },
         electronBuilder: {
-            mainProcessFile: 'src/desktop/desktop.js',
-            mainProcessWatch: ['src/desktop/logger.js', 'src/desktop/menu.js'],
+            mainProcessFile: 'src/desktop/background.js',
+            mainProcessWatch: ['src/desktop/logger.js', 'src/desktop/menu.js', 'src/desktop/utils.js'],
             rendererProcessFile: 'src/main.desktop.js',
             outputDir: 'dist-desktop',
+            nodeIntegration: false,
+            removeElectronJunk: false,
+            disableMainProcessTypescript: true,
+            preload: 'src/desktop/simple-preload.js',
+            // Fix for "Could not find a package.json for module X" errors
+            externals: ['electron', 'electron-log', 'electron-updater', 'fs-extra'],
+            // Prevent dependency resolution errors
+            nodeModulesPath: ['./node_modules', '../node_modules'],
+            // Skip devDependencies - avoid package.json errors
+            noDependencies: true,
+            chainWebpackMainProcess: (config) => {
+                // Don't process node_modules with webpack
+                config.externals([
+                    'electron',
+                    'electron-devtools-installer',
+                    'electron-updater',
+                    'electron-log',
+                    'fs',
+                    'fs-extra',
+                    'path',
+                    'os',
+                    'url'
+                ])
+            },
             builderOptions: {
+                // Configure DMG builder to use Python from PATH
+                beforeBuild: () => {
+                    process.env.PYTHON_PATH = process.env.PYTHON_PATH || 'python';
+                },
                 appId: 'org.owasp.threatdragon',
-                productName: 'Threat-Dragon-ng',
+                productName: 'OWASP Threat Dragon',
                 directories: {
                     output: 'dist-desktop'
                 },
+                files: [
+                    "**/*",
+                    "!**/node_modules/.bin",
+                    "!**/node_modules/.cache",
+                    "!**/__tests__/**",
+                    "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+                    "!.editorconfig",
+                    "!**/._*",
+                    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes}",
+                    "!**/*.{cmd,yml,yaml,md,markdown}"
+                ],
+                extraMetadata: {
+                    main: "background.js"
+                },
+                extraResources: [
+                    "license.txt"
+                ],
                 publish: {
                     provider: 'github'
                 },
@@ -82,8 +127,8 @@ module.exports = {
                     category: 'public.app-category.developer-tools',
                     icon: './src/icons/icon.icns',
                     hardenedRuntime: true,
-                    entitlements: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
-                    entitlementsInherit: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
+                    entitlements: './entitlements.mac.inherit.plist',
+                    entitlementsInherit: './entitlements.mac.inherit.plist',
                     target: [
                         {
                             target: 'default',
@@ -144,6 +189,22 @@ module.exports = {
                 options['b-img-lazy'] = ['src', 'blank-src'];
                 return options;
             });
+            
+        // Special handling for Electron builds
+        if (process.env.VUE_APP_IS_ELECTRON === 'true') {
+            // Add plugin to define environment variables
+            config.plugin('define').tap(args => {
+                const env = args[0]['process.env'] || {};
+                env.IS_ELECTRON = JSON.stringify(true);
+                args[0]['process.env'] = env;
+                return args;
+            });
+            
+            // Use mock implementations for web-only dependencies
+            config.resolve.alias
+                .set('vue3-google-signin', path.resolve(__dirname, 'src/plugins/desktop-auth.js'))
+                // Add aliases for any other web-only dependencies that need to be mocked
+        }
     },
     configureWebpack: {
         devtool: 'source-map',
