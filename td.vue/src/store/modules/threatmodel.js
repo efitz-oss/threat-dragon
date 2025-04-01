@@ -1,9 +1,8 @@
 import demo from '@/service/demo/index.js';
 import isElectron from 'is-electron';
 import { getProviderType } from '@/service/provider/providers';
-import i18n from '@/i18n/index.js';
+import i18n, { tc } from '@/i18n/index.js';
 import { providerTypes } from '@/service/provider/providerTypes';
-import { useToast } from 'vue-toast-notification';
 import {
     THREATMODEL_CLEAR,
     THREATMODEL_CONTRIBUTORS_UPDATED,
@@ -38,12 +37,86 @@ const state = {
     selectedDiagram: {}
 };
 
-// Initialize toast service
-const toast = useToast();
+// Initialize a safe toast service
+const toast = {
+    success: (message, options) => {
+        if (typeof window !== 'undefined' && window.$toast) {
+            window.$toast.success(message, options);
+        } else {
+            console.log('Success:', message);
+        }
+    },
+    error: (message, options) => {
+        if (typeof window !== 'undefined' && window.$toast) {
+            window.$toast.error(message, options);
+        } else {
+            console.error('Error:', message);
+        }
+    },
+    warning: (message, options) => {
+        if (typeof window !== 'undefined' && window.$toast) {
+            window.$toast.warning(message, options);
+        } else {
+            console.warn('Warning:', message);
+        }
+    },
+    info: (message, options) => {
+        if (typeof window !== 'undefined' && window.$toast) {
+            window.$toast.info(message, options);
+        } else {
+            console.info('Info:', message);
+        }
+    }
+};
+
+// Helper function for safe translations
+const t = (key) => {
+    try {
+        return tc(key) || key;
+    } catch (err) {
+        console.warn(`Translation error for key: ${key}`, err);
+        return key;
+    }
+};
+
+// Helper to deep clone a threat model without using JSON stringify/parse
+// This maintains the structure of diagrams better than JSON serialization
+const deepClone = (threatModel) => {
+    if (!threatModel) return threatModel;
+    
+    // Create a new object with the same properties
+    const clone = { ...threatModel };
+    
+    // Deep clone the nested objects
+    if (clone.summary) clone.summary = { ...clone.summary };
+    
+    if (clone.detail) {
+        clone.detail = { ...clone.detail };
+        
+        // Special handling for diagrams
+        if (Array.isArray(clone.detail.diagrams)) {
+            clone.detail.diagrams = clone.detail.diagrams.map(diagram => {
+                const diagramClone = { ...diagram };
+                // Ensure cells is always an array even if it's missing or null
+                diagramClone.cells = Array.isArray(diagram.cells) ? [...diagram.cells] : [];
+                return diagramClone;
+            });
+        }
+        
+        // Make sure contributors is an array
+        if (Array.isArray(clone.detail.contributors)) {
+            clone.detail.contributors = clone.detail.contributors.map(c => ({ ...c }));
+        }
+    }
+    
+    return clone;
+};
 
 const stashThreatModel = (theState, threatModel) => {
     console.debug('Stash threat model');
-    theState.data = threatModel;
+    // Create a deep clone of the threat model
+    theState.data = deepClone(threatModel);
+    // Still use JSON for the stash to maintain backward compatibility
     theState.stash = JSON.stringify(threatModel);
 };
 
@@ -62,7 +135,7 @@ const actions = {
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
                 const res = await googleDriveApi.createAsync(rootState.folder.selected, state.data, `${state.data.summary.title}.json`);
                 dispatch(FOLDER_SELECTED, res.data);
-                toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName);
+                toast.success(t('threatmodel.saved') + ' : ' + state.fileName);
             } else {
                 await threatmodelApi.createAsync(
                     rootState.repo.selected,
@@ -70,14 +143,14 @@ const actions = {
                     state.data.summary.title,
                     state.data
                 );
-                toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName);
+                toast.success(t('threatmodel.saved') + ' : ' + state.fileName);
             }
             dispatch(THREATMODEL_STASH);
             commit(THREATMODEL_NOT_MODIFIED);
         } catch (ex) {
             console.error('Failed to save new threat model!');
             console.error(ex);
-            toast.error(i18n.get().t('threatmodel.errors.save'));
+            toast.error(t('threatmodel.errors.save'));
         }
     },
     [THREATMODEL_DIAGRAM_APPLIED]: ({ commit }) => commit(THREATMODEL_DIAGRAM_APPLIED),
@@ -114,17 +187,31 @@ const actions = {
     },
     [THREATMODEL_MODIFIED]: ({ commit }) => commit(THREATMODEL_MODIFIED),
     [THREATMODEL_RESTORE]: async ({ commit, state, rootState }) => {
-        let originalModel = JSON.parse(state.stash);
         console.debug('Restore threat model action');
-        if (getProviderType(rootState.provider.selected) !== providerTypes.local && getProviderType(rootState.provider.selected) !== providerTypes.desktop && getProviderType(rootState.provider.selected) !== providerTypes.google) {
-            const originalTitle = (JSON.parse(state.stash)).summary.title;
-            const resp = await threatmodelApi.modelAsync(
-                rootState.repo.selected,
-                rootState.branch.selected,
-                originalTitle
-            );
-            originalModel = resp.data;
+        let originalModel;
+        
+        try {
+            // Parse the stash but ensure we properly recreate the structure
+            const parsedModel = JSON.parse(state.stash);
+            originalModel = deepClone(parsedModel);
+            
+            if (getProviderType(rootState.provider.selected) !== providerTypes.local && 
+                getProviderType(rootState.provider.selected) !== providerTypes.desktop && 
+                getProviderType(rootState.provider.selected) !== providerTypes.google) {
+                    
+                const originalTitle = parsedModel.summary.title;
+                const resp = await threatmodelApi.modelAsync(
+                    rootState.repo.selected,
+                    rootState.branch.selected,
+                    originalTitle
+                );
+                originalModel = deepClone(resp.data);
+            }
+        } catch (err) {
+            console.error('Error restoring threat model:', err);
+            originalModel = deepClone(state.data); // Use current data as fallback
         }
+        
         commit(THREATMODEL_RESTORE, originalModel);
     },
     [THREATMODEL_SAVE]: async ({ dispatch, commit, rootState, state }) => {
@@ -141,7 +228,33 @@ const actions = {
                 save.local(state.data, `${state.data.summary.title}.json`);
             } else if (getProviderType(rootState.provider.selected) === providerTypes.desktop) {
                 // desktop version always saves locally
-                await window.electronAPI.modelSave(state.data, state.fileName);
+                console.debug('Desktop save action');
+                
+                try {
+                    // Use our deep clone function instead of JSON stringify/parse
+                    // This preserves the structure better for diagram editing
+                    const cleanData = deepClone(state.data);
+                    
+                    // For the actual save to file, we need to convert to JSON string
+                    const jsonData = JSON.stringify(cleanData, null, 2);
+                    
+                    // Set a filename if we don't have one
+                    const fileName = state.fileName || `${state.data.summary.title || 'threat-model'}.json`;
+                    
+                    // For saving to disk, we'll use the JSON string directly
+                    const result = await window.electronAPI.saveFile(jsonData, fileName);
+                    console.debug('Save completed successfully:', result);
+                    
+                    // Update the state after successful save
+                    if (result && state.fileName !== result) {
+                        commit(THREATMODEL_UPDATE, { fileName: result });
+                    } else if (state.fileName !== fileName) {
+                        commit(THREATMODEL_UPDATE, { fileName });
+                    }
+                } catch (saveError) {
+                    console.error('Error in desktop save:', saveError);
+                    throw saveError;
+                }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
                 await googleDriveApi.updateAsync(rootState.folder.selected, state.data);
             } else {
@@ -154,11 +267,11 @@ const actions = {
             }
             dispatch(THREATMODEL_STASH);
             commit(THREATMODEL_NOT_MODIFIED);
-            toast.success(i18n.get().t('threatmodel.saved') + ' : ' + state.fileName, { timeout: 1000 });
+            toast.success(t('threatmodel.saved') + ' : ' + state.fileName, { timeout: 1000 });
         } catch (ex) {
             console.error('Failed to save threat model!');
             console.error(ex);
-            toast.error(i18n.get().t('threatmodel.errors.save'));
+            toast.error(t('threatmodel.errors.save'));
         }
     },
     [THREATMODEL_SELECTED]: ({ commit }, threatModel) => commit(THREATMODEL_SELECTED, threatModel),
@@ -211,9 +324,15 @@ const mutations = {
         if (!state.data) state.data = {};
         if (!state.data.detail) state.data.detail = {};
         if (!Array.isArray(state.data.detail.diagrams)) state.data.detail.diagrams = [];
-    
-        state.selectedDiagram = diagram; 
-        state.modifiedDiagram = diagram;
+        
+        // Make sure cells exists and is an array
+        const diagramClone = deepClone(diagram);
+        if (!Array.isArray(diagramClone.cells)) {
+            diagramClone.cells = [];
+        }
+        
+        state.selectedDiagram = diagramClone;
+        state.modifiedDiagram = diagramClone;
     
         const idx = state.data.detail.diagrams.findIndex(x => x.id === diagram.id);
         console.debug(`Threatmodel diagram selected for edits: ${diagram.id} at index: ${idx}`);

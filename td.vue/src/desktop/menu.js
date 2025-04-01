@@ -4,24 +4,12 @@ import path from 'path';
 import logger from './logger.js';
 import { isMacOS } from './utils.js';
 
-// Use dynamic imports for better testing support
-let app, dialog, shell, fs;
-
-try {
-    // For production environment
-    const electron = require('electron');
-    app = electron.app;
-    dialog = electron.dialog;
-    shell = electron.shell;
-    fs = require('fs');
-} catch (e) {
-    // For testing environment
-    const electron = require('electron');
-    app = electron.app || { addRecentDocument: () => {} };
-    dialog = electron.dialog || { showOpenDialog: () => {}, showSaveDialog: () => {} };
-    shell = electron.shell || { openExternal: () => {} };
-    fs = require('fs') || { readFile: () => {}, writeFile: () => {} };
-}
+// Import Electron modules
+const electron = require('electron');
+const app = electron.app;
+const dialog = electron.dialog;
+const shell = electron.shell;
+const fs = require('fs');
 
 // provided by electron server bootstrap
 var mainWindow;

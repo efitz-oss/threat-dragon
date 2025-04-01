@@ -4,16 +4,37 @@
  * @param {string} fileName
  */
 const local = (data, fileName) => {
-    saveTD(data, fileName);
+    return saveTD(data, fileName);
 };
 
-function saveTD (data, fileName) {
-    if ('showSaveFilePicker' in self) {
+function saveTD(data, fileName) {
+    // Check if running in Electron
+    const isElectronEnv = typeof window !== 'undefined' && 
+                        window.electronAPI && 
+                        window.electronAPI.isElectron;
+    
+    if (isElectronEnv) {
+        console.debug('Save using Electron file dialog');
+        return saveElectron(data, fileName);
+    } else if ('showSaveFilePicker' in window) {
         console.debug('Save using browser file picker');
-        writeFile(data, fileName);
+        return writeFile(data, fileName);
     } else {
         console.debug('Save using browser local filesystem download');
-        downloadFile(data, fileName);
+        return downloadFile(data, fileName);
+    }
+}
+
+async function saveElectron(data, fileName) {
+    const jsonData = JSON.stringify(data, null, 2);
+    try {
+        // Use Electron's saveFile function via IPC
+        const result = await window.electronAPI.saveFile(jsonData, fileName);
+        console.debug('Electron save successful:', result);
+        return result;
+    } catch (err) {
+        console.error('Electron save failed:', err);
+        throw err;
     }
 }
 

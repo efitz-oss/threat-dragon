@@ -5,48 +5,14 @@ import { LOADER_FINISHED, LOADER_STARTED } from '@/store/actions/loader.js';
 import router from '@/router/index.js';
 import { store } from '@/store/index.js'; // Direct import of the store instance
 
-// Translation helper that works in both composable and non-composable contexts
-const getTranslation = (key) => {
-    try {
-        // Try direct i18n access first (Vue 3 way)
-        if (typeof i18n.t === 'function') {
-            return i18n.t(key);
-        }
-        // Fall back to get() for backward compatibility
-        if (typeof i18n.get === 'function') {
-            return i18n.get().t(key);
-        }
-    } catch (err) {
-        console.warn('Translation error:', err);
-    }
-    
-    // Return key as fallback
-    return key;
-};
+import { tc } from '@/i18n/index.js';
+import { useToast } from '@/plugins/toast-notification.js';
 
-// Create a toast function that works globally using the app-level instance
-const createToast = () => {
-    try {
-        // Access the globally registered toast instance
-        if (window.$toast) {
-            return window.$toast;
-        }
-    } catch (err) {
-        // Fallback for tests and non-browser contexts
-        console.warn('Toast not available in this context, using mock');
-    }
-    
-    // Fallback mock implementation
-    return {
-        success: (msg) => console.log('Toast success:', msg),
-        error: (msg) => console.log('Toast error:', msg),
-        warning: (msg) => console.log('Toast warning:', msg),
-        info: (msg) => console.log('Toast info:', msg)
-    };
-};
+// Get translation using the standardized helper
+const getTranslation = (key) => tc(key);
 
-// Use a function to get the toast to avoid composition API issues outside of setup()
-const getToast = () => createToast();
+// Get toast using the standardized helper
+const getToast = () => useToast();
 
 const createClient = () => {
     const client = axios.create();

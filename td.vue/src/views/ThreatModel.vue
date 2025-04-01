@@ -128,6 +128,11 @@ export default {
             return require(`@/assets/thumbnail.${diagram.diagramType.toLowerCase()}.jpg`);
         },
         editDiagram(diagram) {
+            // Make sure the diagram has all required properties
+            if (!diagram.cells) {
+                diagram.cells = [];
+            }
+            
             this.$store.dispatch(tmActions.diagramSelected, diagram);
             const path = `${this.$route.path}/edit/${encodeURIComponent(diagram.title)}`;
             this.$router.push(path);

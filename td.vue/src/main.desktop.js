@@ -1,12 +1,9 @@
 import 'mutationobserver-shim';
 import { createApp, h } from 'vue';
-
 import App from './App.vue';
-import i18nFactory from './i18n/index.js';
-
+import i18nFactory, { tc } from './i18n/index.js';
 import router from './router/index.js';
 import { providerNames } from './service/provider/providers.js';
-
 import openThreatModel from './service/otm/openThreatModel.js';
 import { isValidOTM, isValidSchema } from './service/schema/ajv';
 import storeFactory from './store/index.js';
@@ -108,16 +105,24 @@ modalApp.use(bootstrapVueNext);
 // Mount the modal app
 const modalInstance = modalApp.mount('#confirm-modal-container');
 
+// Use standardized translation helper
+const safeTranslate = (key, defaultText) => {
+    return tc(key) || defaultText;
+};
+
 // Function to show confirmation dialog
 const getConfirmModal = async () => {
-    const i18n = app.$i18n || vueApp.config.globalProperties.$i18n;
+    modalInstance.message = safeTranslate('forms.discardMessage', 'Are you sure you want to discard your changes?');
+    modalInstance.title = safeTranslate('forms.confirm', 'Confirm');
+    modalInstance.okTitle = safeTranslate('forms.ok', 'OK');
+    modalInstance.cancelTitle = safeTranslate('forms.cancel', 'Cancel');
     
-    modalInstance.message = i18n ? i18n.t('forms.discardMessage') : 'Are you sure you want to discard your changes?';
-    modalInstance.title = i18n ? i18n.t('forms.confirm') : 'Confirm';
-    modalInstance.okTitle = i18n ? i18n.t('forms.ok') : 'OK';
-    modalInstance.cancelTitle = i18n ? i18n.t('forms.cancel') : 'Cancel';
-    
-    return modalInstance.$refs.confirmModal.show();
+    try {
+        return modalInstance.$refs.confirmModal.show();
+    } catch (error) {
+        console.error("Error showing confirmation modal:", error);
+        return confirm(modalInstance.message); // Fallback to browser confirm
+    }
 };
 
 // request from electron to renderer to close the application
@@ -174,8 +179,26 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
     const currentRoute = appRouter.currentRoute.value; // Vue 3 router uses .value
-    const i18n = app.$i18n || vueApp.config.globalProperties.$i18n;
-    const toast = app.$toast || vueApp.config.globalProperties.$toast;
+    
+    // Safe access to i18n and toast
+    let i18nInstance, toastInstance;
+    try {
+        i18nInstance = app.$i18n || vueApp.config.globalProperties.$i18n;
+    } catch(e) {
+        console.warn('Could not access i18n instance:', e);
+        i18nInstance = null;
+    }
+    
+    try {
+        toastInstance = app.$toast || vueApp.config.globalProperties.$toast || window.$toast;
+    } catch(e) {
+        console.warn('Could not access toast instance:', e);
+        toastInstance = {
+            error: (msg) => console.error('Toast error:', msg),
+            warning: (msg) => console.warn('Toast warning:', msg),
+            success: (msg) => console.log('Toast success:', msg)
+        };
+    }
     
     let params;
     // check for schema errors
@@ -192,8 +215,17 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
             threatmodel: jsonModel.summary.title
         });
     } catch (e) {
-        const errorMessage = i18n ? i18n.t('threatmodel.errors.invalidJson') + ' : ' + e.message : 'Invalid JSON: ' + e.message;
-        if (toast) toast.error(errorMessage);
+        let errorMessage;
+        try {
+            errorMessage = i18nInstance && typeof i18nInstance.t === 'function' 
+                ? i18nInstance.t('threatmodel.errors.invalidJson') + ' : ' + e.message 
+                : 'Invalid JSON: ' + e.message;
+        } catch (translationError) {
+            console.warn('Translation error:', translationError);
+            errorMessage = 'Invalid JSON: ' + e.message;
+        }
+        
+        if (toastInstance) toastInstance.error(errorMessage);
         appRouter.push({ name: 'HomePage' }).catch(error => {
             if (error.name != 'NavigationDuplicated') {
                 throw error;

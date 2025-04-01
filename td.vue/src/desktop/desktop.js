@@ -12,7 +12,7 @@ const path = require('path');
 const os = require('os');
 const pkg = require('../../../package.json');
 
-// Electron DevTools installer is handled by Cypress for testing
+// Setup Vue DevTools for development
 let installExtension, VUEJS_DEVTOOLS;
 try {
     const devTools = require('electron-devtools-installer');
@@ -64,7 +64,8 @@ async function createWindow () {
         logger.log.info('Running in development mode with WEBPACK_DEV_SERVER_URL: ' + electronURL);
         // Load the url of the dev server when in development mode
         await mainWindow.loadURL(electronURL);
-        if (!isTest) {
+        // Open DevTools in development mode
+        if (isDevelopment) {
             mainWindow.webContents.openDevTools();
         }
     } else {
@@ -103,8 +104,8 @@ app.on('ready', async () => {
     let template = menu.getMenuTemplate();
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
-    // Install Vue Devtools
-    if (isDevelopment && !isTest) {
+    // Install Vue Devtools in development mode
+    if (isDevelopment) {
         try {
             await installExtension(VUEJS_DEVTOOLS);
         } catch (e) {
@@ -124,7 +125,7 @@ app.on('ready', async () => {
         autoUpdater.quitAndInstall();
     });
 
-    // Handle the new invoke-based IPC methods (for Cypress testing)
+    // Handle application information IPC methods
     ipcMain.handle('get-app-version', () => {
         return pkg.version;
     });
@@ -138,9 +139,9 @@ app.on('ready', async () => {
     });
 
     ipcMain.handle('open-file', async () => {
-        // This wrapper around dialog.showOpenDialog matches what's needed in tests
+        // Open file dialog and return the selected file path
         const result = await menu.openFileDialog();
-        // Return format expected by Cypress tests
+        // Return in a standardized format
         return { filePaths: result ? [result] : [] };
     });
 

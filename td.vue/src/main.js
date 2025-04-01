@@ -5,8 +5,7 @@ import router from './router/index.js';
 import { store } from './store/index.js';
 import bootstrapVueNext from './plugins/bootstrap-vue-next'; // Bootstrap-Vue-Next plugin for Vue 3
 import fontAwesome from './plugins/fontawesome-vue'; // FontAwesome plugin
-import ToastPlugin from 'vue-toast-notification';  //updated Toast notifications setup
-import 'vue-toast-notification/dist/theme-default.css'; // Import toast styles
+import { toastNotificationPlugin } from './plugins/toast-notification.js';
 import Tooltip from 'primevue/tooltip';
 import { isElectronMode } from './utils/environment';
 import configActions from './store/actions/config.js';
@@ -21,14 +20,11 @@ app.use(i18nFactory.get()); // i18n (Internationalization)
 app.use(bootstrapVueNext); // Bootstrap-Vue-Next plugin
 app.use(fontAwesome); // FontAwesome plugin
 
-// Initialize toast plugin and make it globally available
-app.use(ToastPlugin, {
+// Initialize toast notification plugin
+app.use(toastNotificationPlugin, {
     position: 'top-right',
     duration: 3000
 });
-
-// Make toast globally accessible for use outside of components
-window.$toast = app.config.globalProperties.$toast;
 
 app.directive('tooltip', Tooltip);
 

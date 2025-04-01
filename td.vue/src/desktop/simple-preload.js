@@ -25,6 +25,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onOpenModelRequest: (callback) => ipcRenderer.on('open-model-request', callback),
   onPrintModelRequest: (callback) => ipcRenderer.on('print-model-request', callback),
   onSaveModelRequest: (callback) => ipcRenderer.on('save-model-request', callback),
+  onModelSaveResult: (callback) => ipcRenderer.on('model-save-result', callback),
+  offModelSaveResult: (callback) => ipcRenderer.removeListener('model-save-result', callback),
   onUpdateAvailable: (callback) => ipcRenderer.on('update-available', callback),
   onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', callback),
   

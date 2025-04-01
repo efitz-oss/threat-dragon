@@ -3,46 +3,46 @@
         <td-form-button
             :onBtnClick="deleteSelected"
             icon="trash"
-            :title="$t('threatmodel.buttons.delete')"
+            :title="t('threatmodel.buttons.delete')"
             text="" />
 
         <td-form-button
             :onBtnClick="showShortcuts"
             icon="keyboard"
-            :title="$t('threatmodel.buttons.shortcuts')"
+            :title="t('threatmodel.buttons.shortcuts')"
             text="" />
 
         <td-form-button
             :onBtnClick="undo"
             icon="undo"
-            :title="$t('threatmodel.buttons.undo')"
+            :title="t('threatmodel.buttons.undo')"
             text="" />
 
         <td-form-button
             :onBtnClick="redo"
             icon="redo"
-            :title="$t('threatmodel.buttons.redo')"
+            :title="t('threatmodel.buttons.redo')"
             text="" />
 
         <td-form-button
             :onBtnClick="zoomIn"
             icon="search-plus"
-            :title="$t('threatmodel.buttons.zoomIn')"
+            :title="t('threatmodel.buttons.zoomIn')"
             text="" />
 
         <td-form-button
             :onBtnClick="zoomOut"
             icon="search-minus"
-            :title="$t('threatmodel.buttons.zoomOut')"
+            :title="t('threatmodel.buttons.zoomOut')"
             text="" />
 
         <td-form-button
             :onBtnClick="toggleGrid"
             icon="th"
-            :title="$t('threatmodel.buttons.toggleGrid')"
+            :title="t('threatmodel.buttons.toggleGrid')"
             text="" />
 
-        <b-dropdown right :text="$t('forms.export')" id="export-graph-btn">
+        <b-dropdown right :text="t('forms.export')" id="export-graph-btn">
             <b-dropdown-item @click="exportPNG" id="export-graph-png">
                 PNG
             </b-dropdown-item>
@@ -57,26 +57,32 @@
         <td-form-button
             :onBtnClick="closeDiagram"
             icon="times"
-            :text="$t('forms.close')" />
+            :text="t('forms.close')" />
 
         <td-form-button
             :isPrimary="true"
             :onBtnClick="save"
             icon="save"
-            :text="$t('forms.save')" />
+            :text="t('forms.save')" />
 
     </BButtonGroup>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-
+import { useI18n } from '@/i18n/index.js';
 import TdFormButton from '@/components/FormButton.vue';
 
 export default {
     name: 'TdGraphButtons',
     components: {
         TdFormButton
+    },
+    setup() {
+        // Use the composition API for i18n
+        const { t } = useI18n();
+        
+        return { t };
     },
     computed: mapState({
         diagram: (state) => state.threatmodel.selectedDiagram,
@@ -102,7 +108,6 @@ export default {
             return;
         },
         showShortcuts() {
-            // Vue 3 Migration: Replace v-b-modal directive with method call
             this.$root.$emit('bv::show::modal', 'shortcuts');
         },
         undo() {
