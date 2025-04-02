@@ -40,10 +40,10 @@ export default {
       try {
         log('OAuth callback page loaded');
         
-        // Using history mode, we should always get the code from search params
+        // We'll look for the code in multiple places to support different router modes and redirect patterns
         let code = null;
         
-        // Check search params for code (history mode)
+        // First check URL search params (standard approach with history mode)
         if (window.location.search) {
           log(`Checking search params: ${window.location.search.replace(/code=[^&]+/, 'code=REDACTED')}`);
           const params = new URLSearchParams(window.location.search);
@@ -53,23 +53,41 @@ export default {
           }
         }
         
-        // Fallback to check hash for code (hash mode)
+        // If not found, check the full URL path for oauth-return pattern (for some redirects)
+        if (!code && window.location.pathname.includes('/oauth-return')) {
+          log('Found oauth-return in pathname, checking query string');
+          // The code might be in query params but pathname includes the route
+          const fullPath = window.location.pathname + window.location.search;
+          const match = fullPath.match(/\/oauth-return\?code=([^&]+)/);
+          if (match && match[1]) {
+            code = match[1];
+            log('Found code in pathname + search pattern');
+          }
+        }
+        
+        // Fallback to check hash for code (hash mode or older redirects)
         if (!code && window.location.hash) {
           log(`Found hash: ${window.location.hash.replace(/code=[^&]+/, 'code=REDACTED')}`);
           
-          // Check for code in hash fragment
+          // Check for code in hash fragment with hashtag navigation
           if (window.location.hash.includes('#/oauth-return?code=')) {
-            log('Found code in hash fragment');
+            log('Found code in hash fragment with hashtag navigation');
             const parts = window.location.hash.split('#/oauth-return?');
             if (parts.length > 1) {
               const params = new URLSearchParams(parts[1]);
               code = params.get('code');
             }
+          } else if (window.location.hash.includes('code=')) {
+            // Direct hash parameter without route
+            log('Found code directly in hash params');
+            const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+            code = hashParams.get('code');
           }
         }
         
         if (!code) {
           log('No authorization code found in URL');
+          log(`Full URL: ${window.location.href.replace(/code=[^&]+/, 'code=REDACTED')}`);
           throw new Error('No authorization code found');
         }
         

@@ -76,14 +76,20 @@ const oauthReturn = (req, res) => {
         return errors.badRequest('No authorization code present in OAuth return', res, logger);
     }
     
-    const returnUrl = env.get().config.NODE_ENV === 'development' 
-        ? `${baseUrl}/#/oauth-return?code=${req.query.code}`
-        : `/#/oauth-return?code=${req.query.code}`;
+    // Get the return URL from the provider with consistent format
+    const provider = providers.get(req.params.provider);
+    const returnUrl = provider.getOauthReturnUrl(req.query.code);
+    
+    // In development mode, returnUrl already includes the full URL with hostname
+    // In production, we need to prepend the baseUrl if it was successfully determined
+    const fullReturnUrl = env.get().config.NODE_ENV === 'development' 
+        ? returnUrl
+        : `${baseUrl}${returnUrl}`;
         
-    logger.info(`Complete redirect URL: ${returnUrl.replace(/code=[^&]+/u, 'code=REDACTED')}`);
+    logger.info(`Complete redirect URL: ${fullReturnUrl.replace(/code=[^&]+/u, 'code=REDACTED')}`);
     
     logger.info(`Redirecting to client application...`);
-    return res.redirect(returnUrl);
+    return res.redirect(fullReturnUrl);
 };
 
 

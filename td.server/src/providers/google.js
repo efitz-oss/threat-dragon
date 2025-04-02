@@ -31,11 +31,17 @@ const getOauthRedirectUrl = () => {
  * @returns {String}
  */
 const getOauthReturnUrl = (code) => {
-    let returnUrl = `/#/oauth-return?code=${code}`;
+    // Use a consistent format for the URL regardless of environment
+    // For history mode routers, use a standard path without hash
+    const path = `/oauth-return?code=${code}`;
+    
+    // In development, include the full localhost URL
     if (env.get().config.NODE_ENV === 'development') {
-        returnUrl = `http://localhost:8080${returnUrl}`;
+        return `http://localhost:8080${path}`;
     }
-    return returnUrl;
+    
+    // In production, use a relative path that will work with any protocol/host
+    return path;
 };
 
 /**
