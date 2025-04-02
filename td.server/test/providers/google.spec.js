@@ -51,7 +51,7 @@ describe('providers/google.js', () => {
             });
 
             it('gives a relative url when not in development mode', () => {
-                const idx = googleProvider.getOauthReturnUrl(code).indexOf('/#/oauth-return');
+                const idx = googleProvider.getOauthReturnUrl(code).indexOf('/oauth-return');
                 expect(idx).to.eq(0);
             });
 

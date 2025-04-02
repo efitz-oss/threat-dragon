@@ -8,10 +8,10 @@ const os = require('os');
 
 // Export common modules used by the Electron app
 module.exports = {
-  electron,
-  electronUpdater,
-  electronLog,
-  path,
-  fs,
-  os
+    electron,
+    electronUpdater,
+    electronLog,
+    path,
+    fs,
+    os
 };

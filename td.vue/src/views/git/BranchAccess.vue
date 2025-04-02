@@ -2,11 +2,11 @@
     <td-selection-page
         :items="branches"
         :page="page"
-        :pageNext="pageNext"
-        :pagePrev="pagePrev"
-        :onItemClick="onBranchClick"
-        :paginate="paginate">
-
+        :page-next="pageNext"
+        :page-prev="pagePrev"
+        :on-item-click="onBranchClick"
+        :paginate="paginate"
+    >
         {{ $t('branch.select') }}
         <!-- Fixme: The href should get the configured hostname from env -->
         <a
@@ -16,16 +16,17 @@
             rel="noopener noreferrer"
         >{{ repoName }}</a>
         {{ $t('branch.from') }}
-        <a href="javascript:void(0)" id="return-to-repo" @click="selectRepoClick">
+        <a id="return-to-repo" href="javascript:void(0)" @click="selectRepoClick">
             {{ $t('branch.chooseRepo') }}
         </a>
         {{ $t('branch.or') }}
-        <a href="javascript:void(0)" id="new-branch" @click="toggleNewBranchDialog()">{{ $t('branch.addNew') }}</a>
+        <a id="new-branch" href="javascript:void(0)" @click="toggleNewBranchDialog()">{{ $t('branch.addNew') }}</a>
 
         <add-branch-modal
             v-if="showNewBranchDialog"
             :branches="branches"
-            @close-dialog="toggleNewBranchDialog()"/>
+            @close-dialog="toggleNewBranchDialog()"
+        />
     </td-selection-page>
 </template>
 

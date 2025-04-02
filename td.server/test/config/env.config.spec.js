@@ -23,17 +23,17 @@ describe('config/env.config.js environment configuration', () => {
     describe('tryLoadDotEnv', () => {
         it('adds a github provider', () => {
             expect(mockEnv.addProvider).to.have.been
-            .calledWith(sinon.match.instanceOf(GithubEnv));
+                .calledWith(sinon.match.instanceOf(GithubEnv));
         });
 
         it('adds the encryption provider', () => {
             expect(mockEnv.addProvider).to.have.been
-            .calledWith(sinon.match.instanceOf(EncryptionEnv));
+                .calledWith(sinon.match.instanceOf(EncryptionEnv));
         });
 
         it('adds the threat dragon provider', () => {
             expect(mockEnv.addProvider).to.have.been
-            .calledWith(sinon.match.instanceOf(ThreatDragonEnv));
+                .calledWith(sinon.match.instanceOf(ThreatDragonEnv));
         });
 
         it('hydrates the config', () => {

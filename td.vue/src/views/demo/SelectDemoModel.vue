@@ -2,7 +2,7 @@
     <b-container fluid>
         <b-row>
             <b-col>
-               <div class="jumbotron text-center">
+                <div class="jumbotron text-center">
                     <h4>
                         {{ $t('demo.select') }}
                     </h4>
@@ -10,15 +10,17 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-col md=6 offset=3>
+            <b-col md="6" offset="3">
                 <b-list-group>
                     <b-list-group-item
                         v-for="(model, idx) in models"
                         :key="idx"
                         href="javascript:void(0)"
-                        @click="onModelClick(model)"
                         :data-model-name="model.name"
-                    >{{ model.name }}</b-list-group-item>
+                        @click="onModelClick(model)"
+                    >
+                        {{ model.name }}
+                    </b-list-group-item>
                 </b-list-group>
             </b-col>
         </b-row>

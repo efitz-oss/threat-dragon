@@ -103,7 +103,7 @@ describe('providers/bitbucket.js', () => {
         });
 
         it('gets the access_token from bitbucket', () => {
-            var form = new FormData();
+            const form = new FormData();
             form.append('grant_type', 'authorization_code');
             form.append('client_id', config.BITBUCKET_CLIENT_ID);
             form.append('client_secret', config.BITBUCKET_CLIENT_SECRET);

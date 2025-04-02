@@ -52,7 +52,7 @@ function downloadFile(data, fileName) {
 
 async function writeFile(data, fileName) {
     const jsonData = JSON.stringify(data, null, 2);
-    var fileHandle = null;
+    let fileHandle = null;
     const options = {
         suggestedName: fileName,
         types: [

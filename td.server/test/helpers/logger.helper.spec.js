@@ -87,8 +87,8 @@ describe('helpers/logger.helper.js', () => {
         const complexObject = {a: 'a', b: { ba: 'ba', bb: 'bb'}};
         let objectString = logger.transformToString(complexObject);
         expect(objectString).to.equal('{"a":"a","b":{"ba":"ba","bb":"bb"}}');
-        complexObject.b.bb = complexObject.b
+        complexObject.b.bb = complexObject.b;
         objectString = logger.transformToString(complexObject);
         expect(objectString).to.equal('{"a":"a","b":{"ba":"ba","bb":"[Circular]"}}');
-    })
+    });
 });

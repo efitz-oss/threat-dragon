@@ -79,6 +79,6 @@ library.add(
 export default {
     install(app) {
         // Register the FontAwesomeIcon component globally
-        app.component('font-awesome-icon', FontAwesomeIcon);
+        app.component('FontAwesomeIcon', FontAwesomeIcon);
     },
 };

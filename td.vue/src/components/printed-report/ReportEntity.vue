@@ -4,9 +4,15 @@
             {{ `${entity.data.name.replaceAll('\n', ' ')} (${dataType})` }}
             <em v-if="outOfScope">- {{ $t('threatmodel.properties.outOfScope') }}</em>
         </div>
-        <p class="entity-description" v-if="outOfScope"><b>{{ $t('threatmodel.properties.reasonOutOfScope') }}:</b> {{ entity.data.reasonOutOfScope }}</p>
-        <p class="entity-description">{{ $t('threatmodel.properties.description') }}: {{ entity.data.description }}</p>
-        <p class="entity-description" v-if="showProperties">{{ properties }}</p>
+        <p v-if="outOfScope" class="entity-description">
+            <b>{{ $t('threatmodel.properties.reasonOutOfScope') }}:</b> {{ entity.data.reasonOutOfScope }}
+        </p>
+        <p class="entity-description">
+            {{ $t('threatmodel.properties.description') }}: {{ entity.data.description }}
+        </p>
+        <p v-if="showProperties" class="entity-description">
+            {{ properties }}
+        </p>
         <table class="table">
             <thead>
                 <tr>
@@ -38,26 +44,6 @@
         </table>
     </div>
 </template>
-
-<style lang="scss" scoped>
-.report-box {
-    display: flex;
-    flex-direction: column;
-    white-space: pre-wrap;
-}
-
-.entity-title {
-    font-size: 24px;
-    margin-top: 50px;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-.entity-description {
-    padding: 15px;
-    white-space: pre-wrap;
-}
-</style>
 
 <script>
 import threatService from '@/service/threats/index.js';
@@ -150,3 +136,23 @@ export default {
 };
 
 </script>
+
+<style lang="scss" scoped>
+.report-box {
+    display: flex;
+    flex-direction: column;
+    white-space: pre-wrap;
+}
+
+.entity-title {
+    font-size: 24px;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.entity-description {
+    padding: 15px;
+    white-space: pre-wrap;
+}
+</style>

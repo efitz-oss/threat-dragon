@@ -2,7 +2,7 @@ const buildVersion = require('../../../package.json').version;
 
 const convertSummary = (jsonModel) => {
     const noteText = 'Note that support for Open Threat Model is experimental and subject to large scale changes.\n';
-    let summary = new Object();
+    const summary = new Object();
 
     if (jsonModel.project) {
         summary.title = jsonModel.project.name;
@@ -24,7 +24,7 @@ const convertSummary = (jsonModel) => {
 };
 
 const getDiagramType = (representation) => {
-    let diagram = new Object();
+    const diagram = new Object();
 
     if (representation.attributes && representation.attributes.diagramType) {
         switch(representation.attributes.diagramType) {
@@ -67,7 +67,7 @@ const getDiagramType = (representation) => {
 };
 
 const convertDetail = (jsonModel) => {
-    let detail = new Object();
+    const detail = new Object();
     detail.contributors = [];
     detail.diagrams = [];
     detail.diagramTop = 0;
@@ -80,7 +80,7 @@ const convertDetail = (jsonModel) => {
         jsonModel.representations.forEach(function(representation) {
             if (representation.type === 'diagram') {
                 // threat dragon only knows about diagrams
-                let diagram = getDiagramType(representation);
+                const diagram = getDiagramType(representation);
                 diagram.cells = [];
                 diagram.version = buildVersion;
                 diagram.id = diagramID++;
@@ -102,7 +102,7 @@ const convertDetail = (jsonModel) => {
 };
 
 export const convert = function (jsonModel) {
-    let dragonModel = new Object();
+    const dragonModel = new Object();
 
     dragonModel.version = buildVersion;
     dragonModel.otmVersion = jsonModel.otmVersion;

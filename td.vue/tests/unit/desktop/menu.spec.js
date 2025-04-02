@@ -117,7 +117,7 @@ describe('desktop/menu.js', () => {
     describe('Desktop menu functions', () => {
 
         const mockData = { 'title': 'test title' };
-        var mockFilename = 'test name';
+        let mockFilename = 'test name';
 
         describe('Server actions', () => {
 

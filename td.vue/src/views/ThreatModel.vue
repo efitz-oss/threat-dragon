@@ -1,6 +1,6 @@
 <template>
     <div v-if="!!model && model.summary">
-        <b-row class="mb-4" id="title_row">
+        <b-row id="title_row" class="mb-4">
             <b-col>
                 <td-threat-model-summary-card />
             </b-col>
@@ -9,10 +9,13 @@
         <b-row class="mb-4">
             <b-col>
                 <BCard
-                    :header="$t('threatmodel.description')">
+                    :header="$t('threatmodel.description')"
+                >
                     <b-row class="tm-card">
                         <b-col>
-                            <p id="tm_description">{{ model.summary.description }}</p>
+                            <p id="tm_description">
+                                {{ model.summary.description }}
+                            </p>
                         </b-col>
                     </b-row>
                 </BCard>
@@ -21,21 +24,21 @@
         <!-- Diagrams -->
         <b-row class="mb-4">
             <b-col
-                class="tm_diagram"
-                lg="3"
                 v-for="(diagram, idx) in model.detail.diagrams"
                 :key="idx"
+                class="tm_diagram"
+                lg="3"
             >
                 <BCard>
                     <template #header>
                         <h6 class="diagram-header-text">
-                            <a href="javascript:void(0)" @click="editDiagram(diagram)" class="diagram-edit">
+                            <a href="javascript:void(0)" class="diagram-edit" @click="editDiagram(diagram)">
                                 {{ diagram.title }}
                             </a>
                         </h6>
                     </template>
                     <h6 v-if="diagram.description" class="diagram-description-text">
-                        <a href="javascript:void(0)" @click="editDiagram(diagram)" class="diagram-edit">
+                        <a href="javascript:void(0)" class="diagram-edit" @click="editDiagram(diagram)">
                             {{ diagram.description }}
                         </a>
                     </h6>
@@ -43,7 +46,8 @@
                         <BImg
                             class="m-auto d-block td-diagram-thumb"
                             :src="getThumbnailUrl(diagram)"
-                            :alt="diagram.title" />
+                            :alt="diagram.title"
+                        />
                     </a>
                 </BCard>
             </b-col>
@@ -53,43 +57,29 @@
                 <BButtonGroup>
                     <td-form-button
                         id="td-edit-btn"
-                        :isPrimary="true"
-                        :onBtnClick="onEditClick"
+                        :is-primary="true"
+                        :on-btn-click="onEditClick"
                         icon="edit"
-                        :text="$t('forms.edit')" />
+                        :text="$t('forms.edit')"
+                    />
                     <td-form-button
                         id="td-report-btn"
-                        :onBtnClick="onReportClick"
+                        :on-btn-click="onReportClick"
                         icon="file-alt"
-                        :text="$t('forms.report')" />
+                        :text="$t('forms.report')"
+                    />
                     <td-form-button
                         id="td-close-btn"
-                        :onBtnClick="onCloseClick"
+                        :on-btn-click="onCloseClick"
                         icon="times"
-                        :text="$t('forms.closeModel')" />
+                        :text="$t('forms.closeModel')"
+                    />
                 </BButtonGroup>
             </b-col>
         </b-row>
     </div>
 </template>
 
-<style lang="scss" scoped>
-@use '@/styles/colors.scss' as colors; /* Import the SCSS file with color variables */
-.tm-card {
-    font-size: 14px;
-    white-space: pre-wrap;
-}
-.diagram-header-text a {
-    color: colors.$black;
-}
-.diagram-description-text a {
-    color: colors.$black;
-}
-.td-diagram-thumb {
-    max-width: 200px;
-    max-height: 160px;
-}
-</style>
 <script>
 import { mapState } from 'vuex';
 import { getProviderType } from '@/service/provider/providers.js';
@@ -107,6 +97,14 @@ export default {
         providerType: (state) => getProviderType(state.provider.selected),
         version: (state) => state.packageBuildVersion
     }),
+    mounted() {
+        const threatTop = this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
+        const diagramTop = this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
+        const update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
+        console.debug('updates: ' + JSON.stringify(update));
+        this.$store.dispatch(tmActions.update, update);
+        this.$store.dispatch(tmActions.notModified);
+    },
     methods: {
         onEditClick(evt) {
             evt.preventDefault();
@@ -137,14 +135,23 @@ export default {
             const path = `${this.$route.path}/edit/${encodeURIComponent(diagram.title)}`;
             this.$router.push(path);
         }
-    },
-    mounted() {
-        let threatTop = this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
-        let diagramTop = this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
-        let update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
-        console.debug('updates: ' + JSON.stringify(update));
-        this.$store.dispatch(tmActions.update, update);
-        this.$store.dispatch(tmActions.notModified);
     }
 };
 </script>
+<style lang="scss" scoped>
+@use '@/styles/colors.scss' as colors; /* Import the SCSS file with color variables */
+.tm-card {
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+.diagram-header-text a {
+    color: colors.$black;
+}
+.diagram-description-text a {
+    color: colors.$black;
+}
+.td-diagram-thumb {
+    max-width: 200px;
+    max-height: 160px;
+}
+</style>

@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import env from '../../src/env/Env.js';
 import * as threatModelRepository from '../../src/repositories/gitlabrepo.js';
-import {GitlabClientWrapper} from "../../src/repositories/gitlabrepo.js";
+import {GitlabClientWrapper} from '../../src/repositories/gitlabrepo.js';
 import {getClient, userAsync} from '../../src/repositories/gitlabrepo.js';
 
 describe('repositories/gitlabrepo.js', () => {
@@ -43,7 +43,7 @@ describe('repositories/gitlabrepo.js', () => {
             repo_slug: 'repoInfo.repo',
             name: 'branch_name',
             model: 'my model',
-            data: "abc",
+            data: 'abc',
             body: {
                 content: 'test content',
                 id: 1
@@ -59,14 +59,14 @@ describe('repositories/gitlabrepo.js', () => {
         },
         Projects: {
             all: sinon.stub().returns(Promise.resolve({
-                    data:
+                data:
                         [
                             {path_with_namespace: 'Threat-Workspace/Repo1'},
                             {path_with_namespace: 'Threat-Workspace/Repo2'},
                             {path_with_namespace: 'Threat-Workspace/Repo3'},
-],
-                    paginationInfo: {next: null, previous: null}
-                }
+                        ],
+                paginationInfo: {next: null, previous: null}
+            }
             )),
             getBranch: sinon.stub().returns(Promise.resolve({data: {target: {hash: info.readInfo.commit}}})),
             listBranches: sinon.stub().returns(Promise.resolve({data: {values: []}})),
@@ -144,7 +144,7 @@ describe('repositories/gitlabrepo.js', () => {
         });
 
         it('creates the gitlab client', () => {
-             threatModelRepository.userAsync(accessToken);
+            threatModelRepository.userAsync(accessToken);
             sinon.stub(env, 'get').returns({config: {}});
             expect(GitlabClientWrapper.getClient).to.have.been.calledWith(clientOptions.auth);
 
@@ -189,7 +189,7 @@ describe('repositories/gitlabrepo.js', () => {
     });
 
     describe('branchesAsync', () => {
-        const repoInfo = {page: info.listBranches.page, repo: "repo", organisation: "org"};
+        const repoInfo = {page: info.listBranches.page, repo: 'repo', organisation: 'org'};
         beforeEach(async () => {
             sinon.stub(env, 'get').returns({config: {GITLAB_WORKSPACE: workspace}});
             await threatModelRepository.branchesAsync(repoInfo, accessToken);
@@ -200,13 +200,13 @@ describe('repositories/gitlabrepo.js', () => {
         });
 
         it('gets the repo', () => {
-            expect(mockClient.Branches.all).to.have.been.calledWith("org/repo", info.listBranches);
+            expect(mockClient.Branches.all).to.have.been.calledWith('org/repo', info.listBranches);
         });
 
     });
 
     describe('modelsAsync', () => {
-        const branchInfo = {branch: "main", repo: "repo"};
+        const branchInfo = {branch: 'main', repo: 'repo'};
 
         beforeEach(async () => {
             sinon.stub(env, 'get').returns({config: {GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath}});
@@ -218,12 +218,12 @@ describe('repositories/gitlabrepo.js', () => {
         });
 
         it('should get the branch contents', () => {
-            expect(mockClient.Repositories.allRepositoryTrees).to.have.been.calledWith("undefined/repo", info.branchInfo);
+            expect(mockClient.Repositories.allRepositoryTrees).to.have.been.calledWith('undefined/repo', info.branchInfo);
         });
     });
 
     describe('modelAsync', () => {
-        const modelInfo = {page: info.listBranches.page, repo: "repo", organisation: "org", model: "model"};
+        const modelInfo = {page: info.listBranches.page, repo: 'repo', organisation: 'org', model: 'model'};
 
         beforeEach(async () => {
             sinon.stub(env, 'get').returns({config: {GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath}});
@@ -235,7 +235,7 @@ describe('repositories/gitlabrepo.js', () => {
         });
 
         it('should get the contents', () => {
-            expect(mockClient.RepositoryFiles.show).to.have.been.calledWith("org/repo", "ThreatDragonModels/model/model.json");
+            expect(mockClient.RepositoryFiles.show).to.have.been.calledWith('org/repo', 'ThreatDragonModels/model/model.json');
         });
 
     });
@@ -246,7 +246,7 @@ describe('repositories/gitlabrepo.js', () => {
             repo: info.createAsync.repo_slug,
             model: info.createAsync.model,
             body: info.createAsync.body,
-            organisation: "org"
+            organisation: 'org'
         };
 
         beforeEach(async () => {
@@ -261,13 +261,13 @@ describe('repositories/gitlabrepo.js', () => {
 
         it('create the file', () => {
             expect(mockClient.RepositoryFiles.create).to.have.been.calledWith(
-                "org/repoInfo.repo",
-                "ThreatDragonModels/my model/my model.json",
-                "branch_name",
-                "{\n  \"content\": \"test content\",\n  \"id\": 1\n}",
-                "Created by OWASP Threat Dragon",
+                'org/repoInfo.repo',
+                'ThreatDragonModels/my model/my model.json',
+                'branch_name',
+                '{\n  "content": "test content",\n  "id": 1\n}',
+                'Created by OWASP Threat Dragon',
 
-        );
+            );
         });
     });
 
@@ -278,7 +278,7 @@ describe('repositories/gitlabrepo.js', () => {
             repo: info.createAsync.repo_slug,
             model: info.createAsync.model,
             body: info.createAsync.body,
-            organisation: "org"
+            organisation: 'org'
 
         };
 
@@ -295,11 +295,11 @@ describe('repositories/gitlabrepo.js', () => {
 
         it('update the file', () => {
             expect(mockClient.RepositoryFiles.edit).to.have.been.calledWith(
-                "org/repoInfo.repo",
-                "ThreatDragonModels/my model/my model.json",
-                "branch_name",
-                "{\n  \"content\": \"test content\",\n  \"id\": 1\n}",
-                "Updated by OWASP Threat Dragon",
+                'org/repoInfo.repo',
+                'ThreatDragonModels/my model/my model.json',
+                'branch_name',
+                '{\n  "content": "test content",\n  "id": 1\n}',
+                'Updated by OWASP Threat Dragon',
 
             );
         });

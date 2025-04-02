@@ -1,13 +1,14 @@
 <template>
     <td-selection-page
-        :filter.sync="searchQuery"
+        v-model:filter="searchQuery"
         :items="repositories"
         :page="page"
-        :pageNext="pageNext"
-        :pagePrev="pagePrev"
-        :onItemClick="onRepoClick"
+        :page-next="pageNext"
+        :page-prev="pagePrev"
+        :on-item-click="onRepoClick"
         :paginate="paginate"
-        :emptyStateText="`${$t('repository.noneFound')} ${$t('providers.' + provider + '.displayName')}`">
+        :empty-state-text="`${$t('repository.noneFound')} ${$t('providers.' + provider + '.displayName')}`"
+    >
         {{ $t('repository.select') }} {{ $t(`providers.${provider}.displayName`) }} {{ $t('repository.from') }}
     </td-selection-page>
 </template>

@@ -16,7 +16,7 @@ describe('helpers/jwt.helper.js', () => {
     beforeEach(() => {
         sinon.stub(jsonwebtoken, 'sign');
         sinon.stub(env, 'get').returns({ config });
-        sinon.stub(encryptionHelper, 'encryptPromise').resolves(cipherText)
+        sinon.stub(encryptionHelper, 'encryptPromise').resolves(cipherText);
     });
 
     describe('createAsync', () => {

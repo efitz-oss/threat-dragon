@@ -42,14 +42,14 @@ vueApp.use(DesktopAuthPlugin); // Add Desktop authentication plugin
 
 // Set desktop configuration explicitly
 store.commit(CONFIG_LOADED, { 
-  config: {
-    githubEnabled: false,
-    googleEnabled: false,
-    gitlabEnabled: false,
-    bitbucketEnabled: false,
-    localEnabled: true,
-    desktopEnabled: true
-  }
+    config: {
+        githubEnabled: false,
+        googleEnabled: false,
+        gitlabEnabled: false,
+        bitbucketEnabled: false,
+        localEnabled: true,
+        desktopEnabled: true
+    }
 });
 
 // Configure router base path for Electron
@@ -61,7 +61,7 @@ console.log('Running in Electron desktop mode');
 
 // Add error logging
 window.addEventListener('error', (event) => {
-  console.error('Global error:', event.error);
+    console.error('Global error:', event.error);
 });
 
 // Mount the app
@@ -80,15 +80,15 @@ document.body.appendChild(modalContainer);
 
 // Create and mount the confirmation modal
 const modalApp = createApp({
-  data() {
-    return {
-      title: 'Confirm',
-      message: 'Are you sure?',
-      okTitle: 'OK',
-      cancelTitle: 'Cancel'
-    };
-  },
-  template: `
+    data() {
+        return {
+            title: 'Confirm',
+            message: 'Are you sure?',
+            okTitle: 'OK',
+            cancelTitle: 'Cancel'
+        };
+    },
+    template: `
     <confirmation-modal 
       ref="confirmModal"
       :title="title"
@@ -120,7 +120,7 @@ const getConfirmModal = async () => {
     try {
         return modalInstance.$refs.confirmModal.show();
     } catch (error) {
-        console.error("Error showing confirmation modal:", error);
+        console.error('Error showing confirmation modal:', error);
         return confirm(modalInstance.message); // Fallback to browser confirm
     }
 };

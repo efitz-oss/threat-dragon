@@ -1,6 +1,6 @@
 import env from '../env/Env.js';
 import loggerHelper from '../helpers/logger.helper.js';
-import repositories from "../repositories/index.js";
+import repositories from '../repositories/index.js';
 import responseWrapper from './responseWrapper.js';
 import { serverError } from './errors.js';
 
@@ -175,7 +175,7 @@ const getPagination = (headers, pageLinks, page) => {
         }
         return getPaginationFromPageLinks(pageLinks, page);
     } 
-        return getPaginationFromHeaders(headers, page);
+    return getPaginationFromHeaders(headers, page);
     
 };
 

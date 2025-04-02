@@ -143,11 +143,33 @@ describe('views/OAuthCallback.vue', () => {
         const hashCode = 'hash-code-12345';
         
         beforeEach(async () => {
-            // Setup window location with hash fragment containing code
-            window.location.search = ''; // No query parameters
-            window.location.hash = `#/oauth-return?code=${hashCode}`;
+            // Reset mocks
+            jest.clearAllMocks();
+            mockPush.mockClear();
+            loginApi.completeLoginAsync.mockClear();
             
-            // Create vuex store with the provider
+            // Save original location
+            const originalLocation = window.location;
+            
+            // Set up window.location to return hash fragment code
+            delete window.location;
+            window.location = {
+                search: '',
+                hash: `#/oauth-return?code=${hashCode}`,
+                pathname: '/oauth-callback',
+                href: `https://example.com/oauth-callback#/oauth-return?code=${hashCode}`
+            };
+            
+            // Mock the loginApi to return data immediately
+            loginApi.completeLoginAsync.mockImplementation((providerName, authCode) => {
+                // Check for correct code extraction
+                if (authCode === hashCode) {
+                    return Promise.resolve({ data: jwt });
+                }
+                return Promise.reject(new Error('Invalid code'));
+            });
+            
+            // Create store with provider
             mockStore = createStore({
                 state: {
                     provider: {
@@ -158,26 +180,29 @@ describe('views/OAuthCallback.vue', () => {
                     AUTH_SET_JWT: jest.fn()
                 }
             });
-            
-            // Spy on the dispatch method
             jest.spyOn(mockStore, 'dispatch');
             
-            // Mock API response
-            loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
-            
-            // Mount the component
+            // Mount component - this will trigger the onMounted hook
             wrapper = mount(OAuthCallback, {
                 global: {
                     plugins: [mockStore]
                 }
             });
             
-            // Wait for mounted hook to execute
+            // Wait for async operations to complete
             await nextTick();
-            await nextTick(); // Additional nextTick for async code
+            await nextTick(); 
+            await nextTick();
+            
+            // Add longer delay to ensure async processes finish
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            // Restore original window.location after test
+            window.location = originalLocation;
         });
         
         it('extracts code from hash fragment', () => {
+            // Verify the API call was made with the correct code from hash fragment
             expect(loginApi.completeLoginAsync).toHaveBeenCalledWith(provider, hashCode);
         });
     });

@@ -2,9 +2,9 @@
     <b-card :header="title">
         <b-row class="td-card">
             <b-col
-                md="2"
                 v-for="(keyvalue, idx) in values"
                 :key="idx"
+                md="2"
             >
                 <div>
                     <strong>{{ keyvalue.key }}:</strong>
@@ -17,12 +17,6 @@
     </b-card>
 </template>
 
-<style lang="scss" scoped>
-.td-card {
-    font-size: 14px;
-}
-</style>
-
 <script>
 export default {
     name: 'TdKeyValueCard',
@@ -33,3 +27,9 @@ export default {
 };
 
 </script>
+
+<style lang="scss" scoped>
+.td-card {
+    font-size: 14px;
+}
+</style>

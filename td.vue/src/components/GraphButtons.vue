@@ -1,70 +1,78 @@
 <template>
-   <BButtonGroup>
+    <BButtonGroup>
         <td-form-button
-            :onBtnClick="deleteSelected"
+            :on-btn-click="deleteSelected"
             icon="trash"
             :title="t('threatmodel.buttons.delete')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="showShortcuts"
+            :on-btn-click="showShortcuts"
             icon="keyboard"
             :title="t('threatmodel.buttons.shortcuts')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="undo"
+            :on-btn-click="undo"
             icon="undo"
             :title="t('threatmodel.buttons.undo')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="redo"
+            :on-btn-click="redo"
             icon="redo"
             :title="t('threatmodel.buttons.redo')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="zoomIn"
+            :on-btn-click="zoomIn"
             icon="search-plus"
             :title="t('threatmodel.buttons.zoomIn')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="zoomOut"
+            :on-btn-click="zoomOut"
             icon="search-minus"
             :title="t('threatmodel.buttons.zoomOut')"
-            text="" />
+            text=""
+        />
 
         <td-form-button
-            :onBtnClick="toggleGrid"
+            :on-btn-click="toggleGrid"
             icon="th"
             :title="t('threatmodel.buttons.toggleGrid')"
-            text="" />
+            text=""
+        />
 
-        <b-dropdown right :text="t('forms.export')" id="export-graph-btn">
-            <b-dropdown-item @click="exportPNG" id="export-graph-png">
+        <b-dropdown id="export-graph-btn" right :text="t('forms.export')">
+            <b-dropdown-item id="export-graph-png" @click="exportPNG">
                 PNG
             </b-dropdown-item>
-            <b-dropdown-item @click="exportJPEG" id="export-graph-jpeg">
+            <b-dropdown-item id="export-graph-jpeg" @click="exportJPEG">
                 JPEG
             </b-dropdown-item>
-            <b-dropdown-item @click="exportSVG" id="export-graph-svg">
+            <b-dropdown-item id="export-graph-svg" @click="exportSVG">
                 SVG
             </b-dropdown-item>
         </b-dropdown>
 
         <td-form-button
-            :onBtnClick="closeDiagram"
+            :on-btn-click="closeDiagram"
             icon="times"
-            :text="t('forms.close')" />
+            :text="t('forms.close')"
+        />
 
         <td-form-button
-            :isPrimary="true"
-            :onBtnClick="save"
+            :is-primary="true"
+            :on-btn-click="save"
             icon="save"
-            :text="t('forms.save')" />
-
+            :text="t('forms.save')"
+        />
     </BButtonGroup>
 </template>
 

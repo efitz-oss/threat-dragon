@@ -9,9 +9,9 @@ const toast = useToast();
 const apiKey = process.env.VUE_APP_GOOGLE_API_KEY || '';
 const appId = process.env.VUE_APP_GOOGLE_CLOUD_PROJECT_ID || '';
 
-let accessToken = ref(null);
-let isLoading = ref(false);
-let fileContent = ref(null); // Store imported file content
+const accessToken = ref(null);
+const isLoading = ref(false);
+const fileContent = ref(null); // Store imported file content
 
 const getGoogleAccessToken = async () => {
     try {
@@ -152,7 +152,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <button @click="handleAuth" class="btn btn-primary" :disabled="isLoading">
+    <button class="btn btn-primary" :disabled="isLoading" @click="handleAuth">
         <span v-if="isLoading">Loading...</span>
         <span v-else>Open Google Picker</span>
     </button>

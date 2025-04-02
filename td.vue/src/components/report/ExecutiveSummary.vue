@@ -3,19 +3,29 @@
         <b-row>
             <b-col>
                 <b-card :header="$t('report.executiveSummary')">
-                    <h3 class="td-description-title">{{ $t('threatmodel.description') }}</h3>
-                    <p class="td-summary">{{ summary || $t('report.notProvided') }}</p>
+                    <h3 class="td-description-title">
+                        {{ $t('threatmodel.description') }}
+                    </h3>
+                    <p class="td-summary">
+                        {{ summary || $t('report.notProvided') }}
+                    </p>
 
-                    <h3 class="td-report-summary">{{ $t('report.summary') }}</h3>
+                    <h3 class="td-report-summary">
+                        {{ $t('report.summary') }}
+                    </h3>
                     <BTableSimple striped responsive>
                         <BThead>
                             <BTr>
-                                <BTh v-for="(value, key) in tableRows[0]" :key="key">{{ key }}</BTh>
+                                <BTh v-for="(value, key) in tableRows[0]" :key="key">
+                                    {{ key }}
+                                </BTh>
                             </BTr>
                         </BThead>
                         <BTbody>
                             <BTr v-for="(row, index) in tableRows" :key="index">
-                                <BTd v-for="(value, key) in row" :key="key">{{ value }}</BTd>
+                                <BTd v-for="(value, key) in row" :key="key">
+                                    {{ value }}
+                                </BTd>
                             </BTr>
                         </BTbody>
                     </BTableSimple>
@@ -24,12 +34,6 @@
         </b-row>
     </div>
 </template>
-
-<style lang="scss" scoped>
-.td-summary {
-    white-space: pre-wrap;
-}
-</style>
 
 <script>
 export default {
@@ -98,3 +102,9 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+.td-summary {
+    white-space: pre-wrap;
+}
+</style>

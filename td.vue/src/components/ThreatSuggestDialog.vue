@@ -1,66 +1,100 @@
 <template>
     <div>
-        <b-modal id="threat-edit" size="lg" ok-variant="primary" header-bg-variant="primary" header-text-variant="light"
-            :title="modalTitle" ref="editModal">
+        <b-modal
+            id="threat-edit"
+            ref="editModal"
+            size="lg"
+            ok-variant="primary"
+            header-bg-variant="primary"
+            header-text-variant="light"
+            :title="modalTitle"
+        >
             <b-form>
                 <b-form-row>
                     <b-col>
                         <b-form-group id="title-group" :label="$t('threats.properties.title')" label-for="title">
-                            <b-form-input id="title" v-model="threat.title" type="text" required></b-form-input>
+                            <b-form-input
+                                id="title"
+                                v-model="threat.title"
+                                type="text"
+                                required
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="threat-type-group" :label="$t('threats.properties.type')"
-                            label-for="threat-type">
-                            <b-form-select id="threat-type" v-model="threat.type" :options="types">
-                            </b-form-select>
+                        <b-form-group
+                            id="threat-type-group"
+                            :label="$t('threats.properties.type')"
+                            label-for="threat-type"
+                        >
+                            <b-form-select id="threat-type" v-model="threat.type" :options="types" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
-                    <b-col md=5>
-                        <b-form-group id="status-group" class="float-left" :label="$t('threats.properties.status')"
-                            label-for="status">
-                            <b-form-radio-group id="status" v-model="threat.status" :options="statuses"
-                                buttons></b-form-radio-group>
+                    <b-col md="5">
+                        <b-form-group
+                            id="status-group"
+                            class="float-left"
+                            :label="$t('threats.properties.status')"
+                            label-for="status"
+                        >
+                            <b-form-radio-group
+                                id="status"
+                                v-model="threat.status"
+                                :options="statuses"
+                                buttons
+                            />
                         </b-form-group>
                     </b-col>
 
-                    <b-col md=2>
+                    <b-col md="2">
                         <b-form-group id="score-group" :label="$t('threats.properties.score')" label-for="score">
-                            <b-form-input id="score" v-model="threat.score" type="text"></b-form-input>
+                            <b-form-input id="score" v-model="threat.score" type="text" />
                         </b-form-group>
                     </b-col>
 
-                    <b-col md=5>
-                        <b-form-group id="priority-group" class="float-right" :label="$t('threats.properties.priority')"
-                            label-for="priority">
-                            <b-form-radio-group id="priority" v-model="threat.severity" :options="priorities"
-                                buttons></b-form-radio-group>
+                    <b-col md="5">
+                        <b-form-group
+                            id="priority-group"
+                            class="float-right"
+                            :label="$t('threats.properties.priority')"
+                            label-for="priority"
+                        >
+                            <b-form-radio-group
+                                id="priority"
+                                v-model="threat.severity"
+                                :options="priorities"
+                                buttons
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="description-group" :label="$t('threats.properties.description')"
-                            label-for="description">
-                            <b-form-textarea id="description" v-model="threat.description" rows="5">
-                            </b-form-textarea>
+                        <b-form-group
+                            id="description-group"
+                            :label="$t('threats.properties.description')"
+                            label-for="description"
+                        >
+                            <b-form-textarea id="description" v-model="threat.description" rows="5" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="mitigation-group" :label="$t('threats.properties.mitigation')"
-                            label-for="mitigation">
-                            <b-form-textarea id="mitigation" v-model="threat.mitigation" rows="5">
-                            </b-form-textarea>
+                        <b-form-group
+                            id="mitigation-group"
+                            :label="$t('threats.properties.mitigation')"
+                            label-for="mitigation"
+                        >
+                            <b-form-textarea id="mitigation" v-model="threat.mitigation" rows="5" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>

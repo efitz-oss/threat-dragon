@@ -13,6 +13,7 @@ import tokenRepo from '../../src/repositories/token.js';
 describe('controllers/auth.js', () => {
     const providerStub = {
         getOauthRedirectUrl: () => 'oauth-redirect',
+        getOauthReturnUrl: (code) => `/oauth-return?code=${code}`,
         completeLoginAsync: () => {},
         name: 'provider1'
     };
@@ -80,16 +81,19 @@ describe('controllers/auth.js', () => {
     describe('oauthReturn', () => {
         beforeEach(() => {
             mockRequest.query.code = '12345';
+            mockRequest.params.provider = 'google';
+            sinon.stub(providers, 'get').returns(providerStub);
         });
 
         describe('development', () => {
             beforeEach(() => {
                 sinon.stub(env, 'get').returns({ config: { NODE_ENV: 'development' }});
+                sinon.stub(providerStub, 'getOauthReturnUrl').returns(`http://localhost:8080/oauth-return?code=${mockRequest.query.code}`);
                 auth.oauthReturn(mockRequest, mockResponse);
             });
             
             it('redirects to the expected url', () => {
-                const expected = `http://localhost:8080/#/oauth-return?code=${mockRequest.query.code}`;
+                const expected = `http://localhost:8080/oauth-return?code=${mockRequest.query.code}`;
                 expect(mockResponse.redirect).to.have.been.calledWith(expected);
             });
         });
@@ -100,11 +104,12 @@ describe('controllers/auth.js', () => {
                 // Set mock request's protocol and host for proper baseUrl construction
                 mockRequest.protocol = 'http';
                 mockRequest.get.withArgs('host').returns('example.com');
+                sinon.stub(providerStub, 'getOauthReturnUrl').returns(`/oauth-return?code=${mockRequest.query.code}`);
                 auth.oauthReturn(mockRequest, mockResponse);
             });
             
             it('redirects to the expected url', () => {
-                const expected = `/#/oauth-return?code=${mockRequest.query.code}`;
+                const expected = `http://example.com/oauth-return?code=${mockRequest.query.code}`;
                 expect(mockResponse.redirect).to.have.been.calledWith(expected);
             });
         });

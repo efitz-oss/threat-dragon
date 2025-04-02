@@ -3,26 +3,21 @@
         :id="`${provider.key}-login-btn`"
         class="m-1"
         variant="secondary"
-        @click="onProviderClick()"> 
+        @click="onProviderClick()"
+    > 
         <span class="login-btn-icon">
             <font-awesome-icon
                 :icon="provider.icon"
                 size="2x"
                 color="white"
                 class="mr-2"
-            ></font-awesome-icon>
+            />
         </span>
         <span>
             {{ $t('providers.' + provider.key + '.loginWith') }} {{ $t('providers.' + provider.key + '.displayName') }}
         </span>
     </BButton>
 </template>
-
-<style lang="scss" scoped>
-.login-btn-icon {
-  display: block;
-}
-</style>
 
 <script>
 import { providerNames } from '@/service/provider/providers.js';
@@ -51,3 +46,9 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+.login-btn-icon {
+  display: block;
+}
+</style>

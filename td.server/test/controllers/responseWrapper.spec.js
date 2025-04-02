@@ -15,7 +15,7 @@ describe('controllers/responseWrapper.js', () => {
         res = getMockResponse();
         logger = {
             error: () => {}
-        }
+        };
         sinon.stub(errors, 'serverError');
     });
 

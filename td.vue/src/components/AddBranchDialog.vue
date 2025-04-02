@@ -8,22 +8,22 @@
         :title="modalTitle"
         visible
         centered
-        @hide="closeDialog"
         hide-footer
+        @hide="closeDialog"
     >
         <form @submit.prevent="addBranch">
             <b-row>
                 <b-col lg="12" class="pb-2">
                     <b-form-group id="input-group-1" :label="$t('branch.name')" label-for="branchName">
                         <b-form-input
-                            type="text"
                             id="branchName"
                             v-model="newBranchName"
-                            @input="validate"
+                            type="text"
                             :state="isError"
                             lazy-formatter
                             trim
                             required
+                            @input="validate"
                         />
                         <b-form-invalid-feedback :state="isError">
                             {{ branchNameError }}
@@ -34,13 +34,18 @@
             <b-row>
                 <b-col lg="12" class="pb-2">
                     <b-form-group id="input-group-2" :label="$t('branch.refBranch')" label-for="refBranch">
-                        <b-form-select id="refBranch" v-model="refBranch" :options="branchNames" size="md"
-                                       required/>
+                        <b-form-select
+                            id="refBranch"
+                            v-model="refBranch"
+                            :options="branchNames"
+                            size="md"
+                            required
+                        />
                     </b-form-group>
                 </b-col>
             </b-row>
         </form>
-        <hr/>
+        <hr>
         <div class="d-flex justify-content-end">
             <b-overlay
                 :show="wait"
@@ -49,9 +54,18 @@
                 opacity="0.8"
                 spinner-small
             >
-                <b-button variant="primary" type="submit" @click="addBranch" class="m-1">{{ $t('branch.add') }}</b-button>
+                <b-button
+                    variant="primary"
+                    type="submit"
+                    class="m-1"
+                    @click="addBranch"
+                >
+                    {{ $t('branch.add') }}
+                </b-button>
             </b-overlay>
-            <b-button variant="secondary" @click="closeDialog" class="m-1">{{ $t('branch.cancel') }}</b-button>
+            <b-button variant="secondary" class="m-1" @click="closeDialog">
+                {{ $t('branch.cancel') }}
+            </b-button>
         </div>
     </b-modal>
 </template>
@@ -86,15 +100,15 @@ export default {
             return this.branches.map(branch => branch.value || branch);
         }
     },
-    mounted() {
-        this.refBranch = this.branchNames.slice(-1)[0];
-    },
     watch: {
         branches: function (newBranches) {
             if (newBranches.length > 0) {
                 this.refBranch = this.branchNames.slice(-1)[0];
             }
         }
+    },
+    mounted() {
+        this.refBranch = this.branchNames.slice(-1)[0];
     },
     methods: {
         closeDialog() {

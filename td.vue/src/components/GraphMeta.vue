@@ -12,14 +12,14 @@
                 <template #header>
                     {{ $t('threatmodel.threats') }}
                     <BButton
-                        :disabled="disableNewThreat"
-                        @click="newThreat()"
                         v-if="!!cellRef"
+                        :disabled="disableNewThreat"
                         variant="primary"
                         size="sm"
                         class="float-right"
+                        @click="newThreat()"
                     >
-                        <font-awesome-icon icon="plus" class="mr-1"></font-awesome-icon>
+                        <font-awesome-icon icon="plus" class="mr-1" />
                         {{ $t('threats.newThreat') }}
                     </BButton>
                 </template>
@@ -27,9 +27,9 @@
                     <b-card-text v-if="!!cellRef">
                         <b-row>
                             <b-col
-                                md="4"
                                 v-for="(threat, idx) in threats || []"
                                 :key="idx"
+                                md="4"
                             >
                                 <td-graph-threats
                                     :id="threat.id"
@@ -39,61 +39,41 @@
                                     :title="threat.title"
                                     :type="threat.type"
                                     :mitigation="threat.mitigation"
-                                    :modelType="threat.modelType"
+                                    :model-type="threat.modelType"
                                     :number="threat.number"
-                                    @threatSelected="threatSelected" />
+                                    @threat-selected="threatSelected"
+                                />
                             </b-col>
                         </b-row>
                     </b-card-text>
                     <b-card-text
-                        v-if="!cellRef || !cellRef.data">
+                        v-if="!cellRef || !cellRef.data"
+                    >
                         {{ $t('threats.emptyThreat') }}
                     </b-card-text>
                 </b-card-body>
             </b-card>
-            <a href="javascript:void(0)"
+            <a
                 v-if="!disableNewThreat"
+                href="javascript:void(0)"
+                class="new-threat-by-type m-2"
                 @click="AddThreatByType()"
-                class="new-threat-by-type m-2"
             >
-                    <font-awesome-icon icon="plus"></font-awesome-icon>
-                    {{ $t('threats.newThreatByType') }}
+                <font-awesome-icon icon="plus" />
+                {{ $t('threats.newThreatByType') }}
             </a>
-            <a href="javascript:void(0)"
+            <a
                 v-if="!disableNewThreat"
-                @click="AddThreatByContext()"
+                href="javascript:void(0)"
                 class="new-threat-by-type m-2"
+                @click="AddThreatByContext()"
             >
-                    <font-awesome-icon icon="plus"></font-awesome-icon>
-                    {{ $t('threats.newThreatByContext') }}
+                <font-awesome-icon icon="plus" />
+                {{ $t('threats.newThreatByContext') }}
             </a>
         </b-col>
     </b-row>
 </template>
-
-<style lang="scss" scoped>
-@use '@/styles/colors.scss' as colors;
-.new-threat-by-type {
-    color: colors.$orange;
-    font-size: 16px;
-    padding: 15px;
-}
-.props-header {
-    a {
-        font-size: 12px;
-        font-weight: bolder;
-        text-decoration: none;
-        margin-left: 5px;
-    }
-}
-.down-icon {
-    margin-left: 3px;
-}
-.collapsed > .when-open,
-.not-collapsed > .when-closed {
-  display: none;
-}
-</style>
 
 <script>
 import { mapState } from 'vuex';
@@ -155,3 +135,27 @@ export default {
 };
 
 </script>
+
+<style lang="scss" scoped>
+@use '@/styles/colors.scss' as colors;
+.new-threat-by-type {
+    color: colors.$orange;
+    font-size: 16px;
+    padding: 15px;
+}
+.props-header {
+    a {
+        font-size: 12px;
+        font-weight: bolder;
+        text-decoration: none;
+        margin-left: 5px;
+    }
+}
+.down-icon {
+    margin-left: 3px;
+}
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
+}
+</style>

@@ -13,7 +13,7 @@
         <b-row>
             <b-col>
                 <td-threat-model-summary-card 
-                    :titlePrefix="$t('report.title')" 
+                    :title-prefix="$t('report.title')" 
                     data-testid="threat-model-summary" 
                 />
             </b-col>

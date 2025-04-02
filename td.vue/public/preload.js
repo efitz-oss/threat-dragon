@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron');
 
 // No more WebdriverIO dependency
 // if (process.env.IS_TEST === 'true') {

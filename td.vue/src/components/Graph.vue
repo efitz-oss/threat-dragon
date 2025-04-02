@@ -2,12 +2,14 @@
     <div>
         <b-row>
             <b-col md="2">
-                <div ref="stencil_container"></div>
+                <div ref="stencil_container" />
             </b-col>
             <b-col md="10">
                 <b-row>
                     <b-col>
-                        <h3 class="td-graph-title">{{ diagram.title }}</h3>
+                        <h3 class="td-graph-title">
+                            {{ diagram.title }}
+                        </h3>
                     </b-col>
                     <b-col align="right">
                         <td-graph-buttons :graph="graph" @saved="saved" @closed="closed" />
@@ -19,12 +21,12 @@
                             id="graph-container"
                             ref="graph_container"
                             style="height: 65vh; width: 100%; flex: 1; "
-                        ></div>
+                        />
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
-        <td-graph-meta @threatSelected="threatSelected" @threatSuggest="threatSuggest" />
+        <td-graph-meta @threat-selected="threatSelected" @threat-suggest="threatSuggest" />
 
         <div>
             <td-keyboard-shortcuts />
@@ -33,12 +35,6 @@
         </div>
     </div>
 </template>
-
-<style lang="scss" scoped>
-.td-graph-title {
-    margin-right: 15px;
-}
-</style>
 
 <script>
 import { mapState } from 'vuex';
@@ -74,6 +70,9 @@ export default {
     },
     async mounted() {
         this.init();
+    },
+    unmounted() {
+        diagramService.dispose(this.graph);
     },
     methods: {
         init() {
@@ -115,9 +114,12 @@ export default {
                 centered: true
             });
         }
-    },
-    unmounted() {
-        diagramService.dispose(this.graph);
     }
 };
 </script>
+
+<style lang="scss" scoped>
+.td-graph-title {
+    margin-right: 15px;
+}
+</style>

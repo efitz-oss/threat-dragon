@@ -1,8 +1,8 @@
 <template>
     <td-key-value-card
         :title="`${titlePrefix ? titlePrefix + ' ' : ''}${model.summary.title}`"
-        :values="overviewCardData">
-    </td-key-value-card>
+        :values="overviewCardData"
+    />
 </template>
 
 <script>

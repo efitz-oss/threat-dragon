@@ -2,15 +2,8 @@
     <div
         ref="diagram_container"
         class="td-readonly-diagram"
-    ></div>
+    />
 </template>
-
-<style lang="scss" scoped>
-.td-readonly-diagram {
-    min-height: 600px;
-    max-width: 95%;
-}
-</style>
 
 <script>
 import debounce from '@/service/debounce.js';
@@ -31,6 +24,18 @@ export default {
             graph: null
         };
     },
+    mounted() {
+        this.init();
+    },
+    created() {
+        // Store the debounced function reference so we can remove it properly
+        this.debouncedResize = debounce(this.resize, debounceTimeoutMs);
+        window.addEventListener('resize', this.debouncedResize);
+    },
+    unmounted() {
+        window.removeEventListener('resize', this.debouncedResize);
+        diagramService.dispose(this.graph);
+    },
     methods: {
         init() {
             this.graph = diagramService.draw(this.$refs.diagram_container, this.diagram);
@@ -48,19 +53,14 @@ export default {
                 padding: 3
             });
         }
-    },
-    mounted() {
-        this.init();
-    },
-    created() {
-        // Store the debounced function reference so we can remove it properly
-        this.debouncedResize = debounce(this.resize, debounceTimeoutMs);
-        window.addEventListener('resize', this.debouncedResize);
-    },
-    unmounted() {
-        window.removeEventListener('resize', this.debouncedResize);
-        diagramService.dispose(this.graph);
     }
 };
 
 </script>
+
+<style lang="scss" scoped>
+.td-readonly-diagram {
+    min-height: 600px;
+    max-width: 95%;
+}
+</style>

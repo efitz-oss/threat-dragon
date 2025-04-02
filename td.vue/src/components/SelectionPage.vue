@@ -1,10 +1,10 @@
 <template>
-<b-container fluid>
+    <b-container fluid>
         <b-row>
             <b-col>
                 <b-container class="text-center p-4 bg-light">
                     <h4>
-                        <slot></slot>
+                        <slot />
                     </h4>
                 </b-container>
             </b-col>
@@ -38,7 +38,12 @@
                         {{ emptyStateText }}
                     </b-list-group-item>
 
-                    <b-list-group-item v-for="(item, idx) in displayedItems" :key="idx" href="#" @click="$emit('item-click', item)">
+                    <b-list-group-item
+                        v-for="(item, idx) in displayedItems"
+                        :key="idx"
+                        href="#"
+                        @click="$emit('item-click', item)"
+                    >
                         {{ isGoogleProvider ? item.name : item }}
                     </b-list-group-item>
                 </b-list-group>
@@ -48,9 +53,15 @@
         <b-row>
             <b-col md="6" offset="3">
                 <div class="pagination">
-                    <button @click="prevPage" :disabled="!pagePrev">Previous</button>
-                    <button class="btn" disabled>{{ pageRef }}</button>
-                    <button @click="nextPage" :disabled="!pageNext">Next</button>
+                    <button :disabled="!pagePrev" @click="prevPage">
+                        Previous
+                    </button>
+                    <button class="btn" disabled>
+                        {{ pageRef }}
+                    </button>
+                    <button :disabled="!pageNext" @click="nextPage">
+                        Next
+                    </button>
                 </div>
             </b-col>
         </b-row>

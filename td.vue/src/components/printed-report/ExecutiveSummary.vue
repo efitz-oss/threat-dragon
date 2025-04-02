@@ -16,44 +16,50 @@
             <table class="table td-summary-table">
                 <tr>
                     <th>{{ $t('report.threatStats.total') }}</th>
-                    <td class="td-summary-total">{{ total }}</td>
+                    <td class="td-summary-total">
+                        {{ total }}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ $t('report.threatStats.mitigated') }}</th>
-                    <td class="td-summary-mitigated">{{ mitigated }}</td>
+                    <td class="td-summary-mitigated">
+                        {{ mitigated }}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ $t('report.threatStats.notMitigated') }}</th>
-                    <td class="td-summary-not-mitigated">{{ notMitigated }}</td>
+                    <td class="td-summary-not-mitigated">
+                        {{ notMitigated }}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ $t('report.threatStats.openHigh') }}</th>
-                    <td class="td-summary-open-high">{{ openHigh }}</td>
+                    <td class="td-summary-open-high">
+                        {{ openHigh }}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ $t('report.threatStats.openMedium') }}</th>
-                    <td class="td-summary-open-medium">{{ openMedium }}</td>
+                    <td class="td-summary-open-medium">
+                        {{ openMedium }}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ $t('report.threatStats.openLow') }}</th>
-                    <td class="td-summary-open-low">{{ openLow }}</td>
+                    <td class="td-summary-open-low">
+                        {{ openLow }}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ $t('report.threatStats.openUnknown') }}</th>
-                    <td class="td-summary-open-unknown">{{ openUnknown }}</td>
+                    <td class="td-summary-open-unknown">
+                        {{ openUnknown }}
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </template>
-
-<style lang="scss" scoped>
-.page {
-    display: flex;
-    flex-direction: column;
-    white-space: pre-wrap;
-}
-</style>
 
 <script>
 export default {
@@ -112,3 +118,11 @@ export default {
 };
 
 </script>
+
+<style lang="scss" scoped>
+.page {
+    display: flex;
+    flex-direction: column;
+    white-space: pre-wrap;
+}
+</style>

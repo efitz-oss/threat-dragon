@@ -9,9 +9,7 @@
                             " "
                         )} (${dataType})`
                     }}
-                    <em v-if="outOfScope"
-                        >- {{ $t("threatmodel.properties.outOfScope") }}</em
-                    >
+                    <em v-if="outOfScope">- {{ $t("threatmodel.properties.outOfScope") }}</em>
                 </h3>
             </b-col>
         </b-row>
@@ -29,7 +27,7 @@
                     {{ $t("threatmodel.properties.description") }}:
                     {{ entity.data.description }}
                 </p>
-                <p class="entity-description" v-if="showProperties">
+                <p v-if="showProperties" class="entity-description">
                     {{ properties }}
                 </p>
             </b-col>
@@ -42,15 +40,18 @@
                             <BTh
                                 v-for="(value, key) in tableData[0]"
                                 :key="key"
-                                >{{ key }}</BTh
                             >
+                                {{ key }}
+                            </BTh>
                         </BTr>
                     </BThead>
                     <BTbody>
                         <BTr v-for="(row, index) in tableData" :key="index">
-                            <BTd v-for="(value, key) in row" :key="key">{{
-                                value
-                            }}</BTd>
+                            <BTd v-for="(value, key) in row" :key="key">
+                                {{
+                                    value
+                                }}
+                            </BTd>
                         </BTr>
                     </BTbody>
                 </BTableSimple>
@@ -58,25 +59,6 @@
         </b-row>
     </div>
 </template>
-
-<style lang="scss" scoped>
-.td-threat-data {
-    width: 99%;
-    white-space: pre-wrap;
-}
-
-.entity-title {
-    font-size: 24px;
-    margin-top: 50px;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-.entity-description {
-    padding: 15px;
-    white-space: pre-wrap;
-}
-</style>
 
 <script>
 import threatService from '@/service/threats/index.js';
@@ -210,3 +192,22 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+.td-threat-data {
+    width: 99%;
+    white-space: pre-wrap;
+}
+
+.entity-title {
+    font-size: 24px;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.entity-description {
+    padding: 15px;
+    white-space: pre-wrap;
+}
+</style>

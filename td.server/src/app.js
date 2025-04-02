@@ -1,6 +1,6 @@
 import express from 'express';
-import path from 'path';
 import { fileURLToPath } from 'url';
+import path from 'path';
 import rateLimit from 'express-rate-limit';
 
 import env from './env/Env.js';

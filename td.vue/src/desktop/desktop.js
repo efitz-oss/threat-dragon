@@ -101,7 +101,7 @@ app.on('activate', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     logger.log.debug('Building the menu system for the default language');
-    let template = menu.getMenuTemplate();
+    const template = menu.getMenuTemplate();
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
     // Install Vue Devtools in development mode
@@ -231,7 +231,7 @@ function handleModelSave (_event, modelData, fileName) {
 function handleUpdateMenu (_event, locale) {
     logger.log.debug('Re-labeling the menu system for: ' + locale);
     menu.setLocale(locale);
-    let template = menu.getMenuTemplate();
+    const template = menu.getMenuTemplate();
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 

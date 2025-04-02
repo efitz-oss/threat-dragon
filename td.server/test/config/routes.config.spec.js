@@ -9,7 +9,7 @@ import homeController from '../../src/controllers/homecontroller.js';
 import { getMockApp } from '../mocks/express.mocks.js';
 import routeConfig from '../../src/config/routes.config.js';
 import threatmodelController from '../../src/controllers/threatmodelcontroller.js';
-import configcontroller from "../../src/controllers/configcontroller.js";
+import configcontroller from '../../src/controllers/configcontroller.js';
 import googleProviderThreatmodelController from '../../src/controllers/googleProviderThreatmodelController.js';
 
 describe('config/routes.config.js routes', () => {

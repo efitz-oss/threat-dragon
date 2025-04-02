@@ -3,17 +3,25 @@
         <div class="welcome-jumbotron">
             <b-row class="text-center mb-2">
                 <b-col md="12">
-                    <h1 class="display-3 text-center">{{ $t("tos.title") }}</h1>
+                    <h1 class="display-3 text-center">
+                        {{ $t("tos.title") }}
+                    </h1>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <div class="td-description mt-5 text-left" v-html="$t('tos.content')"></div>
+                    <div class="td-description mt-5 text-left" v-html="$t('tos.content')" />
                 </b-col>
             </b-row>
         </div>
     </b-container>
 </template>
+
+<script>
+export default {
+    name: 'ToSPage'
+};
+</script>
 
 <style lang="scss" scoped>
 /* Recreating BootstrapVue's b-jumbotron styling */
@@ -47,9 +55,3 @@
     margin-bottom: 1rem;
 }
 </style>
-
-<script>
-export default {
-    name: 'ToSPage'
-};
-</script>

@@ -15,27 +15,17 @@
 
         <b-row>
             <td-dashboard-action
-                class="dashboard-action"
                 v-for="(action, idx) in actions"
                 :key="idx"
+                class="dashboard-action"
                 :to="action.to"
                 :icon="action.icon"
-                :iconPreface="action.iconPreface"
+                :icon-preface="action.iconPreface"
                 :description="action.key"
-            ></td-dashboard-action>
+            />
         </b-row>
     </div>
 </template>
-
-<style lang="scss" scoped>
-.action-icon {
-    color: var(--orange); /* Updated to use CSS custom property */
-    margin-bottom: 15px;
-}
-.dashboard-action {
-    padding-bottom: 2rem;
-}
-</style>
 
 <script>
 import { mapState } from 'vuex';
@@ -54,3 +44,13 @@ export default {
     }),
 };
 </script>
+
+<style lang="scss" scoped>
+.action-icon {
+    color: var(--orange); /* Updated to use CSS custom property */
+    margin-bottom: 15px;
+}
+.dashboard-action {
+    padding-bottom: 2rem;
+}
+</style>

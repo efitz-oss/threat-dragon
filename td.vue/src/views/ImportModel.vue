@@ -28,7 +28,7 @@
                                     v-model="tmJson"
                                     :placeholder="prompt"
                                     rows="16"
-                                ></b-form-textarea>
+                                />
                             </b-form-group>
                         </b-col>
                     </b-row>
@@ -40,7 +40,7 @@
                 <BButtonGroup>
                     <td-form-button
                         id="td-open-btn"
-                        :onBtnClick="onOpenClick"
+                        :on-btn-click="onOpenClick"
                         icon="folder-open"
                         :text="$t('forms.open')"
                     />
@@ -51,8 +51,8 @@
                 <BButtonGroup>
                     <td-form-button
                         id="td-import-btn"
-                        :isPrimary="true"
-                        :onBtnClick="onImportClick"
+                        :is-primary="true"
+                        :on-btn-click="onImportClick"
                         icon="file-import"
                         :text="$t('forms.import')"
                     />
@@ -120,7 +120,7 @@ export default {
     methods: {
         onDropFile(event) {
             if (event.dataTransfer.files.length === 1) {
-                let file = event.dataTransfer.files[0];
+                const file = event.dataTransfer.files[0];
                 if (file.name.endsWith('.json')) {
                     file.text()
                         .then((text) => {
@@ -149,7 +149,7 @@ export default {
                     const [handle] = await window.showOpenFilePicker(
                         pickerFileOptions
                     );
-                    let file = await handle.getFile();
+                    const file = await handle.getFile();
                     if (file.name.endsWith('.json')) {
                         this.tmJson = await file.text();
                         this.$store.dispatch(tmActions.update, {

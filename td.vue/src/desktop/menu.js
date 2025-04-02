@@ -12,7 +12,7 @@ const shell = electron.shell;
 const fs = require('fs');
 
 // provided by electron server bootstrap
-var mainWindow;
+let mainWindow;
 
 // access the i18n message strings
 import ara from '@/i18n/ar.js';
@@ -34,7 +34,7 @@ import zho from '@/i18n/zh.js';
 const messages = { ara, deu, ell, eng, fin, fra, hin, ind, jpn, ms, por, spa, zho };
 const languages = [ 'ara', 'deu', 'ell', 'eng', 'fin', 'fra', 'hin', 'ind', 'jpn', 'ms', 'por', 'spa', 'zho' ];
 const defaultLanguage = 'eng';
-var language = defaultLanguage;
+let language = defaultLanguage;
 
 export const model = {
     fileDirectory: '',
@@ -43,7 +43,7 @@ export const model = {
 };
 
 export function getMenuTemplate () {
-    var menuTemplate = (isMacOS ? [{ role: 'appMenu' }] : []);
+    const menuTemplate = (isMacOS ? [{ role: 'appMenu' }] : []);
     menuTemplate.push(
         {
             label: messages[language].desktop.file.heading,
@@ -218,7 +218,7 @@ function openModelFile (filename) {
     logger.log.debug(messages[language].desktop.file.open + ': ' + filename);
     fs.readFile(filename, (err, data) => {
         if (!err) {
-            let modelData = JSON.parse(data);
+            const modelData = JSON.parse(data);
             mainWindow.webContents.send('open-model', path.basename(filename), modelData);
             model.filePath = filename;
             model.isOpen = true;
@@ -259,7 +259,7 @@ function saveModelDataAs (modelData, fileName) {
     if (fileName) {
         newName = fileName;
     }
-    var dialogOptions = {
+    const dialogOptions = {
         title: messages[language].desktop.file.saveAs,
         defaultPath: path.join(model.fileDirectory, newName),
         filters: [{ name: 'Threat Model', extensions: ['json'] }, { name: 'All Files', extensions: ['*'] }]
@@ -284,7 +284,7 @@ function saveModelDataAs (modelData, fileName) {
 
 // request that the renderer open a new model
 function newModel () {
-    let newName = 'new-model.json';
+    const newName = 'new-model.json';
     logger.log.debug(messages[language].desktop.file.new + ': ' + newName);
     mainWindow.webContents.send('new-model-request', newName);
 }
@@ -325,7 +325,7 @@ function saveModelData (modelData) {
 // Open saveAs file system dialog and write report contents as HTML
 function saveHTMLReport (htmlPath) {
     htmlPath += '.html';
-    var dialogOptions = {
+    const dialogOptions = {
         title: messages[language].forms.saveAS,
         defaultPath: htmlPath,
         filters: [{ name: 'HTML export', extensions: ['html'] }, { name: 'All Files', extensions: ['*'] }]
@@ -350,7 +350,7 @@ function saveHTMLReport (htmlPath) {
 // Open saveAs file system dialog and write PDF report
 function savePDFReport (pdfPath) {
     pdfPath += '.pdf';
-    var dialogOptions = {
+    const dialogOptions = {
         title: messages[language].forms.exportPdf,
         defaultPath: pdfPath,
         properties: ['openFile'],

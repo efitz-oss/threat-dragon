@@ -1,22 +1,23 @@
 <template>
     <td-selection-page
         :items="threatModels"
-        :onItemClick="onThreatmodelClick"
-        :emptyStateText="$t('threatmodelSelect.newThreatModel')"
-        :onEmptyStateClick="newThreatModel">
-            {{ $t('threatmodelSelect.select') }}
-            <!-- Fixme: The href should get the configured hostname from env -->
-            <a
-                :href="`${providerUri}/${repoName}`"
-                target="_blank"
-                rel="noopener noreferrer"
-            >{{ `${repoName}/${branch}` }}</a>
-            {{ $t('threatmodelSelect.from') }}
-            <a href="javascript:void(0)" id="return-to-branch" @click="selectBranchClick">{{ $t('threatmodelSelect.branch') }}</a>
-            {{ $t('threatmodelSelect.or') }}
-            <a href="javascript:void(0)" id="return-to-repo" @click="selectRepoClick">{{ $t('threatmodelSelect.repo') }}</a>
-            {{ $t('threatmodelSelect.or') }}
-            <a href="javascript:void(0)" id="new-threat-model" @click="newThreatModel">{{ $t('threatmodelSelect.newThreatModel') }}</a>
+        :on-item-click="onThreatmodelClick"
+        :empty-state-text="$t('threatmodelSelect.newThreatModel')"
+        :on-empty-state-click="newThreatModel"
+    >
+        {{ $t('threatmodelSelect.select') }}
+        <!-- Fixme: The href should get the configured hostname from env -->
+        <a
+            :href="`${providerUri}/${repoName}`"
+            target="_blank"
+            rel="noopener noreferrer"
+        >{{ `${repoName}/${branch}` }}</a>
+        {{ $t('threatmodelSelect.from') }}
+        <a id="return-to-branch" href="javascript:void(0)" @click="selectBranchClick">{{ $t('threatmodelSelect.branch') }}</a>
+        {{ $t('threatmodelSelect.or') }}
+        <a id="return-to-repo" href="javascript:void(0)" @click="selectRepoClick">{{ $t('threatmodelSelect.repo') }}</a>
+        {{ $t('threatmodelSelect.or') }}
+        <a id="new-threat-model" href="javascript:void(0)" @click="newThreatModel">{{ $t('threatmodelSelect.newThreatModel') }}</a>
     </td-selection-page>
 </template>
 

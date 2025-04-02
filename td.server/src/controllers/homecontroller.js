@@ -1,7 +1,7 @@
-import loggerHelper from '../helpers/logger.helper.js';
-import path from 'path';
 import { fileURLToPath } from 'url';
+import path from 'path';
 
+import loggerHelper from '../helpers/logger.helper.js';
 import { upDir } from '../helpers/path.helper.js';
 
 const logger = loggerHelper.get('controllers/homecontroller.js');

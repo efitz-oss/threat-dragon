@@ -57,7 +57,7 @@ describe('env/Env.js', () => {
 
         it('throws an error when called on the parent class', () => {
             expect(() => {
-                env.properties
+                env.properties;
             }).to.throw('override the getter for properties');
         });
     });
@@ -69,7 +69,7 @@ describe('env/Env.js', () => {
 
         it('throws an error when called on the parent class', () => {
             expect(() => {
-                env.prefix
+                env.prefix;
             }).to.throw('override the getter for prefix');
         });
     });
@@ -248,7 +248,7 @@ describe('env/Env.js', () => {
             });
 
             it('attempts to read a file based property', () => {
-                try { env._loadConfig(); } catch (e) { }
+                try { env._loadConfig(); } catch (e) { /* Expected error, safe to ignore */ }
                 expect(env.tryReadFromFile).to.have.been.called;
             });
 

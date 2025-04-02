@@ -16,19 +16,19 @@ const getToast = () => useToast();
 
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {
-  // Always use the same protocol as the current page to avoid mixed content errors
-  const currentProtocol = window.location.protocol;
-  const hostname = window.location.hostname;
-  const port = window.location.port ? `:${window.location.port}` : '';
+    // Always use the same protocol as the current page to avoid mixed content errors
+    const currentProtocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port ? `:${window.location.port}` : '';
   
-  // In development mode, we might want to explicitly set the port
-  if (process.env.NODE_ENV === 'development') {
-    return `${currentProtocol}//${hostname}${port}`;
-  }
+    // In development mode, we might want to explicitly set the port
+    if (process.env.NODE_ENV === 'development') {
+        return `${currentProtocol}//${hostname}${port}`;
+    }
   
-  // In production, we'll either use the full URL or just a relative path
-  // Using a relative path is safer as it automatically uses the current protocol and host
-  return '';
+    // In production, we'll either use the full URL or just a relative path
+    // Using a relative path is safer as it automatically uses the current protocol and host
+    return '';
 };
 
 const createClient = () => {

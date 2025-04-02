@@ -5,8 +5,8 @@ import plot4ai from './plot4ai.js';
 import stride from './stride.js';
 
 const swapKeyValuePairs = (obj) => {
-    let swappedObj = {};
-    for (let key in obj) {
+    const swappedObj = {};
+    for (const key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
             swappedObj[obj[key]] = key;
         }

@@ -8,8 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Build app: `npm run build:root`
 - Test: `npm run test:root` (all tests)
 - Test a single test: `npm run test:single "**/path/to/test.spec.js"`
-- Lint: `npm run lint:root`
-- Lint with auto-fix: `npm run lint:fix:root`
+- Lint: `npm run lint`
+- Lint with auto-fix: `npm run lint:fix`
 - Generate SBOM: `npm run make-sbom`
 
 ## Code Style
@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Single quotes for strings
 - 4-space indentation
 - Semicolons required
-- Vue.js code follows 'plugin:vue/essential' rules
+- Vue.js code follows 'plugin:vue/vue3-recommended' rules
 - Jest for testing (with vue3-jest for components)
 - Cypress for e2e testing
 

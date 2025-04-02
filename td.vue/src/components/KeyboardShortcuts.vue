@@ -8,7 +8,7 @@
         ok-only
         :title="$t('threatmodel.shortcuts.title')"
     >
-        <b-table :items="shortcuts"></b-table>
+        <b-table :items="shortcuts" />
     </b-modal>
 </template>
 

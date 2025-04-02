@@ -1,5 +1,5 @@
-import tokenStore from './tokenStore.js';
 import loggerHelper from '../helpers/logger.helper.js';
+import tokenStore from './tokenStore.js';
 
 const logger = loggerHelper.get('repositories/token.js');
 
