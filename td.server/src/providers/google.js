@@ -16,13 +16,14 @@ const isConfigured = () => Boolean(env.get().config.GOOGLE_CLIENT_ID);
 
 /**
  * Gets the Google OAuth Login URL
+ * @param {String} providerName - The name of the provider to store in state
  * @returns {String}
  */
-const getOauthRedirectUrl = () => {
+const getOauthRedirectUrl = (providerName) => {
     const scope = 'openid email profile https://www.googleapis.com/auth/drive.file';
     const redirectUri = env.get().config.GOOGLE_REDIRECT_URI;
     const clientId = env.get().config.GOOGLE_CLIENT_ID;
-    return `https://accounts.google.com/o/oauth2/auth?response_type=code&scope=${scope}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+    return `https://accounts.google.com/o/oauth2/auth?response_type=code&scope=${scope}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${providerName}`;
 };
 
 /**

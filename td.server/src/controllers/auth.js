@@ -12,9 +12,9 @@ const login = (req, res) => {
     logger.debug(`API login request: ${logger.transformToString(req)}`);
 
     try {
-        
-        const provider = providers.get(req.params.provider);
-        return responseWrapper.sendResponse(() => provider.getOauthRedirectUrl(), req, res, logger);
+        const providerName = req.params.provider;
+        const provider = providers.get(providerName);
+        return responseWrapper.sendResponse(() => provider.getOauthRedirectUrl(providerName), req, res, logger);
        
     } catch (err) {
         return errors.badRequest(err.message, res, logger);
@@ -58,6 +58,7 @@ const oauthReturn = (req, res) => {
     logger.info(`Provider from URL path: ${req.params.provider || 'none'}`);
     logger.info(`Auth code received: ${req.query.code ? `${req.query.code.substring(0, 10)}...` : 'none'}`);
     logger.info(`Auth code length: ${req.query.code?.length || 0}`);
+    logger.info(`State parameter: ${req.query.state || 'none'}`);
     logger.info(`Request URL: ${req.url}`);
     logger.info(`Request method: ${req.method}`);
     logger.info(`Request headers: ${JSON.stringify(req.headers)}`);
@@ -76,20 +77,32 @@ const oauthReturn = (req, res) => {
         return errors.badRequest('No authorization code present in OAuth return', res, logger);
     }
     
-    // Get the return URL from the provider with consistent format
-    const provider = providers.get(req.params.provider);
-    const returnUrl = provider.getOauthReturnUrl(req.query.code);
+    // Extract provider from state parameter
+    const providerName = req.query.state;
+    if (!providerName) {
+        logger.error('No provider specified in state parameter');
+        return errors.badRequest('No provider specified in state parameter', res, logger);
+    }
     
-    // In development mode, returnUrl already includes the full URL with hostname
-    // In production, we need to prepend the baseUrl if it was successfully determined
-    const fullReturnUrl = env.get().config.NODE_ENV === 'development' 
-        ? returnUrl
-        : `${baseUrl}${returnUrl}`;
+    try {
+        // Get the return URL from the provider with consistent format
+        const provider = providers.get(providerName);
+        const returnUrl = provider.getOauthReturnUrl(req.query.code);
         
-    logger.info(`Complete redirect URL: ${fullReturnUrl.replace(/code=[^&]+/u, 'code=REDACTED')}`);
-    
-    logger.info(`Redirecting to client application...`);
-    return res.redirect(fullReturnUrl);
+        // In development mode, returnUrl already includes the full URL with hostname
+        // In production, we need to prepend the baseUrl if it was successfully determined
+        const fullReturnUrl = env.get().config.NODE_ENV === 'development' 
+            ? returnUrl
+            : `${baseUrl}${returnUrl}`;
+            
+        logger.info(`Complete redirect URL: ${fullReturnUrl.replace(/code=[^&]+/u, 'code=REDACTED')}`);
+        
+        logger.info(`Redirecting to client application...`);
+        return res.redirect(fullReturnUrl);
+    } catch (err) {
+        logger.error(`Error in OAuth return: ${err.message}`);
+        return errors.badRequest(err.message, res, logger);
+    }
 };
 
 

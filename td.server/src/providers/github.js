@@ -31,11 +31,12 @@ const getGithubUrl = () => {
 
 /**
  * Gets the Github OAuth Login URL
+ * @param {String} providerName - The name of the provider to store in state
  * @returns {String}
  */
-const getOauthRedirectUrl = () => {
+const getOauthRedirectUrl = (providerName) => {
     const scope = env.get().config.GITHUB_SCOPE || 'public_repo';
-    return `${getGithubUrl()}/login/oauth/authorize?scope=${scope}&client_id=${env.get().config.GITHUB_CLIENT_ID}`;
+    return `${getGithubUrl()}/login/oauth/authorize?scope=${scope}&client_id=${env.get().config.GITHUB_CLIENT_ID}&state=${providerName}`;
 };
 
 /**

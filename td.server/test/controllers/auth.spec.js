@@ -12,7 +12,7 @@ import tokenRepo from '../../src/repositories/token.js';
 
 describe('controllers/auth.js', () => {
     const providerStub = {
-        getOauthRedirectUrl: () => 'oauth-redirect',
+        getOauthRedirectUrl: (providerName) => `oauth-redirect&state=${providerName}`,
         getOauthReturnUrl: (code) => `/oauth-return?code=${code}`,
         completeLoginAsync: () => {},
         name: 'provider1'
@@ -81,7 +81,7 @@ describe('controllers/auth.js', () => {
     describe('oauthReturn', () => {
         beforeEach(() => {
             mockRequest.query.code = '12345';
-            mockRequest.params.provider = 'google';
+            mockRequest.query.state = 'google';
             sinon.stub(providers, 'get').returns(providerStub);
         });
 

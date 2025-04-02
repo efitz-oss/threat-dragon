@@ -31,11 +31,12 @@ const getBitbucketUrl = () => {
 
 /**
  * Gets the Bitbucket OAuth Login URL
+ * @param {String} providerName - The name of the provider to store in state
  * @returns {String}
  */
-const getOauthRedirectUrl = () => {
+const getOauthRedirectUrl = (providerName) => {
     const scope = env.get().config.BITBUCKET_SCOPE || '';
-    return `${getBitbucketUrl()}/site/oauth2/authorize?scope=${scope}&response_type=code&client_id=${env.get().config.BITBUCKET_CLIENT_ID}`;
+    return `${getBitbucketUrl()}/site/oauth2/authorize?scope=${scope}&response_type=code&client_id=${env.get().config.BITBUCKET_CLIENT_ID}&state=${providerName}`;
 };
 
 /**
