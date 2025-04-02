@@ -39,135 +39,170 @@ const getOauthReturnUrl = (code) => {
 };
 
 /**
+ * Validates required Google OAuth configuration
+ * @param {Object} logger - The logger instance
+ * @throws {Error} If any required configuration is missing
+ */
+const validateConfiguration = (logger) => {
+    logger.info(`NODE_ENV: ${env.get().config.NODE_ENV}`);
+    logger.info(`Using redirect URI: ${env.get().config.GOOGLE_REDIRECT_URI}`);
+    logger.info(`Google client ID configured: ${Boolean(env.get().config.GOOGLE_CLIENT_ID)}`);
+    logger.info(`Google client ID length: ${env.get().config.GOOGLE_CLIENT_ID?.length || 0}`);
+    logger.info(`Google client secret configured: ${Boolean(env.get().config.GOOGLE_CLIENT_SECRET)}`);
+    logger.info(`Google client secret length: ${env.get().config.GOOGLE_CLIENT_SECRET?.length || 0}`);
+    
+    if (!env.get().config.GOOGLE_CLIENT_ID) {
+        const error = new Error('Google OAuth client ID is not configured');
+        logger.error(error.message);
+        throw error;
+    }
+    
+    if (!env.get().config.GOOGLE_CLIENT_SECRET) {
+        const error = new Error('Google OAuth client secret is not configured');
+        logger.error(error.message);
+        throw error;
+    }
+    
+    if (!env.get().config.GOOGLE_REDIRECT_URI) {
+        const error = new Error('Google OAuth redirect URI is not configured');
+        logger.error(error.message);
+        throw error;
+    }
+};
+
+/**
+ * Exchanges auth code for Google access token
+ * @param {String} code - The authorization code
+ * @param {Object} logger - The logger instance
+ * @returns {Object} The token response data
+ */
+const exchangeCodeForToken = async (code, logger) => {
+    const url = 'https://oauth2.googleapis.com/token';
+    logger.info(`Token exchange URL: ${url}`);
+    
+    const body = {
+        client_id: env.get().config.GOOGLE_CLIENT_ID,
+        client_secret: env.get().config.GOOGLE_CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: env.get().config.GOOGLE_REDIRECT_URI
+    };
+    
+    logger.info('Request body prepared with code and required parameters');
+    
+    const options = {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+    
+    logger.info('Sending token request to Google OAuth endpoint');
+    logger.info(`Request URL: ${url}`);
+    logger.info(`Request method: POST`);
+    logger.info(`Request headers: ${JSON.stringify(options.headers)}`);
+    
+    const providerResp = await axios.post(url, new URLSearchParams(body), options);
+    
+    logger.info('Received token response from Google');
+    logger.info(`Response status: ${providerResp.status}`);
+    logger.info(`Response has access_token: ${Boolean(providerResp.data?.access_token)}`);
+    logger.info(`Response has refresh_token: ${Boolean(providerResp.data?.refresh_token)}`);
+    logger.info(`Response has id_token: ${Boolean(providerResp.data?.id_token)}`);
+    logger.info(`Response has token_type: ${providerResp.data?.token_type || 'none'}`);
+    logger.info(`Response has expires_in: ${providerResp.data?.expires_in || 'none'}`);
+    
+    if (!providerResp.data || !providerResp.data.access_token) {
+        logger.error('No access token in Google response:', JSON.stringify(providerResp.data || {}));
+        throw new Error('No access token received from Google');
+    }
+    
+    return providerResp.data;
+};
+
+/**
+ * Fetches user info using the access token
+ * @param {String} accessToken - The access token
+ * @param {Object} logger - The logger instance
+ * @returns {Object} The user info
+ */
+const fetchUserInfo = async (accessToken, logger) => {
+    logger.info('Successfully obtained access token, fetching user info');
+    const tokenInfoUrl = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`;
+    logger.info(`User info URL: ${tokenInfoUrl}`);
+    
+    const userInfo = await axios.get(tokenInfoUrl);
+    
+    logger.info('Successfully fetched user info');
+    logger.info(`User info status: ${userInfo.status}`);
+    logger.info(`User info has name: ${Boolean(userInfo.data?.name)}`);
+    logger.info(`User info has email: ${Boolean(userInfo.data?.email)}`);
+    logger.info(`User info has picture: ${Boolean(userInfo.data?.picture)}`);
+    
+    return {
+        username: userInfo.data.name,
+        email: userInfo.data.email,
+        picture: userInfo.data.picture
+    };
+};
+
+/**
+ * Logs error details from API responses
+ * @param {Error} error - The error object
+ * @param {String} url - The request URL
+ * @param {Object} logger - The logger instance
+ */
+const logApiError = (error, url, logger) => {
+    logger.error('Error in Google OAuth flow:', error.message);
+    logger.error('Error stack:', error.stack);
+    
+    if (error.response) {
+        logger.error('Response status:', error.response.status);
+        logger.error('Response data:', JSON.stringify(error.response.data || {}));
+        logger.error('Response headers:', JSON.stringify(error.response.headers || {}));
+    } else if (error.request) {
+        logger.error('No response received from Google. Request details:');
+        logger.error('Request method: POST');
+        logger.error(`Request URL: ${url}`);
+    }
+};
+
+/**
  * Finishes the OAuth login, issues a JWT
  * @param {String} code
  * @returns {String} jwt
  */
 const completeLoginAsync = async (code) => {
-        // Use the proper logger
-        const googleLogger = loggerHelper.get('providers/google.js');
-        googleLogger.info('=========== GOOGLE OAUTH TOKEN EXCHANGE START ===========');
-        googleLogger.info('Starting Google completeLoginAsync with code:', code ? `${code.substring(0, 10)}...` : 'none');
-        googleLogger.info(`Authorization code length: ${code?.length || 0}`);
- 
-        const url = `https://oauth2.googleapis.com/token`;
-        googleLogger.info(`Token exchange URL: ${url}`);
+    // Use the proper logger
+    const googleLogger = loggerHelper.get('providers/google.js');
+    googleLogger.info('=========== GOOGLE OAUTH TOKEN EXCHANGE START ===========');
+    googleLogger.info('Starting Google completeLoginAsync with code:', code ? `${code.substring(0, 10)}...` : 'none');
+    googleLogger.info(`Authorization code length: ${code?.length || 0}`);
+
+    try {
+        // Validate configuration
+        validateConfiguration(googleLogger);
         
-        // Log configuration details
-        googleLogger.info(`NODE_ENV: ${env.get().config.NODE_ENV}`);
-        googleLogger.info(`Using redirect URI: ${env.get().config.GOOGLE_REDIRECT_URI}`);
-        googleLogger.info(`Google client ID configured: ${Boolean(env.get().config.GOOGLE_CLIENT_ID)}`);
-        googleLogger.info(`Google client ID length: ${env.get().config.GOOGLE_CLIENT_ID?.length || 0}`);
-        googleLogger.info(`Google client secret configured: ${Boolean(env.get().config.GOOGLE_CLIENT_SECRET)}`);
-        googleLogger.info(`Google client secret length: ${env.get().config.GOOGLE_CLIENT_SECRET?.length || 0}`);
+        // Exchange code for token
+        const tokenData = await exchangeCodeForToken(code, googleLogger);
         
-        // Validate required configuration
-        if (!env.get().config.GOOGLE_CLIENT_ID) {
-            const error = new Error('Google OAuth client ID is not configured');
-            googleLogger.error(error.message);
-            throw error;
-        }
+        // Fetch user info
+        const user = await fetchUserInfo(tokenData.access_token, googleLogger);
         
-        if (!env.get().config.GOOGLE_CLIENT_SECRET) {
-            const error = new Error('Google OAuth client secret is not configured');
-            googleLogger.error(error.message);
-            throw error;
-        }
+        googleLogger.info(`Created user object with username: ${user.username}`);
+        googleLogger.info(`Created user object with email: ${user.email}`);
+        googleLogger.info('=========== GOOGLE OAUTH TOKEN EXCHANGE COMPLETE ===========');
         
-        if (!env.get().config.GOOGLE_REDIRECT_URI) {
-            const error = new Error('Google OAuth redirect URI is not configured');
-            googleLogger.error(error.message);
-            throw error;
-        }
-        
-        const body = {
-            client_id: env.get().config.GOOGLE_CLIENT_ID,
-            client_secret: env.get().config.GOOGLE_CLIENT_SECRET,
-            code,
-            grant_type: 'authorization_code',
-            redirect_uri: env.get().config.GOOGLE_REDIRECT_URI
+        return {
+            user,
+            opts: tokenData
         };
+    } catch (error) {
+        // Log errors from API calls
+        logApiError(error, 'https://oauth2.googleapis.com/token', googleLogger);
         
-        googleLogger.info('Request body prepared with code and required parameters');
-        
-        const options = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        
-        try {
-            googleLogger.info('Sending token request to Google OAuth endpoint');
-            googleLogger.info(`Request URL: ${url}`);
-            googleLogger.info(`Request method: POST`);
-            googleLogger.info(`Request headers: ${JSON.stringify(options.headers)}`);
-            
-            const providerResp = await axios.post(url, new URLSearchParams(body), options);
-            
-            googleLogger.info('Received token response from Google');
-            googleLogger.info(`Response status: ${providerResp.status}`);
-            googleLogger.info(`Response has access_token: ${Boolean(providerResp.data?.access_token)}`);
-            googleLogger.info(`Response has refresh_token: ${Boolean(providerResp.data?.refresh_token)}`);
-            googleLogger.info(`Response has id_token: ${Boolean(providerResp.data?.id_token)}`);
-            googleLogger.info(`Response has token_type: ${providerResp.data?.token_type || 'none'}`);
-            googleLogger.info(`Response has expires_in: ${providerResp.data?.expires_in || 'none'}`);
-            
-            if (!providerResp.data || !providerResp.data.access_token) {
-                googleLogger.error('No access token in Google response:', JSON.stringify(providerResp.data || {}));
-                throw new Error('No access token received from Google');
-            }
-            
-            googleLogger.info('Successfully obtained access token, fetching user info');
-            const tokenInfoUrl = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${providerResp.data.access_token}`;
-            googleLogger.info(`User info URL: ${tokenInfoUrl}`);
-            
-            try {
-                const userInfo = await axios.get(tokenInfoUrl);
-                googleLogger.info('Successfully fetched user info');
-                googleLogger.info(`User info status: ${userInfo.status}`);
-                googleLogger.info(`User info has name: ${Boolean(userInfo.data?.name)}`);
-                googleLogger.info(`User info has email: ${Boolean(userInfo.data?.email)}`);
-                googleLogger.info(`User info has picture: ${Boolean(userInfo.data?.picture)}`);
-                
-                const user = {
-                    username: userInfo.data.name,
-                    email: userInfo.data.email,
-                    picture: userInfo.data.picture
-                };
-                
-                googleLogger.info(`Created user object with username: ${user.username}`);
-                googleLogger.info(`Created user object with email: ${user.email}`);
-                googleLogger.info('=========== GOOGLE OAUTH TOKEN EXCHANGE COMPLETE ===========');
-                
-                return {
-                    user,
-                    opts: providerResp.data
-                };
-            } catch (userInfoError) {
-                googleLogger.error('Error fetching user info from Google:', userInfoError.message);
-                if (userInfoError.response) {
-                    googleLogger.error('User info response status:', userInfoError.response.status);
-                    googleLogger.error('User info response data:', JSON.stringify(userInfoError.response.data || {}));
-                }
-                throw new Error(`Failed to fetch user info: ${userInfoError.message}`);
-            }
-        } catch (error) {
-            googleLogger.error('Error in Google OAuth flow:', error.message);
-            googleLogger.error('Error stack:', error.stack);
-            
-            if (error.response) {
-                googleLogger.error('Response status:', error.response.status);
-                googleLogger.error('Response data:', JSON.stringify(error.response.data || {}));
-                googleLogger.error('Response headers:', JSON.stringify(error.response.headers || {}));
-            } else if (error.request) {
-                googleLogger.error('No response received from Google. Request details:');
-                googleLogger.error('Request method: POST');
-                googleLogger.error(`Request URL: ${url}`);
-            }
-            
-            googleLogger.error('=========== GOOGLE OAUTH TOKEN EXCHANGE FAILED ===========');
-            throw error;
-        }
+        googleLogger.error('=========== GOOGLE OAUTH TOKEN EXCHANGE FAILED ===========');
+        throw error;
+    }
 };
 
 export default {

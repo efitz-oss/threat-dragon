@@ -4,24 +4,12 @@ import path from 'path';
 import logger from './logger.js';
 import { isMacOS } from './utils.js';
 
-// Use dynamic imports for better testing support
-let app, dialog, shell, fs;
-
-try {
-    // For production environment
-    const electron = require('electron');
-    app = electron.app;
-    dialog = electron.dialog;
-    shell = electron.shell;
-    fs = require('fs');
-} catch (e) {
-    // For testing environment
-    const electron = require('electron');
-    app = electron.app || { addRecentDocument: () => {} };
-    dialog = electron.dialog || { showOpenDialog: () => {}, showSaveDialog: () => {} };
-    shell = electron.shell || { openExternal: () => {} };
-    fs = require('fs') || { readFile: () => {}, writeFile: () => {} };
-}
+// Import Electron modules
+const electron = require('electron');
+const app = electron.app;
+const dialog = electron.dialog;
+const shell = electron.shell;
+const fs = require('fs');
 
 // provided by electron server bootstrap
 var mainWindow;
@@ -446,6 +434,65 @@ export const setMainWindow = (window) => {
     mainWindow = window;
 };
 
+// Add new methods for Cypress testing
+export function openFileDialog() {
+    return new Promise((resolve, reject) => {
+        dialog.showOpenDialog({
+            title: messages[language].desktop.file.open,
+            properties: ['openFile'],
+            filters: [
+                { name: 'Threat Model', extensions: ['json'] },
+                { name: 'All Files', extensions: ['*'] }
+            ]
+        }).then(result => {
+            if (result.canceled === false && result.filePaths.length > 0) {
+                resolve(result.filePaths[0]);
+            } else {
+                resolve(null);
+            }
+        }).catch(err => {
+            logger.log.warn(messages[language].threatmodel.errors.open + ': ' + err);
+            reject(err);
+        });
+    });
+}
+
+export function saveFile(filePath, content) {
+    return new Promise((resolve, reject) => {
+        if (!filePath) {
+            dialog.showSaveDialog({
+                title: messages[language].desktop.file.saveAs,
+                filters: [{ name: 'Threat Model', extensions: ['json'] }, { name: 'All Files', extensions: ['*'] }]
+            }).then(result => {
+                if (result.canceled === false) {
+                    fs.writeFile(result.filePath, content, (err) => {
+                        if (err) {
+                            logger.log.error(messages[language].threatmodel.errors.save + ': ' + err);
+                            reject(err);
+                        } else {
+                            resolve(result.filePath);
+                        }
+                    });
+                } else {
+                    resolve(null);
+                }
+            }).catch(err => {
+                logger.log.error(messages[language].desktop.file.saveAs + ': ' + messages[language].threatmodel.errors.save + ': ' + err);
+                reject(err);
+            });
+        } else {
+            fs.writeFile(filePath, content, (err) => {
+                if (err) {
+                    logger.log.error(messages[language].threatmodel.errors.save + ': ' + err);
+                    reject(err);
+                } else {
+                    resolve(filePath);
+                }
+            });
+        }
+    });
+}
+
 export default {
     getMenuTemplate,
     modelClosed,
@@ -454,6 +501,9 @@ export default {
     modelSave,
     openModel,
     openModelRequest,
+    openFileDialog,
+    saveFile,
     setLocale,
-    setMainWindow
+    setMainWindow,
+    model // Export the model object for access to filePath
 };

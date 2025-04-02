@@ -619,11 +619,21 @@ describe('store/modules/threatmodel.js', () => {
             });
 
             it('sets the selected diagram', () => {
-                expect(threatmodelModule.state.selectedDiagram).toEqual(diagram);
+                // Expect diagram with cells array initialized
+                expect(threatmodelModule.state.selectedDiagram).toEqual({
+                    id: 2,
+                    foo: 'baz',
+                    cells: []
+                });
             });
             
             it('sets the modified diagram', () => {
-                expect(threatmodelModule.state.modifiedDiagram).toEqual(diagram);
+                // Expect diagram with cells array initialized
+                expect(threatmodelModule.state.modifiedDiagram).toEqual({
+                    id: 2,
+                    foo: 'baz',
+                    cells: []
+                });
             });
         });
 

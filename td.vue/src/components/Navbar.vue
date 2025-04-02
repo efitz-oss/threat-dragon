@@ -142,13 +142,25 @@ export default {
     components: {
         TdLocaleSelect,
     },
+    mounted() {
+        // Ensure Bootstrap's JavaScript is properly initialized for the navbar toggle
+        const toggle = document.querySelector('.navbar-toggler');
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                const target = document.getElementById('nav-collapse');
+                if (target) {
+                    target.classList.toggle('show');
+                }
+            });
+        }
+    },
     computed: {
         ...mapGetters(['username']),
         ...mapState({
             config: state => state.config.config
         }),
         googleEnabled() {
-            return this.config && this.config.googleEnabled;
+            return this.config && this.config.googleEnabled && !this.$store.getters.isElectronMode;
         }
     },
     methods: {

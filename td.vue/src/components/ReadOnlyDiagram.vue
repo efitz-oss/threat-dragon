@@ -58,7 +58,6 @@ export default {
         window.addEventListener('resize', this.debouncedResize);
     },
     unmounted() {
-        // Vue 3 uses unmounted instead of destroyed
         window.removeEventListener('resize', this.debouncedResize);
         diagramService.dispose(this.graph);
     }
