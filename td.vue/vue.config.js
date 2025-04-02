@@ -64,118 +64,121 @@ module.exports = {
                 path.resolve(__dirname, 'src', 'styles', '*.scss')
             ]
         },
-        electronBuilder: {
-            mainProcessFile: 'src/desktop/background.js',
-            mainProcessWatch: ['src/desktop/logger.js', 'src/desktop/menu.js', 'src/desktop/utils.js'],
-            rendererProcessFile: 'src/main.desktop.js',
-            outputDir: 'dist-desktop',
-            nodeIntegration: false,
-            removeElectronJunk: false,
-            disableMainProcessTypescript: true,
-            preload: 'src/desktop/simple-preload.js',
-            // Fix for "Could not find a package.json for module X" errors
-            externals: ['electron', 'electron-log', 'electron-updater', 'fs-extra'],
-            // Prevent dependency resolution errors
-            nodeModulesPath: ['./node_modules', '../node_modules'],
-            // Skip devDependencies - avoid package.json errors
-            noDependencies: true,
-            chainWebpackMainProcess: (config) => {
-                // Don't process node_modules with webpack
-                config.externals([
-                    'electron',
-                    'electron-devtools-installer',
-                    'electron-updater',
-                    'electron-log',
-                    'fs',
-                    'fs-extra',
-                    'path',
-                    'os',
-                    'url'
-                ])
-            },
-            builderOptions: {
-                // Configure DMG builder to use Python from PATH
-                beforeBuild: () => {
-                    process.env.PYTHON_PATH = process.env.PYTHON_PATH || 'python';
+        // Skip electron builder setup for web-only builds
+        ...(process.env.VUE_APP_WEB_ONLY === 'true' ? {} : {
+            electronBuilder: {
+                mainProcessFile: 'src/desktop/background.js',
+                mainProcessWatch: ['src/desktop/logger.js', 'src/desktop/menu.js', 'src/desktop/utils.js'],
+                rendererProcessFile: 'src/main.desktop.js',
+                outputDir: 'dist-desktop',
+                nodeIntegration: false,
+                removeElectronJunk: false,
+                disableMainProcessTypescript: true,
+                preload: 'src/desktop/simple-preload.js',
+                // Fix for "Could not find a package.json for module X" errors
+                externals: ['electron', 'electron-log', 'electron-updater', 'fs-extra'],
+                // Prevent dependency resolution errors
+                nodeModulesPath: ['./node_modules', '../node_modules'],
+                // Skip devDependencies - avoid package.json errors
+                noDependencies: true,
+                chainWebpackMainProcess: (config) => {
+                    // Don't process node_modules with webpack
+                    config.externals([
+                        'electron',
+                        'electron-devtools-installer',
+                        'electron-updater',
+                        'electron-log',
+                        'fs',
+                        'fs-extra',
+                        'path',
+                        'os',
+                        'url'
+                    ])
                 },
-                appId: 'org.owasp.threatdragon',
-                productName: 'OWASP Threat Dragon',
-                directories: {
-                    output: 'dist-desktop'
-                },
-                files: [
-                    "**/*",
-                    "!**/node_modules/.bin",
-                    "!**/node_modules/.cache",
-                    "!**/__tests__/**",
-                    "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-                    "!.editorconfig",
-                    "!**/._*",
-                    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes}",
-                    "!**/*.{cmd,yml,yaml,md,markdown}"
-                ],
-                extraMetadata: {
-                    main: "background.js"
-                },
-                extraResources: [
-                    "license.txt"
-                ],
-                publish: {
-                    provider: 'github'
-                },
-                mac: {
-                    category: 'public.app-category.developer-tools',
-                    icon: './src/icons/icon.icns',
-                    hardenedRuntime: true,
-                    entitlements: './entitlements.mac.inherit.plist',
-                    entitlementsInherit: './entitlements.mac.inherit.plist',
-                    target: [
-                        {
-                            target: 'default',
-                            arch: ['x64', 'arm64']
-                        }
-                    ]
-                },
-                win: {
-                    icon: './src/icons/icon.ico',
-                    target: [
-                        {
-                            target: 'nsis',
-                            arch: ['arm64', 'x64']
-                        }
+                builderOptions: {
+                    // Configure DMG builder to use Python from PATH
+                    beforeBuild: () => {
+                        process.env.PYTHON_PATH = process.env.PYTHON_PATH || 'python';
+                    },
+                    appId: 'org.owasp.threatdragon',
+                    productName: 'OWASP Threat Dragon',
+                    directories: {
+                        output: 'dist-desktop'
+                    },
+                    files: [
+                        "**/*",
+                        "!**/node_modules/.bin",
+                        "!**/node_modules/.cache",
+                        "!**/__tests__/**",
+                        "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+                        "!.editorconfig",
+                        "!**/._*",
+                        "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes}",
+                        "!**/*.{cmd,yml,yaml,md,markdown}"
                     ],
-                    rfc3161TimeStampServer: 'http://timestamp.acs.microsoft.com',
-                    signingHashAlgorithms: ['sha256'],
-                    publisherName: [
-                        'Open Source Developer, Antony Jonathan Gadsden'
-                    ]
-                },
-                linux: {
-                    category: 'Development',
-                    executableName: 'threat-dragon',
-                    icon: './src/icons/td-256.png',
-                    synopsis: 'OWASP Threat Dragon',
-                    target: [
-                        {
-                            target: 'AppImage',
-                            arch: ['arm64', 'x64']
-                        },
-                        {
-                            target: 'snap',
-                            arch: ['arm64', 'x64']
-                        },
-                        'deb',
-                        'rpm'
-                    ]
-                },
-                snap: {
-                    grade: 'stable',
-                    summary: 'OWASP Threat Dragon, desktop version',
-                    description: 'OWASP Threat Dragon is a free, open-source, cross-platform threat modelling application',
-                    title: 'OWASP Threat Dragon'
+                    extraMetadata: {
+                        main: "background.js"
+                    },
+                    extraResources: [
+                        "license.txt"
+                    ],
+                    publish: {
+                        provider: 'github'
+                    },
+                    mac: {
+                        category: 'public.app-category.developer-tools',
+                        icon: './src/icons/icon.icns',
+                        hardenedRuntime: true,
+                        entitlements: './entitlements.mac.inherit.plist',
+                        entitlementsInherit: './entitlements.mac.inherit.plist',
+                        target: [
+                            {
+                                target: 'default',
+                                arch: ['x64', 'arm64']
+                            }
+                        ]
+                    },
+                    win: {
+                        icon: './src/icons/icon.ico',
+                        target: [
+                            {
+                                target: 'nsis',
+                                arch: ['arm64', 'x64']
+                            }
+                        ],
+                        rfc3161TimeStampServer: 'http://timestamp.acs.microsoft.com',
+                        signingHashAlgorithms: ['sha256'],
+                        publisherName: [
+                            'Open Source Developer, Antony Jonathan Gadsden'
+                        ]
+                    },
+                    linux: {
+                        category: 'Development',
+                        executableName: 'threat-dragon',
+                        icon: './src/icons/td-256.png',
+                        synopsis: 'OWASP Threat Dragon',
+                        target: [
+                            {
+                                target: 'AppImage',
+                                arch: ['arm64', 'x64']
+                            },
+                            {
+                                target: 'snap',
+                                arch: ['arm64', 'x64']
+                            },
+                            'deb',
+                            'rpm'
+                        ]
+                    },
+                    snap: {
+                        grade: 'stable',
+                        summary: 'OWASP Threat Dragon, desktop version',
+                        description: 'OWASP Threat Dragon is a free, open-source, cross-platform threat modelling application',
+                        title: 'OWASP Threat Dragon'
+                    }
                 }
             }
-        }
+        })
     },
     chainWebpack: config => {
         config.module
@@ -190,8 +193,27 @@ module.exports = {
                 return options;
             });
             
+        // Check if we're in web-only mode
+        const isWebOnly = process.env.VUE_APP_WEB_ONLY === 'true';
+        
+        // For web-only builds, explicitly set the environment to non-electron
+        if (isWebOnly) {
+            // Set environment variables for web-only mode
+            if (config.plugins.has('define')) {
+                config.plugin('define').tap(args => {
+                    const env = args[0]['process.env'] || {};
+                    env.IS_ELECTRON = JSON.stringify(false);
+                    env.VUE_APP_WEB_ONLY = JSON.stringify(true);
+                    args[0]['process.env'] = env;
+                    return args;
+                });
+            }
+            
+            // No need for electron-specific aliases in web mode
+            console.log('Building in web-only mode - skipping electron configuration');
+        }
         // Special handling for Electron builds
-        if (process.env.VUE_APP_IS_ELECTRON === 'true') {
+        else if (process.env.VUE_APP_IS_ELECTRON === 'true') {
             // Add plugin to define environment variables
             config.plugin('define').tap(args => {
                 const env = args[0]['process.env'] || {};
@@ -241,7 +263,8 @@ module.exports = {
         },
         resolve: {
             alias: {
-                vue$: 'vue/dist/vue.runtime.esm-bundler.js'
+                vue$: 'vue/dist/vue.runtime.esm-bundler.js',
+                'vue': 'vue/dist/vue.runtime.esm-bundler.js'
             }
         }
     }

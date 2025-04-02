@@ -1,6 +1,10 @@
 # uses allow-list, so ignore everything
 *
 
+# SBOM output files (explicitly ignored)
+sbom.json
+sbom.xml
+
 # allow github, workflows and templates
 !.github/
 !.github/*.yaml
@@ -242,7 +246,3 @@
 # utility scripts
 !utils
 !utils/**/*
-
-# migration archive
-!migration-archive/
-!migration-archive/**/*

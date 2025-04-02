@@ -10,6 +10,9 @@ import Tooltip from 'primevue/tooltip';
 import { isElectronMode } from './utils/environment';
 import configActions from './store/actions/config.js';
 
+// Check if we're in web-only mode
+const isWebOnly = process.env.VUE_APP_WEB_ONLY === 'true';
+
 // Create Vue app
 const app = createApp(App);
 
@@ -31,10 +34,15 @@ app.directive('tooltip', Tooltip);
 // Mount the app
 app.mount('#app');
 
+// Log the build mode
+if (isWebOnly) {
+    console.log('Running in web-only mode');
+}
+
 // Fetch config (this will set appropriate values for desktop/web modes)
 store.dispatch(configActions.fetch).then(() => {
     // Only import and initialize Google Sign-In in web mode and if Google auth is enabled
-    if (!isElectronMode() && store.state.config?.config?.googleEnabled) {
+    if ((!isElectronMode() || isWebOnly) && store.state.config?.config?.googleEnabled) {
         console.log('Google auth is enabled, initializing Google Sign-In plugin');
         import('vue3-google-signin').then((GoogleSignInModule) => {
             const GoogleSignInPlugin = GoogleSignInModule.default;
