@@ -7,8 +7,14 @@ import clientFactory from '../httpClient.js';
  * @returns Promise
  */
 const getAsync = async (url, query) => {
-    const res = await clientFactory.get().get(url, { params: query });
-    return res.data;
+    try {
+        const client = clientFactory.get();
+        const res = await client.get(url, { params: query });
+        return res.data;
+    } catch (error) {
+        console.error(`GET request to ${url} failed:`, error.message);
+        throw error;
+    }
 };
 
 /**
@@ -44,8 +50,14 @@ const postAsync = async (url, body) => {
  * @param {Object} body
  */
 const putAsync = async (url, body) => {
-    const res = await clientFactory.get().put(url, body);
-    return res.data;
+    try {
+        const client = clientFactory.get();
+        const res = await client.put(url, body);
+        return res.data;
+    } catch (error) {
+        console.error(`PUT request to ${url} failed:`, error.message);
+        throw error;
+    }
 };
 
 export default {

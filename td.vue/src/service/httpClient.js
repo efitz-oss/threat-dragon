@@ -16,16 +16,18 @@ const getToast = () => useToast();
 
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {
-  // Check if we're in development mode
-  const isDev = process.env.NODE_ENV === 'development';
+  // Always use the same protocol as the current page to avoid mixed content errors
+  const currentProtocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  const port = window.location.port ? `:${window.location.port}` : '';
   
-  // If in development, use http protocol for API requests to avoid SSL issues
-  if (isDev) {
-    const port = window.location.port ? `:${window.location.port}` : '';
-    return `http://${window.location.hostname}${port}`;
+  // In development mode, we might want to explicitly set the port
+  if (process.env.NODE_ENV === 'development') {
+    return `${currentProtocol}//${hostname}${port}`;
   }
   
-  // In production, use relative URLs to inherit the protocol from the page
+  // In production, we'll either use the full URL or just a relative path
+  // Using a relative path is safer as it automatically uses the current protocol and host
   return '';
 };
 
@@ -57,12 +59,21 @@ const createClient = () => {
         return resp;
     }, async (err) => {
         const logAndExit = () => {
-            console.error('Request error:',err);
+            // Better error logging with structured information
+            console.error('Request error:', {
+                message: err.message,
+                url: err.config?.url,
+                method: err.config?.method,
+                status: err.response?.status,
+                statusText: err.response?.statusText,
+                data: err.response?.data
+            });
             store.dispatch(LOADER_FINISHED);
             return Promise.reject(err);
         };
 
-        if (err.response.status !== 401) {
+        // Check if err.response exists before accessing status
+        if (!err.response || err.response.status !== 401) {
             return logAndExit();
         }
 
