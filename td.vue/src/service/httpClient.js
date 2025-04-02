@@ -14,8 +14,28 @@ const getTranslation = (key) => tc(key);
 // Get toast using the standardized helper
 const getToast = () => useToast();
 
+// Determine the correct base URL based on environment
+const getBaseUrl = () => {
+  // Check if we're in development mode
+  const isDev = process.env.NODE_ENV === 'development';
+  
+  // If in development, use http protocol for API requests to avoid SSL issues
+  if (isDev) {
+    const port = window.location.port ? `:${window.location.port}` : '';
+    return `http://${window.location.hostname}${port}`;
+  }
+  
+  // In production, use relative URLs to inherit the protocol from the page
+  return '';
+};
+
 const createClient = () => {
-    const client = axios.create();
+    const baseURL = getBaseUrl();
+    console.log(`Creating HTTP client with base URL: ${baseURL}`);
+    
+    const client = axios.create({
+        baseURL
+    });
     client.defaults.headers.common.Accept = 'application/json';
     client.defaults.headers.post['Content-Type'] = 'application/json';
     client.interceptors.request.use((config) => {

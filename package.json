@@ -52,7 +52,7 @@
     "pretest:server": "cd td.server && npm run pretest",
     "pretest:site": "cd td.vue && npm run pretest",
     "security": "npm audit && npm outdated",
-    "start": "npm-run-all build --parallel start:server start:site",
+    "start": "npm run build && npm-run-all --parallel start:server start:site",
     "start:desktop": "npm run start:desktop --workspace=threat-dragon-vue",
     "start:desktop:simple": "npm run start:desktop:simple --workspace=threat-dragon-vue",
     "start:server": "npm run start:server --workspace=threat-dragon-server",

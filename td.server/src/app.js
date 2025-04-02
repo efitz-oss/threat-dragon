@@ -61,6 +61,23 @@ const configureServer = (app, logger) => {
     const serverApiPort = env.get().config.SERVER_API_PORT || env.get().config.PORT || 3000;
     app.set('port', serverApiPort);
     logger.info('Express API server listening on ' + app.get('port'));
+    
+    // Add CORS headers in development mode
+    if (process.env.NODE_ENV === 'development') {
+        app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+            res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            
+            // Handle preflight requests
+            if (req.method === 'OPTIONS') {
+                return res.status(200).end();
+            }
+            
+            return next();
+        });
+        logger.info('CORS enabled for development mode');
+    }
 };
 
 const create = () => {
