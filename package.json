@@ -49,7 +49,7 @@
     "pretest": "npm-run-all pretest:server pretest:site",
     "pretest:server": "cd td.server && npm run pretest",
     "pretest:site": "cd td.vue && npm run pretest",
-    "postinstall": "npm install && cd td.server && npm install && cd ../td.vue && npm install",
+    "postinstall": "cd td.server && npm install && cd ../td.vue && npm install",
     "start": "npm-run-all build start:server start:site",
     "start:desktop": "npm run start:desktop --workspace=threat-dragon",
     "start:desktop:simple": "npm run start:desktop:simple --workspace=threat-dragon",
