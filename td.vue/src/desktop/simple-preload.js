@@ -1,6 +1,19 @@
 // preload.js
 const { contextBridge, ipcRenderer } = require('electron');
 
+// Try to load passive events support for use in renderer process
+try {
+    const passiveEventsSupport = require('passive-events-support/dist/main.js');
+    if (passiveEventsSupport && typeof passiveEventsSupport.configure === 'function') {
+        passiveEventsSupport.configure({
+            strict: false,
+            capture: false
+        });
+    }
+} catch (err) {
+    console.warn("Failed to load passive-events-support:", err.message);
+}
+
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing all of electron's API
 contextBridge.exposeInMainWorld('electronAPI', {
