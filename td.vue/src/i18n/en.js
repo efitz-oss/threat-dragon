@@ -48,7 +48,7 @@ const eng = {
 <p>We reserve the right to modify these Terms at any time. Your continued use of the application after such modifications constitutes your acceptance of the modified terms.</p>
 
 <h2>8. Governing Law</h2>
-<p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which OWASP operates, without regard to its conflict of law provisions.</p>
+<p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'} operates, without regard to its conflict of law provisions.</p>
 
 <h2>9. Operator Information</h2>
 <p>This instance of OWASP Threat Dragon is operated by ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'}. For questions related to this deployment, please contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator through appropriate channels'}.</p>
@@ -92,7 +92,7 @@ const eng = {
 <p>We may update this privacy policy from time to time. Any changes will be posted on this page.</p>
 
 <h2>Contact</h2>
-<p>If you have questions about this Privacy Policy, please contact us through the OWASP Threat Dragon GitHub repository.</p>
+<p>If you have questions about this Privacy Policy, please contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator through appropriate channels'}.</p>
 
 <p>Last updated: March 19, 2025</p>`
     },
@@ -300,7 +300,7 @@ const eng = {
         buttons: {
             delete: 'Delete selected',
             redo: 'Redo edit',
-            shortcuts: 'Keyboard shortcuts', 
+            shortcuts: 'Keyboard shortcuts',
             toggleGrid: 'Toggle grid',
             undo: 'Undo edit',
             zoomIn: 'Zoom in',
