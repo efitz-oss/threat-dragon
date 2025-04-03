@@ -4,9 +4,44 @@ import { nextTick } from 'vue';
 
 import NewThreatModel from '@/views/NewThreatModel.vue';
 import { THREATMODEL_CLEAR, THREATMODEL_SELECTED, THREATMODEL_UPDATE, THREATMODEL_NOT_MODIFIED } from '@/store/actions/threatmodel.js';
+import { createI18n } from 'vue-i18n';
 
 describe('NewThreatModel.vue', () => {
-    let wrapper, mockStore, router;
+    let wrapper, mockStore, router, i18n;
+
+    // Create a simple i18n instance for testing
+    const createI18nInstance = () => {
+        return createI18n({
+            legacy: false,
+            locale: 'eng',
+            messages: {
+                eng: {
+                    threatmodel: {
+                        title: 'Title',
+                        owner: 'Owner',
+                        description: 'Description',
+                        reviewer: 'Reviewer',
+                        new: {
+                            title: 'Create New Threat Model',
+                            description: 'Enter information about your new threat model'
+                        },
+                        placeholder: {
+                            title: 'Threat Model Title',
+                            owner: 'Owner Name or Team',
+                            description: 'Enter a high-level description of the system being modeled',
+                            reviewer: 'Reviewer Name'
+                        },
+                        buttons: {
+                            save: 'Save'
+                        }
+                    },
+                    forms: {
+                        save: 'Save'
+                    }
+                }
+            }
+        });
+    };
 
     describe('local provider', () => {
         beforeEach(async () => {
@@ -18,7 +53,8 @@ describe('NewThreatModel.vue', () => {
             // Create store 
             mockStore = createStore({
                 state: {
-                    provider: { selected: 'local' }
+                    provider: { selected: 'local' },
+                    packageBuildVersion: '1.0.0'
                 },
                 actions: {
                     [THREATMODEL_CLEAR]: jest.fn(),
@@ -31,11 +67,14 @@ describe('NewThreatModel.vue', () => {
             // Replace the dispatch with our mock
             mockStore.dispatch = dispatchMock;
             
+            // Create i18n instance
+            i18n = createI18nInstance();
+            
             // Create wrapper using direct mount for simplicity
             // This might be cleaner until we solve potential issues with createWrapper
             wrapper = mount(NewThreatModel, {
                 global: {
-                    plugins: [mockStore],
+                    plugins: [mockStore, i18n],
                     mocks: {
                         $router: router,
                         $route: {
@@ -51,6 +90,13 @@ describe('NewThreatModel.vue', () => {
             
             // Wait for component to initialize
             await nextTick();
+            
+            // Set up a default title for assertions
+            wrapper.vm.threatModel.summary.title = 'New Threat Model';
+            
+            // Dispatch threatmodel_selected and execute the save model function
+            // This simulates the user submitting the form
+            wrapper.vm.saveModel();
         });
 
         it('clears the current threat model', () => {
@@ -82,7 +128,8 @@ describe('NewThreatModel.vue', () => {
             // Create store 
             mockStore = createStore({
                 state: {
-                    provider: { selected: 'github' }
+                    provider: { selected: 'github' },
+                    packageBuildVersion: '1.0.0'
                 },
                 actions: {
                     [THREATMODEL_CLEAR]: jest.fn(),
@@ -95,10 +142,13 @@ describe('NewThreatModel.vue', () => {
             // Replace the dispatch with our mock
             mockStore.dispatch = dispatchMock;
             
+            // Create i18n instance
+            i18n = createI18nInstance();
+            
             // Create wrapper using direct mount for simplicity
             wrapper = mount(NewThreatModel, {
                 global: {
-                    plugins: [mockStore],
+                    plugins: [mockStore, i18n],
                     mocks: {
                         $router: router,
                         $route: {
@@ -114,6 +164,13 @@ describe('NewThreatModel.vue', () => {
             
             // Wait for component to initialize
             await nextTick();
+            
+            // Set up a default title for assertions
+            wrapper.vm.threatModel.summary.title = 'New Threat Model';
+            
+            // Dispatch threatmodel_selected and execute the save model function
+            // This simulates the user submitting the form
+            wrapper.vm.saveModel();
         });
 
         it('clears the current threat model', () => {

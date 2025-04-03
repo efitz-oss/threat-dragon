@@ -27,8 +27,8 @@ describe('service/google.provider.js', () => {
                 action = google.getDashboardActions().find(x => x.key === 'createNew');
             });
 
-            it('links to the folder creation page', () => {
-                expect(action.to).toEqual('/google/google/folder?action=create');
+            it('links to the new threat model page', () => {
+                expect(action.to).toEqual('/google/google/new');
             });
 
             it('uses the plus icon', () => {
