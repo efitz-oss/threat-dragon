@@ -1,4 +1,5 @@
 // Mock bootstrap-vue-next for tests
+// A proper plugin must have an install method
 const plugin = {
     install: (app) => {
     // Add mock bootstrap components to app

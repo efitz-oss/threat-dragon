@@ -9,7 +9,8 @@ import { mount, shallowMount } from '@vue/test-utils';
 import { createStore } from 'vuex';
 
 // Import Bootstrap Vue plugin
-import bootstrapVue from '../bootstrap-vue-next';
+// Import our mock bootstrap-vue-next plugin
+import bootstrapVuePlugin from '../bootstrap-vue-next';
 
 /**
  * Creates a test wrapper for a Vue component
@@ -45,7 +46,7 @@ export function createWrapper(component, options = {}) {
     const config = {
         props,
         global: {
-            plugins: [mockStore, bootstrapVue, ...plugins],
+            plugins: [mockStore, bootstrapVuePlugin, ...plugins],
             stubs: {
                 'router-view': true,
                 ...stubs
