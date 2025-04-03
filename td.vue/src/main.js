@@ -9,7 +9,7 @@ import { toastNotificationPlugin } from './plugins/toast-notification.js';
 import Tooltip from 'primevue/tooltip';
 import { isElectronMode } from './utils/environment';
 import configActions from './store/actions/config.js';
-import 'passive-events-support/dist/index.js'; // Add support for passive event listeners
+import 'passive-events-support/dist/main.js'; // Add support for passive event listeners
 
 // Check if we're in web-only mode
 const isWebOnly = process.env.VUE_APP_WEB_ONLY === 'true';
