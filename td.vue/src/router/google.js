@@ -20,7 +20,15 @@ export const googleRoutes = [
         name: `${providerType}SaveModel`,
         component: () =>
             import(/* webpackChunkName: "folder-access" */ '../views/google/DriveAccess.vue'),
-        props: (route) => ({ mode: 'save', threatModel: route.params.threatModel })
+        props: (route) => {
+            // Convert the threatModel object from route params to a proper object
+            const threatModel = route.params && route.params.threatModel;
+            
+            return { 
+                mode: 'save', 
+                threatModel 
+            };
+        }
     },
     {
         path: `/${providerType}/:provider/:folder/:threatmodel`,

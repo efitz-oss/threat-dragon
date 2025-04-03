@@ -293,6 +293,16 @@ const eng = {
         buttons: {
             delete: 'Delete selected',
             redo: 'Redo edit',
+            shortcuts: 'Keyboard shortcuts', 
+            toggleGrid: 'Toggle grid',
+            undo: 'Undo edit',
+            zoomIn: 'Zoom in',
+            zoomOut: 'Zoom out',
+            save: 'Save'
+        },
+        controlButtons: {
+            delete: 'Delete selected',
+            redo: 'Redo edit',
             shortcuts: 'Keyboard shortcuts',
             toggleGrid: 'Toggle grid',
             undo: 'Undo edit',

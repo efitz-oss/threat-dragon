@@ -16,6 +16,7 @@ import {
     BRow,
     BButton,
     BButtonGroup,
+    BButtonToolbar,
     BForm,
     BFormGroup,
     BFormInput,
@@ -39,13 +40,14 @@ import {
     BFormTags,
     BDropdownItemButton,
     BInputGroup,
-    BInputGroupPrepend,
-    BInputGroupAppend,
     BInputGroupText,
     BFormSelect,
     BFormRadioGroup,
     BCardBody
 } from 'bootstrap-vue-next';
+
+// Import Modal plugin separately to make it global
+import { modalManagerPlugin } from 'bootstrap-vue-next';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
@@ -68,6 +70,7 @@ const components = {
     BRow,
     BButton,
     BButtonGroup,
+    BButtonToolbar,
     BForm,
     BFormGroup,
     BFormInput,
@@ -91,8 +94,6 @@ const components = {
     BFormTags,
     BDropdownItemButton,
     BInputGroup,
-    BInputGroupPrepend,
-    BInputGroupAppend,
     BInputGroupText,
     BFormSelect,
     BFormRadioGroup,
@@ -103,9 +104,13 @@ const components = {
 // bootstrap-vue-next components globally for use in Vue 3
 export default {
     install(app) {
+        // Register individual components
         Object.entries(components).forEach(([name, component]) => {
             app.component(name, component);
         });
+        
+        // Register modal plugin globally
+        app.use(modalManagerPlugin);
     }
 };
 
@@ -128,6 +133,7 @@ export {
     BRow,
     BButton,
     BButtonGroup,
+    BButtonToolbar,
     BForm,
     BFormGroup,
     BFormInput,
@@ -151,10 +157,10 @@ export {
     BFormTags,
     BDropdownItemButton,
     BInputGroup,
-    BInputGroupPrepend,
-    BInputGroupAppend,
     BInputGroupText,
     BFormSelect,
     BFormRadioGroup,
-    BCardBody
+    BCardBody,
+    // Export modalManagerPlugin for direct usage
+    modalManagerPlugin
 };

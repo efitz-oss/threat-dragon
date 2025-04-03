@@ -51,7 +51,7 @@ const threatModel = computed(() => {
     if (route.params.threatModel) return route.params.threatModel;
 
     // Otherwise get from store
-    return store.state.threatmodel.selected;
+    return store.state.threatmodel.data;
 });
 
 const getGoogleAccessToken = async () => {

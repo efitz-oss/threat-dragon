@@ -113,11 +113,17 @@ export default {
                 this.$router.push({ name: `${this.providerType}ThreatModelEdit`, params });
             } else if (this.providerType === 'google') {
                 // For Google provider, first go to DriveAccess to select save location
+                // Store the model in Vuex first
+                this.$store.dispatch(tmActions.update, { 
+                    title: this.threatModel.summary.title,
+                    data: this.threatModel
+                });
+                
+                // Then navigate to the save screen
                 this.$router.push({
                     name: `${this.providerType}SaveModel`,
                     params: {
-                        ...this.$route.params,
-                        threatModel: this.threatModel
+                        ...this.$route.params
                     }
                 });
             } else {

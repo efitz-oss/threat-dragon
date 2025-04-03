@@ -100,7 +100,7 @@
                                 :label-for="`diagram-${idx}`"
                                 class="mb-3"
                             >
-                                <b-input-group-prepend>
+                                <template #prepend>
                                     <b-dropdown
                                         variant="secondary"
                                         class="select-diagram-type"
@@ -137,7 +137,7 @@
                                             {{ $t('threatmodel.diagram.generic.select') }}
                                         </b-dropdown-item-button>
                                     </b-dropdown>
-                                </b-input-group-prepend>
+                                </template>
                                 <b-form-input
                                     v-model="model.detail.diagrams[idx].title"
                                     type="text"
@@ -149,7 +149,7 @@
                                     type="text"
                                     class="td-diagram-description"
                                 />
-                                <b-input-group-append>
+                                <template #append>
                                     <b-button
                                         variant="secondary"
                                         class="td-remove-diagram"
@@ -158,7 +158,7 @@
                                         <font-awesome-icon icon="times" />
                                         {{ $t('forms.remove') }}
                                     </b-button>
-                                </b-input-group-append>
+                                </template>
                             </b-input-group>
                         </b-col>
                     </b-form-row>
