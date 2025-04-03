@@ -101,9 +101,16 @@ export default {
         async closed() {
             if (!this.$store.getters.modelChanged || (await this.getConfirmModal())) {
                 await this.$store.dispatch(tmActions.diagramClosed);
+                
+                // Create a clean copy of params without any diagram parameter
+                const cleanParams = { ...this.$route.params };
+                if ('diagram' in cleanParams) {
+                    delete cleanParams.diagram;
+                }
+                
                 this.$router.push({
                     name: `${this.providerType}ThreatModel`,
-                    params: this.$route.params
+                    params: cleanParams
                 });
             }
         },

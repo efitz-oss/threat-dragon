@@ -96,72 +96,64 @@
                     </b-form-row>
                     <b-form-row>
                         <b-col v-for="(diagram, idx) in model.detail.diagrams" :key="idx" md="8">
-                            <b-input-group
-                                :id="`diagram-group-${idx}`"
-                                :label-for="`diagram-${idx}`"
-                                class="mb-3"
-                            >
-                                <template #prepend>
-                                    <b-dropdown
-                                        variant="secondary"
-                                        class="select-diagram-type w-100"
-                                        :text="model.detail.diagrams[idx].diagramType"
+                            <div class="diagram-inputs">
+                                <b-dropdown
+                                    variant="secondary"
+                                    class="select-diagram-type"
+                                    :text="model.detail.diagrams[idx].diagramType"
+                                >
+                                    <b-dropdown-item-button
+                                        @click="onDiagramTypeClick(idx, 'CIA')"
                                     >
-                                        <b-dropdown-item-button
-                                            @click="onDiagramTypeClick(idx, 'CIA')"
-                                        >
-                                            {{ $t('threatmodel.diagram.cia.select') }}
-                                        </b-dropdown-item-button>
-                                        <b-dropdown-item-button
-                                            @click="onDiagramTypeClick(idx, 'DIE')"
-                                        >
-                                            {{ $t('threatmodel.diagram.die.select') }}
-                                        </b-dropdown-item-button>
-                                        <b-dropdown-item-button
-                                            @click="onDiagramTypeClick(idx, 'LINDDUN')"
-                                        >
-                                            {{ $t('threatmodel.diagram.linddun.select') }}
-                                        </b-dropdown-item-button>
-                                        <b-dropdown-item-button
-                                            @click="onDiagramTypeClick(idx, 'PLOT4ai')"
-                                        >
-                                            {{ $t('threatmodel.diagram.plot4ai.select') }}
-                                        </b-dropdown-item-button>
-                                        <b-dropdown-item-button
-                                            @click="onDiagramTypeClick(idx, 'STRIDE')"
-                                        >
-                                            {{ $t('threatmodel.diagram.stride.select') }}
-                                        </b-dropdown-item-button>
-                                        <b-dropdown-item-button
-                                            @click="onDiagramTypeClick(idx, 'Generic')"
-                                        >
-                                            {{ $t('threatmodel.diagram.generic.select') }}
-                                        </b-dropdown-item-button>
-                                    </b-dropdown>
-                                </template>
+                                        {{ $t('threatmodel.diagram.cia.select') }}
+                                    </b-dropdown-item-button>
+                                    <b-dropdown-item-button
+                                        @click="onDiagramTypeClick(idx, 'DIE')"
+                                    >
+                                        {{ $t('threatmodel.diagram.die.select') }}
+                                    </b-dropdown-item-button>
+                                    <b-dropdown-item-button
+                                        @click="onDiagramTypeClick(idx, 'LINDDUN')"
+                                    >
+                                        {{ $t('threatmodel.diagram.linddun.select') }}
+                                    </b-dropdown-item-button>
+                                    <b-dropdown-item-button
+                                        @click="onDiagramTypeClick(idx, 'PLOT4ai')"
+                                    >
+                                        {{ $t('threatmodel.diagram.plot4ai.select') }}
+                                    </b-dropdown-item-button>
+                                    <b-dropdown-item-button
+                                        @click="onDiagramTypeClick(idx, 'STRIDE')"
+                                    >
+                                        {{ $t('threatmodel.diagram.stride.select') }}
+                                    </b-dropdown-item-button>
+                                    <b-dropdown-item-button
+                                        @click="onDiagramTypeClick(idx, 'Generic')"
+                                    >
+                                        {{ $t('threatmodel.diagram.generic.select') }}
+                                    </b-dropdown-item-button>
+                                </b-dropdown>
                                 <b-form-input
                                     v-model="model.detail.diagrams[idx].title"
                                     type="text"
-                                    class="td-diagram"
+                                    class="diagram-title"
                                     placeholder="Diagram title"
                                 />
                                 <b-form-input
                                     v-model="model.detail.diagrams[idx].description"
                                     :placeholder="model.detail.diagrams[idx].placeholder"
                                     type="text"
-                                    class="td-diagram-description"
+                                    class="diagram-description"
                                 />
-                                <template #append>
-                                    <b-button
-                                        variant="secondary"
-                                        class="td-remove-diagram"
-                                        @click="onRemoveDiagramClick(idx)"
-                                    >
-                                        <font-awesome-icon icon="times" />
-                                        {{ $t('forms.remove') }}
-                                    </b-button>
-                                </template>
-                            </b-input-group>
+                                <b-button
+                                    variant="secondary"
+                                    class="remove-diagram-btn"
+                                    @click="onRemoveDiagramClick(idx)"
+                                >
+                                    <font-awesome-icon icon="times" />
+                                    {{ $t('forms.remove') }}
+                                </b-button>
+                            </div>
                         </b-col>
                     </b-form-row>
                     <b-form-row>
@@ -395,7 +387,39 @@ export default {
     .form-group {
         margin-bottom: 1.5rem;
     }
-    .td-diagram {
-        margin-bottom: 0.5rem;
+    
+    .form-group label {
+        margin-top: 1rem;
+    }
+    .diagram-inputs {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .diagram-inputs > * {
+        margin-right: 5px;
+        height: 38px; /* Standardize height of all elements */
+    }
+    
+    .diagram-inputs > *:last-child {
+        margin-right: 0;
+    }
+    
+    .select-diagram-type {
+        flex: 0 0 auto;
+        min-width: 110px;
+    }
+    
+    .diagram-title {
+        flex: 1 1 auto;
+    }
+    
+    .diagram-description {
+        flex: 2 1 auto;
+    }
+    
+    .remove-diagram-btn {
+        flex: 0 0 auto;
     }
 </style>

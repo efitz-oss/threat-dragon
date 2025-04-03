@@ -151,4 +151,8 @@ export default {
 .form-group {
     margin-bottom: 1.5rem;
 }
+
+.form-group label {
+    margin-top: 1rem;
+}
 </style>

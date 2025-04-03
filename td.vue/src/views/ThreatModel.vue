@@ -146,8 +146,15 @@ export default {
             }
 
             this.$store.dispatch(tmActions.diagramSelected, diagram);
-            const path = `${this.$route.path}/edit/${encodeURIComponent(diagram.title)}`;
-            this.$router.push(path);
+            
+            // Use named route instead of path manipulation
+            this.$router.push({
+                name: `${this.providerType}DiagramEdit`,
+                params: {
+                    ...this.$route.params,
+                    diagram: encodeURIComponent(diagram.title)
+                }
+            });
         }
     }
 };

@@ -219,14 +219,13 @@ const pickerCallback = async (data) => {
                     });
 
                     // Navigate to the edit view
+                    // Store fileId in the store rather than passing as a route param
                     router.push({
                         name: 'googleThreatModelEdit',
                         params: {
                             provider: route.params.provider,
                             folder: document.id,
-                            threatmodel: fileNameToSave.replace(/\.json$/, ''),
-                            fileId: savedFileId // Pass fileId in the params
-                            // Note: fileId is marked as optional in the route
+                            threatmodel: fileNameToSave.replace(/\.json$/, '')
                         }
                     });
                 }
@@ -248,14 +247,19 @@ const pickerCallback = async (data) => {
                 await sendToBackend(document.id, content);
                 toast.success('File imported successfully!');
                 
-                // Navigate to the threat model edit view
+                // Store fileId in the store
+                store.commit(THREATMODEL_UPDATE, {
+                    fileName: document.name,
+                    fileId: document.id
+                });
+                
+                // Navigate to the threat model view first, which will then load the edit view
                 router.push({
-                    name: 'googleThreatModelEdit',
+                    name: 'googleThreatModel',
                     params: {
                         provider: route.params.provider,
                         folder: document.id,
-                        threatmodel: document.name.replace(/\.json$/, ''),
-                        fileId: document.id
+                        threatmodel: document.name.replace(/\.json$/, '')
                     }
                 });
             } catch (error) {

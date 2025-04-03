@@ -148,7 +148,13 @@ describe('views/Threatmodel.vue', () => {
             });
 
             it('routes to the diagram edit based on the current route', () => {
-                expect(mockRouter.push).toHaveBeenCalledWith(`${path}/edit/${encodeURIComponent(diagrams[0].title)}`);
+                // Now using named route with params
+                expect(mockRouter.push).toHaveBeenCalledWith(expect.objectContaining({
+                    name: 'gitDiagramEdit',
+                    params: expect.objectContaining({
+                        diagram: encodeURIComponent(diagrams[0].title)
+                    })
+                }));
             });
         });
     });
