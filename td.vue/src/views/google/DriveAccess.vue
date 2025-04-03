@@ -31,7 +31,7 @@ const appId = process.env.VUE_APP_GOOGLE_APP_ID || '';
 
 const accessToken = ref(null);
 const isLoading = ref(false);
-const fileContent = ref(null); // Store imported file content
+// const fileContent = ref(null); // Removed unused variable
 const fileName = ref('');
 
 // Determine if we're saving or opening based on route or props
@@ -67,6 +67,12 @@ const getGoogleAccessToken = async () => {
         });
 
         if (!response.ok) {
+            // If we get a 401 Unauthorized, the token might be expired
+            if (response.status === 401) {
+                toast.info('Session expired. Please sign in again.');
+                router.push({ name: 'HomePage' });
+                return null;
+            }
             throw new Error(`Server returned ${response.status} from /api/google-token`);
         }
 
@@ -226,9 +232,19 @@ const pickerCallback = async (data) => {
             try {
                 isLoading.value = true;
                 const content = await fetchFileContent(document.id);
-                fileContent.value = content; // Store content for UI display
                 await sendToBackend(document.id, content);
                 toast.success('File imported successfully!');
+                
+                // Navigate to the threat model edit view
+                router.push({
+                    name: 'googleThreatModelEdit',
+                    params: {
+                        provider: route.params.provider,
+                        folder: document.id,
+                        threatmodel: document.name.replace(/\.json$/, ''),
+                        fileId: document.id
+                    }
+                });
             } catch (error) {
                 console.error('Error processing file:', error);
                 toast.error('Failed to import file from Google Drive');
@@ -252,6 +268,27 @@ const fetchFileContent = async (fileId) => {
     if (!response.ok) {
         const errorText = await response.text();
         console.error('Google Drive API error:', errorText);
+        
+        // If we get a 401 Unauthorized, the token might be expired
+        if (response.status === 401) {
+            toast.info('Google Drive access token expired. Attempting to refresh...');
+            // Try to get a fresh token and retry
+            const newToken = await getGoogleAccessToken();
+            if (newToken) {
+                accessToken.value = newToken;
+                // Retry the fetch with the new token
+                const retryResponse = await fetch(
+                    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+                    {
+                        headers: { Authorization: `Bearer ${accessToken.value}` }
+                    }
+                );
+                if (retryResponse.ok) {
+                    return await retryResponse.text();
+                }
+            }
+        }
+        
         throw new Error('Failed to fetch file content from Google Drive');
     }
     return await response.text();
@@ -287,6 +324,40 @@ const saveFileToDrive = async (folderId, fileName, content) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Google Drive API error:', errorText);
+            
+            // If we get a 401 Unauthorized, the token might be expired
+            if (response.status === 401) {
+                toast.info('Google Drive access token expired. Attempting to refresh...');
+                // Try to get a fresh token and retry
+                const newToken = await getGoogleAccessToken();
+                if (newToken) {
+                    accessToken.value = newToken;
+                    // Retry the save with the new token
+                    const retryForm = new FormData();
+                    retryForm.append(
+                        'metadata',
+                        new Blob([JSON.stringify(metadata)], { type: 'application/json' })
+                    );
+                    retryForm.append('file', new Blob([content], { type: 'application/json' }));
+                    
+                    const retryResponse = await fetch(
+                        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Authorization: `Bearer ${accessToken.value}`
+                            },
+                            body: retryForm
+                        }
+                    );
+                    
+                    if (retryResponse.ok) {
+                        const retryResult = await retryResponse.json();
+                        return retryResult.id;
+                    }
+                }
+            }
+            
             throw new Error('Failed to save file to Google Drive');
         }
 
@@ -394,11 +465,7 @@ onMounted(() => {
             </b-row>
         </div>
 
-        <!-- Display imported JSON file content (only for open mode) -->
-        <div v-if="fileContent && !isSaveMode" class="mt-3 p-3 border rounded">
-            <h5>Imported File Content:</h5>
-            <pre>{{ fileContent }}</pre>
-        </div>
+        <!-- Don't display imported JSON file content - we should navigate instead -->
     </b-container>
 </template>
 
