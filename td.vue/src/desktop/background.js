@@ -264,7 +264,7 @@ function createWindow() {
         });
 
         // Listen for console logs from the renderer
-        mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        mainWindow.webContents.on('console-message', (event, level, message) => {
             const levels = ['debug', 'info', 'warning', 'error'];
             const logLevel = levels[level] || 'info';
 

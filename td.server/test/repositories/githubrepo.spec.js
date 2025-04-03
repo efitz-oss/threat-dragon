@@ -20,29 +20,29 @@ describe('repositories/githubrepo.js', () => {
     const accessToken = 'test-access-token';
     const repoFullName = `${info.organisation}/${info.repo}`;
     const modelPath = `ThreatDragonModels/${info.model}/${info.model}.json`;
-  
+
     let githubApiScope;
-  
+
     before(() => {
-    // Skip API mocking if using real APIs
+        // Skip API mocking if using real APIs
         if (useRealApis()) {
             console.log('Using real GitHub API');
             return;
         }
-    
+
         // Setup GitHub API mocks
         githubApiScope = mockGitHubApi();
     });
-  
+
     after(() => {
-    // Clean up nock
+        // Clean up nock
         if (!useRealApis()) {
             nock.cleanAll();
         }
     });
-  
+
     beforeEach(() => {
-    // Setup environment stubs
+        // Setup environment stubs
         sinon.stub(env, 'get').returns({
             config: {
                 REPO_ROOT_DIRECTORY: 'ThreatDragonModels',
@@ -50,7 +50,7 @@ describe('repositories/githubrepo.js', () => {
             }
         });
     });
-  
+
     afterEach(() => {
         sinon.restore();
     });
@@ -59,7 +59,7 @@ describe('repositories/githubrepo.js', () => {
         it('fetches the user information', async () => {
             const result = await threatModelRepository.userAsync(accessToken);
             expect(result).to.be.an('object');
-      
+
             // If using real API, just check that we get some kind of result
             if (useRealApis()) {
                 expect(result).to.have.any.keys('login', 'id');
@@ -71,7 +71,7 @@ describe('repositories/githubrepo.js', () => {
 
     describe('with enterprise hostname', () => {
         const enterpriseHostname = 'github.example.com';
-    
+
         beforeEach(() => {
             env.get.restore();
             sinon.stub(env, 'get').returns({
@@ -80,7 +80,7 @@ describe('repositories/githubrepo.js', () => {
                     REPO_ROOT_DIRECTORY: 'ThreatDragonModels'
                 }
             });
-      
+
             // Mock enterprise GitHub API if not using real APIs
             if (!useRealApis()) {
                 nock(`https://${enterpriseHostname}/api/v3`)
@@ -88,13 +88,13 @@ describe('repositories/githubrepo.js', () => {
                     .reply(200, [{ name: 'repo1' }]);
             }
         });
-    
+
         it('uses the enterprise hostname for API calls', async () => {
             // Skip this test when using real APIs
             if (useRealApis()) {
                 return;
             }
-      
+
             const result = await threatModelRepository.reposAsync(info.page, accessToken);
             expect(result).to.be.an('array');
         });
@@ -104,7 +104,7 @@ describe('repositories/githubrepo.js', () => {
         it('fetches repositories for the user', async () => {
             const result = await threatModelRepository.reposAsync(info.page, accessToken);
             expect(result).to.be.an('array');
-      
+
             // Just check we get an array with repositories
             if (useRealApis()) {
                 expect(result.length).to.be.at.least(0);
@@ -120,7 +120,7 @@ describe('repositories/githubrepo.js', () => {
         it('fetches branches for a repository', async () => {
             const result = await threatModelRepository.branchesAsync(info, accessToken);
             expect(result).to.be.an('array');
-      
+
             // If using real API, just check the structure
             // Just check the result is returned
             expect(result).to.exist;
@@ -131,7 +131,7 @@ describe('repositories/githubrepo.js', () => {
         it('fetches threat models from a repository branch', async () => {
             const result = await threatModelRepository.modelsAsync(info, accessToken);
             expect(result).to.be.an('array');
-      
+
             // If using real API, we can only check structure
             // Just check the result is returned
             expect(result).to.exist;
@@ -158,7 +158,7 @@ describe('repositories/githubrepo.js', () => {
 
     // The following tests modify data and should be skipped with real APIs
     // unless you have a test repository set up
-  
+
     describe('createAsync', () => {
         it('creates a new threat model', async () => {
             // Skip this test when using real APIs to avoid creating real content
@@ -166,7 +166,7 @@ describe('repositories/githubrepo.js', () => {
                 console.log('Skipping createAsync test with real API');
                 return;
             }
-      
+
             const result = await threatModelRepository.createAsync(info, accessToken);
             expect(result).to.be.an('object');
             expect(result).to.have.nested.property('content');
@@ -180,7 +180,7 @@ describe('repositories/githubrepo.js', () => {
                 console.log('Skipping updateAsync test with real API');
                 return;
             }
-      
+
             const result = await threatModelRepository.updateAsync(info, accessToken);
             expect(result).to.be.an('object');
             expect(result).to.have.nested.property('content.sha');
@@ -194,7 +194,7 @@ describe('repositories/githubrepo.js', () => {
                 console.log('Skipping deleteAsync test with real API');
                 return;
             }
-      
+
             const result = await threatModelRepository.deleteAsync(info, accessToken);
             expect(result).to.be.an('object');
         });

@@ -48,6 +48,9 @@ import configActions from '@/store/actions/config.js';
 import { mapState } from 'vuex';
 export default {
     name: 'HomePage',
+    components: {
+        TdProviderLoginButton
+    },
     computed: mapState({
         config: (state) => {
             return state.config.config;
@@ -91,51 +94,48 @@ export default {
                 this.$store.dispatch(configActions.fetch);
             }
         }
-    },
-    components: {
-        TdProviderLoginButton
     }
 };
 </script>
 
 <style lang="scss" scoped>
-/* Recreating BootstrapVue's b-jumbotron styling */
-.welcome-jumbotron {
-    background-color: #f8f9fa;
-    /* Light grey background like BootstrapVue jumbotron */
-    padding: 3rem 2rem;
-    /* Increase padding to match BootstrapVue */
-    border-radius: 0.3rem;
-    /* Add rounded corners */
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    /* Light shadow */
-    margin-bottom: 1.5rem;
-    /* Space below jumbotron */
-    text-align: center;
-    /* Ensure text alignment */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+    /* Recreating BootstrapVue's b-jumbotron styling */
+    .welcome-jumbotron {
+        background-color: #f8f9fa;
+        /* Light grey background like BootstrapVue jumbotron */
+        padding: 3rem 2rem;
+        /* Increase padding to match BootstrapVue */
+        border-radius: 0.3rem;
+        /* Add rounded corners */
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        /* Light shadow */
+        margin-bottom: 1.5rem;
+        /* Space below jumbotron */
+        text-align: center;
+        /* Ensure text alignment */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-/* Additional existing styles */
-.login-btn-icon {
-    display: block;
-}
+    /* Additional existing styles */
+    .login-btn-icon {
+        display: block;
+    }
 
-.td-cupcake {
-    width: 100%;
-    max-width: 480px;
-    /* Ensure image size matches */
-    margin: 40px auto;
-    /* Center image */
-}
+    .td-cupcake {
+        width: 100%;
+        max-width: 480px;
+        /* Ensure image size matches */
+        margin: 40px auto;
+        /* Center image */
+    }
 
-.td-description {
-    font-size: 20px;
-    max-width: 80%;
-    margin: 10px auto;
-    /* Ensure description stays centered */
-}
+    .td-description {
+        font-size: 20px;
+        max-width: 80%;
+        margin: 10px auto;
+        /* Ensure description stays centered */
+    }
 </style>

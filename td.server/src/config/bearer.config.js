@@ -36,20 +36,22 @@ const middleware = (req, res, next) => {
     try {
         logger.debug('Verifying JWT token');
         const decodedData = jwt.verifyToken(token);
-        
+
         if (!decodedData) {
             logger.warn('JWT verification returned no data');
             return errors.unauthorized(res, logger);
         }
-        
+
         const { provider, user } = decodedData;
-        
+
         // Debug provider info
-        logger.debug(`Provider from JWT: ${JSON.stringify({
-            exists: Boolean(provider),
-            name: provider?.name || 'unknown',
-            hasAccessToken: provider && Boolean(provider.access_token)
-        })}`);
+        logger.debug(
+            `Provider from JWT: ${JSON.stringify({
+                exists: Boolean(provider),
+                name: provider?.name || 'unknown',
+                hasAccessToken: provider && Boolean(provider.access_token)
+            })}`
+        );
 
         req.provider = provider;
         req.user = user;

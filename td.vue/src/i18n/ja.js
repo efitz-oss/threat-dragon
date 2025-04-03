@@ -134,9 +134,6 @@ const jpn = {
             description: 'モデリングするシステムの概要を入力してください',
             reviewer: '検証者名'
         },
-        buttons: {
-            save: '保存'
-        },
         diagram: {
             diagrams: '図面',
             addNewDiagram: '新しい図面を追加...',
@@ -213,7 +210,8 @@ const jpn = {
             toggleGrid: 'グリッドの表示',
             undo: '戻す',
             zoomIn: '拡大',
-            zoomOut: '縮小'
+            zoomOut: '縮小',
+            save: '保存'
         },
         shortcuts: {
             title: 'キーボードショートカット',

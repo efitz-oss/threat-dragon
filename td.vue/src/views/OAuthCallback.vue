@@ -73,7 +73,10 @@ export default {
                 // Fallback to check hash for code (hash mode or older redirects)
                 if (!code && window.location.hash) {
                     log(
-                        `Found hash: ${window.location.hash.replace(/code=[^&]+/, 'code=REDACTED')}`
+                        `Found hash: ${window.location.hash.replace(
+                            /code=[^&]+/,
+                            'code=REDACTED'
+                        )}`
                     );
 
                     // Check for code in hash fragment with hashtag navigation
@@ -96,7 +99,12 @@ export default {
 
                 if (!code) {
                     log('No authorization code found in URL');
-                    log(`Full URL: ${window.location.href.replace(/code=[^&]+/, 'code=REDACTED')}`);
+                    log(
+                        `Full URL: ${window.location.href.replace(
+                            /code=[^&]+/,
+                            'code=REDACTED'
+                        )}`
+                    );
                     throw new Error('No authorization code found');
                 }
 
@@ -170,27 +178,27 @@ export default {
 </script>
 
 <style scoped>
-.oauth-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-}
+    .oauth-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+    }
 
-.debug-section {
-    margin-top: 30px;
-    text-align: left;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
-}
+    .debug-section {
+        margin-top: 30px;
+        text-align: left;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
 
-.debug-info {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 12px;
-    max-height: 300px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
+    .debug-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
 </style>

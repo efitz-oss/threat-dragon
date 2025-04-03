@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { AUTH_SET_JWT } from '@/store/actions/auth.js';
-import i18n from '@/i18n/index.js';
 import { LOADER_FINISHED, LOADER_STARTED } from '@/store/actions/loader.js';
 import router from '@/router/index.js';
 import { store } from '@/store/index.js'; // Direct import of the store instance

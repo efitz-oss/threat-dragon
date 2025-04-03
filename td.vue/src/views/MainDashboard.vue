@@ -46,11 +46,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.action-icon {
-    color: var(--orange); /* Updated to use CSS custom property */
-    margin-bottom: 15px;
-}
-.dashboard-action {
-    padding-bottom: 2rem;
-}
+    .action-icon {
+        color: var(--orange); /* Updated to use CSS custom property */
+        margin-bottom: 15px;
+    }
+    .dashboard-action {
+        padding-bottom: 2rem;
+    }
 </style>

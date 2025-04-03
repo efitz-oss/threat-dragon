@@ -22,7 +22,9 @@ describe('controllers/responseWrapper.js', () => {
     describe('sendResponse', () => {
         const functions = {
             noError: () => data,
-            withError: () => { throw err; }
+            withError: () => {
+                throw err;
+            }
         };
 
         describe('without error', () => {
@@ -58,10 +60,7 @@ describe('controllers/responseWrapper.js', () => {
             });
 
             it('returns a server error', () => {
-                expect(errors.serverError).to.have.been.calledWith(
-                    'Internal Server Error',
-                    res
-                );
+                expect(errors.serverError).to.have.been.calledWith('Internal Server Error', res);
             });
         });
     });
@@ -105,10 +104,7 @@ describe('controllers/responseWrapper.js', () => {
             });
 
             it('returns a server error', () => {
-                expect(errors.serverError).to.have.been.calledWith(
-                    'Internal Server Error',
-                    res
-                );
+                expect(errors.serverError).to.have.been.calledWith('Internal Server Error', res);
             });
         });
     });

@@ -39,10 +39,7 @@ describe('config/routes.config.js routes', () => {
 
     describe('Main application entry point and health check', () => {
         it('routes GET /', () => {
-            expect(mockRouter.get).to.have.been.calledWith(
-                '/',
-                homeController.index
-            );
+            expect(mockRouter.get).to.have.been.calledWith('/', homeController.index);
         });
 
         it('routes GET /healthz', () => {
@@ -56,17 +53,11 @@ describe('config/routes.config.js routes', () => {
 
     describe('login/logout', () => {
         it('routes GET /api/login/:provider', () => {
-            expect(mockRouter.get).to.have.been.calledWith(
-                '/api/login/:provider',
-                auth.login
-            );
+            expect(mockRouter.get).to.have.been.calledWith('/api/login/:provider', auth.login);
         });
 
         it('routes POST /api/logout', () => {
-            expect(mockRouter.post).to.have.been.calledWith(
-                '/api/logout',
-                auth.logout
-            );
+            expect(mockRouter.post).to.have.been.calledWith('/api/logout', auth.logout);
         });
     });
 
@@ -79,10 +70,7 @@ describe('config/routes.config.js routes', () => {
         });
 
         it('routes GET /api/oauth/return', () => {
-            expect(mockRouter.get).to.have.been.calledWith(
-                '/api/oauth/return',
-                auth.oauthReturn
-            );
+            expect(mockRouter.get).to.have.been.calledWith('/api/oauth/return', auth.oauthReturn);
         });
     });
 
@@ -152,21 +140,21 @@ describe('config/routes.config.js routes', () => {
                 googleProviderThreatmodelController.folders
             );
         });
-    
+
         it('routes POST /api/googleproviderthreatmodel/:folder/create', () => {
             expect(mockRouter.post).to.have.been.calledWith(
                 '/api/googleproviderthreatmodel/:folder/create',
                 googleProviderThreatmodelController.create
             );
         });
-    
+
         it('routes PUT /api/googleproviderthreatmodel/:file/update', () => {
             expect(mockRouter.put).to.have.been.calledWith(
                 '/api/googleproviderthreatmodel/:file/update',
                 googleProviderThreatmodelController.update
             );
         });
-    
+
         it('routes POST /api/googleproviderthreatmodel/:file/data', () => {
             expect(mockRouter.post).to.have.been.calledWith(
                 '/api/googleproviderthreatmodel/:file/data',
@@ -174,7 +162,6 @@ describe('config/routes.config.js routes', () => {
             );
         });
     });
-    
 
     it('adds bearer token middleware', () => {
         expect(mockRouter.use).to.have.been.calledWith(bearer.middleware);

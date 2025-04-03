@@ -56,7 +56,10 @@ import threatService from '@/service/threats/index.js';
 export default {
     name: 'TdReportEntity',
     props: {
-        entity: Object,
+        entity: {
+            type: Object,
+            default: () => ({})
+        },
         outOfScope: {
             type: Boolean,
             default: false
@@ -123,20 +126,20 @@ export default {
             }
             if (this.entity.data.privilegeLevel) {
                 properties +=
-                    this.$t('threatmodel.properties.privilegeLevel') +
-                    ': ' +
-                    this.entity.data.privilegeLevel +
-                    ', ';
+                        this.$t('threatmodel.properties.privilegeLevel') +
+                        ': ' +
+                        this.entity.data.privilegeLevel +
+                        ', ';
             }
             if (this.entity.data.providesAuthentication) {
                 properties += this.$t('threatmodel.properties.providesAuthentication') + ', ';
             }
             if (this.entity.data.protocol) {
                 properties +=
-                    this.$t('threatmodel.properties.protocol') +
-                    ' (' +
-                    this.entity.data.protocol +
-                    '), ';
+                        this.$t('threatmodel.properties.protocol') +
+                        ' (' +
+                        this.entity.data.protocol +
+                        '), ';
             }
             if (this.entity.data.publicNetwork) {
                 properties += this.$t('threatmodel.properties.publicNetwork') + ', ';
@@ -167,20 +170,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.td-threat-data {
-    width: 99%;
-    white-space: pre-wrap;
-}
+    .td-threat-data {
+        width: 99%;
+        white-space: pre-wrap;
+    }
 
-.entity-title {
-    font-size: 24px;
-    margin-top: 50px;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
+    .entity-title {
+        font-size: 24px;
+        margin-top: 50px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
 
-.entity-description {
-    padding: 15px;
-    white-space: pre-wrap;
-}
+    .entity-description {
+        padding: 15px;
+        white-space: pre-wrap;
+    }
 </style>

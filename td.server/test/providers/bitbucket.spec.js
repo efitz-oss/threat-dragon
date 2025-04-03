@@ -23,19 +23,20 @@ describe('providers/bitbucket.js', () => {
         const config = { BITBUCKET_CLIENT_ID: '1234567' };
 
         it('contains the bitbucket login oauth url', () => {
-            expect(bitbucketProvider.getOauthRedirectUrl()).to
-                .contain('https://bitbucket.org/site/oauth2/authorize');
+            expect(bitbucketProvider.getOauthRedirectUrl()).to.contain(
+                'https://bitbucket.org/site/oauth2/authorize'
+            );
         });
 
         it('adds the client_id', () => {
             sinon.stub(env, 'get').returns({ config });
-            expect(bitbucketProvider.getOauthRedirectUrl()).to
-                .contain(`client_id=${config.BITBUCKET_CLIENT_ID}`);
+            expect(bitbucketProvider.getOauthRedirectUrl()).to.contain(
+                `client_id=${config.BITBUCKET_CLIENT_ID}`
+            );
         });
 
         it('uses the default scope', () => {
-            expect(bitbucketProvider.getOauthRedirectUrl()).to
-                .contain('');
+            expect(bitbucketProvider.getOauthRedirectUrl()).to.contain('');
         });
 
         it('uses the configured scope', () => {
@@ -43,8 +44,7 @@ describe('providers/bitbucket.js', () => {
                 BITBUCKET_SCOPE: 'repo'
             });
             sinon.stub(env, 'get').returns({ config: scopedCfg });
-            expect(bitbucketProvider.getOauthRedirectUrl()).to
-                .contain('scope=repo');
+            expect(bitbucketProvider.getOauthRedirectUrl()).to.contain('scope=repo');
         });
     });
 
@@ -66,8 +66,7 @@ describe('providers/bitbucket.js', () => {
             });
 
             it('adds the code as a query param', () => {
-                expect(bitbucketProvider.getOauthReturnUrl(code)).to
-                    .contain(`code=${code}`);
+                expect(bitbucketProvider.getOauthReturnUrl(code)).to.contain(`code=${code}`);
             });
         });
 
@@ -81,7 +80,9 @@ describe('providers/bitbucket.js', () => {
             });
 
             it('returns an absolute url with the front-end port', () => {
-                const idx = bitbucketProvider.getOauthReturnUrl(code).indexOf('http://localhost:8080');
+                const idx = bitbucketProvider
+                    .getOauthReturnUrl(code)
+                    .indexOf('http://localhost:8080');
                 expect(idx).to.eq(0);
             });
         });
@@ -95,7 +96,7 @@ describe('providers/bitbucket.js', () => {
         const code = 'mycode';
 
         beforeEach(async () => {
-            sinon.stub(axios, 'post').resolves({ data: { access_token: '' }});
+            sinon.stub(axios, 'post').resolves({ data: { access_token: '' } });
             sinon.stub(env, 'get').returns({ config });
             sinon.stub(repo, 'userAsync').resolves({});
 
@@ -113,7 +114,7 @@ describe('providers/bitbucket.js', () => {
                 form,
                 {
                     headers: {
-                        'Content-Type': 'multipart/form-data; boundary=undefined',
+                        'Content-Type': 'multipart/form-data; boundary=undefined'
                     }
                 }
             );

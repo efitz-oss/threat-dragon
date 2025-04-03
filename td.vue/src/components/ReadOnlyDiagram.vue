@@ -55,8 +55,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.td-readonly-diagram {
-    min-height: 600px;
-    max-width: 95%;
-}
+    .td-readonly-diagram {
+        min-height: 600px;
+        max-width: 95%;
+    }
 </style>

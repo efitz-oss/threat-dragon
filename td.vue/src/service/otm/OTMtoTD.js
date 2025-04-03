@@ -29,35 +29,35 @@ const getDiagramType = (representation) => {
 
     if (representation.attributes && representation.attributes.diagramType) {
         switch (representation.attributes.diagramType) {
-            case 'CIA':
-                diagram.diagramType = 'CIA';
-                diagram.thumbnail = './public/content/images/thumbnail.cia.jpg';
-                diagram.placeholder = 'New CIA diagram description';
-                break;
-            case 'DIE':
-                diagram.diagramType = 'DIE';
-                diagram.thumbnail = './public/content/images/thumbnail.die.jpg';
-                diagram.placeholder = 'New DIE diagram description';
-                break;
-            case 'LINDDUN':
-                diagram.diagramType = 'LINDDUN';
-                diagram.thumbnail = './public/content/images/thumbnail.linddun.jpg';
-                diagram.placeholder = 'New LINDDUN diagram description';
-                break;
-            case 'PLOT4ai':
-                diagram.diagramType = 'PLOT4ai';
-                diagram.thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
-                diagram.placeholder = 'New PLOT4ai diagram description';
-                break;
-            case 'STRIDE':
-                diagram.diagramType = 'STRIDE';
-                diagram.thumbnail = './public/content/images/thumbnail.stride.jpg';
-                diagram.placeholder = 'New STRIDE diagram description';
-                break;
-            default:
-                diagram.diagramType = 'Generic';
-                diagram.thumbnail = './public/content/images/thumbnail.jpg';
-                diagram.placeholder = 'New generic diagram description';
+        case 'CIA':
+            diagram.diagramType = 'CIA';
+            diagram.thumbnail = './public/content/images/thumbnail.cia.jpg';
+            diagram.placeholder = 'New CIA diagram description';
+            break;
+        case 'DIE':
+            diagram.diagramType = 'DIE';
+            diagram.thumbnail = './public/content/images/thumbnail.die.jpg';
+            diagram.placeholder = 'New DIE diagram description';
+            break;
+        case 'LINDDUN':
+            diagram.diagramType = 'LINDDUN';
+            diagram.thumbnail = './public/content/images/thumbnail.linddun.jpg';
+            diagram.placeholder = 'New LINDDUN diagram description';
+            break;
+        case 'PLOT4ai':
+            diagram.diagramType = 'PLOT4ai';
+            diagram.thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
+            diagram.placeholder = 'New PLOT4ai diagram description';
+            break;
+        case 'STRIDE':
+            diagram.diagramType = 'STRIDE';
+            diagram.thumbnail = './public/content/images/thumbnail.stride.jpg';
+            diagram.placeholder = 'New STRIDE diagram description';
+            break;
+        default:
+            diagram.diagramType = 'Generic';
+            diagram.thumbnail = './public/content/images/thumbnail.jpg';
+            diagram.placeholder = 'New generic diagram description';
         }
     } else {
         diagram.diagramType = 'Generic';

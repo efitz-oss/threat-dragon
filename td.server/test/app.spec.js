@@ -19,7 +19,7 @@ describe.skip('app.js main application', () => {
     beforeEach(() => {
         // Create a fresh sandbox for each test
         sandbox = sinon.createSandbox();
-        
+
         // Setup mocks
         mockApp = getMockApp();
         sandbox.stub(expressHelper, 'getInstance').returns(mockApp);
@@ -58,7 +58,7 @@ describe.skip('app.js main application', () => {
         it('uses dotenv config', () => {
             expect(envConfig.tryLoadDotEnv).to.have.been.calledOnce;
         });
-        
+
         it('uses /public for static content', () => {
             expect(mockApp.use).to.have.been.calledWith('/public', sinon.match.any);
             expect(express.static).to.have.been.calledWith(sinon.match('dist'));

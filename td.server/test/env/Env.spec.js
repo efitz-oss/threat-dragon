@@ -199,7 +199,7 @@ describe('env/Env.js', () => {
                 sandbox.stub(dotenv, 'config');
                 env._tryLoadDotEnv();
             });
-    
+
             it('uses the default env file path', () => {
                 expect(fs.existsSync).to.have.been.calledWith(env._defaultEnvFilePath);
             });
@@ -219,19 +219,25 @@ describe('env/Env.js', () => {
         ];
 
         class TestEnv extends Env {
-            constructor() {super('test'); }
-            get prefix() { return prefix; }
-            get properties() { return props; }
+            constructor() {
+                super('test');
+            }
+            get prefix() {
+                return prefix;
+            }
+            get properties() {
+                return props;
+            }
         }
 
         describe('with missing required properties', () => {
             let previousTest2Value;
-            
+
             beforeEach(() => {
                 // Clear the TEST_TEST2 environment variable to ensure test works
                 previousTest2Value = process.env.TEST_TEST2;
                 delete process.env.TEST_TEST2;
-                
+
                 process.env.TEST_TEST1 = 'foo';
                 env = new TestEnv();
 
@@ -248,7 +254,11 @@ describe('env/Env.js', () => {
             });
 
             it('attempts to read a file based property', () => {
-                try { env._loadConfig(); } catch (e) { /* Expected error, safe to ignore */ }
+                try {
+                    env._loadConfig();
+                } catch (e) {
+                    /* Expected error, safe to ignore */
+                }
                 expect(env.tryReadFromFile).to.have.been.called;
             });
 

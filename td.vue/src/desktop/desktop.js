@@ -4,7 +4,7 @@ import { app, protocol, BrowserWindow, Menu, ipcMain } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import menu from './menu.js';
 import logger from './logger.js';
-import { electronURL, isDevelopment, isTest, isMacOS, isWin } from './utils.js';
+import { electronURL, isDevelopment, isMacOS, isWin } from './utils.js';
 
 // Import dependencies directly to simplify the build process
 const { autoUpdater } = require('electron-updater');

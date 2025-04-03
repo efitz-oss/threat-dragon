@@ -61,7 +61,10 @@ export default {
         TdReportEntity
     },
     props: {
-        diagram: Object,
+        diagram: {
+            type: Object,
+            default: () => ({})
+        },
         showDiagram: {
             type: Boolean,
             default: true
@@ -88,12 +91,12 @@ export default {
             return this.diagram.cells.filter(
                 (x) =>
                     !!x.data &&
-                    !!x.data.threats &&
-                    (this.showOutOfScope || !x.data.outOfScope) &&
-                    (this.showEmpty ||
-                        x.data.threats.some(
-                            (y) => this.showMitigated || y.status.toLowerCase() !== 'mitigated'
-                        ))
+                        !!x.data.threats &&
+                        (this.showOutOfScope || !x.data.outOfScope) &&
+                        (this.showEmpty ||
+                            x.data.threats.some(
+                                (y) => this.showMitigated || y.status.toLowerCase() !== 'mitigated'
+                            ))
             );
         }
     }
@@ -101,8 +104,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.diagram-drawing {
-    min-height: 600px;
-    display: flex !important;
-}
+    .diagram-drawing {
+        min-height: 600px;
+        display: flex !important;
+    }
 </style>

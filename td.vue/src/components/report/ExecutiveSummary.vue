@@ -41,7 +41,8 @@ export default {
     props: {
         summary: {
             type: String,
-            required: false
+            required: false,
+            default: ''
         },
         threats: {
             type: Array,
@@ -89,12 +90,14 @@ export default {
             ).length;
         },
         openLow: function () {
-            return this.getOpenThreats().filter((threat) => threat.severity.toLowerCase() === 'low')
-                .length;
+            return this.getOpenThreats().filter(
+                (threat) => threat.severity.toLowerCase() === 'low'
+            ).length;
         },
         openTbd: function () {
-            return this.getOpenThreats().filter((threat) => threat.severity.toLowerCase() === 'tbd')
-                .length;
+            return this.getOpenThreats().filter(
+                (threat) => threat.severity.toLowerCase() === 'tbd'
+            ).length;
         },
         openUnknown: function () {
             return this.getOpenThreats().filter((threat) => !threat.severity).length;
@@ -116,7 +119,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.td-summary {
-    white-space: pre-wrap;
-}
+    .td-summary {
+        white-space: pre-wrap;
+    }
 </style>

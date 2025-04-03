@@ -157,6 +157,4 @@ describe('controllers/error.js', () => {
             expect(res).to.deep.equal(mockResponse);
         });
     });
-
-
 });

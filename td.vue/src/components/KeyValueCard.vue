@@ -17,14 +17,20 @@
 export default {
     name: 'TdKeyValueCard',
     props: {
-        title: String,
-        values: Array
+        title: {
+            type: String,
+            default: ''
+        },
+        values: {
+            type: Array,
+            default: () => []
+        }
     }
 };
 </script>
 
 <style lang="scss" scoped>
-.td-card {
-    font-size: 14px;
-}
+    .td-card {
+        font-size: 14px;
+    }
 </style>

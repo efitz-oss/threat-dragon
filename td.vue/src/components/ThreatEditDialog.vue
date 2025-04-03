@@ -18,7 +18,11 @@
                             :label="$t('threats.properties.title')"
                             label-for="title"
                         >
-                            <b-form-input id="title" v-model="threat.title" type="text" required />
+                            <b-form-input
+                                id="title"
+                                v-model="threat.title"
+                                type="text"
+                                required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -157,6 +161,14 @@ import threatModels from '@/service/threats/models/index.js';
 
 export default {
     name: 'TdThreatEditDialog',
+    data() {
+        return {
+            threat: {},
+            modelTypes: ['CIA', 'DIE', 'LINDDUN', 'PLOT4ai', 'STRIDE'],
+            number: 0,
+            newThreat: false
+        };
+    },
     computed: {
         ...mapState({
             cellRef: (state) => state.cell.ref,
@@ -198,13 +210,6 @@ export default {
             return this.$t('threats.edit') + ' #' + this.number;
         }
     },
-    data() {
-        return {
-            threat: {},
-            modelTypes: ['CIA', 'DIE', 'LINDDUN', 'PLOT4ai', 'STRIDE'],
-            number: 0
-        };
-    },
     methods: {
         editThreat(threatId, state) {
             const crnthreat = this.cellRef.data.threats.find((x) => x.id === threatId);
@@ -232,8 +237,9 @@ export default {
                 if (objRef.threatFrequency) {
                     Object.keys(objRef.threatFrequency).forEach((k) => {
                         if (
-                            this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`) ===
-                            this.threat.type
+                            this.$t(
+                                `threats.model.${this.threat.modelType.toLowerCase()}.${k}`
+                            ) === this.threat.type
                         )
                             objRef.threatFrequency[k]++;
                     });
@@ -260,7 +266,7 @@ export default {
                 Object.keys(threatMap).forEach((k) => {
                     if (
                         this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`) ===
-                        this.threat.type
+                            this.threat.type
                     )
                         threatMap[k]--;
                 });

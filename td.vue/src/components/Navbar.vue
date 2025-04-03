@@ -99,6 +99,17 @@ export default {
     components: {
         TdLocaleSelect
     },
+    computed: {
+        ...mapGetters(['username']),
+        ...mapState({
+            config: (state) => state.config.config
+        }),
+        googleEnabled() {
+            return (
+                this.config && this.config.googleEnabled && !this.$store.getters.isElectronMode
+            );
+        }
+    },
     mounted() {
         // Ensure Bootstrap's JavaScript is properly initialized for the navbar toggle
         const toggle = document.querySelector('.navbar-toggler');
@@ -109,15 +120,6 @@ export default {
                     target.classList.toggle('show');
                 }
             });
-        }
-    },
-    computed: {
-        ...mapGetters(['username']),
-        ...mapState({
-            config: (state) => state.config.config
-        }),
-        googleEnabled() {
-            return this.config && this.config.googleEnabled && !this.$store.getters.isElectronMode;
         }
     },
     methods: {
@@ -135,48 +137,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/styles/sizes.scss' as sizes;
-@use '@/styles/colors.scss' as colors;
-$icon-height: 1.2rem;
-.navbar {
-    background-color: colors.$orange;
-    border-color: colors.$orange-alt;
-    height: sizes.$header-height + 10;
-    font-size: 15px;
-}
-.nav-link,
-.logged-in-as {
-    color: colors.$white !important;
-}
-.logged-in-as {
-    margin-right: 10px;
-}
-.td-fa-nav {
-    font-size: $icon-height;
-    max-height: $icon-height;
-    margin: 0 5px 0 5px;
-}
-.td-brand {
-    color: colors.$white !important;
-    .td-brand-img {
-        max-height: (sizes.$header-height - 10);
+    @use '@/styles/sizes.scss' as sizes;
+    @use '@/styles/colors.scss' as colors;
+    $icon-height: 1.2rem;
+    .navbar {
+        background-color: colors.$orange;
+        border-color: colors.$orange-alt;
+        height: sizes.$header-height + 10;
+        font-size: 15px;
     }
-}
-@media (max-width: 576px) {
-    .nav-link {
-        color: colors.$red !important;
+    .nav-link,
+    .logged-in-as {
+        color: colors.$white !important;
     }
     .logged-in-as {
-        background-color: colors.$orange;
-        border-radius: 5px;
-        padding: 10px;
+        margin-right: 10px;
     }
-}
-@media (max-width: 576px) {
-    .td-owasp-logo {
-        background-color: colors.$red;
-        border-radius: 50%;
-        padding: 5px;
+    .td-fa-nav {
+        font-size: $icon-height;
+        max-height: $icon-height;
+        margin: 0 5px 0 5px;
     }
-}
+    .td-brand {
+        color: colors.$white !important;
+        .td-brand-img {
+            max-height: (sizes.$header-height - 10);
+        }
+    }
+    @media (max-width: 576px) {
+        .nav-link {
+            color: colors.$red !important;
+        }
+        .logged-in-as {
+            background-color: colors.$orange;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    }
+    @media (max-width: 576px) {
+        .td-owasp-logo {
+            background-color: colors.$red;
+            border-radius: 50%;
+            padding: 5px;
+        }
+    }
 </style>

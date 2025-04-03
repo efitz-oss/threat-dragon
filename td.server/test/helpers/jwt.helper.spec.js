@@ -29,7 +29,9 @@ describe('helpers/jwt.helper.js', () => {
         });
 
         it('encrypts the provider options', () => {
-            expect(encryptionHelper.encryptPromise).to.have.been.calledWith(JSON.stringify(providerOpts));
+            expect(encryptionHelper.encryptPromise).to.have.been.calledWith(
+                JSON.stringify(providerOpts)
+            );
         });
 
         it('uses the provider and user for the JWT', () => {
@@ -82,13 +84,14 @@ describe('helpers/jwt.helper.js', () => {
         });
 
         it('passes the token', () => {
-            expect(jsonwebtoken.verify).to.have.been
-                .calledWith(token, sinon.match.any);
+            expect(jsonwebtoken.verify).to.have.been.calledWith(token, sinon.match.any);
         });
 
         it('passes the signing key', () => {
-            expect(jsonwebtoken.verify).to.have.been
-                .calledWith(sinon.match.any, config.ENCRYPTION_JWT_SIGNING_KEY);
+            expect(jsonwebtoken.verify).to.have.been.calledWith(
+                sinon.match.any,
+                config.ENCRYPTION_JWT_SIGNING_KEY
+            );
         });
     });
 
@@ -101,13 +104,14 @@ describe('helpers/jwt.helper.js', () => {
         });
 
         it('passes the token', () => {
-            expect(jsonwebtoken.verify).to.have.been
-                .calledWith(token, sinon.match.any);
+            expect(jsonwebtoken.verify).to.have.been.calledWith(token, sinon.match.any);
         });
 
         it('passes the signing key', () => {
-            expect(jsonwebtoken.verify).to.have.been
-                .calledWith(sinon.match.any, config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY);
+            expect(jsonwebtoken.verify).to.have.been.calledWith(
+                sinon.match.any,
+                config.ENCRYPTION_JWT_REFRESH_SIGNING_KEY
+            );
         });
     });
 });

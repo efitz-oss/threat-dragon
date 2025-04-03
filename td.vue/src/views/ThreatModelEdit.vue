@@ -254,7 +254,7 @@ export default {
             evt.preventDefault();
             if (
                 this.$route.name === 'gitThreatModelCreate' ||
-                this.$route.name === 'googleThreatModelCreate'
+                    this.$route.name === 'googleThreatModelCreate'
             ) {
                 await this.$store.dispatch(tmActions.create);
             } else {
@@ -330,17 +330,17 @@ export default {
             this.model.detail.diagrams[idx].thumbnail = thumbnail;
             if (
                 this.model.detail.diagrams[idx].title ===
-                    this.$t('threatmodel.diagram.cia.defaultTitle') ||
-                this.model.detail.diagrams[idx].title ===
-                    this.$t('threatmodel.diagram.die.defaultTitle') ||
-                this.model.detail.diagrams[idx].title ===
-                    this.$t('threatmodel.diagram.linddun.defaultTitle') ||
-                this.model.detail.diagrams[idx].title ===
-                    this.$t('threatmodel.diagram.plot4ai.defaultTitle') ||
-                this.model.detail.diagrams[idx].title ===
-                    this.$t('threatmodel.diagram.stride.defaultTitle') ||
-                this.model.detail.diagrams[idx].title ===
-                    this.$t('threatmodel.diagram.generic.defaultTitle')
+                        this.$t('threatmodel.diagram.cia.defaultTitle') ||
+                    this.model.detail.diagrams[idx].title ===
+                        this.$t('threatmodel.diagram.die.defaultTitle') ||
+                    this.model.detail.diagrams[idx].title ===
+                        this.$t('threatmodel.diagram.linddun.defaultTitle') ||
+                    this.model.detail.diagrams[idx].title ===
+                        this.$t('threatmodel.diagram.plot4ai.defaultTitle') ||
+                    this.model.detail.diagrams[idx].title ===
+                        this.$t('threatmodel.diagram.stride.defaultTitle') ||
+                    this.model.detail.diagrams[idx].title ===
+                        this.$t('threatmodel.diagram.generic.defaultTitle')
             ) {
                 this.model.detail.diagrams[idx].title = defaultTitle;
             }
@@ -376,14 +376,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.add-diagram-link {
-    color: var(--orange);
-    font-size: 14px;
-}
-.remove-diagram-btn {
-    font-size: 12px;
-}
-.select-diagram-type {
-    font-size: 12px;
-}
+    .add-diagram-link {
+        color: var(--orange);
+        font-size: 14px;
+    }
+    .remove-diagram-btn {
+        font-size: 12px;
+    }
+    .select-diagram-type {
+        font-size: 12px;
+    }
 </style>

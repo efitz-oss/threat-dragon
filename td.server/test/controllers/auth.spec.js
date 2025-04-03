@@ -24,13 +24,14 @@ describe('controllers/auth.js', () => {
         mockRequest = getMockRequest();
         mockResponse = getMockResponse();
         sinon.stub(responseWrapper, 'sendResponse').callsFake((fn) => fn());
-        sinon.stub(responseWrapper, 'sendResponseAsync').callsFake(async (p) => { await p(); });
+        sinon.stub(responseWrapper, 'sendResponseAsync').callsFake(async (p) => {
+            await p();
+        });
         sinon.stub(tokenRepo, 'add');
     });
 
     describe('login', () => {
         describe('with a configured provider', () => {
-
             beforeEach(() => {
                 mockRequest.params.provider = 'foobar';
                 sinon.stub(providers, 'get').returns(providerStub);
@@ -48,7 +49,6 @@ describe('controllers/auth.js', () => {
         });
 
         describe('with an invalid provider', () => {
-
             beforeEach(() => {
                 mockRequest.params.provider = 'foobar';
                 sinon.stub(errors, 'badRequest');
@@ -87,11 +87,13 @@ describe('controllers/auth.js', () => {
 
         describe('development', () => {
             beforeEach(() => {
-                sinon.stub(env, 'get').returns({ config: { NODE_ENV: 'development' }});
-                sinon.stub(providerStub, 'getOauthReturnUrl').returns(`http://localhost:8080/oauth-return?code=${mockRequest.query.code}`);
+                sinon.stub(env, 'get').returns({ config: { NODE_ENV: 'development' } });
+                sinon
+                    .stub(providerStub, 'getOauthReturnUrl')
+                    .returns(`http://localhost:8080/oauth-return?code=${mockRequest.query.code}`);
                 auth.oauthReturn(mockRequest, mockResponse);
             });
-            
+
             it('redirects to the expected url', () => {
                 const expected = `http://localhost:8080/oauth-return?code=${mockRequest.query.code}`;
                 expect(mockResponse.redirect).to.have.been.calledWith(expected);
@@ -100,14 +102,16 @@ describe('controllers/auth.js', () => {
 
         describe('simulated production', () => {
             beforeEach(() => {
-                sinon.stub(env, 'get').returns({ config: { NODE_ENV: 'simulated_production' }});
+                sinon.stub(env, 'get').returns({ config: { NODE_ENV: 'simulated_production' } });
                 // Set mock request's protocol and host for proper baseUrl construction
                 mockRequest.protocol = 'http';
                 mockRequest.get.withArgs('host').returns('example.com');
-                sinon.stub(providerStub, 'getOauthReturnUrl').returns(`/oauth-return?code=${mockRequest.query.code}`);
+                sinon
+                    .stub(providerStub, 'getOauthReturnUrl')
+                    .returns(`/oauth-return?code=${mockRequest.query.code}`);
                 auth.oauthReturn(mockRequest, mockResponse);
             });
-            
+
             it('redirects to the expected url', () => {
                 const expected = `http://example.com/oauth-return?code=${mockRequest.query.code}`;
                 expect(mockResponse.redirect).to.have.been.calledWith(expected);
@@ -141,7 +145,9 @@ describe('controllers/auth.js', () => {
             });
 
             it('has the provider complete the login using the code', () => {
-                expect(providerStub.completeLoginAsync).to.have.been.calledWith(mockRequest.body.code);
+                expect(providerStub.completeLoginAsync).to.have.been.calledWith(
+                    mockRequest.body.code
+                );
             });
 
             it('generates the access and refresh tokens', () => {
@@ -165,23 +171,23 @@ describe('controllers/auth.js', () => {
             beforeEach(() => {
                 // Direct approach - replace auth.completeLogin with a mocked version just for this test
                 const originalMethod = auth.completeLogin;
-                
+
                 // Temporarily replace completeLogin with our own version
                 // that we know calls errors.badRequest directly
                 auth.completeLogin = (req, res) => {
                     errors.badRequest('Provider error', res);
                 };
-                
+
                 // Mock badRequest to check it's called
                 sinon.stub(errors, 'badRequest').returns('error response');
-                
+
                 // Make the call
                 auth.completeLogin(mockRequest, mockResponse);
-                
+
                 // Restore original function for subsequent tests
                 auth.completeLogin = originalMethod;
             });
-            
+
             it('sends a bad request error', () => {
                 expect(errors.badRequest).to.have.been.calledOnce;
                 expect(errors.badRequest.firstCall.args[0]).to.equal('Provider error');
@@ -222,7 +228,11 @@ describe('controllers/auth.js', () => {
             });
 
             it('creates a new token', () => {
-                expect(jwtHelper.createAsync).to.have.been.calledWith(provider.name, provider, user);
+                expect(jwtHelper.createAsync).to.have.been.calledWith(
+                    provider.name,
+                    provider,
+                    user
+                );
             });
         });
     });

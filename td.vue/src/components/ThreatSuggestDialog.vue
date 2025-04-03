@@ -17,7 +17,11 @@
                             :label="$t('threats.properties.title')"
                             label-for="title"
                         >
-                            <b-form-input id="title" v-model="threat.title" type="text" required />
+                            <b-form-input
+                                id="title"
+                                v-model="threat.title"
+                                type="text"
+                                required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -142,6 +146,14 @@ import { GetContextSuggestions } from '@/service/threats/oats/context-generator.
 import { v4 } from 'uuid';
 export default {
     name: 'TdThreatSuggest',
+    data() {
+        return {
+            suggestions: [],
+            types: [],
+            threat: {},
+            index: 0
+        };
+    },
     computed: {
         ...mapState({
             cellRef: (state) => state.cell.ref,
@@ -179,14 +191,6 @@ export default {
         modalTitle() {
             return this.$t('threats.newThreat') + ' #' + (this.threatTop + 1);
         }
-    },
-    data() {
-        return {
-            suggestions: [],
-            types: [],
-            threat: {},
-            index: 0
-        };
     },
     methods: {
         showModal(type) {
@@ -251,8 +255,8 @@ export default {
                 Object.keys(objRef.threatFrequency).forEach((k) => {
                     if (
                         this.$t(`threats.model.${this.modelType.toLowerCase()}.${k}`) ===
-                            this.threat.type &&
-                        this.threatTypes.includes(this.threat.type)
+                                this.threat.type &&
+                            this.threatTypes.includes(this.threat.type)
                     )
                         objRef.threatFrequency[k]++;
                 });

@@ -35,7 +35,7 @@ const edit = (container, diagram) => {
         getPlugin: (name) => {
             if (name === 'history') {
                 return {
-                    on: (event, callback) => {
+                    on: (event) => {
                         // Set up event listener but don't do anything
                         console.debug(`Set up ${event} listener for history plugin`);
                         // Return a no-op function as off() handler

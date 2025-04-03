@@ -71,7 +71,8 @@ const getGoogleAccessToken = async () => {
         }
 
         const data = await response.json();
-        if (!data.data || !data.data.accessToken) throw new Error('No access token in response');
+        if (!data.data || !data.data.accessToken)
+            throw new Error('No access token in response');
 
         return data.data.accessToken;
     } catch (error) {
@@ -163,7 +164,12 @@ const createPicker = () => {
 };
 
 const pickerCallback = async (data) => {
-    if (!data || !data.action || !google.picker || data.action !== google.picker.Action.PICKED) {
+    if (
+        !data ||
+            !data.action ||
+            !google.picker ||
+            data.action !== google.picker.Action.PICKED
+    ) {
         return;
     }
 
@@ -237,9 +243,12 @@ const pickerCallback = async (data) => {
 };
 
 const fetchFileContent = async (fileId) => {
-    const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-        headers: { Authorization: `Bearer ${accessToken.value}` }
-    });
+    const response = await fetch(
+        `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+        {
+            headers: { Authorization: `Bearer ${accessToken.value}` }
+        }
+    );
     if (!response.ok) {
         const errorText = await response.text();
         console.error('Google Drive API error:', errorText);
@@ -258,7 +267,10 @@ const saveFileToDrive = async (folderId, fileName, content) => {
         };
 
         const form = new FormData();
-        form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+        form.append(
+            'metadata',
+            new Blob([JSON.stringify(metadata)], { type: 'application/json' })
+        );
         form.append('file', new Blob([content], { type: 'application/json' }));
 
         const response = await fetch(
@@ -391,35 +403,35 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-/* Recreating BootstrapVue's b-jumbotron styling */
-.welcome-jumbotron {
-    background-color: #f8f9fa; /* Light grey background like BootstrapVue jumbotron */
-    padding: 3rem 2rem; /* Increase padding to match BootstrapVue */
-    border-radius: 0.3rem; /* Add rounded corners */
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Light shadow */
-    margin-bottom: 1.5rem; /* Space below jumbotron */
-    display: flex;
-    flex-direction: column;
-    min-height: 60vh; /* Ensure jumbotron takes most of the screen */
-}
+    /* Recreating BootstrapVue's b-jumbotron styling */
+    .welcome-jumbotron {
+        background-color: #f8f9fa; /* Light grey background like BootstrapVue jumbotron */
+        padding: 3rem 2rem; /* Increase padding to match BootstrapVue */
+        border-radius: 0.3rem; /* Add rounded corners */
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Light shadow */
+        margin-bottom: 1.5rem; /* Space below jumbotron */
+        display: flex;
+        flex-direction: column;
+        min-height: 60vh; /* Ensure jumbotron takes most of the screen */
+    }
 
-.flex-grow-1 {
-    flex-grow: 1;
-}
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
 
-.td-description {
-    font-size: 20px;
-    max-width: 80%;
-    margin: 10px auto; /* Center the description */
-    text-align: center;
-}
+    .td-description {
+        font-size: 20px;
+        max-width: 80%;
+        margin: 10px auto; /* Center the description */
+        text-align: center;
+    }
 
-.google-drive-button {
-    padding: 1rem 2rem;
-    font-size: 1.25rem;
-}
+    .google-drive-button {
+        padding: 1rem 2rem;
+        font-size: 1.25rem;
+    }
 
-.login-btn-icon {
-    display: block;
-}
+    .login-btn-icon {
+        display: block;
+    }
 </style>

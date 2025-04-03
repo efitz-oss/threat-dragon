@@ -143,7 +143,7 @@ const ell = {
                 'Εισάγετε μια περιγραφή υψηλού επιπέδου του συστήματος που μοντελοποιείται',
             reviewer: 'Όνομα Αξιολογητή'
         },
-        buttons: {
+        actions: {
             save: 'Αποθήκευση'
         },
         diagram: {
@@ -214,7 +214,7 @@ const ell = {
             storesCredentials: 'Αποθηκεύει στοιχεία πρόσβασης',
             storesInventory: 'Stores Inventory'
         },
-        buttons: {
+        controlButtons: {
             delete: 'Διαγραφή επιλεγμένων',
             redo: 'Επανάληψη',
             shortcuts: 'Συντομεύσεις Πληκτρολογίου',

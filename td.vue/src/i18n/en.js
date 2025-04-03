@@ -223,9 +223,6 @@ const eng = {
             description: 'Enter a high-level description of the system being modeled',
             reviewer: 'Reviewer Name'
         },
-        buttons: {
-            save: 'Save'
-        },
         diagram: {
             diagrams: 'Diagrams',
             addNewDiagram: 'Add a new diagram...',
@@ -300,7 +297,8 @@ const eng = {
             toggleGrid: 'Toggle grid',
             undo: 'Undo edit',
             zoomIn: 'Zoom in',
-            zoomOut: 'Zoom out'
+            zoomOut: 'Zoom out',
+            save: 'Save'
         },
         shortcuts: {
             title: 'Shortcuts',

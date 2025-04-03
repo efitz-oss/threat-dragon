@@ -138,7 +138,7 @@ const zho = {
             description: '输入所建模系统的高级描述',
             reviewer: '审稿人名称'
         },
-        buttons: {
+        actions: {
             save: '保存'
         },
         diagram: {
@@ -208,7 +208,7 @@ const zho = {
             storesCredentials: '存储凭证',
             storesInventory: '存储库存'
         },
-        buttons: {
+        controlButtons: {
             delete: '删除选中',
             redo: '重做',
             shortcuts: '键盘快捷键',

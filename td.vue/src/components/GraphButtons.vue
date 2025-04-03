@@ -3,49 +3,49 @@
         <td-form-button
             :on-btn-click="deleteSelected"
             icon="trash"
-            :title="t('threatmodel.buttons.delete')"
+            :title="t('threatmodel.controlButtons.delete')"
             text=""
         />
 
         <td-form-button
             :on-btn-click="showShortcuts"
             icon="keyboard"
-            :title="t('threatmodel.buttons.shortcuts')"
+            :title="t('threatmodel.controlButtons.shortcuts')"
             text=""
         />
 
         <td-form-button
             :on-btn-click="undo"
             icon="undo"
-            :title="t('threatmodel.buttons.undo')"
+            :title="t('threatmodel.controlButtons.undo')"
             text=""
         />
 
         <td-form-button
             :on-btn-click="redo"
             icon="redo"
-            :title="t('threatmodel.buttons.redo')"
+            :title="t('threatmodel.controlButtons.redo')"
             text=""
         />
 
         <td-form-button
             :on-btn-click="zoomIn"
             icon="search-plus"
-            :title="t('threatmodel.buttons.zoomIn')"
+            :title="t('threatmodel.controlButtons.zoomIn')"
             text=""
         />
 
         <td-form-button
             :on-btn-click="zoomOut"
             icon="search-minus"
-            :title="t('threatmodel.buttons.zoomOut')"
+            :title="t('threatmodel.controlButtons.zoomOut')"
             text=""
         />
 
         <td-form-button
             :on-btn-click="toggleGrid"
             icon="th"
-            :title="t('threatmodel.buttons.toggleGrid')"
+            :title="t('threatmodel.controlButtons.toggleGrid')"
             text=""
         />
 
@@ -76,25 +76,27 @@ export default {
     components: {
         TdFormButton
     },
+    props: {
+        graph: {
+            required: true,
+            type: Object
+        }
+    },
+    emits: ['saved', 'closed'],
     setup() {
         // Use the composition API for i18n
         const { t } = useI18n();
 
         return { t };
     },
-    computed: mapState({
-        diagram: (state) => state.threatmodel.selectedDiagram
-    }),
     data() {
         return {
             gridShowing: true
         };
     },
-    props: {
-        graph: {
-            required: true
-        }
-    },
+    computed: mapState({
+        diagram: (state) => state.threatmodel.selectedDiagram
+    }),
     methods: {
         save() {
             this.$emit('saved');

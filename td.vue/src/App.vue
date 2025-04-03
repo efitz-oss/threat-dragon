@@ -41,13 +41,13 @@ export default {
 </script>
 
 <style lang="scss">
-@use '@/styles/sizes.scss' as sizes;
-/* Font imports don't need to be changed - they're standard CSS imports, not Sass imports */
-@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700');
+    @use '@/styles/sizes.scss' as sizes;
+    /* Font imports don't need to be changed - they're standard CSS imports, not Sass imports */
+    @import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700');
 
-#app {
-    font-size: 20px;
-    line-height: 1.42857143;
-    margin-top: (sizes.$header-height + 15px);
-}
+    #app {
+        font-size: 20px;
+        line-height: 1.42857143;
+        margin-top: (sizes.$header-height + 15px);
+    }
 </style>

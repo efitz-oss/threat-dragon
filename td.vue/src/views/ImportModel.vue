@@ -65,7 +65,7 @@ import openThreatModel from '@/service/otm/openThreatModel.js';
 import TdFormButton from '@/components/FormButton.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import { isValidSchema } from '@/service/schema/ajv';
-import { BRow, BCol, BForm, BFormGroup, BFormTextarea, BButtonGroup } from 'bootstrap-vue-next';
+// Components imported automatically via bootstrap-vue-next plugin
 
 // only search for text files
 const pickerFileOptions = {
@@ -85,6 +85,11 @@ export default {
     components: {
         TdFormButton
     },
+    data() {
+        return {
+            tmJson: ''
+        };
+    },
     computed: {
         ...mapState({
             providerType: (state) => getProviderType(state.provider.selected)
@@ -92,16 +97,11 @@ export default {
         prompt() {
             return (
                 '{ ' +
-                this.$t('threatmodel.dragAndDrop') +
-                this.$t('threatmodel.jsonPaste') +
-                ' ... }'
+                    this.$t('threatmodel.dragAndDrop') +
+                    this.$t('threatmodel.jsonPaste') +
+                    ' ... }'
             );
         }
-    },
-    data() {
-        return {
-            tmJson: ''
-        };
     },
     methods: {
         onDropFile(event) {
@@ -186,7 +186,9 @@ export default {
                     threatmodel: jsonModel.summary.title
                 });
             } catch (e) {
-                this.$toast.error(this.$t('threatmodel.errors.invalidJson') + ' : ' + e.message);
+                this.$toast.error(
+                    this.$t('threatmodel.errors.invalidJson') + ' : ' + e.message
+                );
                 console.error(e);
                 return;
             }

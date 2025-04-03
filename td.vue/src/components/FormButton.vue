@@ -19,7 +19,8 @@ export default {
         },
         icon: {
             type: String,
-            required: false
+            required: false,
+            default: ''
         },
         iconPreface: {
             type: String,
@@ -40,7 +41,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
-    font-size: 14px;
-}
+    button {
+        font-size: 14px;
+    }
 </style>

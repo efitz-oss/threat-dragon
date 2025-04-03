@@ -105,9 +105,9 @@ export default {
     }),
     mounted() {
         const threatTop =
-            this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
+                this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
         const diagramTop =
-            this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
+                this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
         const update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
         console.debug('updates: ' + JSON.stringify(update));
         this.$store.dispatch(tmActions.update, update);
@@ -123,7 +123,10 @@ export default {
         },
         onReportClick(evt) {
             evt.preventDefault();
-            this.$router.push({ name: `${this.providerType}Report`, params: this.$route.params });
+            this.$router.push({
+                name: `${this.providerType}Report`,
+                params: this.$route.params
+            });
         },
         onCloseClick(evt) {
             evt.preventDefault();
@@ -150,19 +153,19 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@use '@/styles/colors.scss' as colors; /* Import the SCSS file with color variables */
-.tm-card {
-    font-size: 14px;
-    white-space: pre-wrap;
-}
-.diagram-header-text a {
-    color: colors.$black;
-}
-.diagram-description-text a {
-    color: colors.$black;
-}
-.td-diagram-thumb {
-    max-width: 200px;
-    max-height: 160px;
-}
+    @use '@/styles/colors.scss' as colors; /* Import the SCSS file with color variables */
+    .tm-card {
+        font-size: 14px;
+        white-space: pre-wrap;
+    }
+    .diagram-header-text a {
+        color: colors.$black;
+    }
+    .diagram-description-text a {
+        color: colors.$black;
+    }
+    .td-diagram-thumb {
+        max-width: 200px;
+        max-height: 160px;
+    }
 </style>

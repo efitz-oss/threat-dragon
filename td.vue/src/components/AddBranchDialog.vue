@@ -55,9 +55,17 @@
         </form>
         <hr />
         <div class="d-flex justify-content-end">
-            <b-overlay :show="wait" variant="light" blur="true"
-opacity="0.8" spinner-small>
-                <b-button variant="primary" type="submit" class="m-1" @click="addBranch">
+            <b-overlay
+                :show="wait"
+                variant="light"
+                blur="true"
+                opacity="0.8"
+                spinner-small>
+                <b-button
+                    variant="primary"
+                    type="submit"
+                    class="m-1"
+                    @click="addBranch">
                     {{ $t('branch.add') }}
                 </b-button>
             </b-overlay>
@@ -79,13 +87,14 @@ export default {
                 return value.every((branch) => {
                     return (
                         typeof branch === 'string' ||
-                        (branch.value && typeof branch.value === 'string')
+                            (branch.value && typeof branch.value === 'string')
                     );
                 });
             },
             required: true
         }
     },
+    emits: ['close-dialog'],
     data() {
         return {
             newBranchName: '',

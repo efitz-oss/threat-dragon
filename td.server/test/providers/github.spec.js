@@ -23,19 +23,20 @@ describe('providers/github.js', () => {
         const config = { GITHUB_CLIENT_ID: '1234567' };
 
         it('contains the github login oauth url', () => {
-            expect(githubProvider.getOauthRedirectUrl()).to
-                .contain('https://github.com/login/oauth/authorize');
+            expect(githubProvider.getOauthRedirectUrl()).to.contain(
+                'https://github.com/login/oauth/authorize'
+            );
         });
 
         it('adds the client_id', () => {
             sinon.stub(env, 'get').returns({ config });
-            expect(githubProvider.getOauthRedirectUrl()).to
-                .contain(`client_id=${config.GITHUB_CLIENT_ID}`);
+            expect(githubProvider.getOauthRedirectUrl()).to.contain(
+                `client_id=${config.GITHUB_CLIENT_ID}`
+            );
         });
 
         it('uses the default scope', () => {
-            expect(githubProvider.getOauthRedirectUrl()).to
-                .contain('scope=public_repo');
+            expect(githubProvider.getOauthRedirectUrl()).to.contain('scope=public_repo');
         });
 
         it('uses the configured scope', () => {
@@ -43,8 +44,7 @@ describe('providers/github.js', () => {
                 GITHUB_SCOPE: 'repo'
             });
             sinon.stub(env, 'get').returns({ config: scopedCfg });
-            expect(githubProvider.getOauthRedirectUrl()).to
-                .contain('scope=repo');
+            expect(githubProvider.getOauthRedirectUrl()).to.contain('scope=repo');
         });
     });
 
@@ -66,8 +66,7 @@ describe('providers/github.js', () => {
             });
 
             it('adds the code as a query param', () => {
-                expect(githubProvider.getOauthReturnUrl(code)).to
-                    .contain(`code=${code}`);
+                expect(githubProvider.getOauthReturnUrl(code)).to.contain(`code=${code}`);
             });
         });
 
@@ -95,7 +94,7 @@ describe('providers/github.js', () => {
         const code = 'mycode';
 
         beforeEach(async () => {
-            sinon.stub(axios, 'post').resolves({ data: { access_token: '' }});
+            sinon.stub(axios, 'post').resolves({ data: { access_token: '' } });
             sinon.stub(env, 'get').returns({ config });
             sinon.stub(repo, 'userAsync').resolves({});
 

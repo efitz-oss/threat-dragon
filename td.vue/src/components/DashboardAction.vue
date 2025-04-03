@@ -36,20 +36,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/styles/colors.scss' as colors;
-.action-icon {
-    color: colors.$orange;
-    margin-bottom: 15px;
-}
+    @use '@/styles/colors.scss' as colors;
+    .action-icon {
+        color: colors.$orange;
+        margin-bottom: 15px;
+    }
 
-.action-pane {
-    min-height: 100%;
-    margin-bottom: 0px;
-}
-.action-pane:hover {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
-.action-pane-link:hover {
-    text-decoration: none;
-}
+    .action-pane {
+        min-height: 100%;
+        margin-bottom: 0px;
+    }
+    .action-pane:hover {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .action-pane-link:hover {
+        text-decoration: none;
+    }
 </style>

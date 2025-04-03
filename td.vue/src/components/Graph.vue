@@ -59,15 +59,15 @@ export default {
         TdThreatEditDialog,
         TdThreatSuggestDialog
     },
-    computed: mapState({
-        diagram: (state) => state.threatmodel.selectedDiagram,
-        providerType: (state) => getProviderType(state.provider.selected)
-    }),
     data() {
         return {
             graph: null
         };
     },
+    computed: mapState({
+        diagram: (state) => state.threatmodel.selectedDiagram,
+        providerType: (state) => getProviderType(state.provider.selected)
+    }),
     async mounted() {
         this.init();
     },
@@ -122,7 +122,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.td-graph-title {
-    margin-right: 15px;
-}
+    .td-graph-title {
+        margin-right: 15px;
+    }
 </style>

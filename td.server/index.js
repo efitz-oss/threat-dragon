@@ -14,10 +14,12 @@ const importAppFactory = async () => {
     const appFactory = await importAppFactory();
     const app = appFactory.create();
 
-    const server = app.listen(app.get('port'), function() {
+    const server = app.listen(app.get('port'), function () {
         const address = server.address();
         if (address) {
-            console.log('Express server listening at ' + address.address + ' on port ' + address.port);
+            console.log(
+                'Express server listening at ' + address.address + ' on port ' + address.port
+            );
         } else {
             console.log('Express server listening on port ' + app.get('port'));
         }

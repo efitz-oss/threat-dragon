@@ -1,5 +1,5 @@
 import 'mutationobserver-shim';
-import { createApp, h } from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
 import i18nFactory, { tc } from './i18n/index.js';
 import router from './router/index.js';
@@ -52,8 +52,7 @@ store.commit(CONFIG_LOADED, {
     }
 });
 
-// Configure router base path for Electron
-const routerInstance = router.get();
+// Configure router for desktop mode
 console.log('Router configured for desktop mode');
 
 // Set up Vue globals for desktop mode
@@ -129,8 +128,7 @@ const getConfirmModal = async () => {
 };
 
 // request from electron to renderer to close the application
-window.electronAPI.onCloseAppRequest(async (_event) => {
-    // eslint-disable-line no-unused-vars
+window.electronAPI.onCloseAppRequest(async () => {
     console.debug('Close application request');
     const store = app.$store || vueApp.config.globalProperties.$store;
     if (!store.getters.modelChanged || (await getConfirmModal())) {
@@ -141,7 +139,7 @@ window.electronAPI.onCloseAppRequest(async (_event) => {
 });
 
 // request from electron to renderer to close the model
-window.electronAPI.onCloseModelRequest(async (_event, fileName) => {
+window.electronAPI.onCloseModelRequest(async (_, fileName) => {
     console.debug('Close model request for file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
@@ -161,7 +159,7 @@ window.electronAPI.onCloseModelRequest(async (_event, fileName) => {
 });
 
 // request from electron to renderer to start a new model
-window.electronAPI.onNewModelRequest(async (_event, fileName) => {
+window.electronAPI.onNewModelRequest(async (_, fileName) => {
     console.debug('New model request  with file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
@@ -178,7 +176,7 @@ window.electronAPI.onNewModelRequest(async (_event, fileName) => {
 });
 
 // provide renderer with model contents from electron
-window.electronAPI.onOpenModel((_event, fileName, jsonModel) => {
+window.electronAPI.onOpenModel((_, fileName, jsonModel) => {
     console.debug('Open model with file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
@@ -249,7 +247,7 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) => {
 });
 
 // request from electron to renderer to provide new model contents
-window.electronAPI.onOpenModelRequest(async (_event, fileName) => {
+window.electronAPI.onOpenModelRequest(async (_, fileName) => {
     console.debug('Open request for model file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
 
@@ -260,7 +258,7 @@ window.electronAPI.onOpenModelRequest(async (_event, fileName) => {
 });
 
 // request from electron to renderer to print the model report
-window.electronAPI.onPrintModelRequest(async (_event, format) => {
+window.electronAPI.onPrintModelRequest(async (_, format) => {
     console.debug('Print report request for model using format : ' + format);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
@@ -282,7 +280,7 @@ window.electronAPI.onPrintModelRequest(async (_event, format) => {
 });
 
 // request from electron to renderer to provide the model data so that it can be saved
-window.electronAPI.onSaveModelRequest((_event, fileName) => {
+window.electronAPI.onSaveModelRequest((_, fileName) => {
     console.debug('Save model request for file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
 

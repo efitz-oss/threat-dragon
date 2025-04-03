@@ -139,7 +139,7 @@ const por = {
             description: 'Insira uma descrição de alto nível do sistema sendo modelado',
             reviewer: 'Nome do Revisor'
         },
-        buttons: {
+        actions: {
             save: 'Salvar'
         },
         diagram: {
@@ -210,7 +210,7 @@ const por = {
             storesCredentials: 'Armazenamento de Credenciais',
             storesInventory: 'Stores Inventory'
         },
-        buttons: {
+        controlButtons: {
             delete: 'Delete selected',
             redo: 'Redo edit',
             shortcuts: 'Keyboard shortcuts',

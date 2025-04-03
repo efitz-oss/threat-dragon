@@ -221,7 +221,7 @@ const fra = {
                 'Entrez une description de haut niveau du système en cours de modélisation',
             reviewer: 'Nom du réviseur'
         },
-        buttons: {
+        actions: {
             save: 'Enregistrer'
         },
         diagram: {
@@ -292,7 +292,7 @@ const fra = {
             storesCredentials: "Conserve les informations d'identification",
             storesInventory: 'Stores Inventory'
         },
-        buttons: {
+        controlButtons: {
             delete: 'Supprimer la sélection',
             redo: 'Rétablir',
             shortcuts: 'Raccourcis clavier',

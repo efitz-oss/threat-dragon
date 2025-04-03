@@ -64,30 +64,30 @@ const getThreatTypesByElement = (modelType, cellType) => {
     let types;
 
     switch (modelType.toUpperCase()) {
-        case 'CIA':
-            types = cia;
-            break;
+    case 'CIA':
+        types = cia;
+        break;
 
-        case 'DIE':
-            types = die;
-            break;
+    case 'DIE':
+        types = die;
+        break;
 
-        case 'LINDDUN':
-            if (cellType === 'tm.Actor') {
-                types = linddun.actor;
-            } else {
-                types = linddun.default;
-            }
-            break;
+    case 'LINDDUN':
+        if (cellType === 'tm.Actor') {
+            types = linddun.actor;
+        } else {
+            types = linddun.default;
+        }
+        break;
 
-        case 'PLOT4AI':
-            switch (cellType) {
-                case 'tm.Actor':
+    case 'PLOT4AI':
+        switch (cellType) {
+        case 'tm.Actor':
             types = plot4ai.actor;
             break;
         case 'tm.Process':
             types = plot4ai.process;
-                    break;
+            break;
         case 'tm.Store':
             types = plot4ai.store;
             break;
@@ -95,17 +95,17 @@ const getThreatTypesByElement = (modelType, cellType) => {
         default:
             types = plot4ai.flow;
             break;
-            }
-            break;
+        }
+        break;
 
-        case 'STRIDE':
-            switch (cellType) {
-                case 'tm.Actor':
+    case 'STRIDE':
+        switch (cellType) {
+        case 'tm.Actor':
             types = stride.actor;
-                    break;
+            break;
         case 'tm.Process':
-                    types = stride.process;
-                    break;
+            types = stride.process;
+            break;
         case 'tm.Store':
             types = stride.store;
             break;
@@ -113,11 +113,11 @@ const getThreatTypesByElement = (modelType, cellType) => {
         default:
             types = stride.flow;
             break;
-            }
-            break;
+        }
+        break;
 
-        default:
-            return generic;
+    default:
+        return generic;
     }
     /**
      * swapping the key-value pairs of types to be consistent with how generic (returned as default)

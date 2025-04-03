@@ -22,15 +22,15 @@ describe('Google Drive Service', () => {
                     list: sandbox.stub(),
                     create: sandbox.stub(),
                     update: sandbox.stub(),
-                    delete: sandbox.stub(),
+                    delete: sandbox.stub()
                 }
             };
 
             oauth2ClientStub = sandbox.stub(google.auth, 'OAuth2');
             oauth2ClientStub.returns({
-                setCredentials: sinon.stub(),
+                setCredentials: sinon.stub()
             });
-            
+
             sandbox.stub(google, 'drive').returns(mockDriveClient);
         }
     });
@@ -54,10 +54,10 @@ describe('Google Drive Service', () => {
         it('should return folder details', async () => {
             if (skipIfRealApis()) return;
 
-            const expectedResponse = { 
-                id: testFolderId, 
-                name: 'Test Folder', 
-                mimeType: 'application/vnd.google-apps.folder' 
+            const expectedResponse = {
+                id: testFolderId,
+                name: 'Test Folder',
+                mimeType: 'application/vnd.google-apps.folder'
             };
 
             mockDriveClient.files.get.resolves({ data: expectedResponse });
@@ -67,7 +67,7 @@ describe('Google Drive Service', () => {
             expect(result).to.deep.equal(expectedResponse);
             expect(mockDriveClient.files.get).to.have.been.calledWith({
                 fileId: testFolderId,
-                fields: 'id, name, mimeType',
+                fields: 'id, name, mimeType'
             });
         });
     });
@@ -78,21 +78,25 @@ describe('Google Drive Service', () => {
 
             const expectedResponse = {
                 files: [{ id: 'fileId', name: 'Test File', mimeType: 'application/json' }],
-                nextPageToken: 'nextToken',
+                nextPageToken: 'nextToken'
             };
 
             mockDriveClient.files.list.resolves({ data: expectedResponse });
 
-            const result = await googledrive.listFilesInFolderAsync(testFolderId, null, accessToken);
+            const result = await googledrive.listFilesInFolderAsync(
+                testFolderId,
+                null,
+                accessToken
+            );
 
             expect(result).to.deep.equal({
                 folders: expectedResponse.files,
-                nextPageToken: expectedResponse.nextPageToken,
+                nextPageToken: expectedResponse.nextPageToken
             });
             expect(mockDriveClient.files.list).to.have.been.calledWith({
                 q: `'${testFolderId}' in parents and (mimeType='application/vnd.google-apps.folder' or mimeType='application/json')`,
                 fields: 'nextPageToken, files(id, name, parents, mimeType)',
-                pageSize: 10,
+                pageSize: 10
             });
         });
     });
@@ -110,7 +114,7 @@ describe('Google Drive Service', () => {
             expect(result).to.equal('parentId');
             expect(mockDriveClient.files.get).to.have.been.calledWith({
                 fileId: testFolderId,
-                fields: 'id, name, parents',
+                fields: 'id, name, parents'
             });
         });
     });
@@ -128,7 +132,7 @@ describe('Google Drive Service', () => {
             expect(result).to.deep.equal(expectedResponse);
             expect(mockDriveClient.files.get).to.have.been.calledWith({
                 fileId: testFileId,
-                alt: 'media',
+                alt: 'media'
             });
         });
     });
@@ -143,19 +147,24 @@ describe('Google Drive Service', () => {
 
             mockDriveClient.files.create.resolves({ data: expectedResponse });
 
-            const result = await googledrive.createFileInFolderAsync(testFolderId, fileName, fileContent, accessToken);
+            const result = await googledrive.createFileInFolderAsync(
+                testFolderId,
+                fileName,
+                fileContent,
+                accessToken
+            );
 
             expect(result).to.deep.equal(expectedResponse);
             expect(mockDriveClient.files.create).to.have.been.calledWith({
                 resource: {
                     name: fileName,
-                    parents: [testFolderId],
+                    parents: [testFolderId]
                 },
                 media: {
                     mimeType: 'application/json',
-                    body: JSON.stringify(fileContent, null, '  '),
+                    body: JSON.stringify(fileContent, null, '  ')
                 },
-                fields: 'id',
+                fields: 'id'
             });
         });
     });
@@ -176,9 +185,9 @@ describe('Google Drive Service', () => {
                 fileId: testFileId,
                 media: {
                     mimeType: 'application/json',
-                    body: JSON.stringify(fileContent, null, '  '),
+                    body: JSON.stringify(fileContent, null, '  ')
                 },
-                fields: 'id',
+                fields: 'id'
             });
         });
     });

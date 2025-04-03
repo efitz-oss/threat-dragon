@@ -67,7 +67,8 @@ export default {
     props: {
         summary: {
             type: String,
-            required: false
+            required: false,
+            default: ''
         },
         threats: {
             type: Array,
@@ -97,8 +98,9 @@ export default {
             ).length;
         },
         openLow: function () {
-            return this.getOpenThreats().filter((threat) => threat.severity.toLowerCase() === 'low')
-                .length;
+            return this.getOpenThreats().filter(
+                (threat) => threat.severity.toLowerCase() === 'low'
+            ).length;
         },
         openUnknown: function () {
             return this.getOpenThreats().filter((threat) => !threat.severity).length;
@@ -115,9 +117,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page {
-    display: flex;
-    flex-direction: column;
-    white-space: pre-wrap;
-}
+    .page {
+        display: flex;
+        flex-direction: column;
+        white-space: pre-wrap;
+    }
 </style>

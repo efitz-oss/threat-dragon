@@ -317,7 +317,8 @@ export default {
             this.updateComponent();
         },
         onChangeScope() {
-            document.getElementById('reasonoutofscope').disabled = !this.cellRef.data.outOfScope;
+            document.getElementById('reasonoutofscope').disabled =
+                    !this.cellRef.data.outOfScope;
             dataChanged.updateProperties(this.cellRef);
             dataChanged.updateStyleAttrs(this.cellRef);
             this.updateComponent();
@@ -327,7 +328,7 @@ export default {
 </script>
 
 <style lang="scss">
-label {
-    font-size: 12px !important;
-}
+    label {
+        font-size: 12px !important;
+    }
 </style>

@@ -194,36 +194,36 @@ export default {
 </script>
 
 <style lang="scss">
-.td-report-options label {
-    padding-top: 4px;
-    font-size: 12px !important;
-}
-.card-header {
-    font-size: 16px;
-}
+    .td-report-options label {
+        padding-top: 4px;
+        font-size: 12px !important;
+    }
+    .card-header {
+        font-size: 16px;
+    }
 </style>
 <style lang="scss" scoped>
-.td-branding {
-    padding-left: 50px;
-}
-.td-report {
-    font-size: 12px;
-}
-.td-report-section {
-    margin-top: 15px;
-}
-.td-report-container {
-    margin-top: 5px;
-}
-.sticky {
-    position: sticky;
-    top: 55px;
-    margin-top: -5px;
-    background-color: var(--white);
-    padding-top: 15px;
-    z-index: 100;
-}
-.right {
-    right: 0;
-}
+    .td-branding {
+        padding-left: 50px;
+    }
+    .td-report {
+        font-size: 12px;
+    }
+    .td-report-section {
+        margin-top: 15px;
+    }
+    .td-report-container {
+        margin-top: 5px;
+    }
+    .sticky {
+        position: sticky;
+        top: 55px;
+        margin-top: -5px;
+        background-color: var(--white);
+        padding-top: 15px;
+        z-index: 100;
+    }
+    .right {
+        right: 0;
+    }
 </style>

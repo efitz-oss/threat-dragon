@@ -1,7 +1,7 @@
 import demo from '@/service/demo/index.js';
 import isElectron from 'is-electron';
 import { getProviderType } from '@/service/provider/providers';
-import i18n, { tc } from '@/i18n/index.js';
+import { tc } from '@/i18n/index.js';
 import { providerTypes } from '@/service/provider/providerTypes';
 import {
     THREATMODEL_CLEAR,
@@ -25,7 +25,7 @@ import {
 import save from '@/service/save.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
 import googleDriveApi from '../../service/api/googleDriveApi';
-import { FOLDER_SELECTED } from '../actions/folder';
+// import { FOLDER_SELECTED } from '../actions/folder';
 
 const state = {
     all: [],

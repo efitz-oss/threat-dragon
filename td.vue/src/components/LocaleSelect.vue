@@ -43,27 +43,28 @@ export default {
 
         // Computed property for the current locale
         const locale = computed(() => {
-            const currentLocale = store.state.locale.locale;
-
+            return store.state.locale.locale;
+        });
+        
+        // Watch for locale changes and sync with i18n
+        watch(() => store.state.locale.locale, (newLocale) => {
             // Sync i18n locale with store (with error handling for tests)
             try {
-                if (i18n.locale && i18n.locale.value !== currentLocale) {
-                    i18n.locale.value = currentLocale;
+                if (i18n.locale && i18n.locale.value !== newLocale) {
+                    i18n.locale.value = newLocale;
                 }
             } catch (err) {
                 console.warn('Error syncing locale:', err);
             }
-
-            return currentLocale;
-        });
+        }, { immediate: true });
 
         // Helper to safely get available locales (handles both ref and direct array)
         const getAvailableLocales = () => {
             // If it's a ref (real implementation), access .value
             if (
                 i18n.availableLocales &&
-                typeof i18n.availableLocales === 'object' &&
-                'value' in i18n.availableLocales
+                    typeof i18n.availableLocales === 'object' &&
+                    'value' in i18n.availableLocales
             ) {
                 return i18n.availableLocales.value;
             }
@@ -112,8 +113,8 @@ export default {
                     const searchableText = getSearchableText(name);
                     return (
                         name.includes(query) ||
-                        locale.toLowerCase().includes(query) ||
-                        searchableText.includes(query)
+                            locale.toLowerCase().includes(query) ||
+                            searchableText.includes(query)
                     );
                 });
         };
@@ -129,34 +130,34 @@ export default {
 
         const getLanguageName = (locale) => {
             switch (locale) {
-                case 'ara':
-                    return 'العربية'; // Arabic
-                case 'deu':
-                    return 'Deutsch'; // German
-                case 'ell':
-                    return 'Ελληνικά'; // Greek
-                case 'eng':
-                    return 'English';
-                case 'spa':
-                    return 'Español'; // Spanish
-                case 'fin':
-                    return 'Suomi'; // Finnish
-                case 'fra':
-                    return 'Français'; // French
-                case 'hin':
-                    return 'हिंदी'; // Hindi
-                case 'ind':
-                    return 'Bahasa Indonesia'; // Indonesia
-                case 'jpn':
-                    return '日本語'; // Japanese
-                case 'ms':
-                    return 'Malay'; // Malay
-                case 'por':
-                    return 'Português'; // Portuguese
-                case 'zho':
-                    return '中文'; // Chinese
-                default:
-                    return locale;
+            case 'ara':
+                return 'العربية'; // Arabic
+            case 'deu':
+                return 'Deutsch'; // German
+            case 'ell':
+                return 'Ελληνικά'; // Greek
+            case 'eng':
+                return 'English';
+            case 'spa':
+                return 'Español'; // Spanish
+            case 'fin':
+                return 'Suomi'; // Finnish
+            case 'fra':
+                return 'Français'; // French
+            case 'hin':
+                return 'हिंदी'; // Hindi
+            case 'ind':
+                return 'Bahasa Indonesia'; // Indonesia
+            case 'jpn':
+                return '日本語'; // Japanese
+            case 'ms':
+                return 'Malay'; // Malay
+            case 'por':
+                return 'Português'; // Portuguese
+            case 'zho':
+                return '中文'; // Chinese
+            default:
+                return locale;
             }
         };
 
@@ -186,13 +187,13 @@ export default {
 </script>
 
 <style scoped>
-.locale-changer input {
-    min-width: 200px;
-    margin-bottom: 8px;
-}
+    .locale-changer input {
+        min-width: 200px;
+        margin-bottom: 8px;
+    }
 
-.dropdown-items-container {
-    max-height: 300px;
-    overflow-y: auto;
-}
+    .dropdown-items-container {
+        max-height: 300px;
+        overflow-y: auto;
+    }
 </style>

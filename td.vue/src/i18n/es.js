@@ -219,7 +219,7 @@ const spa = {
             description: 'Ingrese una descripción de alto nivel del sistema que se está modelando',
             reviewer: 'Nombre del Revisor'
         },
-        buttons: {
+        actions: {
             save: 'Guardar'
         },
         diagram: {
@@ -290,7 +290,7 @@ const spa = {
             storesCredentials: 'Almacena Credenciales',
             storesInventory: 'Stores Inventory'
         },
-        buttons: {
+        controlButtons: {
             delete: 'Eliminar seleccionado',
             redo: 'Rehacer edición',
             shortcuts: 'Atajos de teclado',

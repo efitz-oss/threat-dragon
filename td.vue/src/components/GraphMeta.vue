@@ -81,6 +81,11 @@ import TdGraphThreats from '@/components/GraphThreats.vue';
 
 export default {
     name: 'TdGraphMeta',
+    components: {
+        TdGraphProperties,
+        TdGraphThreats
+    },
+    emits: ['threatSelected', 'threatSuggest'],
     computed: mapState({
         cellRef: (state) => state.cell.ref,
         threats: (state) => state.cell.threats,
@@ -92,15 +97,11 @@ export default {
             }
             return (
                 state.cell.ref.data.outOfScope ||
-                state.cell.ref.data.isTrustBoundary ||
-                state.cell.ref.data.type === 'tm.Text'
+                    state.cell.ref.data.isTrustBoundary ||
+                    state.cell.ref.data.type === 'tm.Text'
             );
         }
     }),
-    components: {
-        TdGraphProperties,
-        TdGraphThreats
-    },
     async mounted() {
         this.init();
     },
@@ -138,25 +139,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/styles/colors.scss' as colors;
-.new-threat-by-type {
-    color: colors.$orange;
-    font-size: 16px;
-    padding: 15px;
-}
-.props-header {
-    a {
-        font-size: 12px;
-        font-weight: bolder;
-        text-decoration: none;
-        margin-left: 5px;
+    @use '@/styles/colors.scss' as colors;
+    .new-threat-by-type {
+        color: colors.$orange;
+        font-size: 16px;
+        padding: 15px;
     }
-}
-.down-icon {
-    margin-left: 3px;
-}
-.collapsed > .when-open,
-.not-collapsed > .when-closed {
-    display: none;
-}
+    .props-header {
+        a {
+            font-size: 12px;
+            font-weight: bolder;
+            text-decoration: none;
+            margin-left: 5px;
+        }
+    }
+    .down-icon {
+        margin-left: 3px;
+    }
+    .collapsed > .when-open,
+    .not-collapsed > .when-closed {
+        display: none;
+    }
 </style>

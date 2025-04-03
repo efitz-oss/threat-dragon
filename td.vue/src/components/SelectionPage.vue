@@ -73,27 +73,52 @@ import { ref, computed } from 'vue';
 export default {
     name: 'TdSelectionPage',
     props: {
-        items: Array,
-        page: Number,
-        pageNext: Boolean,
-        pagePrev: Boolean,
+        items: {
+            type: Array,
+            required: true,
+            default: () => []
+        },
+        page: {
+            type: Number,
+            required: true,
+            default: 1
+        },
+        pageNext: {
+            type: Boolean,
+            default: false
+        },
+        pagePrev: {
+            type: Boolean,
+            default: false
+        },
         paginate: {
+            type: Function,
             required: false,
-            type: Function
+            default: null
         },
         onItemClick: {
-            required: true,
-            type: Function
-        },
-        emptyStateText: String,
-        showBackItem: Boolean,
-        onBackClick: {
-            required: false,
             type: Function,
+            required: true
+        },
+        emptyStateText: {
+            type: String,
+            default: ''
+        },
+        showBackItem: {
+            type: Boolean,
+            default: false
+        },
+        onBackClick: {
+            type: Function,
+            required: false,
             default: () => {}
         },
-        isGoogleProvider: Boolean
+        isGoogleProvider: {
+            type: Boolean,
+            default: false
+        }
     },
+    emits: ['back-click', 'empty-state-click', 'item-click', 'paginate'],
     setup(props, { emit }) {
         const filter = ref('');
         const pageRef = ref(props.page);

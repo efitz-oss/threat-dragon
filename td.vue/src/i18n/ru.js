@@ -138,7 +138,7 @@ const rus = {
             description: 'Введите описание системы высокого уровня',
             reviewer: 'Имя рецензента'
         },
-        buttons: {
+        actions: {
             save: 'Сохранить'
         },
         diagram: {
@@ -209,7 +209,7 @@ const rus = {
             storesCredentials: 'Stores Credentials',
             storesInventory: 'Stores Inventory'
         },
-        buttons: {
+        controlButtons: {
             delete: 'Delete selected',
             redo: 'Redo edit',
             shortcuts: 'Keyboard shortcuts',

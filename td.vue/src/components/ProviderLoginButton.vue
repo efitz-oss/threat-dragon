@@ -6,7 +6,11 @@
         @click="onProviderClick()"
     >
         <span class="login-btn-icon">
-            <font-awesome-icon :icon="provider.icon" size="2x" color="white" class="mr-2" />
+            <font-awesome-icon
+                :icon="provider.icon"
+                size="2x"
+                color="white"
+                class="mr-2" />
         </span>
         <span>
             {{ $t('providers.' + provider.key + '.loginWith') }}
@@ -24,7 +28,10 @@ import { PROVIDER_SELECTED } from '@/store/actions/provider.js';
 export default {
     name: 'TdProviderLoginButton',
     props: {
-        provider: Object
+        provider: {
+            type: Object,
+            default: () => ({})
+        }
     },
     methods: {
         async onProviderClick() {
@@ -33,7 +40,7 @@ export default {
 
             if (
                 this.provider.key === providerNames.local ||
-                this.provider.key === providerNames.desktop
+                    this.provider.key === providerNames.desktop
             ) {
                 this.$store.dispatch(AUTH_SET_LOCAL);
                 return this.$router.push('/dashboard');
@@ -47,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login-btn-icon {
-    display: block;
-}
+    .login-btn-icon {
+        display: block;
+    }
 </style>

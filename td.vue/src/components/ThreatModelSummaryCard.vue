@@ -15,6 +15,13 @@ export default {
     components: {
         TdKeyValueCard
     },
+    props: {
+        titlePrefix: {
+            type: String,
+            required: false,
+            default: ''
+        }
+    },
     computed: {
         ...mapState({
             model: (state) => state.threatmodel.data
@@ -22,18 +29,15 @@ export default {
         overviewCardData: function () {
             const kvs = [];
             kvs.push({ key: this.$t('threatmodel.owner'), value: this.model.summary.owner });
-            kvs.push({ key: this.$t('threatmodel.reviewer'), value: this.model.detail.reviewer });
+            kvs.push({
+                key: this.$t('threatmodel.reviewer'),
+                value: this.model.detail.reviewer
+            });
             kvs.push({
                 key: this.$t('threatmodel.contributors'),
                 value: this.model.detail.contributors.map((x) => x.name).join(', ')
             });
             return kvs;
-        }
-    },
-    props: {
-        titlePrefix: {
-            type: String,
-            required: false
         }
     }
 };
