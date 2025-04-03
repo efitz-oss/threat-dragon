@@ -50,7 +50,10 @@ const eng = {
 <h2>8. Governing Law</h2>
 <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which OWASP operates, without regard to its conflict of law provisions.</p>
 
-<h2>9. Contact</h2>
+<h2>9. Operator Information</h2>
+<p>This instance of OWASP Threat Dragon is operated by ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'}. For questions related to this deployment, please contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator through appropriate channels'}.</p>
+
+<h2>10. Contact</h2>
 <p>If you have any questions about these Terms, please contact us through the OWASP Threat Dragon GitHub repository.</p>
 
 <p>Last updated: March 19, 2025</p>`
@@ -81,6 +84,9 @@ const eng = {
 
 <h2>Data Security</h2>
 <p>We implement appropriate security measures to ensure the safety of any data that passes through our systems, although we do not retain this data.</p>
+
+<h2>Operator Information</h2>
+<p>This instance of OWASP Threat Dragon is operated by ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'}. For questions related to this deployment or data handling practices, please contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator through appropriate channels'}.</p>
 
 <h2>Changes to This Policy</h2>
 <p>We may update this privacy policy from time to time. Any changes will be posted on this page.</p>

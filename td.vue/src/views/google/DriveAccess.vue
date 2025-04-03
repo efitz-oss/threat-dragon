@@ -150,7 +150,10 @@ const createPicker = () => {
                 )
                 .addView(folderView);
 
-            fileName.value = threatModel.value?.summary?.title || 'New Threat Model';
+            // Only set default filename if not already set by user
+            if (!fileName.value) {
+                fileName.value = threatModel.value?.summary?.title || 'New Threat Model';
+            }
         } else {
             // When opening an existing threat model, show JSON files
             const openView = new google.picker.DocsView()
@@ -186,9 +189,17 @@ const pickerCallback = async (data) => {
         if (document && document.mimeType === 'application/vnd.google-apps.folder') {
             try {
                 isLoading.value = true;
-                // Construct file name from threat model title or use default
-                const modelName = threatModel.value?.summary?.title || 'New Threat Model';
-                const fileNameToSave = `${modelName}.json`;
+                
+                // Use the user-provided filename or fall back to threat model title or default
+                let userFileName = fileName.value.trim();
+                if (!userFileName) {
+                    userFileName = threatModel.value?.summary?.title || 'New Threat Model';
+                }
+                
+                // Ensure the filename ends with .json
+                const fileNameToSave = userFileName.endsWith('.json') 
+                    ? userFileName 
+                    : `${userFileName}.json`;
 
                 // Save the threat model to the selected folder
                 const savedFileId = await saveFileToDrive(
@@ -212,7 +223,7 @@ const pickerCallback = async (data) => {
                         params: {
                             provider: route.params.provider,
                             folder: document.id,
-                            threatmodel: modelName,
+                            threatmodel: fileNameToSave.replace(/\.json$/, ''),
                             fileId: savedFileId // Pass fileId in the params
                         }
                     });
