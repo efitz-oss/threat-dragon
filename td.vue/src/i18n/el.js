@@ -53,7 +53,8 @@ const ell = {
             fileName: 'Όνομα αρχείου',
             fileNamePlaceholder: 'Εισάγετε ένα όνομα για το αρχείο σας',
             selectFolder: 'Επιλέξτε φάκελο στο Google Drive',
-            selectFile: 'Επιλέξτε αρχείο από το Google Drive'
+            selectFile: 'Επιλέξτε αρχείο από το Google Drive',
+            selectThreatModel: 'Επιλέξτε μοντέλο απειλών από το Google Drive'
         }
     },
     dashboard: {

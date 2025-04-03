@@ -38,6 +38,18 @@ const ukr = {
         local: {
             displayName: 'Local Session',
             loginWith: 'Login to'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Open',
+            description: 'Select a threat model file or destination folder from Google Drive',
+            saveThreatModel: 'Save Threat Model to Google Drive',
+            saveDescription: 'Select a folder in Google Drive to save your threat model',
+            fileName: 'File Name',
+            fileNamePlaceholder: 'Enter a name for your file',
+            selectFolder: 'Select a folder in Google Drive',
+            selectFile: 'Select a file from Google Drive',
+            selectThreatModel: 'Select a Threat Model from Google Drive'
         }
     },
     dashboard: {

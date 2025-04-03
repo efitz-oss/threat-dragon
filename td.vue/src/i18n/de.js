@@ -50,7 +50,8 @@ const deu = {
             fileName: 'Dateiname',
             fileNamePlaceholder: 'Geben Sie einen Namen für Ihre Datei ein',
             selectFolder: 'Wählen Sie einen Ordner in Google Drive',
-            selectFile: 'Wählen Sie eine Datei aus Google Drive'
+            selectFile: 'Wählen Sie eine Datei aus Google Drive',
+            selectThreatModel: 'Wählen Sie ein Bedrohungsmodell aus Google Drive'
         }
     },
     dashboard: {

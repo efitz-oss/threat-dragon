@@ -46,7 +46,8 @@ const jpn = {
             fileName: 'ファイル名',
             fileNamePlaceholder: 'ファイル名を入力してください',
             selectFolder: 'Googleドライブのフォルダを選択',
-            selectFile: 'Googleドライブのファイルを選択'
+            selectFile: 'Googleドライブのファイルを選択',
+            selectThreatModel: 'Googleドライブから脅威モデルを選択'
         }
     },
     dashboard: {

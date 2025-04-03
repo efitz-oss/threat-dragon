@@ -38,6 +38,18 @@ const ms = {
         local: {
             displayName: 'Sesi Tempatan',
             loginWith: 'Log masuk ke'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Buka',
+            description: 'Pilih fail model ancaman atau folder destinasi dari Google Drive',
+            saveThreatModel: 'Simpan Model Ancaman ke Google Drive',
+            saveDescription: 'Pilih folder di Google Drive untuk menyimpan model ancaman anda',
+            fileName: 'Nama Fail',
+            fileNamePlaceholder: 'Masukkan nama untuk fail anda',
+            selectFolder: 'Pilih folder di Google Drive',
+            selectFile: 'Pilih fail dari Google Drive',
+            selectThreatModel: 'Pilih Model Ancaman dari Google Drive'
         }
     },
     dashboard: {

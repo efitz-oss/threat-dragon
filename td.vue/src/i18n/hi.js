@@ -38,6 +38,18 @@ const hin = {
         local: {
             displayName: 'स्थानीय सत्र',
             loginWith: 'से लोगिन करें'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'खोलें',
+            description: 'Google Drive से थ्रेट मॉडल फ़ाइल या गंतव्य फ़ोल्डर का चयन करें',
+            saveThreatModel: 'थ्रेट मॉडल को Google Drive पर सहेजें',
+            saveDescription: 'अपने थ्रेट मॉडल को सहेजने के लिए Google Drive में एक फ़ोल्डर चुनें',
+            fileName: 'फ़ाइल का नाम',
+            fileNamePlaceholder: 'अपनी फ़ाइल के लिए एक नाम दर्ज करें',
+            selectFolder: 'Google Drive में एक फ़ोल्डर चुनें',
+            selectFile: 'Google Drive से एक फ़ाइल चुनें',
+            selectThreatModel: 'Google Drive से एक थ्रेट मॉडल चुनें'
         }
     },
     dashboard: {

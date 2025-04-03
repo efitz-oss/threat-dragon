@@ -130,7 +130,8 @@ const eng = {
             fileName: 'File Name',
             fileNamePlaceholder: 'Enter a name for your file',
             selectFolder: 'Select a folder in Google Drive',
-            selectFile: 'Select a file from Google Drive'
+            selectFile: 'Select a file from Google Drive',
+            selectThreatModel: 'Select a Threat Model from Google Drive'
         }
     },
     dashboard: {

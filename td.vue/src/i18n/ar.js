@@ -50,7 +50,8 @@ const ara = {
             fileName: 'اسم الملف',
             fileNamePlaceholder: 'أدخل اسمًا لملفك',
             selectFolder: 'حدد مجلدًا في Google Drive',
-            selectFile: 'حدد ملفًا من Google Drive'
+            selectFile: 'حدد ملفًا من Google Drive',
+            selectThreatModel: 'حدد نموذج تهديد من Google Drive'
         }
     },
     dashboard: {

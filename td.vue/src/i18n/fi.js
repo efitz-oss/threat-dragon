@@ -39,6 +39,18 @@ const fin = {
         local: {
             displayName: 'paikallisesti',
             loginWith: 'Kirjaudu sisään'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Avaa',
+            description: 'Valitse uhkamallin tiedosto tai kohdekansio Google Drivestä',
+            saveThreatModel: 'Tallenna uhkamalli Google Driveen',
+            saveDescription: 'Valitse kansio Google Drivestä uhkamallisi tallentamiseksi',
+            fileName: 'Tiedostonimi',
+            fileNamePlaceholder: 'Anna tiedostollesi nimi',
+            selectFolder: 'Valitse kansio Google Drivestä',
+            selectFile: 'Valitse tiedosto Google Drivestä',
+            selectThreatModel: 'Valitse uhkamalli Google Drivestä'
         }
     },
     dashboard: {

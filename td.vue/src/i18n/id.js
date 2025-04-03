@@ -38,6 +38,18 @@ const ind = {
         local: {
             displayName: 'Sesi Lokal',
             loginWith: 'Masuk ke'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Buka',
+            description: 'Pilih file model ancaman atau folder tujuan dari Google Drive',
+            saveThreatModel: 'Simpan Model Ancaman ke Google Drive',
+            saveDescription: 'Pilih folder di Google Drive untuk menyimpan model ancaman Anda',
+            fileName: 'Nama File',
+            fileNamePlaceholder: 'Masukkan nama untuk file Anda',
+            selectFolder: 'Pilih folder di Google Drive',
+            selectFile: 'Pilih file dari Google Drive',
+            selectThreatModel: 'Pilih Model Ancaman dari Google Drive'
         }
     },
     dashboard: {
