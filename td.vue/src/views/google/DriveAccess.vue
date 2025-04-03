@@ -253,9 +253,9 @@ const pickerCallback = async (data) => {
                     fileId: document.id
                 });
                 
-                // Navigate to the threat model view first, which will then load the edit view
+                // Now redirect directly to edit page
                 router.push({
-                    name: 'googleThreatModel',
+                    name: 'googleThreatModelEdit',
                     params: {
                         provider: route.params.provider,
                         folder: document.id,

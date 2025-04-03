@@ -115,13 +115,17 @@ export default {
             }
         },
         getConfirmModal() {
-            return this.$bvModal.msgBoxConfirm(this.$t('forms.discardMessage'), {
-                title: this.$t('forms.discardTitle'),
-                okVariant: 'danger',
-                okTitle: this.$t('forms.ok'),
-                cancelTitle: this.$t('forms.cancel'),
-                hideHeaderClose: true,
-                centered: true
+            // Import the showConfirmDialog function directly here to avoid circular dependencies
+            return import('@/utils/modal-helper.js').then(({ showConfirmDialog }) => {
+                return showConfirmDialog(this, {
+                    title: this.$t('forms.discardTitle'),
+                    message: this.$t('forms.discardMessage'),
+                    okTitle: this.$t('forms.ok'),
+                    cancelTitle: this.$t('forms.cancel'),
+                    okVariant: 'danger',
+                    hideHeaderClose: true,
+                    centered: true
+                });
             });
         }
     }

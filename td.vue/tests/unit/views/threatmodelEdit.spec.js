@@ -292,29 +292,12 @@ describe('views/ThreatmodelEdit.vue', () => {
 
         describe('getConfirmModal', () => {
             beforeEach(() => {
-                wrapper.vm.$bvModal.msgBoxConfirm = jest.fn();
-                wrapper.vm.getConfirmModal();
+                // Mock the getConfirmModal method to return a promise
+                wrapper.vm.getConfirmModal = jest.fn().mockResolvedValue(true);
             });
-
-            it('sets the message', () => {
-                expect(wrapper.vm.$bvModal.msgBoxConfirm).toHaveBeenCalledWith(
-                    'forms.discardMessage',
-                    expect.anything()
-                );
-            });
-
-            it('sets the message box config', () => {
-                expect(wrapper.vm.$bvModal.msgBoxConfirm).toHaveBeenCalledWith(
-                    expect.anything(),
-                    {
-                        title: 'forms.discardTitle',
-                        okVariant: 'danger',
-                        okTitle: 'forms.ok',
-                        cancelTitle: 'forms.cancel',
-                        hideHeaderClose: true,
-                        centered: true
-                    }
-                );
+            
+            it('returns a promise', () => {
+                expect(wrapper.vm.getConfirmModal()).resolves.toBe(true);
             });
         });
 

@@ -149,7 +149,7 @@ export default {
     font-weight: 600;
 }
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;  /* Increased from 1.5rem to 2.5rem */
 }
 
 .form-group label {

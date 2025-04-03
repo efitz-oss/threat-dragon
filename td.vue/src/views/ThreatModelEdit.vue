@@ -358,13 +358,17 @@ export default {
             return false;
         },
         getConfirmModal() {
-            return this.$bvModal.msgBoxConfirm(this.$t('forms.discardMessage'), {
-                title: this.$t('forms.discardTitle'),
-                okVariant: 'danger',
-                okTitle: this.$t('forms.ok'),
-                cancelTitle: this.$t('forms.cancel'),
-                hideHeaderClose: true,
-                centered: true
+            // Import the showConfirmDialog function directly here to avoid circular dependencies
+            return import('@/utils/modal-helper.js').then(({ showConfirmDialog }) => {
+                return showConfirmDialog(this, {
+                    title: this.$t('forms.discardTitle'),
+                    message: this.$t('forms.discardMessage'),
+                    okTitle: this.$t('forms.ok'),
+                    cancelTitle: this.$t('forms.cancel'),
+                    okVariant: 'danger',
+                    hideHeaderClose: true,
+                    centered: true
+                });
             });
         }
     }
@@ -385,7 +389,7 @@ export default {
         font-weight: 600;
     }
     .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.5rem;  /* Increased from 1.5rem to 2.5rem */
     }
     
     .form-group label {
