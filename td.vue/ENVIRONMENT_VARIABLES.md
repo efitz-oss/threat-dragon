@@ -22,7 +22,7 @@ This document provides a comprehensive list of environment variables used in the
 | `VUE_APP_GOOGLE_API_KEY` | - | Valid Google API Key | API key for Google Drive integration |
 | `VUE_APP_GOOGLE_APP_ID` | - | Valid Google App ID | App ID for Google integration |
 | `VUE_APP_OPERATOR_NAME` | "the operator" | Any string | Name of the entity operating this Threat Dragon instance (displayed in Terms of Service and Privacy Policy) |
-| `VUE_APP_OPERATOR_CONTACT` | "the operator through appropriate channels" | Any string | Contact information for the entity operating this Threat Dragon instance (displayed in Terms of Service and Privacy Policy) |
+| `VUE_APP_OPERATOR_CONTACT` | "the operator through appropriate channels" | Any string (including email addresses) | Contact information for the entity operating this Threat Dragon instance (displayed in Terms of Service and Privacy Policy). Email addresses are automatically escaped for proper display. |
 
 ## Server Configuration
 

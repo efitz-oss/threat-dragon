@@ -208,6 +208,14 @@ module.exports = {
                     if (!process.env.VUE_APP_GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID) {
                         env.VUE_APP_GOOGLE_CLIENT_ID = JSON.stringify(process.env.GOOGLE_CLIENT_ID);
                     }
+                    
+                    // Escape operator contact email for i18n system
+                    if (process.env.VUE_APP_OPERATOR_CONTACT) {
+                        // Replace @ with escaped version for i18n
+                        const escapedEmail = process.env.VUE_APP_OPERATOR_CONTACT.replace(/@/g, '\\@');
+                        env.VUE_APP_OPERATOR_CONTACT_ESCAPED = JSON.stringify(escapedEmail);
+                    }
+                    
                     args[0]['process.env'] = env;
                     return args;
                 });
@@ -226,6 +234,14 @@ module.exports = {
                 if (!process.env.VUE_APP_GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID) {
                     env.VUE_APP_GOOGLE_CLIENT_ID = JSON.stringify(process.env.GOOGLE_CLIENT_ID);
                 }
+                
+                // Escape operator contact email for i18n system in Electron too
+                if (process.env.VUE_APP_OPERATOR_CONTACT) {
+                    // Replace @ with escaped version for i18n
+                    const escapedEmail = process.env.VUE_APP_OPERATOR_CONTACT.replace(/@/g, '\\@');
+                    env.VUE_APP_OPERATOR_CONTACT_ESCAPED = JSON.stringify(escapedEmail);
+                }
+                
                 args[0]['process.env'] = env;
                 return args;
             });
