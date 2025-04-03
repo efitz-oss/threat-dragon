@@ -50,7 +50,7 @@
                     </b-form-group>
 
                     <b-button type="submit" variant="primary" class="mt-3">
-                        {{ $t('threatmodel.buttons.save') }}
+                        {{ $t('forms.save') }}
                     </b-button>
                 </b-form>
             </b-col>

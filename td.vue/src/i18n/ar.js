@@ -6,7 +6,9 @@ const ara = {
         v2Warning:
             'نماذج التهديد الإصدار 2.0 غير متوافقة مع الإصدارات السابقة مع نماذج Threat Dragon للإصدار x.1 من ستتم ترقية نماذج الإصدار x.1 المستوردة إلى مخطط الإصدار 2.0،',
         loggedInAs: 'تم تسجيل الدخول كـ ',
-        logOut: 'Log out'
+        logOut: 'Log out',
+        tos: 'شروط الخدمة',
+        privacy: 'سياسة الخصوصية'
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -38,6 +40,17 @@ const ara = {
         local: {
             displayName: 'جلسة محلية',
             loginWith: 'تسجيل الدخول إلى'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'فتح',
+            description: 'حدد ملف نموذج تهديد أو مجلد وجهة من Google Drive',
+            saveThreatModel: 'حفظ نموذج التهديد في Google Drive',
+            saveDescription: 'حدد مجلدًا في Google Drive لحفظ نموذج التهديد الخاص بك',
+            fileName: 'اسم الملف',
+            fileNamePlaceholder: 'أدخل اسمًا لملفك',
+            selectFolder: 'حدد مجلدًا في Google Drive',
+            selectFile: 'حدد ملفًا من Google Drive'
         }
     },
     dashboard: {
@@ -115,6 +128,19 @@ const ara = {
         owner: 'المالك',
         reviewer: 'المراجع',
         title: 'العنوان',
+        new: {
+            title: 'إنشاء نموذج تهديد جديد',
+            description: 'أدخل معلومات حول نموذج التهديد الجديد الخاص بك'
+        },
+        placeholder: {
+            title: 'عنوان نموذج التهديد',
+            owner: 'اسم المالك أو الفريق',
+            description: 'أدخل وصفًا عالي المستوى للنظام الذي يتم نمذجته',
+            reviewer: 'اسم المراجع'
+        },
+        buttons: {
+            save: 'حفظ'
+        },
         diagram: {
             diagrams: 'المخططات',
             addNewDiagram: 'إضافة مخطط جديد...',
@@ -155,7 +181,8 @@ const ara = {
             invalidJson: 'ملف JSON غير صالح. يرجى التحقق من النموذج الخاص بك والمحاولة مرة أخرى.',
             onlyJsonAllowed: 'الملفات التي يمكن التعامل معها هي التي تنتهي بامتداد .json فقط.',
             open: 'حدث خطأ في فتح نموذج التهديد. تحقق من الـ console الخاص بالمطور (developer console) للحصول على مزيد من المعلومات',
-            save: 'حدث خطأ في حفظ نموذج التهديد. تحقق من الـ console الخاص بالمطور (developer console) للحصول على مزيد من المعلومات'
+            save: 'حدث خطأ في حفظ نموذج التهديد. تحقق من الـ console الخاص بالمطور (developer console) للحصول على مزيد من المعلومات',
+            googleDriveSave: 'حدث خطأ أثناء الحفظ في Google Drive. تأكد من أن لديك الأذونات المناسبة.'
         },
         opened: 'تم فتح نموذج التهديد بنجاح',
         saved: 'تم حفظ نموذج التهديد بنجاح',
@@ -256,7 +283,8 @@ const ara = {
         discardTitle: 'هل تريد تجاهل التغييرات؟',
         discardMessage: 'هل أنت متأكد من رغبتك في تجاهل التغييرات الخاصة بك؟',
         edit: 'تحرير',
-        exportAs: 'Export Model As',
+        export: 'تصدير',
+        exportAs: 'تصدير النموذج كـ',
         exportHtml: 'تقرير HTML',
         exportPdf: 'تقرير PDF',
         exportTd: 'Original (Threat Dragon)',

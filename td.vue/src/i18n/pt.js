@@ -6,7 +6,9 @@ const por = {
         v2Warning:
             'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Logado como',
-        logOut: 'Log out'
+        logOut: 'Log out',
+        tos: 'Termos de Serviço',
+        privacy: 'Política de Privacidade'
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -38,6 +40,17 @@ const por = {
         local: {
             displayName: 'Sessão Local',
             loginWith: 'Login com'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Abrir',
+            description: 'Selecione um arquivo de modelo de ameaça ou pasta de destino do Google Drive',
+            saveThreatModel: 'Salvar Modelo de Ameaça no Google Drive',
+            saveDescription: 'Selecione uma pasta no Google Drive para salvar seu modelo de ameaça',
+            fileName: 'Nome do Arquivo',
+            fileNamePlaceholder: 'Digite um nome para seu arquivo',
+            selectFolder: 'Selecione uma pasta no Google Drive',
+            selectFile: 'Selecione um arquivo do Google Drive'
         }
     },
     dashboard: {
@@ -115,6 +128,19 @@ const por = {
         owner: 'Proprietário',
         reviewer: 'Revisor',
         title: 'Título',
+        new: {
+            title: 'Criar Novo Modelo de Ameaça',
+            description: 'Insira informações sobre seu novo modelo de ameaça'
+        },
+        placeholder: {
+            title: 'Título do Modelo de Ameaça',
+            owner: 'Nome do Proprietário ou Equipe',
+            description: 'Insira uma descrição de alto nível do sistema sendo modelado',
+            reviewer: 'Nome do Revisor'
+        },
+        buttons: {
+            save: 'Salvar'
+        },
         diagram: {
             diagrams: 'Diagramas',
             addNewDiagram: 'Adicionar um novo diagrama...',
@@ -155,7 +181,8 @@ const por = {
             invalidJson: 'Invalid JSON. Please check your model and try again.',
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
-            save: 'Error saving the Threat Model. Check the developer console for more information'
+            save: 'Error saving the Threat Model. Check the developer console for more information',
+            googleDriveSave: 'Erro ao salvar no Google Drive. Certifique-se de ter as permissões adequadas.'
         },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',

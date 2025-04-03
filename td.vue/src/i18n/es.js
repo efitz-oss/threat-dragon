@@ -6,7 +6,89 @@ const spa = {
         v2Warning:
             'Los modelos de amenazas(threat models) version 2.0 no son compatibles con los modelos de amenazas(threat model) de Threat Dragon versión 1.x. Los modelos importados de la versión 1.x serán actualizados acorde al esquema de la versión 2.0',
         loggedInAs: 'Conectado como',
-        logOut: 'Log out'
+        logOut: 'Log out',
+        tos: 'Términos de Servicio',
+        privacy: 'Política de Privacidad'
+    },
+    tos: {
+        title: 'Términos de Servicio',
+        content: `<h2>Términos de Servicio</h2>
+<p>Bienvenido a OWASP Threat Dragon. Al utilizar nuestra aplicación, usted acepta estos Términos de Servicio.</p>
+
+<h2>1. Aceptación de Términos</h2>
+<p>Al acceder y utilizar OWASP Threat Dragon, usted acepta y está de acuerdo con los términos y disposiciones de este acuerdo.</p>
+
+<h2>2. Descripción del Servicio</h2>
+<p>OWASP Threat Dragon es una herramienta gratuita de modelado de amenazas de código abierto que le ayuda a crear diagramas de modelos de amenazas e identificar amenazas para su sistema.</p>
+
+<h2>3. Licencia y Restricciones</h2>
+<p>OWASP Threat Dragon se publica bajo la Licencia Apache 2.0. Usted es libre de:</p>
+<ul>
+  <li>Utilizar la aplicación para fines personales o comerciales</li>
+  <li>Modificar la aplicación</li>
+  <li>Distribuir la aplicación</li>
+</ul>
+<p>Sujeto a los términos y condiciones de la Licencia Apache 2.0.</p>
+
+<h2>4. Responsabilidades del Usuario</h2>
+<p>Usted es responsable de:</p>
+<ul>
+  <li>Toda la actividad que ocurre bajo su cuenta</li>
+  <li>Mantener la confidencialidad de la información de su cuenta</li>
+  <li>El contenido de sus modelos de amenazas</li>
+</ul>
+
+<h2>5. Sin Garantía</h2>
+<p>EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A LAS GARANTÍAS DE COMERCIALIZACIÓN, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN.</p>
+
+<h2>6. Limitación de Responsabilidad</h2>
+<p>EN NINGÚN CASO LOS AUTORES O TITULARES DE DERECHOS DE AUTOR SERÁN RESPONSABLES POR CUALQUIER RECLAMACIÓN, DAÑOS U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN DE CONTRATO, AGRAVIO O DE OTRO MODO, DERIVADA DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTROS TRATOS EN EL SOFTWARE.</p>
+
+<h2>7. Modificaciones a los Términos</h2>
+<p>Nos reservamos el derecho de modificar estos Términos en cualquier momento. Su uso continuado de la aplicación después de tales modificaciones constituye su aceptación de los términos modificados.</p>
+
+<h2>8. Ley Aplicable</h2>
+<p>Estos Términos se regirán e interpretarán de acuerdo con las leyes de la jurisdicción en la que opera OWASP, sin tener en cuenta sus disposiciones sobre conflictos de leyes.</p>
+
+<h2>9. Contacto</h2>
+<p>Si tiene alguna pregunta sobre estos Términos, póngase en contacto con nosotros a través del repositorio de GitHub de OWASP Threat Dragon.</p>
+
+<p>Última actualización: 19 de marzo de 2025</p>`
+    },
+    privacy: {
+        title: 'Política de Privacidad',
+        content: `<h2>Resumen</h2>
+<p>OWASP Threat Dragon está comprometido a proteger su privacidad. Esta aplicación está diseñada para respetar sus datos y mantenerlo en control.</p>
+
+<h2>Recopilación de Datos</h2>
+<p>Threat Dragon no:</p>
+<ul>
+  <li>Rastrea o recopila información personal</li>
+  <li>Almacena datos de comportamiento del usuario</li>
+  <li>Utiliza cookies o tecnologías de seguimiento</li>
+  <li>Vende o comparte cualquier información del usuario</li>
+</ul>
+
+<h2>Autenticación</h2>
+<p>Al utilizar la autenticación de Google, solo recibimos información básica del perfil necesaria para fines de autenticación. Esta información no se almacena en nuestros servidores ni se comparte con terceros.</p>
+
+<h2>Sus Modelos de Amenazas</h2>
+<ul>
+  <li>Todos los datos de modelos de amenazas creados dentro de la aplicación permanecen bajo su control</li>
+  <li>Sus datos solo se almacenan localmente o en repositorios que usted autoriza explícitamente</li>
+  <li>No tenemos acceso al contenido de su modelo de amenazas</li>
+</ul>
+
+<h2>Seguridad de Datos</h2>
+<p>Implementamos medidas de seguridad apropiadas para garantizar la seguridad de cualquier dato que pase por nuestros sistemas, aunque no retenemos estos datos.</p>
+
+<h2>Cambios a Esta Política</h2>
+<p>Podemos actualizar esta política de privacidad de vez en cuando. Cualquier cambio se publicará en esta página.</p>
+
+<h2>Contacto</h2>
+<p>Si tiene preguntas sobre esta Política de Privacidad, póngase en contacto con nosotros a través del repositorio de GitHub de OWASP Threat Dragon.</p>
+
+<p>Última actualización: 19 de marzo de 2025</p>`
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -38,6 +120,17 @@ const spa = {
         local: {
             displayName: 'Sesión Local',
             loginWith: 'Conectarse con'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Abrir',
+            description: 'Seleccione un archivo de modelo de amenazas o carpeta de destino desde Google Drive',
+            saveThreatModel: 'Guardar Modelo de Amenazas en Google Drive',
+            saveDescription: 'Seleccione una carpeta en Google Drive para guardar su modelo de amenazas',
+            fileName: 'Nombre del Archivo',
+            fileNamePlaceholder: 'Ingrese un nombre para su archivo',
+            selectFolder: 'Seleccione una carpeta en Google Drive',
+            selectFile: 'Seleccione un archivo de Google Drive'
         }
     },
     dashboard: {
@@ -114,6 +207,19 @@ const spa = {
         owner: 'Propietario',
         reviewer: 'Revisor',
         title: 'Título',
+        new: {
+            title: 'Crear Nuevo Modelo de Amenazas',
+            description: 'Ingrese información sobre su nuevo modelo de amenazas'
+        },
+        placeholder: {
+            title: 'Título del Modelo de Amenazas',
+            owner: 'Nombre del Propietario o Equipo',
+            description: 'Ingrese una descripción de alto nivel del sistema que se está modelando',
+            reviewer: 'Nombre del Revisor'
+        },
+        buttons: {
+            save: 'Guardar'
+        },
         diagram: {
             diagrams: 'Diagramas',
             addNewDiagram: 'Agregar un nuevo diagrama...',
@@ -154,7 +260,8 @@ const spa = {
             invalidJson: 'JSON erróneo. Compruebe su modelo e intente otra vez.',
             onlyJsonAllowed: 'Solamente archivos con extensión .json son soportados.',
             open: 'Error al abrir el modelo de amenazas. Consulte la consola de desarrollador para obtener más información.',
-            save: 'Error al guardar el modelo de amenazas. Consulte la consola de desarrollador para obtener más información.'
+            save: 'Error al guardar el modelo de amenazas. Consulte la consola de desarrollador para obtener más información.',
+            googleDriveSave: 'Error al guardar en Google Drive. Asegúrese de tener los permisos adecuados.'
         },
         opened: 'El modelo de amenazas se abrió con éxito',
         saved: 'El modelo de amenazas se guardó con éxito',
@@ -256,7 +363,8 @@ const spa = {
         discardTitle: '¿Descartar los cambios?',
         discardMessage: '¿Está seguro de descartar sus cambios?',
         edit: 'Editar',
-        exportAs: 'Export Model As',
+        export: 'Exportar',
+        exportAs: 'Exportar Modelo Como',
         exportHtml: 'Reporte HTML',
         exportPdf: 'Reporte PDF',
         exportTd: 'Original (Threat Dragon)',

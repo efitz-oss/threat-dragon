@@ -6,7 +6,9 @@ const jpn = {
         v2Warning:
             'バージョン2.0の脅威モデルは、Threat Dragonバージョン1.xとの互換性を保っていません。バージョン1.xのモデルは、インポート時にバージョン2.0のフォーマットに変換されます。',
         loggedInAs: 'ユーザー名',
-        logOut: 'ログアウト'
+        logOut: 'ログアウト',
+        tos: '利用規約',
+        privacy: 'プライバシーポリシー'
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -34,6 +36,17 @@ const jpn = {
         local: {
             displayName: 'ローカルセッション',
             loginWith: 'ログイン'
+        },
+        googleDrive: {
+            displayName: 'Googleドライブ',
+            loginWith: '開く',
+            description: 'GoogleドライブからモデルファイルまたはフォルダーDriveを選択してください',
+            saveThreatModel: 'Googleドライブに脅威モデルを保存',
+            saveDescription: '脅威モデルを保存するGoogleドライブのフォルダを選択してください',
+            fileName: 'ファイル名',
+            fileNamePlaceholder: 'ファイル名を入力してください',
+            selectFolder: 'Googleドライブのフォルダを選択',
+            selectFile: 'Googleドライブのファイルを選択'
         }
     },
     dashboard: {
@@ -111,6 +124,19 @@ const jpn = {
         owner: 'オーナー',
         reviewer: '検証者',
         title: 'タイトル',
+        new: {
+            title: '新しい脅威モデルを作成',
+            description: '新しい脅威モデルに関する情報を入力してください'
+        },
+        placeholder: {
+            title: '脅威モデルのタイトル',
+            owner: 'オーナー名またはチーム',
+            description: 'モデリングするシステムの概要を入力してください',
+            reviewer: '検証者名'
+        },
+        buttons: {
+            save: '保存'
+        },
         diagram: {
             diagrams: '図面',
             addNewDiagram: '新しい図面を追加...',
@@ -152,7 +178,8 @@ const jpn = {
                 'ファイルのJSONフォーマットに対応していません。モデルを確認したうえ、もう一度試してみてください。',
             onlyJsonAllowed: '拡張子.jsonのファイルのみに対応しています。',
             open: '脅威モデルを開く時にエラーが発生しました。開発者コンソールを確認してください。',
-            save: '脅威モデルを保存時にエラーが発生しました。開発者コンソールを確認してください。'
+            save: '脅威モデルを保存時にエラーが発生しました。開発者コンソールを確認してください。',
+            googleDriveSave: 'Googleドライブへの保存中にエラーが発生しました。適切な権限があることを確認してください。'
         },
         opened: '脅威モデルを読み込みました。',
         saved: '脅威モデルを書き込みました。',

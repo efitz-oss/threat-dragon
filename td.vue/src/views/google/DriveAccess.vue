@@ -187,8 +187,14 @@ const pickerCallback = async (data) => {
 
                 if (savedFileId) {
                     toast.success('Threat model saved to Google Drive!');
+                    
+                    // Store the file ID in the store so we can update it later
+                    store.commit('threatmodel/update', { 
+                        fileName: fileNameToSave,
+                        fileId: savedFileId 
+                    });
 
-                    // Navigate to the edit view or wherever appropriate
+                    // Navigate to the edit view
                     router.push({
                         name: 'googleThreatModelEdit',
                         params: {

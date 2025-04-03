@@ -31,6 +31,7 @@ const state = {
     all: [],
     data: {},
     fileName: '',
+    fileId: '', // Add fileId to track the Google Drive file ID
     stash: '',
     modified: false,
     modifiedDiagram: {},
@@ -134,13 +135,34 @@ const actions = {
                 console.debug('Desktop create action');
                 await window.electronAPI.modelSave(state.data, state.fileName);
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-                const res = await googleDriveApi.createAsync(
-                    rootState.folder.selected,
-                    state.data,
-                    `${state.data.summary.title}.json`
-                );
-                dispatch(FOLDER_SELECTED, res.data);
-                toast.success(t('threatmodel.saved') + ' : ' + state.fileName);
+                console.debug('Google Drive create action - folder:', rootState.folder.selected);
+                try {
+                    const fileName = `${state.data.summary.title}.json`;
+                    console.debug('Creating file:', fileName);
+                    
+                    const res = await googleDriveApi.createAsync(
+                        rootState.folder.selected,
+                        state.data,
+                        fileName
+                    );
+                    
+                    console.debug('File created successfully, result:', res.data);
+                    
+                    if (res.data && res.data.id) {
+                        // Save the file ID in the state for future saves
+                        commit(THREATMODEL_UPDATE, { 
+                            fileName: fileName,
+                            fileId: res.data.id 
+                        });
+                        console.debug('Updated state with fileId:', res.data.id);
+                    }
+                    
+                    toast.success(t('threatmodel.saved') + ' : ' + fileName);
+                } catch (err) {
+                    console.error('Error creating file in Google Drive:', err);
+                    toast.error(t('threatmodel.errors.googleDriveSave'));
+                    throw err;
+                }
             } else {
                 await threatmodelApi.createAsync(
                     rootState.repo.selected,
@@ -170,7 +192,10 @@ const actions = {
         dispatch(THREATMODEL_CLEAR);
         let resp;
         if (getProviderType(rootState.provider.selected) === providerTypes.google) {
+            console.debug('Fetching Google Drive model with ID:', threatModel);
             resp = await googleDriveApi.modelAsync(threatModel);
+            // Store the fileId for future updates
+            commit(THREATMODEL_UPDATE, { fileId: threatModel });
         } else {
             resp = await threatmodelApi.modelAsync(
                 rootState.repo.selected,
@@ -268,7 +293,25 @@ const actions = {
                     throw saveError;
                 }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-                await googleDriveApi.updateAsync(rootState.folder.selected, state.data);
+                // For Google Drive we need to use the fileId from the state rather than folder.selected
+                console.debug('Google Drive save - fileId:', state.fileId);
+                console.debug('Google Drive provider selected:', rootState.provider.selected);
+                
+                if (!state.fileId) {
+                    console.error('No file ID found in state for Google Drive save');
+                    toast.error(t('threatmodel.errors.googleDriveSave'));
+                    throw new Error('No file ID found for Google Drive save');
+                }
+                
+                try {
+                    console.debug('Attempting to update file with ID:', state.fileId);
+                    await googleDriveApi.updateAsync(state.fileId, state.data);
+                    console.debug('Google Drive update successful');
+                } catch (err) {
+                    console.error('Error during Google Drive update:', err);
+                    toast.error(t('threatmodel.errors.googleDriveSave'));
+                    throw err;
+                }
             } else {
                 await threatmodelApi.updateAsync(
                     rootState.repo.selected,
@@ -400,6 +443,9 @@ const mutations = {
         if (update.fileName) {
             state.fileName = update.fileName;
         }
+        if (update.fileId) {
+            state.fileId = update.fileId;
+        }
         console.debug('Threatmodel update: ' + JSON.stringify(update));
     }
 };
@@ -434,6 +480,7 @@ export const clearState = (state) => {
         window.electronAPI.modelClosed(state.fileName);
     }
     state.fileName = '';
+    state.fileId = ''; // Clear the file ID when clearing the state
 };
 
 export default {

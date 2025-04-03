@@ -6,7 +6,9 @@ const rus = {
         v2Warning:
             'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Logged in as',
-        logOut: 'Log out'
+        logOut: 'Log out',
+        tos: 'Условия использования',
+        privacy: 'Политика конфиденциальности'
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -38,6 +40,17 @@ const rus = {
         local: {
             displayName: 'Local Session',
             loginWith: 'Login to'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Open',
+            description: 'Выберите файл модели угроз или целевую папку из Google Drive',
+            saveThreatModel: 'Сохранить модель угроз в Google Drive',
+            saveDescription: 'Выберите папку в Google Drive для сохранения вашей модели угроз',
+            fileName: 'Имя файла',
+            fileNamePlaceholder: 'Введите имя для вашего файла',
+            selectFolder: 'Выберите папку в Google Drive',
+            selectFile: 'Выберите файл из Google Drive'
         }
     },
     dashboard: {
@@ -115,6 +128,19 @@ const rus = {
         owner: 'Owner',
         reviewer: 'Reviewer',
         title: 'Title',
+        new: {
+            title: 'Создать новую модель угроз',
+            description: 'Введите информацию о вашей новой модели угроз'
+        },
+        placeholder: {
+            title: 'Название модели угроз',
+            owner: 'Имя владельца или команды',
+            description: 'Введите описание системы высокого уровня',
+            reviewer: 'Имя рецензента'
+        },
+        buttons: {
+            save: 'Сохранить'
+        },
         diagram: {
             diagrams: 'Diagrams',
             addNewDiagram: 'Add a new diagram...',
@@ -155,7 +181,8 @@ const rus = {
             invalidJson: 'Invalid JSON. Please check your model and try again.',
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
-            save: 'Error saving the Threat Model. Check the developer console for more information'
+            save: 'Error saving the Threat Model. Check the developer console for more information',
+            googleDriveSave: 'Ошибка при сохранении в Google Drive. Убедитесь, что у вас есть необходимые разрешения.'
         },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',
@@ -256,7 +283,8 @@ const rus = {
         discardTitle: 'Discard Changes?',
         discardMessage: 'Are you sure you want to discard your changes?',
         edit: 'Edit',
-        exportAs: 'Export Model As',
+        export: 'Экспорт',
+        exportAs: 'Экспортировать модель как',
         exportHtml: 'HTML Report',
         exportPdf: 'PDF Report',
         exportTd: 'Original (Threat Dragon)',

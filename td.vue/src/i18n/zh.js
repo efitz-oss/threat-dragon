@@ -6,7 +6,9 @@ const zho = {
         v2Warning:
             '2.0 版威胁模型与 1.x 版Threat Dragon模型不兼容。导入的 1.x 版模型将升级到 2.0 版本',
         loggedInAs: '登录身份为',
-        logOut: 'Log out'
+        logOut: 'Log out',
+        tos: '服务条款',
+        privacy: '隐私政策'
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -38,6 +40,17 @@ const zho = {
         local: {
             displayName: '本地',
             loginWith: '登录'
+        },
+        googleDrive: {
+            displayName: 'Google云端硬盘',
+            loginWith: '打开',
+            description: '从Google云端硬盘选择威胁模型文件或目标文件夹',
+            saveThreatModel: '保存威胁模型到Google云端硬盘',
+            saveDescription: '选择Google云端硬盘中的文件夹来保存您的威胁模型',
+            fileName: '文件名',
+            fileNamePlaceholder: '输入文件名',
+            selectFolder: '选择Google云端硬盘中的文件夹',
+            selectFile: '从Google云端硬盘中选择文件'
         }
     },
     dashboard: {
@@ -115,6 +128,19 @@ const zho = {
         owner: '所有者',
         reviewer: '审稿人',
         title: '标题',
+        new: {
+            title: '创建新威胁模型',
+            description: '输入有关新威胁模型的信息'
+        },
+        placeholder: {
+            title: '威胁模型标题',
+            owner: '所有者名称或团队',
+            description: '输入所建模系统的高级描述',
+            reviewer: '审稿人名称'
+        },
+        buttons: {
+            save: '保存'
+        },
         diagram: {
             diagrams: '图表',
             addNewDiagram: '添加新图表...',
@@ -155,7 +181,8 @@ const zho = {
             invalidJson: '无效的JSON。请检查您的格式，然后重试。',
             onlyJsonAllowed: '只支持以.json结尾的文件。',
             open: '打开此威胁模型出错。检查开发者控制台以了解更多信息',
-            save: '保存此威胁模型出错。检查开发者控制台以了解更多信息'
+            save: '保存此威胁模型出错。检查开发者控制台以了解更多信息',
+            googleDriveSave: '保存到Google云端硬盘时出错。请确保您拥有适当的权限。'
         },
         opened: '成功打开威胁模型',
         saved: '成功保存威胁模型',
