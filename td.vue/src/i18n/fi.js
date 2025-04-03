@@ -300,7 +300,8 @@ const fin = {
         saveModelAs: 'Tallenna Uhkamalli Nimellä',
         search: 'Etsi',
         next: 'Seuraava',
-        previous: 'Edellinen'
+        previous: 'Edellinen',
+        requiredField: 'Pakollinen kenttä'
     },
     threats: {
         model: {

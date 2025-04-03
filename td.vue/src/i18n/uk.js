@@ -298,7 +298,8 @@ const ukr = {
         saveModelAs: 'Save Model As',
         search: 'Search',
         next: 'Next',
-        previous: 'Previous'
+        previous: 'Previous',
+        requiredField: 'Обов\'язкове поле'
     },
     threats: {
         model: {

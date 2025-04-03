@@ -8,8 +8,13 @@
         </b-row>
         <b-row>
             <b-col lg="8" offset-lg="2">
-                <b-form @submit.prevent="saveModel">
-                    <b-form-group :label="$t('threatmodel.title')" label-for="threat-model-title">
+                <b-card class="mt-3 mb-5">
+                    <b-form @submit.prevent="saveModel">
+                    <b-form-group 
+                        :label="$t('threatmodel.title') + ' *'" 
+                        label-for="threat-model-title"
+                        class="required-field"
+                    >
                         <b-form-input
                             id="threat-model-title"
                             v-model="threatModel.summary.title"
@@ -49,14 +54,27 @@
                         ></b-form-input>
                     </b-form-group>
 
-                    <b-button type="submit" variant="primary" class="mt-3">
-                        {{ $t('forms.save') }}
-                    </b-button>
+                    <div class="text-right mt-4">
+                        <b-button type="submit" variant="primary">
+                            {{ $t('forms.save') }}
+                        </b-button>
+                    </div>
                 </b-form>
+                <small class="text-muted mt-3">* {{ $t('forms.requiredField') }}</small>
+                </b-card>
             </b-col>
         </b-row>
     </b-container>
 </template>
+
+<style lang="scss" scoped>
+.required-field label {
+    font-weight: 600;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+</style>
 
 <script>
 import { mapState } from 'vuex';

@@ -298,7 +298,8 @@ const hin = {
         saveModelAs: 'मॉडल को इस रूप में सहेजें',
         search: 'खोज',
         next: 'अगला',
-        previous: 'पहले का'
+        previous: 'पहले का',
+        requiredField: 'आवश्यक फ़ील्ड'
     },
     threats: {
         model: {

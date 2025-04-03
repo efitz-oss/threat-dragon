@@ -386,7 +386,8 @@ const spa = {
         saveModelAs: 'Guardar modelo como',
         search: 'Buscar',
         next: 'próximo',
-        previous: 'Previo'
+        previous: 'Previo',
+        requiredField: 'Campo obligatorio'
     },
     threats: {
         model: {

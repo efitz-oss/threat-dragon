@@ -304,7 +304,8 @@ const rus = {
         saveModelAs: 'Save Model As',
         search: 'Search',
         next: 'Next',
-        previous: 'Previous'
+        previous: 'Previous',
+        requiredField: 'Обязательное поле'
     },
     threats: {
         model: {

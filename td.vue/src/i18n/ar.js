@@ -316,7 +316,8 @@ const ara = {
         saveModelAs: 'حفظ النموذج كـ',
         search: 'بحث',
         next: 'التالي',
-        previous: 'السابق'
+        previous: 'السابق',
+        requiredField: 'حقل مطلوب'
     },
     threats: {
         model: {

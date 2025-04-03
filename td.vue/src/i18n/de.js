@@ -2,11 +2,19 @@ const deu = {
     auth: {
         sessionExpired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.'
     },
+    tos: {
+        title: 'Nutzungsbedingungen'
+    },
+    privacy: {
+        title: 'Datenschutzrichtlinie'
+    },
     nav: {
         v2Warning:
             'Version 2.0 Bedrohungsmodelle sind nicht Abwärtskompatibel mit Version 1.x Threat Dragon Modellen. Importierte Version 1.x Modelle werden auf das Version 2.0 Schema gehoben', //in line with wording of BSI Leitfaden zur Entwicklung sicherer Webanwendungen
         loggedInAs: 'Angemeldet als',
-        logOut: 'Log out'
+        logOut: 'Log out',
+        tos: 'Nutzungsbedingungen',
+        privacy: 'Datenschutzrichtlinie'
     },
     home: {
         title: 'OWASP Threat Dragon',
@@ -302,7 +310,8 @@ const deu = {
         saveModelAs: 'Modell speichern als',
         search: 'Suchen',
         next: 'nächste',
-        previous: 'vorherige'
+        previous: 'vorherige',
+        requiredField: 'Pflichtfeld'
     },
     threats: {
         model: {

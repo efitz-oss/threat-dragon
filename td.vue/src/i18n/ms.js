@@ -298,7 +298,8 @@ const ms = {
         saveModelAs: 'Simpan Model Sebagai',
         search: 'Carian',
         next: 'seterusnya',
-        previous: 'sebelumnya'
+        previous: 'sebelumnya',
+        requiredField: 'Medan yang diperlukan'
     },
     threats: {
         model: {

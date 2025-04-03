@@ -403,7 +403,8 @@ const eng = {
         saveModelAs: 'Save Model As',
         search: 'Search',
         next: 'Next',
-        previous: 'Previous'
+        previous: 'Previous',
+        requiredField: 'Required field'
     },
     threats: {
         model: {

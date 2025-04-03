@@ -302,7 +302,8 @@ const zho = {
         saveModelAs: '模型另存为',
         search: '搜索',
         next: '下一个',
-        previous: '上一个'
+        previous: '上一个',
+        requiredField: '必填字段'
     },
     threats: {
         model: {

@@ -10,8 +10,9 @@
                         <b-col>
                             <b-form-group
                                 id="title-group"
-                                :label="$t('threatmodel.title')"
+                                :label="$t('threatmodel.title') + ' *'"
                                 label-for="title"
+                                class="required-field"
                             >
                                 <b-form-input
                                     id="title"
@@ -103,7 +104,7 @@
                                 <template #prepend>
                                     <b-dropdown
                                         variant="secondary"
-                                        class="select-diagram-type"
+                                        class="select-diagram-type w-100"
                                         :text="model.detail.diagrams[idx].diagramType"
                                     >
                                         <b-dropdown-item-button
@@ -142,6 +143,7 @@
                                     v-model="model.detail.diagrams[idx].title"
                                     type="text"
                                     class="td-diagram"
+                                    placeholder="Diagram title"
                                 />
                                 <b-form-input
                                     v-model="model.detail.diagrams[idx].description"
@@ -200,6 +202,7 @@
                             </BButtonGroup>
                         </b-col>
                     </b-form-row>
+                    <small class="text-muted mt-3">* {{ $t('forms.requiredField') }}</small>
                 </b-form>
             </b-card>
         </b-col>
@@ -385,5 +388,14 @@ export default {
     }
     .select-diagram-type {
         font-size: 12px;
+    }
+    .required-field label {
+        font-weight: 600;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .td-diagram {
+        margin-bottom: 0.5rem;
     }
 </style>

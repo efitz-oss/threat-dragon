@@ -304,7 +304,8 @@ const por = {
         saveModelAs: 'Save Model As',
         search: 'Search',
         next: 'próximo',
-        previous: 'anterior'
+        previous: 'anterior',
+        requiredField: 'Campo obrigatório'
     },
     threats: {
         model: {

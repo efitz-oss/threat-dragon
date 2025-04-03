@@ -387,7 +387,8 @@ const fra = {
         saveModelAs: 'Sauvergarder le modèle en tant que',
         search: 'Rechercher',
         next: 'suivant',
-        previous: 'précédent'
+        previous: 'précédent',
+        requiredField: 'Champ obligatoire'
     },
     threats: {
         model: {

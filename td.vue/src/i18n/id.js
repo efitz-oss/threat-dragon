@@ -298,7 +298,8 @@ const ind = {
         saveModelAs: 'Simpan Model Sebagai',
         search: 'Cari',
         next: 'Berikutnya',
-        previous: 'sebelumnya'
+        previous: 'sebelumnya',
+        requiredField: 'Bidang yang harus diisi'
     },
     threats: {
         model: {

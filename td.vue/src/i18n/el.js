@@ -309,7 +309,8 @@ const ell = {
         saveModelAs: 'Αποθήκευση Μοντέλου ως',
         search: 'Αναζήτηση',
         next: 'Επόμενο',
-        previous: 'προηγούμενος'
+        previous: 'προηγούμενος',
+        requiredField: 'Υποχρεωτικό πεδίο'
     },
     threats: {
         model: {
