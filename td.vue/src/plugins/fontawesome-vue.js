@@ -35,7 +35,14 @@ import {
     faShieldAlt
 } from '@fortawesome/free-solid-svg-icons';
 
-import {faBitbucket, faGithub, faGitlab, faVuejs, faGoogle, faGoogleDrive} from '@fortawesome/free-brands-svg-icons';
+import {
+    faBitbucket,
+    faGithub,
+    faGitlab,
+    faVuejs,
+    faGoogle,
+    faGoogleDrive
+} from '@fortawesome/free-brands-svg-icons';
 // Add icons to the library for use
 library.add(
     faSignOutAlt,
@@ -80,5 +87,5 @@ export default {
     install(app) {
         // Register the FontAwesomeIcon component globally
         app.component('FontAwesomeIcon', FontAwesomeIcon);
-    },
+    }
 };

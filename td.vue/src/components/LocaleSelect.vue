@@ -9,7 +9,7 @@
                     placeholder="Search language..."
                     @click.stop
                     @input="filterLocales"
-                >
+                />
             </div>
             <div class="dropdown-items-container">
                 <b-dropdown-item
@@ -24,7 +24,7 @@
         </b-dropdown>
     </div>
 </template>
-  
+
 <script>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -37,14 +37,14 @@ export default {
     setup() {
         const store = useStore();
         const i18n = useI18n();
-        
+
         const searchQuery = ref('');
         const filteredLocales = ref([]);
-        
+
         // Computed property for the current locale
         const locale = computed(() => {
             const currentLocale = store.state.locale.locale;
-            
+
             // Sync i18n locale with store (with error handling for tests)
             try {
                 if (i18n.locale && i18n.locale.value !== currentLocale) {
@@ -53,65 +53,71 @@ export default {
             } catch (err) {
                 console.warn('Error syncing locale:', err);
             }
-            
+
             return currentLocale;
         });
-        
+
         // Helper to safely get available locales (handles both ref and direct array)
         const getAvailableLocales = () => {
             // If it's a ref (real implementation), access .value
-            if (i18n.availableLocales && typeof i18n.availableLocales === 'object' && 'value' in i18n.availableLocales) {
+            if (
+                i18n.availableLocales &&
+                typeof i18n.availableLocales === 'object' &&
+                'value' in i18n.availableLocales
+            ) {
                 return i18n.availableLocales.value;
             }
-            
+
             // For tests or when it's a direct array
             return Array.isArray(i18n.availableLocales) ? i18n.availableLocales : [];
         };
-        
+
         // Initialize the filtered locales
         onMounted(() => {
             filteredLocales.value = [...getAvailableLocales()];
         });
-        
+
         // Reset filtered locales when search query changes
         watch(searchQuery, () => {
             filterLocales();
         });
-        
+
         // Methods
         const filterLocales = () => {
             const query = searchQuery.value.toLowerCase().trim();
-            
+
             if (!query) {
                 filteredLocales.value = getAvailableLocales();
                 return;
             }
-            
+
             // Sort and filter locales
             filteredLocales.value = getAvailableLocales()
                 .sort((a, b) => {
                     const nameA = getLanguageName(a).toLowerCase();
                     const nameB = getLanguageName(b).toLowerCase();
-                    
+
                     // If name starts with query, it should come first
                     const startsWithA = nameA.startsWith(query);
                     const startsWithB = nameB.startsWith(query);
-                    
+
                     if (startsWithA && !startsWithB) return -1;
                     if (!startsWithA && startsWithB) return 1;
-                    
+
                     // If neither or both start with query, sort alphabetically
                     return nameA.localeCompare(nameB);
                 })
-                .filter(locale => {
+                .filter((locale) => {
                     const name = getLanguageName(locale).toLowerCase();
                     const searchableText = getSearchableText(name);
-                    return name.includes(query) ||
+                    return (
+                        name.includes(query) ||
                         locale.toLowerCase().includes(query) ||
-                        searchableText.includes(query);
+                        searchableText.includes(query)
+                    );
                 });
         };
-        
+
         const updateLocale = (locale) => {
             store.dispatch(LOCALE_SELECTED, locale);
             if (isElectron()) {
@@ -120,7 +126,7 @@ export default {
             searchQuery.value = ''; // Clear search after selection
             filterLocales(); // Reset the filtered list
         };
-        
+
         const getLanguageName = (locale) => {
             switch (locale) {
             case 'ara':
@@ -153,18 +159,18 @@ export default {
                 return locale;
             }
         };
-        
+
         const getSearchableText = (name) => {
             const searchMapping = {
-                'العربية': 'arabic',
-                'Ελληνικά': 'greek',
-                'हिंदी': 'hindi',
-                '日本語': 'japanese',
-                '中文': 'chinese'
+                العربية: 'arabic',
+                Ελληνικά: 'greek',
+                हिंदी: 'hindi',
+                日本語: 'japanese',
+                中文: 'chinese'
             };
             return searchMapping[name] || name;
         };
-        
+
         // Return everything needed for the template
         return {
             searchQuery,
@@ -178,7 +184,7 @@ export default {
     }
 };
 </script>
-  
+
 <style scoped>
 .locale-changer input {
     min-width: 200px;

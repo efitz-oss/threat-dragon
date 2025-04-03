@@ -24,7 +24,10 @@ const actions = {
     [AUTH_SET_LOCAL]: ({ commit }) => commit(AUTH_SET_LOCAL),
     [LOGOUT]: async ({ dispatch, state, rootState }) => {
         try {
-            if (rootState.provider.selected !== providers.allProviders.local.key && rootState.provider.selected !== providers.allProviders.desktop.key) {
+            if (
+                rootState.provider.selected !== providers.allProviders.local.key &&
+                rootState.provider.selected !== providers.allProviders.desktop.key
+            ) {
                 await loginApi.logoutAsync(state.refreshToken);
             }
         } catch (e) {

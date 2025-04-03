@@ -47,11 +47,13 @@ store.dispatch(configActions.fetch).then(() => {
         import('vue3-google-signin').then((GoogleSignInModule) => {
             const GoogleSignInPlugin = GoogleSignInModule.default;
             app.use(GoogleSignInPlugin, {
-                clientId: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+                clientId: process.env.VUE_APP_GOOGLE_CLIENT_ID
             });
             console.log('Google Sign-In plugin initialized');
         });
     } else {
-        console.log('Google auth is not enabled or running in desktop mode, skipping Google Sign-In plugin');
+        console.log(
+            'Google auth is not enabled or running in desktop mode, skipping Google Sign-In plugin'
+        );
     }
 });

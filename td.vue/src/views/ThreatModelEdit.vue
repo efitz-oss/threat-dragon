@@ -94,34 +94,46 @@
                         </b-col>
                     </b-form-row>
                     <b-form-row>
-                        <b-col
-                            v-for="(diagram, idx) in model.detail.diagrams"
-                            :key="idx"
-                            md="8"
-                        >
+                        <b-col v-for="(diagram, idx) in model.detail.diagrams" :key="idx" md="8">
                             <b-input-group
                                 :id="`diagram-group-${idx}`"
                                 :label-for="`diagram-${idx}`"
                                 class="mb-3"
                             >
                                 <b-input-group-prepend>
-                                    <b-dropdown variant="secondary" class="select-diagram-type" :text="model.detail.diagrams[idx].diagramType">
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'CIA')">
+                                    <b-dropdown
+                                        variant="secondary"
+                                        class="select-diagram-type"
+                                        :text="model.detail.diagrams[idx].diagramType"
+                                    >
+                                        <b-dropdown-item-button
+                                            @click="onDiagramTypeClick(idx, 'CIA')"
+                                        >
                                             {{ $t('threatmodel.diagram.cia.select') }}
                                         </b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'DIE')">
+                                        <b-dropdown-item-button
+                                            @click="onDiagramTypeClick(idx, 'DIE')"
+                                        >
                                             {{ $t('threatmodel.diagram.die.select') }}
                                         </b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'LINDDUN')">
+                                        <b-dropdown-item-button
+                                            @click="onDiagramTypeClick(idx, 'LINDDUN')"
+                                        >
                                             {{ $t('threatmodel.diagram.linddun.select') }}
                                         </b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'PLOT4ai')">
+                                        <b-dropdown-item-button
+                                            @click="onDiagramTypeClick(idx, 'PLOT4ai')"
+                                        >
                                             {{ $t('threatmodel.diagram.plot4ai.select') }}
                                         </b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'STRIDE')">
+                                        <b-dropdown-item-button
+                                            @click="onDiagramTypeClick(idx, 'STRIDE')"
+                                        >
                                             {{ $t('threatmodel.diagram.stride.select') }}
                                         </b-dropdown-item-button>
-                                        <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'Generic')">
+                                        <b-dropdown-item-button
+                                            @click="onDiagramTypeClick(idx, 'Generic')"
+                                        >
                                             {{ $t('threatmodel.diagram.generic.select') }}
                                         </b-dropdown-item-button>
                                     </b-dropdown>
@@ -138,7 +150,11 @@
                                     class="td-diagram-description"
                                 />
                                 <b-input-group-append>
-                                    <b-button variant="secondary" class="td-remove-diagram" @click="onRemoveDiagramClick(idx)">
+                                    <b-button
+                                        variant="secondary"
+                                        class="td-remove-diagram"
+                                        @click="onRemoveDiagramClick(idx)"
+                                    >
                                         <font-awesome-icon icon="times" />
                                         {{ $t('forms.remove') }}
                                     </b-button>
@@ -148,7 +164,11 @@
                     </b-form-row>
                     <b-form-row>
                         <b-col md="6">
-                            <a href="javascript:void(0)" class="add-diagram-link m-2" @click="onAddDiagramClick">
+                            <a
+                                href="javascript:void(0)"
+                                class="add-diagram-link m-2"
+                                @click="onAddDiagramClick"
+                            >
                                 <font-awesome-icon icon="plus" />
                                 {{ $t('threatmodel.diagram.addNewDiagram') }}
                             </a>
@@ -226,7 +246,10 @@ export default {
         },
         async onSaveClick(evt) {
             evt.preventDefault();
-            if (this.$route.name === 'gitThreatModelCreate' || this.$route.name === 'googleThreatModelCreate') {
+            if (
+                this.$route.name === 'gitThreatModelCreate' ||
+                this.$route.name === 'googleThreatModelCreate'
+            ) {
                 await this.$store.dispatch(tmActions.create);
             } else {
                 await this.$store.dispatch(tmActions.saveModel);
@@ -239,7 +262,10 @@ export default {
         async onCloseClick(evt) {
             evt.preventDefault();
             if (await this.restoreAsync()) {
-                this.$router.push({ name: `${this.providerType}ThreatModel`, params: this.$route.params });
+                this.$router.push({
+                    name: `${this.providerType}ThreatModel`,
+                    params: this.$route.params
+                });
             }
         },
         onAddDiagramClick(evt) {
@@ -297,12 +323,18 @@ export default {
             this.model.detail.diagrams[idx].placeholder = placeholder;
             this.model.detail.diagrams[idx].thumbnail = thumbnail;
             if (
-                this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.cia.defaultTitle') ||
-                this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.die.defaultTitle') ||
-                this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.linddun.defaultTitle') ||
-                this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.plot4ai.defaultTitle') ||
-                this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.stride.defaultTitle') ||
-                this.model.detail.diagrams[idx].title === this.$t('threatmodel.diagram.generic.defaultTitle')
+                this.model.detail.diagrams[idx].title ===
+                    this.$t('threatmodel.diagram.cia.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                    this.$t('threatmodel.diagram.die.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                    this.$t('threatmodel.diagram.linddun.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                    this.$t('threatmodel.diagram.plot4ai.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                    this.$t('threatmodel.diagram.stride.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                    this.$t('threatmodel.diagram.generic.defaultTitle')
             ) {
                 this.model.detail.diagrams[idx].title = defaultTitle;
             }

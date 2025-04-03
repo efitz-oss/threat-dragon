@@ -3,14 +3,16 @@ const jpn = {
         sessionExpired: 'セッションの有効期限が切れました。再ログインしてください。'
     },
     nav: {
-        v2Warning: 'バージョン2.0の脅威モデルは、Threat Dragonバージョン1.xとの互換性を保っていません。バージョン1.xのモデルは、インポート時にバージョン2.0のフォーマットに変換されます。',
+        v2Warning:
+            'バージョン2.0の脅威モデルは、Threat Dragonバージョン1.xとの互換性を保っていません。バージョン1.xのモデルは、インポート時にバージョン2.0のフォーマットに変換されます。',
         loggedInAs: 'ユーザー名',
         logOut: 'ログアウト'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragonロゴ',
-        description: 'OWASP Threat Dragonは無償で、脅威モデリングのソフトです。オープンソースで複数のプラットホームに対応しています。Threat Dragonで脅威モデルを作成することによって、システムに対する脅威が明確になります。重視が多様性と使い勝手に置かれているので、簡単に利用できます。'
+        description:
+            'OWASP Threat Dragonは無償で、脅威モデリングのソフトです。オープンソースで複数のプラットホームに対応しています。Threat Dragonで脅威モデルを作成することによって、システムに対する脅威が明確になります。重視が多様性と使い勝手に置かれているので、簡単に利用できます。'
     },
     providers: {
         desktop: {
@@ -37,7 +39,8 @@ const jpn = {
     dashboard: {
         welcome: {
             title: 'ようこそ！',
-            description: 'システムの設計をもっとセキュアにしましょう。既存の脅威モデルを開くか、次の選択肢から一つを選んで新しい脅威モデルを作成できます。'
+            description:
+                'システムの設計をもっとセキュアにしましょう。既存の脅威モデルを開くか、次の選択肢から一つを選んで新しい脅威モデルを作成できます。'
         },
         actions: {
             openExisting: '既存の脅威モデルを開く',
@@ -88,7 +91,7 @@ const jpn = {
         refBranch: 'リファレンスブランチ',
         add: 'ブランチを追加する\n',
         cancel: '取り消し',
-        name: 'ブランチ名',
+        name: 'ブランチ名'
     },
     threatmodelSelect: {
         select: '次のものから',
@@ -145,7 +148,8 @@ const jpn = {
         threats: '脅威',
         errors: {
             dropSingleFileOnly: '単一のファイルをドロップしてください。',
-            invalidJson: 'ファイルのJSONフォーマットに対応していません。モデルを確認したうえ、もう一度試してみてください。',
+            invalidJson:
+                'ファイルのJSONフォーマットに対応していません。モデルを確認したうえ、もう一度試してみてください。',
             onlyJsonAllowed: '拡張子.jsonのファイルのみに対応しています。',
             open: '脅威モデルを開く時にエラーが発生しました。開発者コンソールを確認してください。',
             save: '脅威モデルを保存時にエラーが発生しました。開発者コンソールを確認してください。'
@@ -278,13 +282,15 @@ const jpn = {
                 integrity: '完全性',
                 availability: '可用性'
             },
-            die: { // Source: https://www.fastly.com/jp/blog/the-dept-of-know-live-sounil-yu-on-why-embracing-the-die-security-model-means-faster-innovation
+            die: {
+                // Source: https://www.fastly.com/jp/blog/the-dept-of-know-live-sounil-yu-on-why-embracing-the-die-security-model-means-faster-innovation
                 header: '--- DIE ---',
                 distributed: '分散化',
                 immutable: '不変',
                 ephemeral: '一時的'
             },
-            linddun: { // No Japanese sources for LINDDUN; using English terms
+            linddun: {
+                // No Japanese sources for LINDDUN; using English terms
                 header: '--- LINDDUN ---',
                 linkability: 'Linkability',
                 identifiability: 'Identifiability',
@@ -294,7 +300,8 @@ const jpn = {
                 unawareness: 'Unawareness',
                 nonCompliance: 'Non-compliance'
             },
-            plot4ai: { // No Japanese sources for PLOT4ai; using English terms
+            plot4ai: {
+                // No Japanese sources for PLOT4ai; using English terms
                 header: '--- PLOT4ai ---',
                 techniqueProcesses: 'Technique & Processes',
                 accessibility: 'Accessibility',
@@ -305,7 +312,8 @@ const jpn = {
                 ethicsHumanRights: 'Ethics & Human Rights',
                 nonCompliance: 'Non-Compliance'
             },
-            stride: { // Source: https://learn.microsoft.com/ja-jp/azure/security/develop/threat-modeling-tool-threats
+            stride: {
+                // Source: https://learn.microsoft.com/ja-jp/azure/security/develop/threat-modeling-tool-threats
                 header: '--- STRIDE ---',
                 spoofing: 'なりすまし',
                 tampering: '改竄',

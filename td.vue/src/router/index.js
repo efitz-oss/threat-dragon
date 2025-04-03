@@ -12,7 +12,7 @@ const routes = [
     {
         path: '/oauth-return',
         name: 'OAuthCallback',
-        component: OAuthCallback,
+        component: OAuthCallback
     },
     {
         path: '/',
@@ -22,7 +22,8 @@ const routes = [
     {
         path: '/dashboard',
         name: 'MainDashboard',
-        component: () => import(/* webpackChunkName: "main-dashboard" */ '../views/MainDashboard.vue')
+        component: () =>
+            import(/* webpackChunkName: "main-dashboard" */ '../views/MainDashboard.vue')
     },
     {
         path: '/tos',
@@ -37,23 +38,27 @@ const routes = [
     {
         path: '/demo/select',
         name: 'DemoSelect',
-        component: () => import(/* webpackChunkName: "demo-select" */ '../views/demo/SelectDemoModel.vue')
+        component: () =>
+            import(/* webpackChunkName: "demo-select" */ '../views/demo/SelectDemoModel.vue')
     },
     ...desktopRoutes,
     ...gitRoutes,
     ...localRoutes,
-    ...googleRoutes,
+    ...googleRoutes
 ];
 
 // Use hash history for Electron (desktop) mode, web history for web mode
-const isElectron = typeof window !== 'undefined' && 
-                  (window.electronAPI?.isElectron || window.isElectronMode);
+const isElectron =
+    typeof window !== 'undefined' && (window.electronAPI?.isElectron || window.isElectronMode);
 const historyMode = isElectron ? createWebHashHistory() : createWebHistory();
-console.log('Router using', isElectron ? 'hash history (Electron mode)' : 'web history (browser mode)');
+console.log(
+    'Router using',
+    isElectron ? 'hash history (Electron mode)' : 'web history (browser mode)'
+);
 
 const router = createRouter({
     history: historyMode,
-    routes,
+    routes
 });
 
 export default router;

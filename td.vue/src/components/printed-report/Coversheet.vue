@@ -8,16 +8,20 @@
         <div class="td-report-meta">
             <ul>
                 <li class="td-owner">
-                    <strong>{{ $t('threatmodel.owner') }}</strong>: {{ owner }}
+                    <strong>{{ $t('threatmodel.owner') }}</strong
+                    >: {{ owner }}
                 </li>
                 <li class="td-reviewer">
-                    <strong>{{ $t('threatmodel.reviewer') }}</strong>: {{ reviewer }}
+                    <strong>{{ $t('threatmodel.reviewer') }}</strong
+                    >: {{ reviewer }}
                 </li>
                 <li class="td-contributors">
-                    <strong>{{ $t('threatmodel.contributors') }}</strong>: {{ (contributors || []).join(', ') }}
+                    <strong>{{ $t('threatmodel.contributors') }}</strong
+                    >: {{ (contributors || []).join(', ') }}
                 </li>
                 <li class="td-date-generated">
-                    <strong>{{ $t('report.dateGenerated') }}</strong>: {{ new Date().toDateString() }}
+                    <strong>{{ $t('report.dateGenerated') }}</strong
+                    >: {{ new Date().toDateString() }}
                 </li>
             </ul>
         </div>
@@ -26,7 +30,7 @@
             src="@/assets/threatdragon_logo_image.svg"
             alt="Threat Dragon Logo"
             class="td-brand-logo"
-        >
+        />
         <em v-if="branding" class="td-brand-text">OWASP Threat Dragon</em>
     </div>
 </template>
@@ -57,7 +61,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .td-title {
     display: flex;
     flex-direction: column;

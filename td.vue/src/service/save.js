@@ -9,10 +9,9 @@ const local = (data, fileName) => {
 
 function saveTD(data, fileName) {
     // Check if running in Electron
-    const isElectronEnv = typeof window !== 'undefined' && 
-                        window.electronAPI && 
-                        window.electronAPI.isElectron;
-    
+    const isElectronEnv =
+        typeof window !== 'undefined' && window.electronAPI && window.electronAPI.isElectron;
+
     if (isElectronEnv) {
         console.debug('Save using Electron file dialog');
         return saveElectron(data, fileName);
@@ -59,10 +58,10 @@ async function writeFile(data, fileName) {
             {
                 description: 'Threat Model',
                 accept: {
-                    'application/json': ['.json'],
-                },
-            },
-        ],
+                    'application/json': ['.json']
+                }
+            }
+        ]
     };
 
     try {
@@ -72,7 +71,7 @@ async function writeFile(data, fileName) {
         return;
     }
 
-    if ( await verifyPermission(fileHandle) ) {
+    if (await verifyPermission(fileHandle)) {
         const writable = await fileHandle.createWritable();
         try {
             await writable.write({ type: 'write', position: 0, data: jsonData });

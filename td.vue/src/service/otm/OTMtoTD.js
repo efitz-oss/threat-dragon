@@ -1,7 +1,8 @@
 const buildVersion = require('../../../package.json').version;
 
 const convertSummary = (jsonModel) => {
-    const noteText = 'Note that support for Open Threat Model is experimental and subject to large scale changes.\n';
+    const noteText =
+        'Note that support for Open Threat Model is experimental and subject to large scale changes.\n';
     const summary = new Object();
 
     if (jsonModel.project) {
@@ -10,7 +11,7 @@ const convertSummary = (jsonModel) => {
         summary.ownerContact = jsonModel.project.ownerContact;
         summary.description = noteText + jsonModel.project.description;
         summary.id = jsonModel.project.id;
-    
+
         // both attributes and tags are not used yet by TD, but need to be preserved if present
         if (jsonModel.project.attributes) {
             summary.attributes = JSON.parse(JSON.stringify(jsonModel.project.attributes));
@@ -27,7 +28,7 @@ const getDiagramType = (representation) => {
     const diagram = new Object();
 
     if (representation.attributes && representation.attributes.diagramType) {
-        switch(representation.attributes.diagramType) {
+        switch (representation.attributes.diagramType) {
         case 'CIA':
             diagram.diagramType = 'CIA';
             diagram.thumbnail = './public/content/images/thumbnail.cia.jpg';
@@ -77,7 +78,7 @@ const convertDetail = (jsonModel) => {
 
     if (jsonModel.representations) {
         let diagramID = 0;
-        jsonModel.representations.forEach(function(representation) {
+        jsonModel.representations.forEach(function (representation) {
             if (representation.type === 'diagram') {
                 // threat dragon only knows about diagrams
                 const diagram = getDiagramType(representation);

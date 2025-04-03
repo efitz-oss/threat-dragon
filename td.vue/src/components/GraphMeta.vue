@@ -26,11 +26,7 @@
                 <b-card-body>
                     <b-card-text v-if="!!cellRef">
                         <b-row>
-                            <b-col
-                                v-for="(threat, idx) in threats || []"
-                                :key="idx"
-                                md="4"
-                            >
+                            <b-col v-for="(threat, idx) in threats || []" :key="idx" md="4">
                                 <td-graph-threats
                                     :id="threat.id"
                                     :status="threat.status"
@@ -46,9 +42,7 @@
                             </b-col>
                         </b-row>
                     </b-card-text>
-                    <b-card-text
-                        v-if="!cellRef || !cellRef.data"
-                    >
+                    <b-card-text v-if="!cellRef || !cellRef.data">
                         {{ $t('threats.emptyThreat') }}
                     </b-card-text>
                 </b-card-body>
@@ -96,7 +90,11 @@ export default {
             if (!state.cell?.ref?.data) {
                 return true;
             }
-            return state.cell.ref.data.outOfScope || state.cell.ref.data.isTrustBoundary || state.cell.ref.data.type === 'tm.Text';
+            return (
+                state.cell.ref.data.outOfScope ||
+                state.cell.ref.data.isTrustBoundary ||
+                state.cell.ref.data.type === 'tm.Text'
+            );
         }
     }),
     components: {
@@ -110,30 +108,33 @@ export default {
         init() {
             this.$store.dispatch(CELL_UNSELECTED);
         },
-        threatSelected(threatId,state) {
+        threatSelected(threatId, state) {
             console.debug('selected threat ID: ' + threatId);
-            this.$emit('threatSelected', threatId,state);
+            this.$emit('threatSelected', threatId, state);
         },
         newThreat() {
-            const threat = createNewTypedThreat(this.diagram.diagramType, this.cellRef.data.type,this.threatTop+1);
+            const threat = createNewTypedThreat(
+                this.diagram.diagramType,
+                this.cellRef.data.type,
+                this.threatTop + 1
+            );
             console.debug('new threat ID: ' + threat.id);
             this.cellRef.data.threats.push(threat);
             this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
-            this.$store.dispatch(tmActions.update, { threatTop: this.threatTop+1 });
+            this.$store.dispatch(tmActions.update, { threatTop: this.threatTop + 1 });
             this.$store.dispatch(tmActions.modified);
             this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
             dataChanged.updateStyleAttrs(this.cellRef);
-            this.threatSelected(threat.id,'new');
+            this.threatSelected(threat.id, 'new');
         },
-        AddThreatByType(){
-            this.$emit('threatSuggest','type');
+        AddThreatByType() {
+            this.$emit('threatSuggest', 'type');
         },
-        AddThreatByContext(){
-            this.$emit('threatSuggest','context');
+        AddThreatByContext() {
+            this.$emit('threatSuggest', 'context');
         }
-    },
+    }
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -156,6 +157,6 @@ export default {
 }
 .collapsed > .when-open,
 .not-collapsed > .when-closed {
-  display: none;
+    display: none;
 }
 </style>

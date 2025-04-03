@@ -19,11 +19,9 @@
                             label-for="title"
                         >
                             <b-form-input
-                                id="title"
-                                v-model="threat.title"
-                                type="text"
-                                required
-                            />
+id="title"
+v-model="threat.title" type="text"
+required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -67,11 +65,7 @@
                             :label="$t('threats.properties.score')"
                             label-for="score"
                         >
-                            <b-form-input
-                                id="score"
-                                v-model="threat.score"
-                                type="text"
-                            />
+                            <b-form-input id="score" v-model="threat.score" type="text" />
                         </b-form-group>
                     </b-col>
 
@@ -115,11 +109,7 @@
                             :label="$t('threats.properties.mitigation')"
                             label-for="mitigation"
                         >
-                            <b-form-textarea
-                                id="mitigation"
-                                v-model="threat.mitigation"
-                                rows="5"
-                            />
+                            <b-form-textarea id="mitigation" v-model="threat.mitigation" rows="5" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -143,11 +133,7 @@
                     >
                         {{ $t('forms.remove') }}
                     </b-button>
-                    <b-button
-                        variant="secondary"
-                        class="float-right"
-                        @click="updateThreat()"
-                    >
+                    <b-button variant="secondary" class="float-right" @click="updateThreat()">
                         {{ $t('forms.apply') }}
                     </b-button>
                     <b-button
@@ -185,12 +171,14 @@ export default {
             }
 
             const res = [];
-            const threatTypes = threatModels.getThreatTypesByElement(this.threat.modelType, this.cellRef.data.type);
+            const threatTypes = threatModels.getThreatTypesByElement(
+                this.threat.modelType,
+                this.cellRef.data.type
+            );
             Object.keys(threatTypes).forEach((type) => {
                 res.push(this.$t(type));
             }, this);
-            if(!res.includes(this.threat.type))
-                res.push(this.threat.type);
+            if (!res.includes(this.threat.type)) res.push(this.threat.type);
             return res;
         },
         statuses() {
@@ -209,46 +197,47 @@ export default {
                 { value: 'Critical', text: this.$t('threats.priority.critical') }
             ];
         },
-        modalTitle() { return this.$t('threats.edit') + ' #' + this.number; }
+        modalTitle() {
+            return this.$t('threats.edit') + ' #' + this.number;
+        }
     },
     data() {
         return {
             threat: {},
-            modelTypes: [
-                'CIA',
-                'DIE',
-                'LINDDUN',
-                'PLOT4ai',
-                'STRIDE'
-            ],
+            modelTypes: ['CIA', 'DIE', 'LINDDUN', 'PLOT4ai', 'STRIDE'],
             number: 0
         };
     },
     methods: {
-        editThreat(threatId,state) {
-            const crnthreat = this.cellRef.data.threats.find(x => x.id === threatId);
-            this.threat = {...crnthreat};
+        editThreat(threatId, state) {
+            const crnthreat = this.cellRef.data.threats.find((x) => x.id === threatId);
+            this.threat = { ...crnthreat };
             if (!this.threat) {
                 // this should never happen with a valid threatId
                 console.warn('Trying to access a non-existent threatId: ' + threatId);
             } else {
                 this.number = this.threat.number;
-                this.newThreat = state==='new';
+                this.newThreat = state === 'new';
                 this.$refs.editModal.show();
             }
         },
         updateThreat() {
-            const threatRef = this.cellRef.data.threats.find(x => x.id === this.threat.id);
+            const threatRef = this.cellRef.data.threats.find((x) => x.id === this.threat.id);
             if (threatRef) {
                 const objRef = this.cellRef.data;
-                if(!objRef.threatFrequency){
-                    const tmpfreq = threatModels.getFrequencyMapByElement(this.threat.modelType,this.cellRef.data.type);
-                    if(tmpfreq!==null)
-                        objRef.threatFrequency = tmpfreq;
+                if (!objRef.threatFrequency) {
+                    const tmpfreq = threatModels.getFrequencyMapByElement(
+                        this.threat.modelType,
+                        this.cellRef.data.type
+                    );
+                    if (tmpfreq !== null) objRef.threatFrequency = tmpfreq;
                 }
-                if(objRef.threatFrequency){
-                    Object.keys(objRef.threatFrequency).forEach((k)=>{
-                        if(this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`)===this.threat.type)
+                if (objRef.threatFrequency) {
+                    Object.keys(objRef.threatFrequency).forEach((k) => {
+                        if (
+                            this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`) ===
+                            this.threat.type
+                        )
                             objRef.threatFrequency[k]++;
                     });
                 }
@@ -269,14 +258,19 @@ export default {
             this.hideModal();
         },
         deleteThreat() {
-            if(!this.threat.new){
+            if (!this.threat.new) {
                 const threatMap = this.cellRef.data.threatFrequency;
-                Object.keys(threatMap).forEach((k)=>{
-                    if(this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`)===this.threat.type)
+                Object.keys(threatMap).forEach((k) => {
+                    if (
+                        this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`) ===
+                        this.threat.type
+                    )
                         threatMap[k]--;
                 });
             }
-            this.cellRef.data.threats = this.cellRef.data.threats.filter(x => x.id !== this.threat.id);
+            this.cellRef.data.threats = this.cellRef.data.threats.filter(
+                (x) => x.id !== this.threat.id
+            );
             this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
             this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
             this.$store.dispatch(tmActions.modified);
@@ -286,14 +280,19 @@ export default {
             this.$refs.editModal.hide();
         },
         async confirmDelete() {
-            const confirmed = await this.$bvModal.msgBoxConfirm(this.$t('threats.confirmDeleteMessage'), {
-                title: this.$t('threats.confirmDeleteTitle'),
-                okTitle: this.$t('forms.delete'),
-                cancelTitle: this.$t('forms.cancel'),
-                okVariant: 'danger'
-            });
+            const confirmed = await this.$bvModal.msgBoxConfirm(
+                this.$t('threats.confirmDeleteMessage'),
+                {
+                    title: this.$t('threats.confirmDeleteTitle'),
+                    okTitle: this.$t('forms.delete'),
+                    cancelTitle: this.$t('forms.cancel'),
+                    okVariant: 'danger'
+                }
+            );
 
-            if (!confirmed) { return; }
+            if (!confirmed) {
+                return;
+            }
 
             this.deleteThreat();
             this.hideModal();
@@ -304,5 +303,4 @@ export default {
         }
     }
 };
-
 </script>

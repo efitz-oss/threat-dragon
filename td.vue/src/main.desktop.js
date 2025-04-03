@@ -41,7 +41,7 @@ vueApp.use(toastNotification); // Add toast notifications
 vueApp.use(DesktopAuthPlugin); // Add Desktop authentication plugin
 
 // Set desktop configuration explicitly
-store.commit(CONFIG_LOADED, { 
+store.commit(CONFIG_LOADED, {
     config: {
         githubEnabled: false,
         googleEnabled: false,
@@ -112,11 +112,14 @@ const safeTranslate = (key, defaultText) => {
 
 // Function to show confirmation dialog
 const getConfirmModal = async () => {
-    modalInstance.message = safeTranslate('forms.discardMessage', 'Are you sure you want to discard your changes?');
+    modalInstance.message = safeTranslate(
+        'forms.discardMessage',
+        'Are you sure you want to discard your changes?'
+    );
     modalInstance.title = safeTranslate('forms.confirm', 'Confirm');
     modalInstance.okTitle = safeTranslate('forms.ok', 'OK');
     modalInstance.cancelTitle = safeTranslate('forms.cancel', 'Cancel');
-    
+
     try {
         return modalInstance.$refs.confirmModal.show();
     } catch (error) {
@@ -126,10 +129,11 @@ const getConfirmModal = async () => {
 };
 
 // request from electron to renderer to close the application
-window.electronAPI.onCloseAppRequest(async (_event) =>  { // eslint-disable-line no-unused-vars
+window.electronAPI.onCloseAppRequest(async (_event) => {
+    // eslint-disable-line no-unused-vars
     console.debug('Close application request');
     const store = app.$store || vueApp.config.globalProperties.$store;
-    if (!store.getters.modelChanged || await getConfirmModal()) {
+    if (!store.getters.modelChanged || (await getConfirmModal())) {
         console.debug('Closing application');
         // send request back to electron server to close the application
         window.electronAPI.appClose();
@@ -137,16 +141,16 @@ window.electronAPI.onCloseAppRequest(async (_event) =>  { // eslint-disable-line
 });
 
 // request from electron to renderer to close the model
-window.electronAPI.onCloseModelRequest(async (_event, fileName) =>  {
+window.electronAPI.onCloseModelRequest(async (_event, fileName) => {
     console.debug('Close model request for file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
-    
-    if (!store.getters.modelChanged || await getConfirmModal()) {
+
+    if (!store.getters.modelChanged || (await getConfirmModal())) {
         console.debug('Closing model and diagram');
         store.dispatch(tmActions.diagramClosed);
         localAuth();
-        appRouter.push({ name: 'MainDashboard' }).catch(error => {
+        appRouter.push({ name: 'MainDashboard' }).catch((error) => {
             if (error.name != 'NavigationDuplicated') {
                 throw error;
             }
@@ -157,12 +161,12 @@ window.electronAPI.onCloseModelRequest(async (_event, fileName) =>  {
 });
 
 // request from electron to renderer to start a new model
-window.electronAPI.onNewModelRequest(async (_event, fileName) =>  {
+window.electronAPI.onNewModelRequest(async (_event, fileName) => {
     console.debug('New model request  with file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
-    
-    if (!store.getters.modelChanged || await getConfirmModal()) {
+
+    if (!store.getters.modelChanged || (await getConfirmModal())) {
         console.debug('Opening new model');
         store.dispatch(tmActions.diagramClosed);
         store.dispatch(tmActions.update, { fileName: fileName });
@@ -174,24 +178,24 @@ window.electronAPI.onNewModelRequest(async (_event, fileName) =>  {
 });
 
 // provide renderer with model contents from electron
-window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
+window.electronAPI.onOpenModel((_event, fileName, jsonModel) => {
     console.debug('Open model with file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
     const currentRoute = appRouter.currentRoute.value; // Vue 3 router uses .value
-    
+
     // Safe access to i18n and toast
     let i18nInstance, toastInstance;
     try {
         i18nInstance = app.$i18n || vueApp.config.globalProperties.$i18n;
-    } catch(e) {
+    } catch (e) {
         console.warn('Could not access i18n instance:', e);
         i18nInstance = null;
     }
-    
+
     try {
         toastInstance = app.$toast || vueApp.config.globalProperties.$toast || window.$toast;
-    } catch(e) {
+    } catch (e) {
         console.warn('Could not access toast instance:', e);
         toastInstance = {
             error: (msg) => console.error('Toast error:', msg),
@@ -199,10 +203,10 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
             success: (msg) => console.log('Toast success:', msg)
         };
     }
-    
+
     let params;
     // check for schema errors
-    if(!isValidSchema(jsonModel)){
+    if (!isValidSchema(jsonModel)) {
         console.warn('Invalid threat model');
     } else if (isValidOTM(jsonModel)) {
         // if threat model is in OTM format then convert OTM to dragon format
@@ -217,16 +221,17 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
     } catch (e) {
         let errorMessage;
         try {
-            errorMessage = i18nInstance && typeof i18nInstance.t === 'function' 
-                ? i18nInstance.t('threatmodel.errors.invalidJson') + ' : ' + e.message 
-                : 'Invalid JSON: ' + e.message;
+            errorMessage =
+                i18nInstance && typeof i18nInstance.t === 'function'
+                    ? i18nInstance.t('threatmodel.errors.invalidJson') + ' : ' + e.message
+                    : 'Invalid JSON: ' + e.message;
         } catch (translationError) {
             console.warn('Translation error:', translationError);
             errorMessage = 'Invalid JSON: ' + e.message;
         }
-        
+
         if (toastInstance) toastInstance.error(errorMessage);
-        appRouter.push({ name: 'HomePage' }).catch(error => {
+        appRouter.push({ name: 'HomePage' }).catch((error) => {
             if (error.name != 'NavigationDuplicated') {
                 throw error;
             }
@@ -236,7 +241,7 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
     store.dispatch(tmActions.update, { fileName: fileName });
     store.dispatch(tmActions.selected, jsonModel);
     localAuth();
-    appRouter.push({ name: `${providerNames.desktop}ThreatModel`, params }).catch(error => {
+    appRouter.push({ name: `${providerNames.desktop}ThreatModel`, params }).catch((error) => {
         if (error.name != 'NavigationDuplicated') {
             throw error;
         }
@@ -244,29 +249,29 @@ window.electronAPI.onOpenModel((_event, fileName, jsonModel) =>  {
 });
 
 // request from electron to renderer to provide new model contents
-window.electronAPI.onOpenModelRequest(async (_event, fileName) =>  {
+window.electronAPI.onOpenModelRequest(async (_event, fileName) => {
     console.debug('Open request for model file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
-    
-    if (!store.getters.modelChanged || await getConfirmModal()) {
+
+    if (!store.getters.modelChanged || (await getConfirmModal())) {
         console.debug('Confirm model can be opened');
         window.electronAPI.modelOpenConfirmed(fileName);
     }
 });
 
 // request from electron to renderer to print the model report
-window.electronAPI.onPrintModelRequest(async (_event, format) =>  {
+window.electronAPI.onPrintModelRequest(async (_event, format) => {
     console.debug('Print report request for model using format : ' + format);
     const store = app.$store || vueApp.config.globalProperties.$store;
     const appRouter = app.$router || router.get();
-    
-    if (!store.getters.modelChanged || await getConfirmModal()) {
+
+    if (!store.getters.modelChanged || (await getConfirmModal())) {
         console.debug('Printing model as ' + format);
         store.dispatch(tmActions.diagramClosed);
         store.dispatch(tmActions.restore);
         store.dispatch(tmActions.notModified);
         localAuth();
-        appRouter.push({ name: `${providerNames.desktop}Report` }).catch(error => {
+        appRouter.push({ name: `${providerNames.desktop}Report` }).catch((error) => {
             if (error.name != 'NavigationDuplicated') {
                 throw error;
             }
@@ -277,17 +282,17 @@ window.electronAPI.onPrintModelRequest(async (_event, format) =>  {
 });
 
 // request from electron to renderer to provide the model data so that it can be saved
-window.electronAPI.onSaveModelRequest((_event, fileName) =>  {
+window.electronAPI.onSaveModelRequest((_event, fileName) => {
     console.debug('Save model request for file name : ' + fileName);
     const store = app.$store || vueApp.config.globalProperties.$store;
-    
+
     store.dispatch(tmActions.diagramApplied);
     store.dispatch(tmActions.saveModel);
 });
 
 const localAuth = () => {
     const store = app.$store || vueApp.config.globalProperties.$store;
-    
+
     store.dispatch(providerActions.selected, providerNames.desktop);
     store.dispatch(authActions.setLocal);
 };

@@ -3,14 +3,16 @@ const spa = {
         sessionExpired: 'Su sesión ha expirado. Por favor inicie una nueva sesión para continuar.'
     },
     nav: {
-        v2Warning: 'Los modelos de amenazas(threat models) version 2.0 no son compatibles con los modelos de amenazas(threat model) de Threat Dragon versión 1.x. Los modelos importados de la versión 1.x serán actualizados acorde al esquema de la versión 2.0',
+        v2Warning:
+            'Los modelos de amenazas(threat models) version 2.0 no son compatibles con los modelos de amenazas(threat model) de Threat Dragon versión 1.x. Los modelos importados de la versión 1.x serán actualizados acorde al esquema de la versión 2.0',
         loggedInAs: 'Conectado como',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo de Threat Dragon',
-        description: 'Threat Dragon es una herramienta de modelado de amenazas de código abierto de OWASP. Se puede utilizar como aplicación desktop para Windows, MacOS y Linux o como una aplicación web. La aplicación de desktop es excelente si desea probarla sin otorgar acceso a sus repositorios de GitHub. Sin embargo, si elige la versión web, podrá liberar el increíble poder de GitHub en sus modelos de amenazas (threat models). Por supuesto, para hacer esto, deberá iniciar sesión en GitHub y permitir el acceso al repositorio de interés'
+        description:
+            'Threat Dragon es una herramienta de modelado de amenazas de código abierto de OWASP. Se puede utilizar como aplicación desktop para Windows, MacOS y Linux o como una aplicación web. La aplicación de desktop es excelente si desea probarla sin otorgar acceso a sus repositorios de GitHub. Sin embargo, si elige la versión web, podrá liberar el increíble poder de GitHub en sus modelos de amenazas (threat models). Por supuesto, para hacer esto, deberá iniciar sesión en GitHub y permitir el acceso al repositorio de interés'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const spa = {
     dashboard: {
         welcome: {
             title: '¡Le damos la bienvenida! ¡Estamos encantados de tenerlo aquí!',
-            description: 'Con OWASP Threat Dragon tendrá los mecanismos para hacer que los diseños de sus aplicaciones sean más seguros. Puedes abrir un modelo de amenaza (threat model) existente o crear un modelo desde cero. Simplemente elija una de las siguientes opciones.'
+            description:
+                'Con OWASP Threat Dragon tendrá los mecanismos para hacer que los diseños de sus aplicaciones sean más seguros. Puedes abrir un modelo de amenaza (threat model) existente o crear un modelo desde cero. Simplemente elija una de las siguientes opciones.'
         },
         actions: {
             openExisting: 'Abrir un modelo de amenazas (threat model) existente',
@@ -91,7 +94,7 @@ const spa = {
         refBranch: 'Rama de referencia',
         add: 'Añadir rama',
         cancel: 'Cancelar',
-        name: 'Nombre de la sucursal',
+        name: 'Nombre de la sucursal'
     },
     threatmodelSelect: {
         select: 'Seleccione un modelo de amenazas (threat model) ',
@@ -213,7 +216,8 @@ const spa = {
                 action: 'Moverse por toda la imagen del diagrama'
             },
             multiSelect: {
-                shortcut: 'hacer clic en el botón izquierdo del ratón en el espacio vacío y arrastrar',
+                shortcut:
+                    'hacer clic en el botón izquierdo del ratón en el espacio vacío y arrastrar',
                 action: 'Selección múltiple'
             },
             zoom: {

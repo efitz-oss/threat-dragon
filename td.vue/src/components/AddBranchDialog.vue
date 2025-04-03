@@ -14,7 +14,11 @@
         <form @submit.prevent="addBranch">
             <b-row>
                 <b-col lg="12" class="pb-2">
-                    <b-form-group id="input-group-1" :label="$t('branch.name')" label-for="branchName">
+                    <b-form-group
+                        id="input-group-1"
+                        :label="$t('branch.name')"
+                        label-for="branchName"
+                    >
                         <b-form-input
                             id="branchName"
                             v-model="newBranchName"
@@ -33,7 +37,11 @@
             </b-row>
             <b-row>
                 <b-col lg="12" class="pb-2">
-                    <b-form-group id="input-group-2" :label="$t('branch.refBranch')" label-for="refBranch">
+                    <b-form-group
+                        id="input-group-2"
+                        :label="$t('branch.refBranch')"
+                        label-for="refBranch"
+                    >
                         <b-form-select
                             id="refBranch"
                             v-model="refBranch"
@@ -45,21 +53,13 @@
                 </b-col>
             </b-row>
         </form>
-        <hr>
+        <hr />
         <div class="d-flex justify-content-end">
-            <b-overlay
-                :show="wait"
-                variant="light"
-                blur="true"
-                opacity="0.8"
-                spinner-small
-            >
+            <b-overlay :show="wait" variant="light" blur="true" opacity="0.8" spinner-small>
                 <b-button
-                    variant="primary"
-                    type="submit"
-                    class="m-1"
-                    @click="addBranch"
-                >
+variant="primary"
+type="submit" class="m-1"
+@click="addBranch">
                     {{ $t('branch.add') }}
                 </b-button>
             </b-overlay>
@@ -79,7 +79,10 @@ export default {
             type: Array,
             validator: (value) => {
                 return value.every((branch) => {
-                    return typeof branch === 'string' || (branch.value && typeof branch.value === 'string');
+                    return (
+                        typeof branch === 'string' ||
+                        (branch.value && typeof branch.value === 'string')
+                    );
                 });
             },
             required: true
@@ -97,7 +100,7 @@ export default {
     },
     computed: {
         branchNames() {
-            return this.branches.map(branch => branch.value || branch);
+            return this.branches.map((branch) => branch.value || branch);
         }
     },
     watch: {
@@ -133,7 +136,10 @@ export default {
                 this.wait = false;
                 return;
             }
-            this.$store.dispatch(branchActions.create, {branchName: this.newBranchName, refBranch: this.refBranch});
+            this.$store.dispatch(branchActions.create, {
+                branchName: this.newBranchName,
+                refBranch: this.refBranch
+            });
 
             // sometimes the branch is not immediately available, so we wait for it (only for 30 seconds)
             for (let i = 0; i < 30; i++) {
@@ -141,7 +147,7 @@ export default {
                 if (this.branchNames.includes(this.newBranchName)) {
                     break;
                 }
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise((resolve) => setTimeout(resolve, 1000));
             }
 
             this.wait = false;

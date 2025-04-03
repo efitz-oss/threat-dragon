@@ -4,17 +4,16 @@
         class="m-1"
         variant="secondary"
         @click="onProviderClick()"
-    > 
+    >
         <span class="login-btn-icon">
             <font-awesome-icon
-                :icon="provider.icon"
-                size="2x"
-                color="white"
-                class="mr-2"
-            />
+:icon="provider.icon"
+size="2x" color="white"
+class="mr-2" />
         </span>
         <span>
-            {{ $t('providers.' + provider.key + '.loginWith') }} {{ $t('providers.' + provider.key + '.displayName') }}
+            {{ $t('providers.' + provider.key + '.loginWith') }}
+            {{ $t('providers.' + provider.key + '.displayName') }}
         </span>
     </BButton>
 </template>
@@ -35,11 +34,14 @@ export default {
             console.debug('login with provider: ' + this.provider.key);
             await this.$store.dispatch(PROVIDER_SELECTED, this.provider.key);
 
-            if (this.provider.key === providerNames.local || this.provider.key === providerNames.desktop) {
+            if (
+                this.provider.key === providerNames.local ||
+                this.provider.key === providerNames.desktop
+            ) {
                 this.$store.dispatch(AUTH_SET_LOCAL);
                 return this.$router.push('/dashboard');
             }
-          
+
             const resp = await loginApi.loginAsync(this.provider.key);
             window.location.href = resp.data;
         }
@@ -49,6 +51,6 @@ export default {
 
 <style lang="scss" scoped>
 .login-btn-icon {
-  display: block;
+    display: block;
 }
 </style>

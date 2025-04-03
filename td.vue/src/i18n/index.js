@@ -2,7 +2,7 @@ import { createI18n, useI18n as vueUseI18n } from 'vue-i18n';
 
 /**
  * Vue 3 Internationalization Module
- * 
+ *
  * This module provides standardized access to translations using Vue 3's Composition API.
  * It maintains backward compatibility with code that uses the older patterns.
  */
@@ -39,7 +39,22 @@ const getI18n = () => {
             legacy: false, // Use Composition API mode
             locale: 'eng',
             messages: {
-                ara, deu, ell, eng, spa, fin, id, fra, hin, ind, jpn, ms, por, rus, ukr, zho
+                ara,
+                deu,
+                ell,
+                eng,
+                spa,
+                fin,
+                id,
+                fra,
+                hin,
+                ind,
+                jpn,
+                ms,
+                por,
+                rus,
+                ukr,
+                zho
             }
         });
     }
@@ -60,7 +75,7 @@ export const useI18n = () => {
             availableLocales: ['eng', 'deu', 'fra']
         };
     }
-    
+
     // Use the vue-i18n provided useI18n hook for normal operation
     try {
         return vueUseI18n();
@@ -87,17 +102,17 @@ export const tc = (key, options = {}) => {
         // In tests, just return the key
         return key;
     }
-    
+
     try {
         const i18nInstance = getI18n();
-        
+
         if (i18nInstance?.global?.t) {
             return i18nInstance.global.t(key, options);
         }
     } catch (err) {
         console.warn(`Translation error for key: ${key}`, err);
     }
-    
+
     // Return key as fallback if translation fails
     return key;
 };

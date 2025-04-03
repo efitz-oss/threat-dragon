@@ -1,8 +1,4 @@
-import {
-    CELL_DATA_UPDATED,
-    CELL_SELECTED,
-    CELL_UNSELECTED
-} from '../actions/cell.js';
+import { CELL_DATA_UPDATED, CELL_SELECTED, CELL_UNSELECTED } from '../actions/cell.js';
 
 export const clearState = (state) => {
     state.ref = null;

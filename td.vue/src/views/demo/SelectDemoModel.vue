@@ -51,9 +51,8 @@ export default {
                 window.electronAPI.modelOpened(model.name);
             }
             const params = Object.assign({}, this.$route.params, { threatmodel: model.name });
-            this.$router.push({ name: 'localThreatModel' , params });
+            this.$router.push({ name: 'localThreatModel', params });
         }
     }
 };
-
 </script>

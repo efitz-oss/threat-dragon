@@ -4,10 +4,10 @@
             <b-col>
                 <b-container class="text-center p-4 bg-light rounded shadow-sm">
                     <h4>
-                        {{ $t("dashboard.welcome.title") }}
+                        {{ $t('dashboard.welcome.title') }}
                     </h4>
                     <p>
-                        {{ $t("dashboard.welcome.description") }}
+                        {{ $t('dashboard.welcome.description') }}
                     </p>
                 </b-container>
             </b-col>
@@ -34,14 +34,14 @@ import { getDashboardActions } from '@/service/provider/providers.js';
 export default {
     name: 'MainDashboard',
     components: {
-        TdDashboardAction,
+        TdDashboardAction
     },
     computed: mapState({
         actions: (state) => {
             const providerKey = state.provider.selected || 'local';
             return getDashboardActions(providerKey);
-        },
-    }),
+        }
+    })
 };
 </script>
 

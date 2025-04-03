@@ -10,7 +10,7 @@ import shapes from './shapes/index.js';
  */
 const get = (graph, container, Stencil) => {
     console.debug('Setting up stencil for diagram editor');
-    
+
     // If we're in testing mode and Stencil is provided, use it to create a mock
     if (Stencil) {
         // Create stencil configuration
@@ -20,34 +20,34 @@ const get = (graph, container, Stencil) => {
             layoutOptions: {
                 columns: 1,
                 center: true,
-                resizeToFit: true,
+                resizeToFit: true
             }
         };
-        
+
         // Create shape instances for testing
         shapes.TrustBoundaryBox();
         shapes.ProcessShape();
         shapes.ActorShape();
         shapes.StoreShape();
-        
+
         // Create the stencil instance
         const stencil = new Stencil(stencilConfig);
-        
+
         // Set up the stencil
         stencil.load([{}, {}, {}, {}], 'components');
         stencil.load([{}, {}], 'boundaries');
         stencil.load([{}], 'metadata');
-        
+
         // Set up events
         stencil.onSearch();
         stencil.onSearch();
-        
+
         // Add to DOM
         container.appendChild(stencil.container);
-        
+
         return stencil;
     }
-    
+
     // Return a simple stencil that satisfies the interface for production
     return {
         load: () => {

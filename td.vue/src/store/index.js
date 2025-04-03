@@ -19,7 +19,7 @@ const buildState = require('../../package.json').buildState;
 const store = createStore({
     state: {
         packageBuildVersion: buildVersion,
-        packageBuildState: buildState,
+        packageBuildState: buildState
     },
     modules: {
         auth,
@@ -31,9 +31,9 @@ const store = createStore({
         provider,
         repo,
         folder,
-        threatmodel,
+        threatmodel
     },
-    plugins: [vuexPersist.session.plugin],
+    plugins: [vuexPersist.session.plugin]
 });
 
 // Factory pattern for backward compatibility with existing code

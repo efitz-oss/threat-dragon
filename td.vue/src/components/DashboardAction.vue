@@ -1,13 +1,9 @@
-<template>    
+<template>
     <b-col lg>
         <router-link :to="to" class="action-pane-link">
             <b-container class="text-center action-pane p-4 bg-light rounded shadow-sm">
-                <font-awesome-icon
-                    :icon="[iconPreface, icon]"
-                    size="4x"
-                    class="action-icon"
-                />
-                <br>
+                <font-awesome-icon :icon="[iconPreface, icon]" size="4x" class="action-icon" />
+                <br />
                 {{ $t(`dashboard.actions.${description}`) }}
             </b-container>
         </router-link>
@@ -50,8 +46,8 @@ export default {
     min-height: 100%;
     margin-bottom: 0px;
 }
-.action-pane:hover{
-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+.action-pane:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .action-pane-link:hover {
     text-decoration: none;

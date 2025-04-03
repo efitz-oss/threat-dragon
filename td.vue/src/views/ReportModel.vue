@@ -6,10 +6,7 @@
                     <b-row>
                         <b-col>
                             <b-form-group id="model-group" label-cols="auto">
-                                <b-form-checkbox
-                                    id="show_models"
-                                    v-model="display.diagrams"
-                                >
+                                <b-form-checkbox id="show_models" v-model="display.diagrams">
                                     {{ $t('report.options.showModelDiagrams') }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -17,10 +14,7 @@
 
                         <b-col>
                             <b-form-group id="mitigated-group" label-cols="auto">
-                                <b-form-checkbox
-                                    id="show_mitigated"
-                                    v-model="display.mitigated"
-                                >
+                                <b-form-checkbox id="show_mitigated" v-model="display.mitigated">
                                     {{ $t('report.options.showMitigatedThreats') }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -28,10 +22,7 @@
 
                         <b-col>
                             <b-form-group id="outofscope-group" label-cols="auto">
-                                <b-form-checkbox
-                                    id="show_outofscope"
-                                    v-model="display.outOfScope"
-                                >
+                                <b-form-checkbox id="show_outofscope" v-model="display.outOfScope">
                                     {{ $t('report.options.showOutOfScope') }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -39,10 +30,7 @@
 
                         <b-col>
                             <b-form-group id="empty-group" label-cols="auto">
-                                <b-form-checkbox
-                                    id="show_empty"
-                                    v-model="display.empty"
-                                >
+                                <b-form-checkbox id="show_empty" v-model="display.empty">
                                     {{ $t('report.options.showEmpty') }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -50,10 +38,7 @@
 
                         <b-col>
                             <b-form-group id="branding-group" label-cols="auto">
-                                <b-form-checkbox
-                                    id="show_branding"
-                                    v-model="display.branding"
-                                >
+                                <b-form-checkbox id="show_branding" v-model="display.branding">
                                     {{ $t('report.options.showBranding') }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -61,10 +46,7 @@
 
                         <b-col>
                             <b-form-group id="properties-group" label-cols="auto">
-                                <b-form-checkbox
-                                    id="show_attributes"
-                                    v-model="display.properties"
-                                >
+                                <b-form-checkbox id="show_attributes" v-model="display.properties">
                                     {{ $t('report.options.showProperties') }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -111,10 +93,7 @@
                 />
             </div>
             <div class="td-report-section">
-                <td-executive-summary
-                    :summary="model.summary.description"
-                    :threats="allThreats"
-                />
+                <td-executive-summary :summary="model.summary.description" :threats="allThreats" />
                 <td-print-executive-summary
                     :summary="model.summary.description"
                     :threats="allThreats"
@@ -194,7 +173,10 @@ export default {
     },
     methods: {
         onCloseClick() {
-            this.$router.push({ name: `${this.providerType}ThreatModel`, params: this.$route.params });
+            this.$router.push({
+                name: `${this.providerType}ThreatModel`,
+                params: this.$route.params
+            });
         },
         print() {
             console.debug('Print the report window');

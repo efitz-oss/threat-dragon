@@ -3,14 +3,16 @@ const deu = {
         sessionExpired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.'
     },
     nav: {
-        v2Warning: 'Version 2.0 Bedrohungsmodelle sind nicht Abwärtskompatibel mit Version 1.x Threat Dragon Modellen. Importierte Version 1.x Modelle werden auf das Version 2.0 Schema gehoben', //in line with wording of BSI Leitfaden zur Entwicklung sicherer Webanwendungen
+        v2Warning:
+            'Version 2.0 Bedrohungsmodelle sind nicht Abwärtskompatibel mit Version 1.x Threat Dragon Modellen. Importierte Version 1.x Modelle werden auf das Version 2.0 Schema gehoben', //in line with wording of BSI Leitfaden zur Entwicklung sicherer Webanwendungen
         loggedInAs: 'Angemeldet als',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'OWASP Threat Dragon ist eine kostenlose, Open-Source, plattformübergreifende Applikation für das Erstellen von Bedrohungsmodellen. Verwenden Sie es, um Diagramme zu Bedrohungsmodellen zu erstellen und Bedrohungen für Ihre Systeme zu identifizieren. Mit Fokus auf Flexibilität und Einfachheit ist das System leicht verständlich und für alle Benutzer zugänglich.'
+        description:
+            'OWASP Threat Dragon ist eine kostenlose, Open-Source, plattformübergreifende Applikation für das Erstellen von Bedrohungsmodellen. Verwenden Sie es, um Diagramme zu Bedrohungsmodellen zu erstellen und Bedrohungen für Ihre Systeme zu identifizieren. Mit Fokus auf Flexibilität und Einfachheit ist das System leicht verständlich und für alle Benutzer zugänglich.'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const deu = {
     dashboard: {
         welcome: {
             title: 'Willkommen!',
-            description: 'Sie sind bereit Ihren Applikationsentwurf sicherer zu gestalten. Sie können ein bestehendes Bedrohungsmodell öffnen, oder ein neues erstellen indem Sie eine der folgenden Optionen auswählen. '
+            description:
+                'Sie sind bereit Ihren Applikationsentwurf sicherer zu gestalten. Sie können ein bestehendes Bedrohungsmodell öffnen, oder ein neues erstellen indem Sie eine der folgenden Optionen auswählen. '
         },
         actions: {
             openExisting: 'Ein bestehendes Bedrohungsmodell öffnen',
@@ -77,7 +80,7 @@ const deu = {
     },
     repository: {
         select: 'Wählen Sie ein',
-        from: 'Repository aus folgender Liste',  //in line with Github wording https://docs.github.com/de/repositories
+        from: 'Repository aus folgender Liste', //in line with Github wording https://docs.github.com/de/repositories
         noneFound: 'Kein Repository gefunden. Legen Sie zum Starten eine neues Repository an.'
     },
     branch: {
@@ -108,7 +111,8 @@ const deu = {
         description: 'High-Level System Beschreibung',
         dragAndDrop: 'Ziehen und ablegen oder ',
         editing: 'Bearbeiten',
-        jsonPaste: 'Legen Sie eine Bedrohungsmodell JSON Datei ab oder kopieren Sie den Inhalt hier:',
+        jsonPaste:
+            'Legen Sie eine Bedrohungsmodell JSON Datei ab oder kopieren Sie den Inhalt hier:',
         owner: 'Eigentümer',
         reviewer: 'Prüfer',
         title: 'Titel',
@@ -149,7 +153,8 @@ const deu = {
         threats: 'Bedrohungen',
         errors: {
             dropSingleFileOnly: 'Ziehen und ablegen erfordert eine einzige Datei.',
-            invalidJson: 'Ungültiges JSON. Bitte überprüfen Sie Ihr Modell und versuchen Sie es erneut.',
+            invalidJson:
+                'Ungültiges JSON. Bitte überprüfen Sie Ihr Modell und versuchen Sie es erneut.',
             onlyJsonAllowed: 'Nur Datein mit .json Endung werden unterstützt.',
             open: 'Fehler beim Öffnen des Bedrohungsmodells. Prüfen Sie die Developer Konsole für mehr Informationen',
             save: 'Fehler beim Speichern des Bedrohungsmodells. Prüfen Sie die Developer Konsole für mehr Informationen'
@@ -288,7 +293,8 @@ const deu = {
                 immutable: 'Immutable',
                 ephemeral: 'Ephemeral'
             },
-            linddun: { //unable to find german sources to Linddun. The official website is also not available on german. will leave the specific terms as in the original
+            linddun: {
+                //unable to find german sources to Linddun. The official website is also not available on german. will leave the specific terms as in the original
                 header: '--- LINDDUN ---',
                 linkability: 'Linkability',
                 identifiability: 'Identifiability',
@@ -332,7 +338,8 @@ const deu = {
         confirmDeleteMessage: 'Sind Sie sicher, dass Sie diese Bedrohung löschen wollen?',
         description: 'Geben Sie eine Beschreibung dieser Bedrohung an',
         emptyThreat: 'Wählen Sie ein Element im Diagramm aus, um eine Bedrohung hinzuzufügen',
-        mitigation: 'Geben Sie eine Korrekturmaßnahme für diese Bedrohung oder eine Begründung N/A an',
+        mitigation:
+            'Geben Sie eine Korrekturmaßnahme für diese Bedrohung oder eine Begründung N/A an',
         newThreat: 'Neue Bedrohung',
         newThreatByType: 'Neue Bedrohung nach Typ',
         newThreatByContext: 'Neue Bedrohung nach Kontext',

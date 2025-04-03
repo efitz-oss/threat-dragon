@@ -14,7 +14,7 @@ export const convert = function (data) {
     otm.trustZones = [];
     otm.components = [];
     otm.dataflows = [];
-    diagram.cells.forEach(function(cell) {
+    diagram.cells.forEach(function (cell) {
         if (cell.data.type == 'tm.Boundary') {
             const zone = new Object();
             zone.id = cell.id;
@@ -32,7 +32,7 @@ export const convert = function (data) {
 
             zone.representations = [];
             let counter = 1;
-            cell.vertices.forEach(function(vert) {
+            cell.vertices.forEach(function (vert) {
                 const rep = new Object();
                 rep.id = counter;
                 rep.name = 'vertices';
@@ -56,9 +56,8 @@ export const convert = function (data) {
 
             store.threats = [];
 
-            if (Object.hasOwn(cell.data, 'threats'))
-            {
-                cell.data.threats.forEach(function(threat) {
+            if (Object.hasOwn(cell.data, 'threats')) {
+                cell.data.threats.forEach(function (threat) {
                     const tr = new Object();
                     tr.id = store.id + store.threats.length;
                     tr.name = threat.title;
@@ -98,9 +97,8 @@ export const convert = function (data) {
 
             actor.threats = [];
 
-            if (Object.hasOwn(cell, 'threats'))
-            {
-                cell.data.threats.forEach(function(threat) {
+            if (Object.hasOwn(cell, 'threats')) {
+                cell.data.threats.forEach(function (threat) {
                     const tr = new Object();
                     tr.id = actor.id + actor.threats.length;
                     tr.name = threat.title;
@@ -140,9 +138,8 @@ export const convert = function (data) {
 
             process.threats = [];
 
-            if (Object.hasOwn(cell.data, 'threats'))
-            {
-                cell.data.threats.forEach(function(threat) {
+            if (Object.hasOwn(cell.data, 'threats')) {
+                cell.data.threats.forEach(function (threat) {
                     const tr = new Object();
                     tr.id = process.id + process.threats.length;
                     tr.name = threat.title;
@@ -189,9 +186,8 @@ export const convert = function (data) {
 
             flow.threats = [];
 
-            if (Object.hasOwn(cell.data, 'threats'))
-            {
-                cell.data.threats.forEach(function(threat) {
+            if (Object.hasOwn(cell.data, 'threats')) {
+                cell.data.threats.forEach(function (threat) {
                     const tr = new Object();
                     tr.id = flow.id + flow.threats.length;
                     tr.name = threat.title;

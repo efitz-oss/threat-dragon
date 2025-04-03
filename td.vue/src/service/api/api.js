@@ -27,14 +27,14 @@ const getAsync = async (url, query) => {
 const postAsync = async (url, body) => {
     // Debug logging for POST requests
     console.log(`Making POST request to: ${url}`);
-    
+
     try {
         const client = clientFactory.get();
         console.log('HTTP client created');
-        
+
         const res = await client.post(url, body);
         console.log(`POST request to ${url} succeeded with status: ${res.status}`);
-        
+
         return res.data;
     } catch (error) {
         console.error(`POST request to ${url} failed:`, error.message);

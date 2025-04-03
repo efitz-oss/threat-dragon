@@ -3,14 +3,16 @@ const por = {
         sessionExpired: 'Your session has expired. Please log in again to continue.'
     },
     nav: {
-        v2Warning: 'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
+        v2Warning:
+            'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Logado como',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo do Threat Dragon',
-        description: 'Threat Dragon é uma ferramenta gratuita e open-souce de modelagem de ameaças da OWASP e que pode ser utilizada via desktop para Windows, MacOS e Linux ou como uma aplicação web. A aplicação de desktop é excelente se você quiser experimentá-la sem conceder acesso aos seus repositórios do GitHub. No entanto, se você escolher a versão web, poderá liberar o incrível poder do GitHub em seus modelos de ameaça (threat model)! Obviamente, para fazer isso, será necessário realizar o login no GitHub e permitir o acesso ao repositório de interesse!'
+        description:
+            'Threat Dragon é uma ferramenta gratuita e open-souce de modelagem de ameaças da OWASP e que pode ser utilizada via desktop para Windows, MacOS e Linux ou como uma aplicação web. A aplicação de desktop é excelente se você quiser experimentá-la sem conceder acesso aos seus repositórios do GitHub. No entanto, se você escolher a versão web, poderá liberar o incrível poder do GitHub em seus modelos de ameaça (threat model)! Obviamente, para fazer isso, será necessário realizar o login no GitHub e permitir o acesso ao repositório de interesse!'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const por = {
     dashboard: {
         welcome: {
             title: 'Desejamos boas-vindas! Ficamos felizes em te ter por aqui!',
-            description: 'Com OWASP Threat Dragon, você terá os mecanismos para tornar os designs de seus aplicativos mais seguros! Você pode abrir um modelo de ameaça (threat model) existente ou criar um modelo do zero! Basta escolher uma das opções abaixo!'
+            description:
+                'Com OWASP Threat Dragon, você terá os mecanismos para tornar os designs de seus aplicativos mais seguros! Você pode abrir um modelo de ameaça (threat model) existente ou criar um modelo do zero! Basta escolher uma das opções abaixo!'
         },
         actions: {
             openExisting: 'Abrir um modelo de ameaça (threat model) existente',
@@ -92,7 +95,7 @@ const por = {
         refBranch: 'Branch de referência',
         add: 'Adicionar branch',
         cancel: 'Cancelar',
-        name: 'Nome da branch',
+        name: 'Nome da branch'
     },
     threatmodelSelect: {
         select: 'Selecion a Threat Model from',
@@ -321,10 +324,10 @@ const por = {
         },
         generic: {
             dafault: 'Nova ameaça genérica',
-            cia : 'Nova ameaça da CIA',
-            die : 'Nova ameaça da DIE',
-            linddun : 'Nova ameaça LINDDUN',
-            plot4ai : 'Nova ameaça PLOT4ai',
+            cia: 'Nova ameaça da CIA',
+            die: 'Nova ameaça da DIE',
+            linddun: 'Nova ameaça LINDDUN',
+            plot4ai: 'Nova ameaça PLOT4ai',
             stride: 'Nova ameaça STRIDE'
         },
         edit: 'Edit Threat',
@@ -370,20 +373,20 @@ const por = {
             showBranding: 'Threat Dragon logo'
         },
         title: 'Relatório do modelo de ameaças para',
-        dateGenerated : 'Data Gerada',
-        executiveSummary : 'Resumo Executivo',
-        notProvided : 'Não fornecido',
+        dateGenerated: 'Data Gerada',
+        executiveSummary: 'Resumo Executivo',
+        notProvided: 'Não fornecido',
         summary: 'Resumo',
-        threatStats : {
+        threatStats: {
             total: 'Ameaças totais',
             mitigated: 'Total Mitigado',
-            notMitigated : 'Não atenuado',
-            openCritical : 'Abrir / Crítica Prioridade',
-            openHigh : 'Abrir / Alta Prioridade',
-            openMedium : 'Abrir / Prioridade Média',
-            openLow : 'Abrir / Baixa Prioridade',
-            openTbd : 'Abrir / TBD Prioridade',
-            openUnknown : 'Prioridade Aberta / Desconhecida'
+            notMitigated: 'Não atenuado',
+            openCritical: 'Abrir / Crítica Prioridade',
+            openHigh: 'Abrir / Alta Prioridade',
+            openMedium: 'Abrir / Prioridade Média',
+            openLow: 'Abrir / Baixa Prioridade',
+            openTbd: 'Abrir / TBD Prioridade',
+            openUnknown: 'Prioridade Aberta / Desconhecida'
         }
     },
     upgrade: {
@@ -393,7 +396,7 @@ const por = {
             p1: 'Version 2 uses a different drawing library, which will change the way parts of your threat models are saved. While most diagrams will look the same as they did in previous versions of Threat Dragon, there are cases where they may need to be adjusted slightly.',
             p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.'
         },
-        instructions: 'Great! Let\'s get you to your model.',
+        instructions: "Great! Let's get you to your model.",
         continue: 'Continue to Threat Model'
     }
 };

@@ -22,7 +22,7 @@ const folderAsync = (folderId = 'root', page = 1) => {
  * @returns {Promise}
  */
 const createAsync = (folder, fileContent, fileName) => {
-    return api.postAsync(`${resource}/${folder}/create`, {fileContent, fileName});
+    return api.postAsync(`${resource}/${folder}/create`, { fileContent, fileName });
 };
 
 /**
@@ -32,7 +32,7 @@ const createAsync = (folder, fileContent, fileName) => {
  * @returns {Promise}
  */
 const updateAsync = (fileId, fileContent) => {
-    return api.putAsync(`${resource}/${fileId}/update`, {fileContent});
+    return api.putAsync(`${resource}/${fileId}/update`, { fileContent });
 };
 
 /**

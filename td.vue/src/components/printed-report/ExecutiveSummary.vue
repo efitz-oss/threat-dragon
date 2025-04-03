@@ -79,44 +79,39 @@ export default {
             return this.threats.length;
         },
         mitigated: function () {
-            return this.threats
-                .filter(threat => threat.status.toLowerCase() === 'mitigated')
+            return this.threats.filter((threat) => threat.status.toLowerCase() === 'mitigated')
                 .length;
         },
         notMitigated: function () {
-            return this.threats
-                .filter(threat => threat.status.toLowerCase() !== 'mitigated')
+            return this.threats.filter((threat) => threat.status.toLowerCase() !== 'mitigated')
                 .length;
         },
         openHigh: function () {
-            return this.getOpenThreats()
-                .filter(threat => threat.severity.toLowerCase() === 'high')
+            return this.getOpenThreats().filter(
+                (threat) => threat.severity.toLowerCase() === 'high'
+            ).length;
+        },
+        openMedium: function () {
+            return this.getOpenThreats().filter(
+                (threat) => threat.severity.toLowerCase() === 'medium'
+            ).length;
+        },
+        openLow: function () {
+            return this.getOpenThreats().filter((threat) => threat.severity.toLowerCase() === 'low')
                 .length;
         },
-        openMedium: function() {
-            return this.getOpenThreats()
-                .filter(threat => threat.severity.toLowerCase() === 'medium')
-                .length;
-        },
-        openLow: function() {
-            return this.getOpenThreats()
-                .filter(threat => threat.severity.toLowerCase() === 'low')
-                .length;
-        },
-        openUnknown: function() {
-            return this.getOpenThreats()
-                .filter(threat => !threat.severity)
-                .length;
+        openUnknown: function () {
+            return this.getOpenThreats().filter((threat) => !threat.severity).length;
         }
     },
     methods: {
         getOpenThreats() {
-            return this.threats
-                .filter(threat => threat.status && threat.status.toLowerCase() === 'open');
+            return this.threats.filter(
+                (threat) => threat.status && threat.status.toLowerCase() === 'open'
+            );
         }
     }
 };
-
 </script>
 
 <style lang="scss" scoped>

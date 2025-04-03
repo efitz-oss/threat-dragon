@@ -7,9 +7,12 @@
         :page-prev="pagePrev"
         :on-item-click="onRepoClick"
         :paginate="paginate"
-        :empty-state-text="`${$t('repository.noneFound')} ${$t('providers.' + provider + '.displayName')}`"
+        :empty-state-text="`${$t('repository.noneFound')} ${$t(
+            'providers.' + provider + '.displayName'
+        )}`"
     >
-        {{ $t('repository.select') }} {{ $t(`providers.${provider}.displayName`) }} {{ $t('repository.from') }}
+        {{ $t('repository.select') }} {{ $t(`providers.${provider}.displayName`) }}
+        {{ $t('repository.from') }}
     </td-selection-page>
 </template>
 
@@ -29,7 +32,7 @@ export default {
     data() {
         return {
             searchQuery: '',
-            searchTimeout: null,
+            searchTimeout: null
         };
     },
     computed: mapState({
@@ -47,10 +50,10 @@ export default {
                 console.log('Suche nach:', newQuery);
                 this.$store.dispatch(repoActions.fetch, {
                     page: 1,
-                    searchQuery: newQuery,
+                    searchQuery: newQuery
                 });
             }, 500);
-        },
+        }
     },
     mounted() {
         if (this.provider !== this.$route.params.provider) {
@@ -69,7 +72,11 @@ export default {
             const params = Object.assign({}, this.$route.params, {
                 repository: repoName
             });
-            this.$router.push({ name: `${this.providerType}Branch`, params, query: this.$route.query });
+            this.$router.push({
+                name: `${this.providerType}Branch`,
+                params,
+                query: this.$route.query
+            });
         },
         paginate(page) {
             this.$store.dispatch(repoActions.fetch, page, this.searchQuery);

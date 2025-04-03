@@ -1,4 +1,4 @@
-import {CONFIG_CLEAR, CONFIG_LOADED} from '@/store/actions/config';
+import { CONFIG_CLEAR, CONFIG_LOADED } from '@/store/actions/config';
 import api from '@/service/api/api';
 import { isElectronMode } from '@/utils/environment';
 
@@ -7,7 +7,7 @@ export const clearState = (state) => {
 };
 
 const state = {
-    config: null,
+    config: null
 };
 
 // Default desktop configuration with Google auth disabled
@@ -35,14 +35,14 @@ const actions = {
 
     CONFIG_FETCH: async ({ commit, dispatch }) => {
         dispatch(CONFIG_CLEAR);
-        
+
         // In Electron mode, set a default config and skip the API call
         if (isElectronMode()) {
             console.log('DESKTOP MODE: Using desktop config with Google auth disabled');
             commit(CONFIG_LOADED, { config: desktopConfig });
             return;
         }
-        
+
         try {
             console.log('FETCHING config from server');
             const response = await api.getAsync('/api/config');
@@ -54,7 +54,7 @@ const actions = {
             console.log('Using fallback config due to API error');
             commit(CONFIG_LOADED, { config: webFallbackConfig });
         }
-    },
+    }
 };
 
 const mutations = {
@@ -79,7 +79,6 @@ const getters = {
 // const getters = {
 //     config: (state) => state.config,
 // };
-
 
 export default {
     state,

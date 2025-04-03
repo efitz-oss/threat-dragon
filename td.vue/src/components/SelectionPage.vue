@@ -34,7 +34,11 @@
                         ...
                     </b-list-group-item>
 
-                    <b-list-group-item v-if="items.length === 0 && !!emptyStateText" href="#" @click="$emit('empty-state-click')">
+                    <b-list-group-item
+                        v-if="items.length === 0 && !!emptyStateText"
+                        href="#"
+                        @click="$emit('empty-state-click')"
+                    >
                         {{ emptyStateText }}
                     </b-list-group-item>
 
@@ -53,19 +57,15 @@
         <b-row>
             <b-col md="6" offset="3">
                 <div class="pagination">
-                    <button :disabled="!pagePrev" @click="prevPage">
-                        Previous
-                    </button>
+                    <button :disabled="!pagePrev" @click="prevPage">Previous</button>
                     <button class="btn" disabled>
                         {{ pageRef }}
                     </button>
-                    <button :disabled="!pageNext" @click="nextPage">
-                        Next
-                    </button>
+                    <button :disabled="!pageNext" @click="nextPage">Next</button>
                 </div>
             </b-col>
         </b-row>
-    </b-container>    
+    </b-container>
 </template>
 
 <script>
@@ -100,8 +100,12 @@ export default {
         const displayedItems = computed(() => {
             if (!filter.value) return props.items;
             return props.isGoogleProvider
-                ? props.items.filter(item => item.name.toLowerCase().includes(filter.value.toLowerCase()))
-                : props.items.filter(item => item.toLowerCase().includes(filter.value.toLowerCase()));
+                ? props.items.filter((item) =>
+                    item.name.toLowerCase().includes(filter.value.toLowerCase())
+                )
+                : props.items.filter((item) =>
+                    item.toLowerCase().includes(filter.value.toLowerCase())
+                );
         });
         const prevPage = () => {
             if (props.pagePrev) {

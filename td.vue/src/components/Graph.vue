@@ -16,11 +16,11 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col style="display: flex;    width: 100vw; ">
+                    <b-col style="display: flex; width: 100vw">
                         <div
                             id="graph-container"
                             ref="graph_container"
-                            style="height: 65vh; width: 100%; flex: 1; "
+                            style="height: 65vh; width: 100%; flex: 1"
                         />
                     </b-col>
                 </b-row>
@@ -85,10 +85,10 @@ export default {
                 this.$store.dispatch(tmActions.diagramModified, updated);
             });
         },
-        threatSelected(threatId,state) {
-            this.$refs.threatEditDialog.editThreat(threatId,state);
+        threatSelected(threatId, state) {
+            this.$refs.threatEditDialog.editThreat(threatId, state);
         },
-        threatSuggest(type){
+        threatSuggest(type) {
             this.$refs.threatSuggestDialog.showModal(type);
         },
         saved() {
@@ -99,9 +99,12 @@ export default {
             this.$store.dispatch(tmActions.saveModel);
         },
         async closed() {
-            if (!this.$store.getters.modelChanged || await this.getConfirmModal()) {
+            if (!this.$store.getters.modelChanged || (await this.getConfirmModal())) {
                 await this.$store.dispatch(tmActions.diagramClosed);
-                this.$router.push({ name: `${this.providerType}ThreatModel`, params: this.$route.params });
+                this.$router.push({
+                    name: `${this.providerType}ThreatModel`,
+                    params: this.$route.params
+                });
             }
         },
         getConfirmModal() {

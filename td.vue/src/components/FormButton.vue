@@ -4,10 +4,7 @@
         :variant="isPrimary ? 'primary' : 'secondary'"
         @click="onBtnClick"
     >
-        <font-awesome-icon
-            v-if="icon"
-            :icon="[iconPreface, icon]"
-        />
+        <font-awesome-icon v-if="icon" :icon="[iconPreface, icon]" />
         {{ text }}
     </BButton>
 </template>

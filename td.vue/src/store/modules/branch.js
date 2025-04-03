@@ -1,9 +1,4 @@
-import {
-    BRANCH_CLEAR,
-    BRANCH_CREATE,
-    BRANCH_FETCH,
-    BRANCH_SELECTED
-} from '../actions/branch.js';
+import { BRANCH_CLEAR, BRANCH_CREATE, BRANCH_FETCH, BRANCH_SELECTED } from '../actions/branch.js';
 import threatmodelApi from '../../service/api/threatmodelApi.js';
 
 export const clearState = (state) => {
@@ -28,14 +23,14 @@ const actions = {
         dispatch(BRANCH_CLEAR);
         const resp = await threatmodelApi.branchesAsync(rootState.repo.selected, page);
         commit(BRANCH_FETCH, {
-            'branches': resp.data.branches,
-            'page': resp.data.pagination.page,
-            'pageNext': resp.data.pagination.next,
-            'pagePrev': resp.data.pagination.prev
+            branches: resp.data.branches,
+            page: resp.data.pagination.page,
+            pageNext: resp.data.pagination.next,
+            pagePrev: resp.data.pagination.prev
         });
     },
     [BRANCH_SELECTED]: ({ commit }, branch) => commit(BRANCH_SELECTED, branch),
-    [BRANCH_CREATE]: async ({ dispatch, rootState }, {branchName, refBranch}) => {
+    [BRANCH_CREATE]: async ({ dispatch, rootState }, { branchName, refBranch }) => {
         await threatmodelApi.createBranchAsync(rootState.repo.selected, branchName, refBranch);
         await dispatch(BRANCH_FETCH);
     }
@@ -43,7 +38,7 @@ const actions = {
 
 const mutations = {
     [BRANCH_CLEAR]: (state) => clearState(state),
-    [BRANCH_FETCH]: (state, {branches, page, pageNext, pagePrev }) => {
+    [BRANCH_FETCH]: (state, { branches, page, pageNext, pagePrev }) => {
         // Replace Vue.set with direct assignment (Vue 3 reactivity)
         state.all = [...branches];
         state.page = page;

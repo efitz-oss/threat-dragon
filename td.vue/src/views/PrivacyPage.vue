@@ -4,7 +4,7 @@
             <b-row class="text-center mb-2">
                 <b-col md="12">
                     <h1 class="display-3 text-center">
-                        {{ $t("privacy.title") }}
+                        {{ $t('privacy.title') }}
                     </h1>
                 </b-col>
             </b-row>

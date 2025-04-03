@@ -53,7 +53,8 @@ const getEditGraph = (container, ctor = Graph) => {
             createEdge() {
                 return new Shape.Edge({
                     attrs: {
-                        line: { // probably need stroke to be black for federal reports
+                        line: {
+                            // probably need stroke to be black for federal reports
                             strokeWidth: 2,
                             targetMarker: {
                                 name: 'block',
@@ -90,7 +91,7 @@ const getEditGraph = (container, ctor = Graph) => {
                 modifiers: ['shift'],
                 pageVisible: true,
                 pageBreak: false,
-                pannable:  true
+                pannable: true
             })
         )
         .use(

@@ -3,14 +3,16 @@ const zho = {
         sessionExpired: '会话登录已过期，请重新登录。'
     },
     nav: {
-        v2Warning: '2.0 版威胁模型与 1.x 版Threat Dragon模型不兼容。导入的 1.x 版模型将升级到 2.0 版本',
+        v2Warning:
+            '2.0 版威胁模型与 1.x 版Threat Dragon模型不兼容。导入的 1.x 版模型将升级到 2.0 版本',
         loggedInAs: '登录身份为',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'Threat Dragon 是来自 OWASP 的免费开源威胁建模工具。它可以用作 Windows、MacOS 和 Linux 的独立桌面应用程序，也可以用作 Web 应用程序。如果您想在不授予其 GitHub 存储库访问权限的情况下试用该应用程序，则桌面应用程序非常棒，但如果您选择在线（Web）版本，则可以在威胁模型上释放 GitHub 的强大功能！根据需求选择下方登录方式。'
+        description:
+            'Threat Dragon 是来自 OWASP 的免费开源威胁建模工具。它可以用作 Windows、MacOS 和 Linux 的独立桌面应用程序，也可以用作 Web 应用程序。如果您想在不授予其 GitHub 存储库访问权限的情况下试用该应用程序，则桌面应用程序非常棒，但如果您选择在线（Web）版本，则可以在威胁模型上释放 GitHub 的强大功能！根据需求选择下方登录方式。'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const zho = {
     dashboard: {
         welcome: {
             title: '欢迎!',
-            description: '您已准备好开始使您的应用程序设计更加安全。您可以通过选择以下选项之一来打开现有威胁模型或创建新的威胁模型。'
+            description:
+                '您已准备好开始使您的应用程序设计更加安全。您可以通过选择以下选项之一来打开现有威胁模型或创建新的威胁模型。'
         },
         actions: {
             openExisting: '打开现有的威胁模型',
@@ -92,7 +95,7 @@ const zho = {
         refBranch: '参考分支',
         add: '添加分支',
         cancel: '取消',
-        name: '分支名称',
+        name: '分支名称'
     },
     threatmodelSelect: {
         select: '从中选择一个威胁模型',

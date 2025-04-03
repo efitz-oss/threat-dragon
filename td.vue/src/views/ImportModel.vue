@@ -4,8 +4,8 @@
             <b-col>
                 <div class="jumbotron text-center">
                     <h4>
-                        {{ $t("forms.open") }} /
-                        {{ $t("dashboard.actions.importExisting") }}
+                        {{ $t('forms.open') }} /
+                        {{ $t('dashboard.actions.importExisting') }}
                     </h4>
                 </div>
             </b-col>
@@ -14,15 +14,8 @@
             <b-col md="8" offset="2">
                 <b-form>
                     <b-row>
-                        <b-col
-                            @drop.prevent="onDropFile"
-                            @dragenter.prevent
-                            @dragover.prevent
-                        >
-                            <b-form-group
-                                id="json-input-group"
-                                label-for="json-input"
-                            >
+                        <b-col @drop.prevent="onDropFile" @dragenter.prevent @dragover.prevent>
+                            <b-form-group id="json-input-group" label-for="json-input">
                                 <b-form-textarea
                                     id="json-input"
                                     v-model="tmJson"
@@ -72,14 +65,7 @@ import openThreatModel from '@/service/otm/openThreatModel.js';
 import TdFormButton from '@/components/FormButton.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import { isValidSchema } from '@/service/schema/ajv';
-import {
-    BRow,
-    BCol,
-    BForm,
-    BFormGroup,
-    BFormTextarea,
-    BButtonGroup,
-} from 'bootstrap-vue-next';
+import { BRow, BCol, BForm, BFormGroup, BFormTextarea, BButtonGroup } from 'bootstrap-vue-next';
 
 // only search for text files
 const pickerFileOptions = {
@@ -87,21 +73,21 @@ const pickerFileOptions = {
         {
             description: 'Threat models',
             accept: {
-                'application/json': ['.json'],
-            },
-        },
+                'application/json': ['.json']
+            }
+        }
     ],
-    multiple: false,
+    multiple: false
 };
 
 export default {
     name: 'ImportModel',
     components: {
-        TdFormButton,
+        TdFormButton
     },
     computed: {
         ...mapState({
-            providerType: (state) => getProviderType(state.provider.selected),
+            providerType: (state) => getProviderType(state.provider.selected)
         }),
         prompt() {
             return (
@@ -110,11 +96,11 @@ export default {
                 this.$t('threatmodel.jsonPaste') +
                 ' ... }'
             );
-        },
+        }
     },
     data() {
         return {
-            tmJson: '',
+            tmJson: ''
         };
     },
     methods: {
@@ -126,40 +112,32 @@ export default {
                         .then((text) => {
                             this.tmJson = text;
                             this.$store.dispatch(tmActions.update, {
-                                fileName: file.name,
+                                fileName: file.name
                             });
                             this.onImportClick(file.name);
                         })
                         .catch((e) => this.$toast.error(e));
                 } else {
-                    this.$toast.error(
-                        this.$t('threatmodel.errors.onlyJsonAllowed')
-                    );
+                    this.$toast.error(this.$t('threatmodel.errors.onlyJsonAllowed'));
                 }
             } else {
-                this.$toast.error(
-                    this.$t('threatmodel.errors.dropSingleFileOnly')
-                );
+                this.$toast.error(this.$t('threatmodel.errors.dropSingleFileOnly'));
             }
         },
         async onOpenClick() {
             if ('showOpenFilePicker' in window) {
                 // Chrome and Edge browsers return an array of file handles
                 try {
-                    const [handle] = await window.showOpenFilePicker(
-                        pickerFileOptions
-                    );
+                    const [handle] = await window.showOpenFilePicker(pickerFileOptions);
                     const file = await handle.getFile();
                     if (file.name.endsWith('.json')) {
                         this.tmJson = await file.text();
                         this.$store.dispatch(tmActions.update, {
-                            fileName: file.name,
+                            fileName: file.name
                         });
                         this.onImportClick(file.name);
                     } else {
-                        this.$toast.error(
-                            this.$t('threatmodel.errors.onlyJsonAllowed')
-                        );
+                        this.$toast.error(this.$t('threatmodel.errors.onlyJsonAllowed'));
                     }
                 } catch (e) {
                     // any error is most likely due to the picker being cancelled, which is benign so just warn
@@ -205,23 +183,19 @@ export default {
             // this will deliberately fail if the threat model does not have a title in the summary
             try {
                 params = Object.assign({}, this.$route.params, {
-                    threatmodel: jsonModel.summary.title,
+                    threatmodel: jsonModel.summary.title
                 });
             } catch (e) {
-                this.$toast.error(
-                    this.$t('threatmodel.errors.invalidJson') +
-                        ' : ' +
-                        e.message
-                );
+                this.$toast.error(this.$t('threatmodel.errors.invalidJson') + ' : ' + e.message);
                 console.error(e);
                 return;
             }
 
             this.$router.push({
                 name: `${this.providerType}ThreatModel`,
-                params,
+                params
             });
-        },
-    },
+        }
+    }
 };
 </script>

@@ -83,32 +83,32 @@ const t = (key) => {
 // This maintains the structure of diagrams better than JSON serialization
 const deepClone = (threatModel) => {
     if (!threatModel) return threatModel;
-    
+
     // Create a new object with the same properties
     const clone = { ...threatModel };
-    
+
     // Deep clone the nested objects
     if (clone.summary) clone.summary = { ...clone.summary };
-    
+
     if (clone.detail) {
         clone.detail = { ...clone.detail };
-        
+
         // Special handling for diagrams
         if (Array.isArray(clone.detail.diagrams)) {
-            clone.detail.diagrams = clone.detail.diagrams.map(diagram => {
+            clone.detail.diagrams = clone.detail.diagrams.map((diagram) => {
                 const diagramClone = { ...diagram };
                 // Ensure cells is always an array even if it's missing or null
                 diagramClone.cells = Array.isArray(diagram.cells) ? [...diagram.cells] : [];
                 return diagramClone;
             });
         }
-        
+
         // Make sure contributors is an array
         if (Array.isArray(clone.detail.contributors)) {
-            clone.detail.contributors = clone.detail.contributors.map(c => ({ ...c }));
+            clone.detail.contributors = clone.detail.contributors.map((c) => ({ ...c }));
         }
     }
-    
+
     return clone;
 };
 
@@ -122,7 +122,8 @@ const stashThreatModel = (theState, threatModel) => {
 
 const actions = {
     [THREATMODEL_CLEAR]: ({ commit }) => commit(THREATMODEL_CLEAR),
-    [THREATMODEL_CONTRIBUTORS_UPDATED]: ({ commit }, contributors) => commit(THREATMODEL_CONTRIBUTORS_UPDATED, contributors),
+    [THREATMODEL_CONTRIBUTORS_UPDATED]: ({ commit }, contributors) =>
+        commit(THREATMODEL_CONTRIBUTORS_UPDATED, contributors),
     [THREATMODEL_CREATE]: async ({ dispatch, commit, rootState, state }) => {
         try {
             if (getProviderType(rootState.provider.selected) === providerTypes.local) {
@@ -133,7 +134,11 @@ const actions = {
                 console.debug('Desktop create action');
                 await window.electronAPI.modelSave(state.data, state.fileName);
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-                const res = await googleDriveApi.createAsync(rootState.folder.selected, state.data, `${state.data.summary.title}.json`);
+                const res = await googleDriveApi.createAsync(
+                    rootState.folder.selected,
+                    state.data,
+                    `${state.data.summary.title}.json`
+                );
                 dispatch(FOLDER_SELECTED, res.data);
                 toast.success(t('threatmodel.saved') + ' : ' + state.fileName);
             } else {
@@ -155,16 +160,17 @@ const actions = {
     },
     [THREATMODEL_DIAGRAM_APPLIED]: ({ commit }) => commit(THREATMODEL_DIAGRAM_APPLIED),
     [THREATMODEL_DIAGRAM_CLOSED]: ({ commit }) => commit(THREATMODEL_DIAGRAM_CLOSED),
-    [THREATMODEL_DIAGRAM_MODIFIED]: ({ commit }, diagram) => commit(THREATMODEL_DIAGRAM_MODIFIED, diagram),
-    [THREATMODEL_DIAGRAM_SAVED]: ({ commit }, diagram) => commit(THREATMODEL_DIAGRAM_SAVED, diagram),
-    [THREATMODEL_DIAGRAM_SELECTED]: ({ commit }, diagram) => commit(THREATMODEL_DIAGRAM_SELECTED, diagram),
+    [THREATMODEL_DIAGRAM_MODIFIED]: ({ commit }, diagram) =>
+        commit(THREATMODEL_DIAGRAM_MODIFIED, diagram),
+    [THREATMODEL_DIAGRAM_SAVED]: ({ commit }, diagram) =>
+        commit(THREATMODEL_DIAGRAM_SAVED, diagram),
+    [THREATMODEL_DIAGRAM_SELECTED]: ({ commit }, diagram) =>
+        commit(THREATMODEL_DIAGRAM_SELECTED, diagram),
     [THREATMODEL_FETCH]: async ({ commit, dispatch, rootState }, threatModel) => {
         dispatch(THREATMODEL_CLEAR);
         let resp;
         if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-            resp = await googleDriveApi.modelAsync(
-                threatModel
-            );
+            resp = await googleDriveApi.modelAsync(threatModel);
         } else {
             resp = await threatmodelApi.modelAsync(
                 rootState.repo.selected,
@@ -175,7 +181,11 @@ const actions = {
         commit(THREATMODEL_FETCH, resp.data);
     },
     [THREATMODEL_FETCH_ALL]: async ({ commit, rootState }) => {
-        if (getProviderType(rootState.provider.selected) === providerTypes.local || getProviderType(rootState.provider.selected) === providerTypes.desktop || getProviderType(rootState.provider.selected) === providerTypes.google) {
+        if (
+            getProviderType(rootState.provider.selected) === providerTypes.local ||
+            getProviderType(rootState.provider.selected) === providerTypes.desktop ||
+            getProviderType(rootState.provider.selected) === providerTypes.google
+        ) {
             commit(THREATMODEL_FETCH_ALL, demo.models);
         } else {
             const resp = await threatmodelApi.modelsAsync(
@@ -189,16 +199,17 @@ const actions = {
     [THREATMODEL_RESTORE]: async ({ commit, state, rootState }) => {
         console.debug('Restore threat model action');
         let originalModel;
-        
+
         try {
             // Parse the stash but ensure we properly recreate the structure
             const parsedModel = JSON.parse(state.stash);
             originalModel = deepClone(parsedModel);
-            
-            if (getProviderType(rootState.provider.selected) !== providerTypes.local && 
-                getProviderType(rootState.provider.selected) !== providerTypes.desktop && 
-                getProviderType(rootState.provider.selected) !== providerTypes.google) {
-                    
+
+            if (
+                getProviderType(rootState.provider.selected) !== providerTypes.local &&
+                getProviderType(rootState.provider.selected) !== providerTypes.desktop &&
+                getProviderType(rootState.provider.selected) !== providerTypes.google
+            ) {
                 const originalTitle = parsedModel.summary.title;
                 const resp = await threatmodelApi.modelAsync(
                     rootState.repo.selected,
@@ -211,7 +222,7 @@ const actions = {
             console.error('Error restoring threat model:', err);
             originalModel = deepClone(state.data); // Use current data as fallback
         }
-        
+
         commit(THREATMODEL_RESTORE, originalModel);
     },
     [THREATMODEL_SAVE]: async ({ dispatch, commit, rootState, state }) => {
@@ -229,22 +240,23 @@ const actions = {
             } else if (getProviderType(rootState.provider.selected) === providerTypes.desktop) {
                 // desktop version always saves locally
                 console.debug('Desktop save action');
-                
+
                 try {
                     // Use our deep clone function instead of JSON stringify/parse
                     // This preserves the structure better for diagram editing
                     const cleanData = deepClone(state.data);
-                    
+
                     // For the actual save to file, we need to convert to JSON string
                     const jsonData = JSON.stringify(cleanData, null, 2);
-                    
+
                     // Set a filename if we don't have one
-                    const fileName = state.fileName || `${state.data.summary.title || 'threat-model'}.json`;
-                    
+                    const fileName =
+                        state.fileName || `${state.data.summary.title || 'threat-model'}.json`;
+
                     // For saving to disk, we'll use the JSON string directly
                     const result = await window.electronAPI.saveFile(jsonData, fileName);
                     console.debug('Save completed successfully:', result);
-                    
+
                     // Update the state after successful save
                     if (result && state.fileName !== result) {
                         commit(THREATMODEL_UPDATE, { fileName: result });
@@ -285,12 +297,19 @@ const mutations = {
     [THREATMODEL_CONTRIBUTORS_UPDATED]: (state, contributors) => {
         state.data.detail.contributors.length = 0;
         // Replace Vue.set with direct array assignment for Vue 3 reactivity
-        state.data.detail.contributors = contributors.map(name => ({ name }));
+        state.data.detail.contributors = contributors.map((name) => ({ name }));
     },
     [THREATMODEL_DIAGRAM_APPLIED]: (state) => {
         if (Object.keys(state.modifiedDiagram).length !== 0) {
-            const idx = state.data.detail.diagrams.findIndex(x => x.id === state.modifiedDiagram.id);
-            console.debug('Threatmodel modified diagram applied : ' + state.modifiedDiagram.id + ' at index: ' + idx);
+            const idx = state.data.detail.diagrams.findIndex(
+                (x) => x.id === state.modifiedDiagram.id
+            );
+            console.debug(
+                'Threatmodel modified diagram applied : ' +
+                    state.modifiedDiagram.id +
+                    ' at index: ' +
+                    idx
+            );
             state.data.detail.diagrams[idx] = state.modifiedDiagram;
         }
     },
@@ -311,7 +330,7 @@ const mutations = {
         }
     },
     [THREATMODEL_DIAGRAM_SAVED]: (state, diagram) => {
-        const idx = state.data.detail.diagrams.findIndex(x => x.id === diagram.id);
+        const idx = state.data.detail.diagrams.findIndex((x) => x.id === diagram.id);
         console.debug('Threatmodel diagram saved: ' + diagram.id + ' at index: ' + idx);
         // beware: this will trigger a redraw of the diagram, ?possibly to the wrong canvas size?
         state.selectedDiagram = diagram;
@@ -324,20 +343,20 @@ const mutations = {
         if (!state.data) state.data = {};
         if (!state.data.detail) state.data.detail = {};
         if (!Array.isArray(state.data.detail.diagrams)) state.data.detail.diagrams = [];
-        
+
         // Make sure cells exists and is an array
         const diagramClone = deepClone(diagram);
         if (!Array.isArray(diagramClone.cells)) {
             diagramClone.cells = [];
         }
-        
+
         state.selectedDiagram = diagramClone;
         state.modifiedDiagram = diagramClone;
-    
-        const idx = state.data.detail.diagrams.findIndex(x => x.id === diagram.id);
+
+        const idx = state.data.detail.diagrams.findIndex((x) => x.id === diagram.id);
         console.debug(`Threatmodel diagram selected for edits: ${diagram.id} at index: ${idx}`);
     },
-    
+
     [THREATMODEL_FETCH]: (state, threatModel) => stashThreatModel(state, threatModel),
     [THREATMODEL_FETCH_ALL]: (state, models) => {
         if (!state.all || !Array.isArray(state.all)) {
@@ -368,7 +387,7 @@ const mutations = {
     [THREATMODEL_UPDATE]: (state, update) => {
         if (!state.data) state.data = {};
         if (!state.data.detail) state.data.detail = {}; // Ensure `detail` exists
-    
+
         if (update.version) {
             state.data.version = update.version; // Direct assignment
         }
@@ -383,9 +402,6 @@ const mutations = {
         }
         console.debug('Threatmodel update: ' + JSON.stringify(update));
     }
-    
-    
-    
 };
 
 const getters = {
@@ -394,13 +410,15 @@ const getters = {
         if (state.data && state.data.detail && state.data.detail.contributors) {
             contribs = state.data.detail.contributors;
         }
-        return contribs.map(x => x.name);
+        return contribs.map((x) => x.name);
     },
     modelChanged: (state) => {
         console.debug('model modified: ' + state.modified);
         return state.modified;
     },
-    isV1Model: (state) => Object.keys(state.data).length > 0 && (state.data.version == null || state.data.version.startsWith('1.'))
+    isV1Model: (state) =>
+        Object.keys(state.data).length > 0 &&
+        (state.data.version == null || state.data.version.startsWith('1.'))
 };
 
 export const clearState = (state) => {

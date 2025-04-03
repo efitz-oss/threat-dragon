@@ -14,13 +14,16 @@
             :href="`${providerUri}/${repoName}`"
             target="_blank"
             rel="noopener noreferrer"
-        >{{ repoName }}</a>
+        >{{ repoName }}</a
+        >
         {{ $t('branch.from') }}
         <a id="return-to-repo" href="javascript:void(0)" @click="selectRepoClick">
             {{ $t('branch.chooseRepo') }}
         </a>
         {{ $t('branch.or') }}
-        <a id="new-branch" href="javascript:void(0)" @click="toggleNewBranchDialog()">{{ $t('branch.addNew') }}</a>
+        <a id="new-branch" href="javascript:void(0)" @click="toggleNewBranchDialog()">{{
+            $t('branch.addNew')
+        }}</a>
 
         <add-branch-modal
             v-if="showNewBranchDialog"
@@ -48,27 +51,28 @@ export default {
     },
     data() {
         return {
-            showNewBranchDialog: false,
+            showNewBranchDialog: false
         };
     },
     computed: mapState({
-        branches: (state) => state.branch.all.map((branch) => {
-            if(branch['protected']){
-                return {
-                    value: branch.name,
-                    icon: 'lock',
-                    iconTooltip: 'branch.protectedBranch',
-                };
-            }
-            return branch.name;
-        }),
+        branches: (state) =>
+            state.branch.all.map((branch) => {
+                if (branch['protected']) {
+                    return {
+                        value: branch.name,
+                        icon: 'lock',
+                        iconTooltip: 'branch.protectedBranch'
+                    };
+                }
+                return branch.name;
+            }),
         provider: (state) => state.provider.selected,
         providerType: (state) => getProviderType(state.provider.selected),
         providerUri: (state) => state.provider.providerUri,
         repoName: (state) => state.repo.selected,
         page: (state) => Number(state.branch.page),
         pageNext: (state) => state.branch.pageNext,
-        pagePrev: (state) => state.branch.pagePrev,
+        pagePrev: (state) => state.branch.pagePrev
     }),
     mounted() {
         if (this.provider !== this.$route.params.provider) {
@@ -92,14 +96,16 @@ export default {
                 branch
             });
 
-            const routeName = `${this.providerType}${this.$route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'}`;
+            const routeName = `${this.providerType}${
+                this.$route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'
+            }`;
 
             this.$router.push({ name: routeName, params });
         },
         paginate(page) {
             this.$store.dispatch(branchActions.fetch, page);
         },
-        toggleNewBranchDialog(){
+        toggleNewBranchDialog() {
             this.showNewBranchDialog = !this.showNewBranchDialog;
         }
     }

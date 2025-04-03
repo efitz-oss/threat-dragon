@@ -1,16 +1,19 @@
 const fin = {
     auth: {
-        sessionExpired: 'Istuntosi on vanhentunut. Ole hyvä ja kirjaudu sisään uudelleen jatkaaksesi.'
+        sessionExpired:
+            'Istuntosi on vanhentunut. Ole hyvä ja kirjaudu sisään uudelleen jatkaaksesi.'
     },
     nav: {
-        v2Warning: 'Version 2.0 uhkamallit eivät ole taaksepäin yhteensopivia version 1.x kanssa. Version 1.x mallit päivitetään automaattisesti version 2.0 uhkamalleiksi.',
+        v2Warning:
+            'Version 2.0 uhkamallit eivät ole taaksepäin yhteensopivia version 1.x kanssa. Version 1.x mallit päivitetään automaattisesti version 2.0 uhkamalleiksi.',
         loggedInAs: 'Kirjautunut käyttäjänä',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'OWASP Threat Dragon on ilmainen avoimen lähdekoodin alustariippumaton sovellus uhkamallintamiseen. Voit piirtää sovelluksella uhkamallinnuskaavioita ja tunnistaa järjestelmän uhkia. Erilaiset käyttäjät voivat helposti lähestyä sovellusta, koska se on yksinkertainen ja joustava.'
+        description:
+            'OWASP Threat Dragon on ilmainen avoimen lähdekoodin alustariippumaton sovellus uhkamallintamiseen. Voit piirtää sovelluksella uhkamallinnuskaavioita ja tunnistaa järjestelmän uhkia. Erilaiset käyttäjät voivat helposti lähestyä sovellusta, koska se on yksinkertainen ja joustava.'
     },
     providers: {
         desktop: {
@@ -41,7 +44,8 @@ const fin = {
     dashboard: {
         welcome: {
             title: 'Tervetuloa!',
-            description: 'Voit nyt aloittaa järjestelmäsi suunnittelun. Voit avaita olemassa olevan uhkamallin tai tehdä uuden valitsemalla jonkin seuraavista vaihtoehdoista. '
+            description:
+                'Voit nyt aloittaa järjestelmäsi suunnittelun. Voit avaita olemassa olevan uhkamallin tai tehdä uuden valitsemalla jonkin seuraavista vaihtoehdoista. '
         },
         actions: {
             openExisting: 'Avaa olemassa oleva uhkamalli',
@@ -92,7 +96,7 @@ const fin = {
         refBranch: 'Viitehaara',
         add: 'Lisää haara',
         cancel: 'Peruuta',
-        name: 'Sivuliikkeen nimi',
+        name: 'Sivuliikkeen nimi'
     },
     threatmodelSelect: {
         select: 'Valitse uhkamalli kohteesta',
@@ -149,7 +153,8 @@ const fin = {
         threats: 'Uhat',
         errors: {
             dropSingleFileOnly: 'Voit pudottaa vain yhden tiedoston.',
-            invalidJson: 'JSON-tiedoton muoto on virheellinen. Tarkista tiedosto ja yritä uudelleen.',
+            invalidJson:
+                'JSON-tiedoton muoto on virheellinen. Tarkista tiedosto ja yritä uudelleen.',
             onlyJsonAllowed: 'Sovellus tukee vain .json -päätteisiä tiedostoja.',
             open: 'Virhe uhkamallin lukemisessa. Yksityiskohtaisemmat tiedot virheestä löytyvät kehittäjän konsolista.',
             save: 'Virhe uhkamallin tallentamisessa. Yksityiskohtaisemmat tiedot virheestä löytyvät kehittäjän konsolista.'

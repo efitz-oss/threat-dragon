@@ -12,13 +12,15 @@
             <b-form>
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="title-group" :label="$t('threats.properties.title')" label-for="title">
+                        <b-form-group
+                            id="title-group"
+                            :label="$t('threats.properties.title')"
+                            label-for="title"
+                        >
                             <b-form-input
-                                id="title"
-                                v-model="threat.title"
-                                type="text"
-                                required
-                            />
+id="title"
+v-model="threat.title" type="text"
+required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -30,7 +32,11 @@
                             :label="$t('threats.properties.type')"
                             label-for="threat-type"
                         >
-                            <b-form-select id="threat-type" v-model="threat.type" :options="types" />
+                            <b-form-select
+                                id="threat-type"
+                                v-model="threat.type"
+                                :options="types"
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -53,7 +59,11 @@
                     </b-col>
 
                     <b-col md="2">
-                        <b-form-group id="score-group" :label="$t('threats.properties.score')" label-for="score">
+                        <b-form-group
+                            id="score-group"
+                            :label="$t('threats.properties.score')"
+                            label-for="score"
+                        >
                             <b-form-input id="score" v-model="threat.score" type="text" />
                         </b-form-group>
                     </b-col>
@@ -82,7 +92,11 @@
                             :label="$t('threats.properties.description')"
                             label-for="description"
                         >
-                            <b-form-textarea id="description" v-model="threat.description" rows="5" />
+                            <b-form-textarea
+                                id="description"
+                                v-model="threat.description"
+                                rows="5"
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -120,7 +134,6 @@
     </div>
 </template>
 
-
 <script>
 import { mapState } from 'vuex';
 import { createNewTypedThreat } from '@/service/threats/index.js';
@@ -139,10 +152,12 @@ export default {
             threatTop: (state) => state.threatmodel.data.detail.threatTop
         }),
         threatTypes() {
-            if (!this.cellRef || !this.threat || !this.modelType)
-                return [];
+            if (!this.cellRef || !this.threat || !this.modelType) return [];
             const res = [];
-            const threattypes = threatModels.getThreatTypesByElement(this.modelType, this.cellRef.data.type);
+            const threattypes = threatModels.getThreatTypesByElement(
+                this.modelType,
+                this.cellRef.data.type
+            );
             Object.keys(threattypes).forEach((type) => {
                 res.push(this.$t(type));
             }, this);
@@ -164,7 +179,9 @@ export default {
                 { value: 'Critical', text: this.$t('threats.priority.critical') }
             ];
         },
-        modalTitle() { return this.$t('threats.newThreat') + ' #' + (this.threatTop + 1); }
+        modalTitle() {
+            return this.$t('threats.newThreat') + ' #' + (this.threatTop + 1);
+        }
     },
     data() {
         return {
@@ -177,7 +194,11 @@ export default {
     methods: {
         showModal(type) {
             this.index = 0;
-            const tmpThreat = createNewTypedThreat(this.modelType, this.cellRef.data.type, this.threatTop + 1);
+            const tmpThreat = createNewTypedThreat(
+                this.modelType,
+                this.cellRef.data.type,
+                this.threatTop + 1
+            );
             this.types = [...this.threatTypes];
             if (type == 'type') {
                 this.threatTypes.map((t, ind) => {
@@ -186,19 +207,20 @@ export default {
                     this.suggestions[ind].type = t;
                 });
             } else {
-                this.suggestions = GetContextSuggestions(this.cellRef.data, this.modelType).map((suggestion) => {
-                    tmpThreat.title = suggestion.title;
-                    tmpThreat.type = this.$t(suggestion.type);
-                    if (!this.types.includes(tmpThreat.type) && tmpThreat.type !== '')
-                        this.types.push(tmpThreat.type);
-                    tmpThreat.description = suggestion.description;
-                    tmpThreat.mitigation = suggestion.mitigation;
-                    console.log(tmpThreat);
-                    return { ...tmpThreat };
-                });
+                this.suggestions = GetContextSuggestions(this.cellRef.data, this.modelType).map(
+                    (suggestion) => {
+                        tmpThreat.title = suggestion.title;
+                        tmpThreat.type = this.$t(suggestion.type);
+                        if (!this.types.includes(tmpThreat.type) && tmpThreat.type !== '')
+                            this.types.push(tmpThreat.type);
+                        tmpThreat.description = suggestion.description;
+                        tmpThreat.mitigation = suggestion.mitigation;
+                        console.log(tmpThreat);
+                        return { ...tmpThreat };
+                    }
+                );
             }
-            if (this.suggestions.length)
-                this.threat = this.suggestions[0];
+            if (this.suggestions.length) this.threat = this.suggestions[0];
             this.$refs.editModal.show();
         },
         hideModal() {
@@ -222,13 +244,19 @@ export default {
             this.threat.number = this.threatTop + 1;
             this.threat.id = v4();
             if (!objRef.threatFrequency) {
-                const tmpfreq = threatModels.getFrequencyMapByElement(this.threat.modelType, this.cellRef.data.type);
-                if (tmpfreq !== null)
-                    objRef.threatFrequency = tmpfreq;
+                const tmpfreq = threatModels.getFrequencyMapByElement(
+                    this.threat.modelType,
+                    this.cellRef.data.type
+                );
+                if (tmpfreq !== null) objRef.threatFrequency = tmpfreq;
             }
             if (objRef.threatFrequency) {
                 Object.keys(objRef.threatFrequency).forEach((k) => {
-                    if (this.$t(`threats.model.${this.modelType.toLowerCase()}.${k}`) === this.threat.type && this.threatTypes.includes(this.threat.type))
+                    if (
+                        this.$t(`threats.model.${this.modelType.toLowerCase()}.${k}`) ===
+                            this.threat.type &&
+                        this.threatTypes.includes(this.threat.type)
+                    )
                         objRef.threatFrequency[k]++;
                 });
             }
@@ -240,7 +268,6 @@ export default {
             this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
             dataChanged.updateStyleAttrs(this.cellRef);
             this.next();
-
         },
         previous() {
             if (this.index > 0) {

@@ -3,14 +3,16 @@ const fra = {
         sessionExpired: 'Votre session est expirée. Veuillez vous reconnecter pour continuer.'
     },
     nav: {
-        v2Warning: 'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
+        v2Warning:
+            'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Connecté en tant que',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo Threat Dragon',
-        description: 'Threat Dragon est un outil de modélisation des menaces open-source et gratuit d\'OWASP. Il peut être utilisé comme une application de bureau sur Windows, MacOS et Linux, ou comme une application Web. L\'application de bureau est idéale si vous voulez essayer Threat Dragon sans lui donner accès à vos projets GitHub, mais si vous choisissez la version en ligne, vous pouvez profiter de la puissance impressionnante de GitHub sur vos modèles de menace! Pour ce faire, vous devez d\'abord vous connecter.'
+        description:
+            "Threat Dragon est un outil de modélisation des menaces open-source et gratuit d'OWASP. Il peut être utilisé comme une application de bureau sur Windows, MacOS et Linux, ou comme une application Web. L'application de bureau est idéale si vous voulez essayer Threat Dragon sans lui donner accès à vos projets GitHub, mais si vous choisissez la version en ligne, vous pouvez profiter de la puissance impressionnante de GitHub sur vos modèles de menace! Pour ce faire, vous devez d'abord vous connecter."
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const fra = {
     dashboard: {
         welcome: {
             title: 'Bienvenue!',
-            description: 'Vous êtes prêt à rendre vos conception d\'application plus sécuritaires. Vous pouvez ouvrir un modèle de menace existant ou en créer un nouveau en choisissant l\'une des options ci-dessous.'
+            description:
+                "Vous êtes prêt à rendre vos conception d'application plus sécuritaires. Vous pouvez ouvrir un modèle de menace existant ou en créer un nouveau en choisissant l'une des options ci-dessous."
         },
         actions: {
             openExisting: 'Ouvrir un modèle de menace existant',
@@ -92,7 +95,7 @@ const fra = {
         refBranch: 'branche de référence',
         add: 'Ajouter une branche',
         cancel: 'Annuler',
-        name: 'Nom de la branche',
+        name: 'Nom de la branche'
     },
     threatmodelSelect: {
         select: 'Sélectionnez un modèle de menace parmi',
@@ -151,8 +154,8 @@ const fra = {
             dropSingleFileOnly: 'Drag and drop requires a single file.',
             invalidJson: 'JSON invalide. Veuillez vérifier votre modèle et réessayer.',
             onlyJsonAllowed: 'Only files that end with .json are supported.',
-            open: 'Erreur lors de l\'ouverture de ce modèle de menace. Vérifiez la console de développement pour plus d\'informations',
-            save: 'Erreur lors de la sauvegarde de ce modèle de menace. Vérifiez la console de développement pour plus d\'informations'
+            open: "Erreur lors de l'ouverture de ce modèle de menace. Vérifiez la console de développement pour plus d'informations",
+            save: "Erreur lors de la sauvegarde de ce modèle de menace. Vérifiez la console de développement pour plus d'informations"
         },
         opened: 'Modèle de menace ouvert avec succès',
         saved: 'Modèle de menace sauvegardé avec succès',
@@ -164,7 +167,7 @@ const fra = {
             description: 'Description',
             outOfScope: 'Hors du domaine visé',
             bidirection: 'Bidirectional',
-            reasonOutOfScope: 'Raison de l\'exclusion du domaine visé',
+            reasonOutOfScope: "Raison de l'exclusion du domaine visé",
             handlesCardPayment: 'Card payment',
             handlesGoodsOrServices: 'Goods or Services',
             isALog: 'Est un journal',
@@ -172,17 +175,17 @@ const fra = {
             isSigned: 'Signé',
             isWebApplication: 'Web Application',
             privilegeLevel: 'Niveau de privilège',
-            providesAuthentication: 'Fournit de l\'authentification',
+            providesAuthentication: "Fournit de l'authentification",
             protocol: 'Protocole',
             publicNetwork: 'Réseau public',
-            storesCredentials: 'Conserve les informations d\'identification',
+            storesCredentials: "Conserve les informations d'identification",
             storesInventory: 'Stores Inventory'
         },
         buttons: {
             delete: 'Supprimer la sélection',
             redo: 'Rétablir',
             shortcuts: 'Raccourcis clavier',
-            toggleGrid: 'Grille d\'affichage',
+            toggleGrid: "Grille d'affichage",
             undo: 'Annuler',
             zoomIn: 'Agrandir',
             zoomOut: 'Rétrécir'
@@ -214,7 +217,7 @@ const fra = {
                 action: 'Déplacer'
             },
             multiSelect: {
-                shortcut: 'clic gauche dans l\'espace vide et glisser',
+                shortcut: "clic gauche dans l'espace vide et glisser",
                 action: 'Multi-sélection'
             },
             zoom: {
@@ -232,7 +235,7 @@ const fra = {
             entities: 'Entités',
             metadata: 'Métadonnées',
             search: 'Recherche',
-            notFound: 'Nous ne l\'avons pas encore, voulez-vous le proposer? :)'
+            notFound: "Nous ne l'avons pas encore, voulez-vous le proposer? :)"
         },
         shapes: {
             actor: 'Acteur',
@@ -294,7 +297,7 @@ const fra = {
                 identifiability: 'Identifiabilité',
                 nonRepudiation: 'Non-répudiation',
                 detectability: 'Détectabilité',
-                disclosureOfInformation: 'Divulgation d\'information',
+                disclosureOfInformation: "Divulgation d'information",
                 unawareness: 'Inconscience',
                 nonCompliance: 'Non-conformité'
             },
@@ -311,10 +314,10 @@ const fra = {
             },
             stride: {
                 header: '--- STRIDE ---',
-                spoofing: 'Usurpation d\'identité',
+                spoofing: "Usurpation d'identité",
                 tampering: 'Falsification',
                 repudiation: 'Répudiation',
-                informationDisclosure: 'Divulgation d\'information',
+                informationDisclosure: "Divulgation d'information",
                 denialOfService: 'Déni de service',
                 elevationOfPrivilege: 'Élévation de privilège'
             }
@@ -378,7 +381,7 @@ const fra = {
             total: 'Menaces Totales',
             mitigated: 'Menaces Totales Mitigées',
             notMitigated: 'Menaces Totales Non-Mitigées',
-            openCritical:'Ouvert / Critique Priorité',
+            openCritical: 'Ouvert / Critique Priorité',
             openHigh: 'Ouvert / Haute Priorité',
             openMedium: 'Ouvert / Moyenne Priorité',
             openLow: 'Ouvert / Faible Priorité',
@@ -391,7 +394,7 @@ const fra = {
             header: 'Mise à jour du modèle de menace - Threat Model',
             welcome: 'Bienvenue à la version 2 de OWASP Threat Dragon!',
             p1: 'La version 2 utilise une bibliothèque de dessins différente, ce qui modifie la façon dont certaines parties de vos modèles de menace sont enregistrées. Bien que la plupart des diagrammes se présenteront de la même manière que dans les versions précédentes de Threat Dragon, il est possible que de légères modifications soient nécessaires dans certains cas.',
-            p2: 'Après avoir fermé cette fenêtre, vous verrez comment chaque diagramme de ce modèle est rendu dans le format de la version 2. Veuillez noter les diagrammes que vous devrez éventuellement ajuster. Il s\'agit d\'une mise à jour unique, et vous ne devriez plus voir ce message après avoir sauvegardé ce modèle.'
+            p2: "Après avoir fermé cette fenêtre, vous verrez comment chaque diagramme de ce modèle est rendu dans le format de la version 2. Veuillez noter les diagrammes que vous devrez éventuellement ajuster. Il s'agit d'une mise à jour unique, et vous ne devriez plus voir ce message après avoir sauvegardé ce modèle."
         },
         instructions: 'Excellent! Allons à votre modèle.',
         continue: 'Continuer au modèle de menace'

@@ -50,22 +50,12 @@
         />
 
         <b-dropdown id="export-graph-btn" right :text="t('forms.export')">
-            <b-dropdown-item id="export-graph-png" @click="exportPNG">
-                PNG
-            </b-dropdown-item>
-            <b-dropdown-item id="export-graph-jpeg" @click="exportJPEG">
-                JPEG
-            </b-dropdown-item>
-            <b-dropdown-item id="export-graph-svg" @click="exportSVG">
-                SVG
-            </b-dropdown-item>
+            <b-dropdown-item id="export-graph-png" @click="exportPNG"> PNG </b-dropdown-item>
+            <b-dropdown-item id="export-graph-jpeg" @click="exportJPEG"> JPEG </b-dropdown-item>
+            <b-dropdown-item id="export-graph-svg" @click="exportSVG"> SVG </b-dropdown-item>
         </b-dropdown>
 
-        <td-form-button
-            :on-btn-click="closeDiagram"
-            icon="times"
-            :text="t('forms.close')"
-        />
+        <td-form-button :on-btn-click="closeDiagram" icon="times" :text="t('forms.close')" />
 
         <td-form-button
             :is-primary="true"
@@ -89,11 +79,11 @@ export default {
     setup() {
         // Use the composition API for i18n
         const { t } = useI18n();
-        
+
         return { t };
     },
     computed: mapState({
-        diagram: (state) => state.threatmodel.selectedDiagram,
+        diagram: (state) => state.threatmodel.selectedDiagram
     }),
     data() {
         return {
@@ -171,5 +161,4 @@ export default {
         }
     }
 };
-
 </script>

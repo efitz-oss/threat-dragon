@@ -6,7 +6,21 @@ export const googleRoutes = [
     {
         path: `/${providerType}/:provider/folder`,
         name: `${providerType}Folder`,
-        component: () => import(/* webpackChunkName: "folder-access" */ '../views/google/DriveAccess.vue')
+        component: () =>
+            import(/* webpackChunkName: "folder-access" */ '../views/google/DriveAccess.vue')
+    },
+    {
+        path: `/${providerType}/:provider/new`,
+        name: `${providerType}New`,
+        component: () =>
+            import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue')
+    },
+    {
+        path: `/${providerType}/:provider/save`,
+        name: `${providerType}SaveModel`,
+        component: () =>
+            import(/* webpackChunkName: "folder-access" */ '../views/google/DriveAccess.vue'),
+        props: (route) => ({ mode: 'save', threatModel: route.params.threatModel })
     },
     {
         path: `/${providerType}/:provider/:folder/:threatmodel`,
@@ -16,17 +30,20 @@ export const googleRoutes = [
     {
         path: `/${providerType}/:provider/:folder/new`,
         name: `${providerType}NewThreatModel`,
-        component: () => import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue')
+        component: () =>
+            import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue')
     },
     {
         path: `/${providerType}/:provider/:folder/:threatmodel/create`,
         name: `${providerType}ThreatModelCreate`,
-        component: () => import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
+        component: () =>
+            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
     },
     {
         path: `/${providerType}/:provider/:folder/:threatmodel/edit`,
         name: `${providerType}ThreatModelEdit`,
-        component: () => import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
+        component: () =>
+            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
     },
     {
         path: `/${providerType}/:provider/:folder/:threatmodel/edit/:diagram`,

@@ -3,14 +3,16 @@ const ind = {
         sessionExpired: 'Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.'
     },
     nav: {
-        v2Warning: 'Model ancaman Versi 2.0 tidak kompatibel ke belakang dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimpor akan ditingkatkan ke skema versi 2.0',
+        v2Warning:
+            'Model ancaman Versi 2.0 tidak kompatibel ke belakang dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimpor akan ditingkatkan ke skema versi 2.0',
         loggedInAs: 'Masuk sebagai',
         logOut: 'Keluar'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo Threat Dragon',
-        description: 'OWASP Threat Dragon adalah aplikasi gratis, sumber terbuka, lintas-platform untuk membuat model ancaman. Gunakan untuk menggambar diagram pemodelan ancaman dan mengidentifikasi ancaman untuk sistem Anda. Dengan penekanan pada fleksibilitas dan kesederhanaan, mudah diakses untuk semua jenis pengguna.'
+        description:
+            'OWASP Threat Dragon adalah aplikasi gratis, sumber terbuka, lintas-platform untuk membuat model ancaman. Gunakan untuk menggambar diagram pemodelan ancaman dan mengidentifikasi ancaman untuk sistem Anda. Dengan penekanan pada fleksibilitas dan kesederhanaan, mudah diakses untuk semua jenis pengguna.'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const ind = {
     dashboard: {
         welcome: {
             title: 'Selamat datang!',
-            description: 'Anda siap untuk memulai membuat desain aplikasi Anda lebih aman. Anda dapat membuka model ancaman yang ada atau membuat yang baru dengan memilih salah satu opsi di bawah.'
+            description:
+                'Anda siap untuk memulai membuat desain aplikasi Anda lebih aman. Anda dapat membuka model ancaman yang ada atau membuat yang baru dengan memilih salah satu opsi di bawah.'
         },
         actions: {
             openExisting: 'Buka model ancaman yang ada',
@@ -92,7 +95,7 @@ const ind = {
         refBranch: 'Cabang Referensi',
         add: 'Tambah cabang',
         cancel: 'Batal',
-        name: 'Nama Cabang',
+        name: 'Nama Cabang'
     },
     threatmodelSelect: {
         select: 'Pilih Model Ancaman dari',

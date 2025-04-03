@@ -80,34 +80,47 @@
                 </b-col>
 
                 <b-col
-                    v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text' && cellRef.data.type !== 'tm.Flow'"
+                    v-if="
+                        !cellRef.data.isTrustBoundary &&
+                            cellRef.data.type !== 'tm.Text' &&
+                            cellRef.data.type !== 'tm.Flow'
+                    "
                     md="6"
                 >
                     <b-form-group id="outofscope-group" label-cols="auto">
-                        <b-form-checkbox id="outofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">
-                            {{
-                                $t('threatmodel.properties.outOfScope')
-                            }}
+                        <b-form-checkbox
+                            id="outofscope"
+                            v-model="cellRef.data.outOfScope"
+                            @change="onChangeScope()"
+                        >
+                            {{ $t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
 
                 <b-col v-if="cellRef.data.type === 'tm.Flow'" md="6">
                     <b-form-group id="flowoutofscope-group" label-cols="auto">
-                        <b-form-checkbox id="flowoutofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">
-                            {{
-                                $t('threatmodel.properties.outOfScope')
-                            }}
+                        <b-form-checkbox
+                            id="flowoutofscope"
+                            v-model="cellRef.data.outOfScope"
+                            @change="onChangeScope()"
+                        >
+                            {{ $t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
-                        <b-form-checkbox id="bidirection" v-model="cellRef.data.isBidirectional" @change="onChangeBidirection()">
-                            {{
-                                $t('threatmodel.properties.bidirection')
-                            }}
+                        <b-form-checkbox
+                            id="bidirection"
+                            v-model="cellRef.data.isBidirectional"
+                            @change="onChangeBidirection()"
+                        >
+                            {{ $t('threatmodel.properties.bidirection') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
 
-                <b-col v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text'" md="6">
+                <b-col
+                    v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text'"
+                    md="6"
+                >
                     <b-form-group
                         id="reasonoutofscope-group"
                         label-cols="auto"
@@ -172,10 +185,12 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Store'">
                     <b-form-group id="isalog-group" label-cols="auto">
-                        <b-form-checkbox id="isalog" v-model="cellRef.data.isALog" @change="onChangeProperties()">
-                            {{
-                                $t('threatmodel.properties.isALog')
-                            }}
+                        <b-form-checkbox
+                            id="isalog"
+                            v-model="cellRef.data.isALog"
+                            @change="onChangeProperties()"
+                        >
+                            {{ $t('threatmodel.properties.isALog') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="storesCredentials"
@@ -189,15 +204,19 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Store'">
                     <b-form-group id="isEncrypted-group" label-cols="auto">
-                        <b-form-checkbox id="isEncrypted" v-model="cellRef.data.isEncrypted" @change="onChangeProperties()">
-                            {{
-                                $t('threatmodel.properties.isEncrypted')
-                            }}
+                        <b-form-checkbox
+                            id="isEncrypted"
+                            v-model="cellRef.data.isEncrypted"
+                            @change="onChangeProperties()"
+                        >
+                            {{ $t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
-                        <b-form-checkbox id="isSigned" v-model="cellRef.data.isSigned" @change="onChangeProperties()">
-                            {{
-                                $t('threatmodel.properties.isSigned')
-                            }}
+                        <b-form-checkbox
+                            id="isSigned"
+                            v-model="cellRef.data.isSigned"
+                            @change="onChangeProperties()"
+                        >
+                            {{ $t('threatmodel.properties.isSigned') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -244,10 +263,12 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Flow'">
                     <b-form-group id="isEncrypted-group" label-cols="auto">
-                        <b-form-checkbox id="isEncrypted" v-model="cellRef.data.isEncrypted" @change="onChangeProperties()">
-                            {{
-                                $t('threatmodel.properties.isEncrypted')
-                            }}
+                        <b-form-checkbox
+                            id="isEncrypted"
+                            v-model="cellRef.data.isEncrypted"
+                            @change="onChangeProperties()"
+                        >
+                            {{ $t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -307,6 +328,6 @@ export default {
 
 <style lang="scss">
 label {
-  font-size: 12px !important;
+    font-size: 12px !important;
 }
 </style>

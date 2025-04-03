@@ -1,11 +1,7 @@
 <template>
     <b-card :header="title">
         <b-row class="td-card">
-            <b-col
-                v-for="(keyvalue, idx) in values"
-                :key="idx"
-                md="2"
-            >
+            <b-col v-for="(keyvalue, idx) in values" :key="idx" md="2">
                 <div>
                     <strong>{{ keyvalue.key }}:</strong>
                 </div>
@@ -25,7 +21,6 @@ export default {
         values: Array
     }
 };
-
 </script>
 
 <style lang="scss" scoped>

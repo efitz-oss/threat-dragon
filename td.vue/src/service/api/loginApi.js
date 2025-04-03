@@ -4,36 +4,36 @@ const loginAsync = (provider) => api.getAsync(`/api/login/${provider}`);
 
 const completeLoginAsync = async (provider, code) => {
     console.log(`Making completeLoginAsync request to /api/oauth/${provider}/completeLogin`);
-    
+
     // Ensure code is valid before making the API call
     if (!code) {
         console.error('completeLoginAsync: No authorization code provided');
         throw new Error('No authorization code provided');
     }
-    
+
     // Don't log the full code for security
     console.log('Authorization code present:', Boolean(code));
     console.log('Authorization code length:', code.length);
-    
+
     try {
         console.log('API base URL:', window.location.origin);
         const url = `/api/oauth/${provider}/completeLogin`;
         console.log('Full request URL:', window.location.origin + url);
-        
+
         // Make the API call with explicit content type headers
         console.log('Sending POST with payload:', { code: 'REDACTED' });
-        
+
         // Use API service for consistent behavior in tests
         console.log('Using API service for API calls');
-        
+
         const response = await api.postAsync(url, { code });
-        
+
         // API service already handles status codes and parsing
         console.log('Response received from API service');
-        
+
         // Standard response format should include data property
         const data = response.data;
-        
+
         // Log success but not the actual tokens for security
         console.log('completeLoginAsync response data:', {
             hasData: Boolean(data),
@@ -41,7 +41,7 @@ const completeLoginAsync = async (provider, code) => {
             accessTokenPresent: Boolean(data?.accessToken),
             refreshTokenPresent: Boolean(data?.refreshToken)
         });
-        
+
         // Validate response format
         if (!data || !data.accessToken || !data.refreshToken) {
             console.error('completeLoginAsync: Invalid response format, missing tokens', {
@@ -52,7 +52,7 @@ const completeLoginAsync = async (provider, code) => {
             });
             throw new Error('Invalid server response format (missing token data)');
         }
-        
+
         return data; // Expecting { accessToken, refreshToken }
     } catch (error) {
         console.error('Error in completeLoginAsync API call:', error.message);

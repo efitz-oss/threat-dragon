@@ -8,9 +8,7 @@
         <!-- Description -->
         <b-row class="mb-4">
             <b-col>
-                <BCard
-                    :header="$t('threatmodel.description')"
-                >
+                <BCard :header="$t('threatmodel.description')">
                     <b-row class="tm-card">
                         <b-col>
                             <p id="tm_description">
@@ -32,13 +30,21 @@
                 <BCard>
                     <template #header>
                         <h6 class="diagram-header-text">
-                            <a href="javascript:void(0)" class="diagram-edit" @click="editDiagram(diagram)">
+                            <a
+                                href="javascript:void(0)"
+                                class="diagram-edit"
+                                @click="editDiagram(diagram)"
+                            >
                                 {{ diagram.title }}
                             </a>
                         </h6>
                     </template>
                     <h6 v-if="diagram.description" class="diagram-description-text">
-                        <a href="javascript:void(0)" class="diagram-edit" @click="editDiagram(diagram)">
+                        <a
+                            href="javascript:void(0)"
+                            class="diagram-edit"
+                            @click="editDiagram(diagram)"
+                        >
                             {{ diagram.description }}
                         </a>
                     </h6>
@@ -98,8 +104,10 @@ export default {
         version: (state) => state.packageBuildVersion
     }),
     mounted() {
-        const threatTop = this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
-        const diagramTop = this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
+        const threatTop =
+            this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
+        const diagramTop =
+            this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
         const update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
         console.debug('updates: ' + JSON.stringify(update));
         this.$store.dispatch(tmActions.update, update);
@@ -108,7 +116,10 @@ export default {
     methods: {
         onEditClick(evt) {
             evt.preventDefault();
-            this.$router.push({ name: `${this.providerType}ThreatModelEdit`, params: this.$route.params });
+            this.$router.push({
+                name: `${this.providerType}ThreatModelEdit`,
+                params: this.$route.params
+            });
         },
         onReportClick(evt) {
             evt.preventDefault();
@@ -130,7 +141,7 @@ export default {
             if (!diagram.cells) {
                 diagram.cells = [];
             }
-            
+
             this.$store.dispatch(tmActions.diagramSelected, diagram);
             const path = `${this.$route.path}/edit/${encodeURIComponent(diagram.title)}`;
             this.$router.push(path);

@@ -3,14 +3,16 @@ const ms = {
         sessionExpired: 'Sesi anda telah tamat. Sila log masuk semula untuk meneruskan.'
     },
     nav: {
-        v2Warning: 'Model ancaman versi 2.0 tidak sesuai dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimport akan dinaik tarafkan ke skema versi 2.0',
+        v2Warning:
+            'Model ancaman versi 2.0 tidak sesuai dengan model Threat Dragon versi 1.x. Model versi 1.x yang diimport akan dinaik tarafkan ke skema versi 2.0',
         loggedInAs: 'Log masuk sebagai',
         logOut: 'Log keluar'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo Threat Dragon',
-        description: 'OWASP Threat Dragon adalah aplikasi percuma, sumber terbuka, lintas platform untuk mencipta model ancaman. Gunakannya untuk melukis gambarajah pemodelan ancaman dan mengenal pasti ancaman bagi sistem anda. Dengan penekanan pada kelenturan dan kesederhanaan, ia mudah diakses untuk semua jenis pengguna.'
+        description:
+            'OWASP Threat Dragon adalah aplikasi percuma, sumber terbuka, lintas platform untuk mencipta model ancaman. Gunakannya untuk melukis gambarajah pemodelan ancaman dan mengenal pasti ancaman bagi sistem anda. Dengan penekanan pada kelenturan dan kesederhanaan, ia mudah diakses untuk semua jenis pengguna.'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const ms = {
     dashboard: {
         welcome: {
             title: 'Selamat Datang!',
-            description: 'Anda bersedia untuk memulakan membuat rekabentuk aplikasi anda lebih selamat. Anda boleh membuka model ancaman sedia ada atau membuat yang baru dengan memilih salah satu pilihan di bawah. '
+            description:
+                'Anda bersedia untuk memulakan membuat rekabentuk aplikasi anda lebih selamat. Anda boleh membuka model ancaman sedia ada atau membuat yang baru dengan memilih salah satu pilihan di bawah. '
         },
         actions: {
             openExisting: 'Buka model ancaman sedia ada',
@@ -92,7 +95,7 @@ const ms = {
         refBranch: 'Cawangan Rujukan',
         add: 'tambah cawangan',
         cancel: 'Batal',
-        nama: 'nama cawangan',
+        nama: 'nama cawangan'
     },
     threatmodelSelect: {
         select: 'Pilih Model Ancaman dari',

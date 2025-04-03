@@ -1,8 +1,5 @@
 <template>
-    <div
-        ref="diagram_container"
-        class="td-readonly-diagram"
-    />
+    <div ref="diagram_container" class="td-readonly-diagram" />
 </template>
 
 <script>
@@ -46,7 +43,7 @@ export default {
             // but may be OS dependent and/or printer dependent
             const height = 700;
             const maxWidth = 1000;
-            
+
             const width = this.$parent.$el.clientWidth;
             this.graph.resize(Math.min(width, maxWidth) - 50, height - 50);
             this.graph.scaleContentToFit({
@@ -55,7 +52,6 @@ export default {
         }
     }
 };
-
 </script>
 
 <style lang="scss" scoped>

@@ -1,8 +1,13 @@
 <template>
     <b-navbar id="navbar" toggleable="lg" fixed="top">
         <b-navbar-brand :to="username ? '/dashboard' : '/'" class="td-brand">
-            <b-img :src="require('@/assets/threatdragon_logo_image.svg')" class="td-brand-img" alt="Threat Dragon Logo" />
-            Threat Dragon v{{ $store.state.packageBuildVersion }}{{ $store.state.packageBuildState }}
+            <b-img
+                :src="require('@/assets/threatdragon_logo_image.svg')"
+                class="td-brand-img"
+                alt="Threat Dragon Logo"
+            />
+            Threat Dragon v{{ $store.state.packageBuildVersion
+            }}{{ $store.state.packageBuildState }}
         </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse" />
@@ -26,11 +31,7 @@
                         :title="$t('nav.logOut')"
                     />
                 </b-nav-item>
-                <b-nav-item
-                    v-if="googleEnabled"
-                    id="nav-tos"
-                    to="/tos"
-                >
+                <b-nav-item v-if="googleEnabled" id="nav-tos" to="/tos">
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="file-contract"
@@ -38,11 +39,7 @@
                         :title="$t('nav.tos')"
                     />
                 </b-nav-item>
-                <b-nav-item
-                    v-if="googleEnabled"
-                    id="nav-privacy"
-                    to="/privacy"
-                >
+                <b-nav-item v-if="googleEnabled" id="nav-privacy" to="/privacy">
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="shield-alt"
@@ -82,9 +79,9 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <b-img 
+                    <b-img
                         :src="require('@/assets/owasp.svg')"
-                        class="td-fa-nav td-owasp-logo" 
+                        class="td-fa-nav td-owasp-logo"
                         :title="$t('desktop.help.visit')"
                     />
                 </b-nav-item>
@@ -100,7 +97,7 @@ import TdLocaleSelect from './LocaleSelect.vue';
 export default {
     name: 'TdNavbar',
     components: {
-        TdLocaleSelect,
+        TdLocaleSelect
     },
     mounted() {
         // Ensure Bootstrap's JavaScript is properly initialized for the navbar toggle
@@ -117,7 +114,7 @@ export default {
     computed: {
         ...mapGetters(['username']),
         ...mapState({
-            config: state => state.config.config
+            config: (state) => state.config.config
         }),
         googleEnabled() {
             return this.config && this.config.googleEnabled && !this.$store.getters.isElectronMode;
@@ -132,8 +129,8 @@ export default {
                     throw error;
                 }
             });
-        },
-    },
+        }
+    }
 };
 </script>
 
@@ -142,44 +139,44 @@ export default {
 @use '@/styles/colors.scss' as colors;
 $icon-height: 1.2rem;
 .navbar {
-  background-color: colors.$orange;
-  border-color: colors.$orange-alt;
-  height: sizes.$header-height + 10;
-  font-size: 15px;
+    background-color: colors.$orange;
+    border-color: colors.$orange-alt;
+    height: sizes.$header-height + 10;
+    font-size: 15px;
 }
 .nav-link,
 .logged-in-as {
-  color: colors.$white !important;
+    color: colors.$white !important;
 }
 .logged-in-as {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 .td-fa-nav {
-  font-size: $icon-height;
-  max-height: $icon-height;
-  margin: 0 5px 0 5px;
+    font-size: $icon-height;
+    max-height: $icon-height;
+    margin: 0 5px 0 5px;
 }
 .td-brand {
-  color: colors.$white !important;
-  .td-brand-img {
-    max-height: (sizes.$header-height - 10);
-  }
+    color: colors.$white !important;
+    .td-brand-img {
+        max-height: (sizes.$header-height - 10);
+    }
 }
 @media (max-width: 576px) {
-  .nav-link {
-    color: colors.$red !important;
-  }
-  .logged-in-as {
-    background-color: colors.$orange;
-    border-radius: 5px;
-    padding: 10px;
-  }
+    .nav-link {
+        color: colors.$red !important;
+    }
+    .logged-in-as {
+        background-color: colors.$orange;
+        border-radius: 5px;
+        padding: 10px;
+    }
 }
 @media (max-width: 576px) {
-  .td-owasp-logo {
-    background-color: colors.$red;
-    border-radius: 50%;
-    padding: 5px;
-  }
+    .td-owasp-logo {
+        background-color: colors.$red;
+        border-radius: 50%;
+        padding: 5px;
+    }
 }
 </style>

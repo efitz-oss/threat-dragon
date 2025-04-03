@@ -3,14 +3,16 @@ const ukr = {
         sessionExpired: 'Your session has expired. Please log in again to continue.'
     },
     nav: {
-        v2Warning: 'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
+        v2Warning:
+            'Version 2.0 threat models are not backwardly compatible with version 1.x Threat Dragon models. Imported version 1.x models will be upgraded to the version 2.0 schema',
         loggedInAs: 'Logged in as',
         logOut: 'Log out'
     },
     home: {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
-        description: 'OWASP Threat Dragon is a free, open-source, cross-platform application for creating threat models. Use it to draw threat modeling diagrams and to identify threats for your system. With an emphasis on flexibility and simplicity it is easily accessible for all types of users.'
+        description:
+            'OWASP Threat Dragon is a free, open-source, cross-platform application for creating threat models. Use it to draw threat modeling diagrams and to identify threats for your system. With an emphasis on flexibility and simplicity it is easily accessible for all types of users.'
     },
     providers: {
         desktop: {
@@ -41,7 +43,8 @@ const ukr = {
     dashboard: {
         welcome: {
             title: 'Welcome!',
-            description: 'You\'re ready to start making your application designs more secure. You can open an existing threat model or create a new one by choosing one of the options below. '
+            description:
+                "You're ready to start making your application designs more secure. You can open an existing threat model or create a new one by choosing one of the options below. "
         },
         actions: {
             openExisting: 'Open an existing threat model',
@@ -92,7 +95,7 @@ const ukr = {
         refBranch: 'Reference branch',
         add: 'add branch',
         cancel: 'Cancel',
-        name: 'branch name',
+        name: 'branch name'
     },
     threatmodelSelect: {
         select: 'Select a Threat Model from',
@@ -232,7 +235,7 @@ const ukr = {
             entities: 'Entities',
             metadata: 'Metadata',
             search: 'Search',
-            notFound: 'We don\'t have that yet, want to open an issue? :)'
+            notFound: "We don't have that yet, want to open an issue? :)"
         },
         shapes: {
             actor: 'Actor',
@@ -271,8 +274,8 @@ const ukr = {
         saveModel: 'Save Model',
         saveModelAs: 'Save Model As',
         search: 'Search',
-        next:'Next',
-        previous:'Previous'
+        next: 'Next',
+        previous: 'Previous'
     },
     threats: {
         model: {
@@ -393,7 +396,7 @@ const ukr = {
             p1: 'Version 2 uses a different drawing library, which will change the way parts of your threat models are saved. While most diagrams will look the same as they did in previous versions of Threat Dragon, there are cases where they may need to be adjusted slightly.',
             p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.'
         },
-        instructions: 'Great! Let\'s get you to your model.',
+        instructions: "Great! Let's get you to your model.",
         continue: 'Continue to Threat Model'
     }
 };

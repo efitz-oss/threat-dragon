@@ -9,7 +9,7 @@
  */
 const draw = (container, diagram) => {
     console.debug('Drawing diagram', diagram ? diagram.title : 'untitled');
-    
+
     // Return a minimal implementation that satisfies the interface
     return {
         toJSON: () => ({ cells: diagram.cells || [] }),
@@ -27,7 +27,7 @@ const draw = (container, diagram) => {
  */
 const edit = (container, diagram) => {
     console.debug('Editing diagram', diagram ? diagram.title : 'untitled');
-    
+
     // Return a minimal implementation that satisfies the interface
     // We need to ensure the object has the structure expected by the app
     return {

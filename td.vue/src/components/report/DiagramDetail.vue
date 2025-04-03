@@ -20,11 +20,7 @@
                     <td-read-only-diagram :diagram="diagram" />
                 </b-col>
             </b-row>
-            <b-row
-                v-for="(entity, idx) in entitiesWithThreats"
-                :key="idx"
-                class="mt-3 no-print"
-            >
+            <b-row v-for="(entity, idx) in entitiesWithThreats" :key="idx" class="mt-3 no-print">
                 <td-report-entity
                     :entity="entity"
                     :out-of-scope="entity.data.outOfScope"
@@ -38,10 +34,7 @@
             <div class="page-title print-only td-threats-title">
                 {{ diagram.title }}
             </div>
-            <div
-                v-for="(entity, idx) in entitiesWithThreats"
-                :key="`print-${idx}`"
-            >
+            <div v-for="(entity, idx) in entitiesWithThreats" :key="`print-${idx}`">
                 <td-print-report-entity
                     :entity="entity"
                     :out-of-scope="entity.data.outOfScope"
@@ -92,14 +85,19 @@ export default {
     },
     computed: {
         entitiesWithThreats: function () {
-            return this.diagram.cells
-                .filter(x => !!x.data && !!x.data.threats
-                    && (this.showOutOfScope || !x.data.outOfScope)
-                    && (this.showEmpty || x.data.threats.some(y => this.showMitigated || y.status.toLowerCase() !== 'mitigated')));
+            return this.diagram.cells.filter(
+                (x) =>
+                    !!x.data &&
+                    !!x.data.threats &&
+                    (this.showOutOfScope || !x.data.outOfScope) &&
+                    (this.showEmpty ||
+                        x.data.threats.some(
+                            (y) => this.showMitigated || y.status.toLowerCase() !== 'mitigated'
+                        ))
+            );
         }
-    },
+    }
 };
-
 </script>
 
 <style lang="scss" scoped>
