@@ -11,7 +11,7 @@ try {
         });
     }
 } catch (err) {
-    console.warn("Failed to load passive-events-support:", err.message);
+    console.warn('Failed to load passive-events-support:', err.message);
 }
 
 // Expose protected methods that allow the renderer process to use
