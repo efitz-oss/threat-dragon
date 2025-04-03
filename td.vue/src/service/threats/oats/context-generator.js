@@ -1,41 +1,41 @@
 function fixupByContext(suggestions, modelType) {
     return suggestions.map((suggestion) => {
         switch (suggestion.type) {
-        case 'threats.model.linddun.linkability':
-            if (modelType === 'STRIDE')
-                suggestion.type = 'threats.model.stride.informationDisclosure';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
-            break;
-        case 'threats.model.linddun.identifiability':
-            if (modelType === 'STRIDE') suggestion.type = 'threats.model.stride.spoofing';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
-            break;
-        case 'threats.model.stride.repudiation':
-            if (modelType === 'LINDDUN')
-                suggestion.type = 'threats.model.linddun.nonRepudiation';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
-            break;
-        case 'threats.model.linddun.detectability':
-            if (modelType === 'STRIDE')
-                suggestion.type = 'threats.model.stride.informationDisclosure';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
-            break;
-        case 'threats.model.linddun.disclosureOfInformation':
-            if (modelType === 'STRIDE')
-                suggestion.type = 'threats.model.stride.informationDisclosure';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
-            break;
-        case 'threats.model.linddun.unawareness':
-            if (modelType === 'STRIDE')
-                suggestion.type = 'threats.model.stride.elevationOfPrivilege';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
-            break;
-        case 'threats.model.stride.tampering':
-            if (modelType === 'LINDDUN')
-                suggestion.type = 'threats.model.linddun.nonCompliance';
-            else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
-            break;
-        }
+            case 'threats.model.linddun.linkability':
+                if (modelType === 'STRIDE')
+                    suggestion.type = 'threats.model.stride.informationDisclosure';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
+                break;
+            case 'threats.model.linddun.identifiability':
+                if (modelType === 'STRIDE') suggestion.type = 'threats.model.stride.spoofing';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
+                break;
+            case 'threats.model.stride.repudiation':
+                if (modelType === 'LINDDUN')
+                    suggestion.type = 'threats.model.linddun.nonRepudiation';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
+                break;
+            case 'threats.model.linddun.detectability':
+                if (modelType === 'STRIDE')
+                    suggestion.type = 'threats.model.stride.informationDisclosure';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
+                break;
+            case 'threats.model.linddun.disclosureOfInformation':
+                if (modelType === 'STRIDE')
+                    suggestion.type = 'threats.model.stride.informationDisclosure';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.confidentiality';
+                break;
+            case 'threats.model.linddun.unawareness':
+                if (modelType === 'STRIDE')
+                    suggestion.type = 'threats.model.stride.elevationOfPrivilege';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
+                break;
+            case 'threats.model.stride.tampering':
+                if (modelType === 'LINDDUN')
+                    suggestion.type = 'threats.model.linddun.nonCompliance';
+                else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
+                break;
+            }
         return suggestion;
     });
 }

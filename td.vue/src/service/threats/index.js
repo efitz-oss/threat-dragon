@@ -73,44 +73,44 @@ export const createNewTypedThreat = function (modelType, cellType, number) {
         type = tc(`threats.model.${modelType.toLowerCase()}.${choice}`);
     } else
         switch (modelType) {
-        case 'CIA':
-            title = tc('threats.generic.cia');
-            type = tc('threats.model.cia.confidentiality');
-            break;
+            case 'CIA':
+                title = tc('threats.generic.cia');
+                type = tc('threats.model.cia.confidentiality');
+                break;
 
-        case 'DIE':
-            title = tc('threats.generic.die');
-            type = tc('threats.model.die.distributed');
-            break;
+            case 'DIE':
+                title = tc('threats.generic.die');
+                type = tc('threats.model.die.distributed');
+                break;
 
-        case 'LINDDUN':
-            title = tc('threats.generic.linddun');
-            type = tc('threats.model.linddun.linkability');
-            break;
+            case 'LINDDUN':
+                title = tc('threats.generic.linddun');
+                type = tc('threats.model.linddun.linkability');
+                break;
 
-        case 'PLOT4ai':
-            title = tc('threats.generic.plot4ai');
-            if (cellType === 'tm.Actor') {
-                type = tc('threats.model.plot4ai.accessibility');
-            } else {
-                type = tc('threats.model.plot4ai.techniqueProcesses');
-            }
-            break;
+            case 'PLOT4ai':
+                title = tc('threats.generic.plot4ai');
+                if (cellType === 'tm.Actor') {
+                    type = tc('threats.model.plot4ai.accessibility');
+                } else {
+                    type = tc('threats.model.plot4ai.techniqueProcesses');
+                }
+                break;
 
-        case 'STRIDE':
-            title = tc('threats.generic.stride');
-            if (cellType === 'tm.Actor' || cellType === 'tm.Process') {
+            case 'STRIDE':
+                title = tc('threats.generic.stride');
+                if (cellType === 'tm.Actor' || cellType === 'tm.Process') {
+                    type = tc('threats.model.stride.spoofing');
+                } else {
+                    type = tc('threats.model.stride.tampering');
+                }
+                break;
+
+            default:
+                title = tc('threats.generic.default');
                 type = tc('threats.model.stride.spoofing');
-            } else {
-                type = tc('threats.model.stride.tampering');
+                break;
             }
-            break;
-
-        default:
-            title = tc('threats.generic.default');
-            type = tc('threats.model.stride.spoofing');
-            break;
-        }
 
     return {
         id: v4(),

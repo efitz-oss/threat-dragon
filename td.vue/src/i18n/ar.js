@@ -138,9 +138,6 @@ const ara = {
             description: 'أدخل وصفًا عالي المستوى للنظام الذي يتم نمذجته',
             reviewer: 'اسم المراجع'
         },
-        buttons: {
-            save: 'حفظ'
-        },
         diagram: {
             diagrams: 'المخططات',
             addNewDiagram: 'إضافة مخطط جديد...',
@@ -216,8 +213,10 @@ const ara = {
             toggleGrid: 'تبديل الشبكة',
             undo: 'تراجع عن التحرير',
             zoomIn: 'تكبير',
-            zoomOut: 'تصغير'
+            zoomOut: 'تصغير',
+            save: 'حفظ'
         },
+
         shortcuts: {
             title: 'اختصارات لوحة المفاتيح',
             copy: {

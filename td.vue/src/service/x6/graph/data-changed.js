@@ -110,31 +110,31 @@ const updateProperties = (cell) => {
 const setType = (cell) => {
     // fundamentally the shape is the only constant identifier
     switch (cell.shape) {
-    case 'actor':
-        cell.data.type = 'tm.Actor';
-        break;
-    case 'store':
-        cell.data.type = 'tm.Store';
-        break;
-    case 'process':
-        cell.data.type = 'tm.Process';
-        break;
-    case 'flow':
-        cell.data.type = 'tm.Flow';
-        break;
-    case 'trust-boundary-box':
-        cell.data.type = 'tm.BoundaryBox';
-        break;
-    case 'trust-boundary-curve':
-    case 'trust-broundary-curve':
-        cell.data.type = 'tm.Boundary';
-        break;
-    case 'td-text-block':
-        cell.data.type = 'tm.Text';
-        break;
-    default:
-        console.debug('Unrecognized shape');
-    }
+        case 'actor':
+            cell.data.type = 'tm.Actor';
+            break;
+        case 'store':
+            cell.data.type = 'tm.Store';
+            break;
+        case 'process':
+            cell.data.type = 'tm.Process';
+            break;
+        case 'flow':
+            cell.data.type = 'tm.Flow';
+            break;
+        case 'trust-boundary-box':
+            cell.data.type = 'tm.BoundaryBox';
+            break;
+        case 'trust-boundary-curve':
+        case 'trust-broundary-curve':
+            cell.data.type = 'tm.Boundary';
+            break;
+        case 'td-text-block':
+            cell.data.type = 'tm.Text';
+            break;
+        default:
+            console.debug('Unrecognized shape');
+        }
 };
 
 export default {

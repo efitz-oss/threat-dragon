@@ -2,22 +2,12 @@
     <div class="locale-changer">
         <b-dropdown right :text="getLanguageName(locale)" variant="primary">
             <div class="px-2 py-2">
-                <input
-                    v-model="searchQuery"
-                    type="text"
-                    class="form-control"
-                    placeholder="Search language..."
-                    @click.stop
-                    @input="filterLocales"
-                />
+                <input v-model="searchQuery" type="text" class="form-control" placeholder="Search language..."
+                    @click.stop @input="filterLocales" />
             </div>
             <div class="dropdown-items-container">
-                <b-dropdown-item
-                    v-for="localeCode in filteredLocales"
-                    :key="`locale-${localeCode}`"
-                    :value="localeCode"
-                    @click="updateLocale(localeCode)"
-                >
+                <b-dropdown-item v-for="localeCode in filteredLocales" :key="`locale-${localeCode}`" :value="localeCode"
+                    @click="updateLocale(localeCode)">
                     {{ getLanguageName(localeCode) }}
                 </b-dropdown-item>
             </div>
@@ -129,34 +119,34 @@ export default {
 
         const getLanguageName = (locale) => {
             switch (locale) {
-            case 'ara':
-                return 'العربية'; // Arabic
-            case 'deu':
-                return 'Deutsch'; // German
-            case 'ell':
-                return 'Ελληνικά'; // Greek
-            case 'eng':
-                return 'English';
-            case 'spa':
-                return 'Español'; // Spanish
-            case 'fin':
-                return 'Suomi'; // Finnish
-            case 'fra':
-                return 'Français'; // French
-            case 'hin':
-                return 'हिंदी'; // Hindi
-            case 'ind':
-                return 'Bahasa Indonesia'; // Indonesia
-            case 'jpn':
-                return '日本語'; // Japanese
-            case 'ms':
-                return 'Malay'; // Malay
-            case 'por':
-                return 'Português'; // Portuguese
-            case 'zho':
-                return '中文'; // Chinese
-            default:
-                return locale;
+                case 'ara':
+                    return 'العربية'; // Arabic
+                case 'deu':
+                    return 'Deutsch'; // German
+                case 'ell':
+                    return 'Ελληνικά'; // Greek
+                case 'eng':
+                    return 'English';
+                case 'spa':
+                    return 'Español'; // Spanish
+                case 'fin':
+                    return 'Suomi'; // Finnish
+                case 'fra':
+                    return 'Français'; // French
+                case 'hin':
+                    return 'हिंदी'; // Hindi
+                case 'ind':
+                    return 'Bahasa Indonesia'; // Indonesia
+                case 'jpn':
+                    return '日本語'; // Japanese
+                case 'ms':
+                    return 'Malay'; // Malay
+                case 'por':
+                    return 'Português'; // Portuguese
+                case 'zho':
+                    return '中文'; // Chinese
+                default:
+                    return locale;
             }
         };
 

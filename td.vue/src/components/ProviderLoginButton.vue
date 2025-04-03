@@ -1,15 +1,7 @@
 <template>
-    <BButton
-        :id="`${provider.key}-login-btn`"
-        class="m-1"
-        variant="secondary"
-        @click="onProviderClick()"
-    >
+    <BButton :id="`${provider.key}-login-btn`" class="m-1" variant="secondary" @click="onProviderClick()">
         <span class="login-btn-icon">
-            <font-awesome-icon
-:icon="provider.icon"
-size="2x" color="white"
-class="mr-2" />
+            <font-awesome-icon :icon="provider.icon" size="2x" color="white" class="mr-2" />
         </span>
         <span>
             {{ $t('providers.' + provider.key + '.loginWith') }}

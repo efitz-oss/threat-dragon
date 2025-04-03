@@ -3,14 +3,11 @@
         <b-card-text>
             <b-row>
                 <b-col>
-                    <a
-v-if="!!number" href="javascript:void(0)"
-@click="threatSelected()"
-                    >#{{ number }} {{ title || 'Unknown Threat' }}</a
-                    >
+                    <a v-if="!!number" href="javascript:void(0)" @click="threatSelected()">#{{ number }} {{ title ||
+                        'Unknown Threat' }}</a>
                     <a v-else href="javascript:void(0)" @click="threatSelected()">{{
                         title || 'Unknown Threat'
-                    }}</a>
+                        }}</a>
                 </b-col>
             </b-row>
             <b-row>
@@ -20,36 +17,16 @@ v-if="!!number" href="javascript:void(0)"
             </b-row>
             <b-row>
                 <b-col>
-                    <font-awesome-icon
-                        v-if="status !== 'Open'"
-                        icon="check"
-                        class="threat-icon green-icon"
-                        :title="status"
-                    />
-                    <font-awesome-icon
-                        v-if="status === 'Open'"
-                        icon="exclamation-triangle"
-                        class="threat-icon red-icon"
-                        :title="status"
-                    />
-                    <font-awesome-icon
-                        v-if="severity === 'High'"
-                        icon="circle"
-                        class="threat-icon red-icon"
-                        :title="severity"
-                    />
-                    <font-awesome-icon
-                        v-if="severity === 'Medium'"
-                        icon="circle"
-                        class="threat-icon yellow-icon"
-                        :title="severity"
-                    />
-                    <font-awesome-icon
-                        v-if="severity === 'Low'"
-                        icon="circle"
-                        class="threat-icon green-icon"
-                        :title="severity"
-                    />
+                    <font-awesome-icon v-if="status !== 'Open'" icon="check" class="threat-icon green-icon"
+                        :title="status" />
+                    <font-awesome-icon v-if="status === 'Open'" icon="exclamation-triangle" class="threat-icon red-icon"
+                        :title="status" />
+                    <font-awesome-icon v-if="severity === 'High'" icon="circle" class="threat-icon red-icon"
+                        :title="severity" />
+                    <font-awesome-icon v-if="severity === 'Medium'" icon="circle" class="threat-icon yellow-icon"
+                        :title="severity" />
+                    <font-awesome-icon v-if="severity === 'Low'" icon="circle" class="threat-icon green-icon"
+                        :title="severity" />
                 </b-col>
                 <b-col align-h="end">
                     <b-badge v-if="!!modelType">
@@ -84,23 +61,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/styles/colors.scss' as colors; /* Import SCSS variables */
+@use '@/styles/colors.scss' as colors;
+
+/* Import SCSS variables */
 .threat-card {
     font-size: 14px;
 }
+
 .threat-title {
     margin-bottom: 5px;
 }
+
 .threat-icon {
     margin: 2px;
 }
+
 .green-icon {
-    color: colors.$green; /* Use SCSS variable */
+    color: colors.$green;
+    /* Use SCSS variable */
 }
+
 .red-icon {
-    color: colors.$red; /* Use SCSS variable */
+    color: colors.$red;
+    /* Use SCSS variable */
 }
+
 .yellow-icon {
-    color: colors.$yellow; /* Use SCSS variable */
+    color: colors.$yellow;
+    /* Use SCSS variable */
 }
 </style>

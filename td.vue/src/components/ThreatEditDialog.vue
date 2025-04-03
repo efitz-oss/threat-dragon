@@ -1,114 +1,60 @@
 <template>
     <div>
-        <b-modal
-            v-if="!!threat"
-            id="threat-edit"
-            ref="editModal"
-            size="lg"
-            ok-variant="primary"
-            header-bg-variant="primary"
-            header-text-variant="light"
-            :title="modalTitle"
-        >
+        <b-modal v-if="!!threat" id="threat-edit" ref="editModal" size="lg" ok-variant="primary"
+            header-bg-variant="primary" header-text-variant="light" :title="modalTitle">
             <b-form>
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="title-group"
-                            :label="$t('threats.properties.title')"
-                            label-for="title"
-                        >
-                            <b-form-input
-id="title"
-v-model="threat.title" type="text"
-required />
+                        <b-form-group id="title-group" :label="$t('threats.properties.title')" label-for="title">
+                            <b-form-input id="title" v-model="threat.title" type="text" required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="threat-type-group"
-                            :label="$t('threats.properties.type')"
-                            label-for="threat-type"
-                        >
-                            <b-form-select
-                                id="threat-type"
-                                v-model="threat.type"
-                                :options="threatTypes"
-                            />
+                        <b-form-group id="threat-type-group" :label="$t('threats.properties.type')"
+                            label-for="threat-type">
+                            <b-form-select id="threat-type" v-model="threat.type" :options="threatTypes" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col md="5">
-                        <b-form-group
-                            id="status-group"
-                            class="float-left"
-                            :label="$t('threats.properties.status')"
-                            label-for="status"
-                        >
-                            <b-form-radio-group
-                                id="status"
-                                v-model="threat.status"
-                                :options="statuses"
-                                buttons
-                            />
+                        <b-form-group id="status-group" class="float-left" :label="$t('threats.properties.status')"
+                            label-for="status">
+                            <b-form-radio-group id="status" v-model="threat.status" :options="statuses" buttons />
                         </b-form-group>
                     </b-col>
 
                     <b-col md="2">
-                        <b-form-group
-                            id="score-group"
-                            :label="$t('threats.properties.score')"
-                            label-for="score"
-                        >
+                        <b-form-group id="score-group" :label="$t('threats.properties.score')" label-for="score">
                             <b-form-input id="score" v-model="threat.score" type="text" />
                         </b-form-group>
                     </b-col>
 
                     <b-col md="5">
-                        <b-form-group
-                            id="priority-group"
-                            class="float-right"
-                            :label="$t('threats.properties.priority')"
-                            label-for="priority"
-                        >
-                            <b-form-radio-group
-                                id="priority"
-                                v-model="threat.severity"
-                                :options="priorities"
-                                buttons
-                            />
+                        <b-form-group id="priority-group" class="float-right" :label="$t('threats.properties.priority')"
+                            label-for="priority">
+                            <b-form-radio-group id="priority" v-model="threat.severity" :options="priorities" buttons />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="description-group"
-                            :label="$t('threats.properties.description')"
-                            label-for="description"
-                        >
-                            <b-form-textarea
-                                id="description"
-                                v-model="threat.description"
-                                rows="5"
-                            />
+                        <b-form-group id="description-group" :label="$t('threats.properties.description')"
+                            label-for="description">
+                            <b-form-textarea id="description" v-model="threat.description" rows="5" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="mitigation-group"
-                            :label="$t('threats.properties.mitigation')"
-                            label-for="mitigation"
-                        >
+                        <b-form-group id="mitigation-group" :label="$t('threats.properties.mitigation')"
+                            label-for="mitigation">
                             <b-form-textarea id="mitigation" v-model="threat.mitigation" rows="5" />
                         </b-form-group>
                     </b-col>
@@ -117,31 +63,16 @@ required />
 
             <template #modal-footer>
                 <div class="w-100">
-                    <b-button
-                        v-if="!newThreat"
-                        variant="danger"
-                        class="float-left"
-                        @click="confirmDelete()"
-                    >
+                    <b-button v-if="!newThreat" variant="danger" class="float-left" @click="confirmDelete()">
                         {{ $t('forms.delete') }}
                     </b-button>
-                    <b-button
-                        v-if="newThreat"
-                        variant="danger"
-                        class="float-left"
-                        @click="immediateDelete()"
-                    >
+                    <b-button v-if="newThreat" variant="danger" class="float-left" @click="immediateDelete()">
                         {{ $t('forms.remove') }}
                     </b-button>
                     <b-button variant="secondary" class="float-right" @click="updateThreat()">
                         {{ $t('forms.apply') }}
                     </b-button>
-                    <b-button
-                        v-if="!newThreat"
-                        variant="secondary"
-                        class="float-right mr-2"
-                        @click="hideModal()"
-                    >
+                    <b-button v-if="!newThreat" variant="secondary" class="float-right mr-2" @click="hideModal()">
                         {{ $t('forms.cancel') }}
                     </b-button>
                 </div>
