@@ -17,6 +17,8 @@ sbom.xml
 !.lycheeignore
 !.trivyignore
 !.markdownlint.yaml
+!.eslintrc.js
+!.prettierrc.json
 
 # docker files
 !.dockerignore
@@ -84,7 +86,6 @@ sbom.xml
 !td.server/test/repositories/
 !td.server/test/repositories/*.spec.js
 !td.server/.babelrc
-!td.server/.eslintrc.js
 !td.server/README.md
 !td.server/dev.js
 !td.server/index.js

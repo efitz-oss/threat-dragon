@@ -10,13 +10,8 @@
             </b-row>
             <b-row>
                 <b-col md="4">
-                    <b-img
-                        id="home-td-logo"
-                        class="td-cupcake"
-                        data-testid="home-logo"
-                        :alt="$t('home.imgAlt')"
-                        :src="require('@/assets/threatdragon_logo_image.svg')"
-                    />
+                    <b-img id="home-td-logo" class="td-cupcake" data-testid="home-logo" :alt="$t('home.imgAlt')"
+                        :src="require('@/assets/threatdragon_logo_image.svg')" />
                 </b-col>
                 <b-col md="8">
                     <b-row>
@@ -26,12 +21,8 @@
                     </b-row>
                     <b-row>
                         <b-col class="mt-5 ml-5 text-center" data-testid="login-buttons">
-                            <td-provider-login-button
-                                v-for="(provider, idx) in providers"
-                                :key="idx"
-                                :provider="provider"
-                                data-testid="provider-login-button"
-                            />
+                            <td-provider-login-button v-for="(provider, idx) in providers" :key="idx"
+                                :provider="provider" data-testid="provider-login-button" />
                         </b-col>
                     </b-row>
                 </b-col>
@@ -41,11 +32,11 @@
 </template>
 
 <script>
-import {allProviders} from '@/service/provider/providers.js';
+import { allProviders } from '@/service/provider/providers.js';
 import { isElectronMode } from '@/utils/environment';
 import TdProviderLoginButton from '@/components/ProviderLoginButton.vue';
 import configActions from '@/store/actions/config.js';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 export default {
     name: 'HomePage',
     computed:
@@ -56,9 +47,9 @@ export default {
             providers: (state) => {
                 // Always use desktop provider in Electron mode
                 if (state.config.isElectronMode) {
-                    return {desktop: allProviders.desktop};
+                    return { desktop: allProviders.desktop };
                 }
-                
+
                 const providers = {};
                 if (state.config.config) {
                     // Only add providers that are enabled in config
@@ -95,35 +86,48 @@ export default {
     },
     components: {
         TdProviderLoginButton,
-    },};
+    },
+};
 </script>
 
 <style lang="scss" scoped>
 /* Recreating BootstrapVue's b-jumbotron styling */
 .welcome-jumbotron {
-    background-color: #f8f9fa; /* Light grey background like BootstrapVue jumbotron */
-    padding: 3rem 2rem; /* Increase padding to match BootstrapVue */
-    border-radius: 0.3rem; /* Add rounded corners */
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Light shadow */
-    margin-bottom: 1.5rem; /* Space below jumbotron */
-    text-align: center; /* Ensure text alignment */
+    background-color: #f8f9fa;
+    /* Light grey background like BootstrapVue jumbotron */
+    padding: 3rem 2rem;
+    /* Increase padding to match BootstrapVue */
+    border-radius: 0.3rem;
+    /* Add rounded corners */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    /* Light shadow */
+    margin-bottom: 1.5rem;
+    /* Space below jumbotron */
+    text-align: center;
+    /* Ensure text alignment */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
 /* Additional existing styles */
 .login-btn-icon {
     display: block;
 }
+
 .td-cupcake {
     width: 100%;
-    max-width: 480px; /* Ensure image size matches */
-    margin: 40px auto; /* Center image */
+    max-width: 480px;
+    /* Ensure image size matches */
+    margin: 40px auto;
+    /* Center image */
 }
+
 .td-description {
     font-size: 20px;
     max-width: 80%;
-    margin: 10px auto; /* Ensure description stays centered */
+    margin: 10px auto;
+    /* Ensure description stays centered */
 }
 </style>

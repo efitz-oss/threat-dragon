@@ -7,7 +7,7 @@ import api from '@/service/api/api.js';
 const store = useStore();
 const toast = useToast();
 const apiKey = process.env.VUE_APP_GOOGLE_API_KEY || '';
-const appId = process.env.VUE_APP_GOOGLE_CLOUD_PROJECT_ID || '';
+const appId = process.env.VUE_APP_GOOGLE_APP_ID || '';
 
 const accessToken = ref(null);
 const isLoading = ref(false);
@@ -20,11 +20,11 @@ const getGoogleAccessToken = async () => {
             toast.error('You need to sign in with Google before using Google Drive');
             return null;
         }
-        
+
         const response = await fetch('/api/google-token', {
             headers: { 'Authorization': `Bearer ${store.state.auth.jwt}` }
         });
-        
+
         if (!response.ok) {
             throw new Error(`Server returned ${response.status} from /api/google-token`);
         }
@@ -75,13 +75,37 @@ const createPicker = () => {
         toast.error('Google Picker API failed to load');
         return;
     }
+
+    // Use DocsView to select a threat model from Google Drive, restricting to only json files
+    const openView = new google.picker.DocsView()
+        .setMimeTypes('application/json')
+        .setIncludeFolders(true)
+        .setMode(google.picker.DocsViewMode.LIST); // Set to list mode (vs GRID)
+
+    // Use DocsView to create a new threat model in Google Drive
+    const createNewView = new google.picker.DocsView()
+        // we need to display a text field to allow the user to enter a file name
+        // then we need to set the file name here
+        // and we need a skeleton "blank" JSON threat model file content to save
+        .setIncludeFolders(true)
+        .setSelectFolderEnabled(true) // Allows folder selection
+        .setMimeTypes('application/vnd.google-apps.folder') // Restrict to folders only
+        .setMode(google.picker.DocsViewMode.LIST); // Set to list mode (vs GRID)
+
     try {
         const picker = new google.picker.PickerBuilder()
-            .addView(google.picker.ViewId.DOCS)
+            // we need to figure out how to use this in two different cases:
+            // 1. use openView with an appropriate title for opening an existing threat model
+            // 2. use createNewView with an appropriate title and a file name for creating a new threat model
+            .addView(openView)
+            .addView(createNewView)
             .setOAuthToken(accessToken.value)
             .setAppId(appId)
             .setDeveloperKey(apiKey)
             .setCallback(pickerCallback)
+            // .setTitle('Select a threat model file') // to open an existing file; need to localize
+            // .setTitle('Select or Upload JSON File') // to select a destination folder for file upload; need to localize
+            .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .build();
         picker.setVisible(true);
     } catch (error) {

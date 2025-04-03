@@ -204,6 +204,10 @@ module.exports = {
                     const env = args[0]['process.env'] || {};
                     env.IS_ELECTRON = JSON.stringify(false);
                     env.VUE_APP_WEB_ONLY = JSON.stringify(true);
+                    // Use GOOGLE_CLIENT_ID as fallback for VUE_APP_GOOGLE_CLIENT_ID
+                    if (!process.env.VUE_APP_GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID) {
+                        env.VUE_APP_GOOGLE_CLIENT_ID = JSON.stringify(process.env.GOOGLE_CLIENT_ID);
+                    }
                     args[0]['process.env'] = env;
                     return args;
                 });
@@ -218,6 +222,10 @@ module.exports = {
             config.plugin('define').tap(args => {
                 const env = args[0]['process.env'] || {};
                 env.IS_ELECTRON = JSON.stringify(true);
+                // Use GOOGLE_CLIENT_ID as fallback for VUE_APP_GOOGLE_CLIENT_ID
+                if (!process.env.VUE_APP_GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID) {
+                    env.VUE_APP_GOOGLE_CLIENT_ID = JSON.stringify(process.env.GOOGLE_CLIENT_ID);
+                }
                 args[0]['process.env'] = env;
                 return args;
             });
