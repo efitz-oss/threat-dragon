@@ -18,7 +18,7 @@ sbom.xml
 !.trivyignore
 !.markdownlint.yaml
 !.eslintrc.js
-!.prettierrc.json
+!.prettierrc
 
 # docker files
 !.dockerignore

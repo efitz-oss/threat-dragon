@@ -6,7 +6,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
     // Check if running in Electron
     isElectron: true,
-  
+
     // Renderer to main process (sending)
     appClose: () => ipcRenderer.send('app-close'),
     modelClosed: (fileName) => ipcRenderer.send('model-closed', fileName),
@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     modelSave: (modelData, fileName) => ipcRenderer.send('model-save', modelData, fileName),
     updateMenu: (locale) => ipcRenderer.send('update-menu', locale),
     quitAndInstall: () => ipcRenderer.send('quit-and-install'),
-  
+
     // Main to renderer process (receiving)
     onCloseAppRequest: (callback) => ipcRenderer.on('close-app-request', callback),
     onCloseModelRequest: (callback) => ipcRenderer.on('close-model-request', callback),
@@ -29,13 +29,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
     offModelSaveResult: (callback) => ipcRenderer.removeListener('model-save-result', callback),
     onUpdateAvailable: (callback) => ipcRenderer.on('update-available', callback),
     onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', callback),
-  
+
     // Invoke functions (async calls that return a result)
     getAppVersion: () => ipcRenderer.invoke('get-app-version'),
     getAppName: () => ipcRenderer.invoke('get-app-name'),
     getOsVersion: () => ipcRenderer.invoke('get-os-version'),
     openFile: () => ipcRenderer.invoke('open-file'),
-    saveFile: (content, suggestedFileName) => ipcRenderer.invoke('save-file', content, suggestedFileName),
+    saveFile: (content, suggestedFileName) =>
+        ipcRenderer.invoke('save-file', content, suggestedFileName),
     getThreatModelPath: () => ipcRenderer.invoke('get-threat-model-path'),
     getProviderLogon: () => ipcRenderer.invoke('get-provider-logon'),
     getRecentModelList: () => ipcRenderer.invoke('get-recent-model-list'),

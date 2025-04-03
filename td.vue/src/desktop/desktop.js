@@ -30,8 +30,7 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 let runApp = true;
-async function createWindow () {
-
+async function createWindow() {
     // Create the browser window
     const mainWindow = new BrowserWindow({
         width: 1400,
@@ -167,7 +166,7 @@ app.on('ready', async () => {
         app.clearRecentDocuments();
         // Add new items
         if (Array.isArray(list)) {
-            list.forEach(file => app.addRecentDocument(file));
+            list.forEach((file) => app.addRecentDocument(file));
         }
         return true;
     });
@@ -190,7 +189,7 @@ app.on('ready', async () => {
 });
 
 // this is emitted when a 'recent document' is opened
-app.on('open-file', function(event, path) {
+app.on('open-file', function (event, path) {
     // apply custom handler to this event
     event.preventDefault();
     logger.log.debug('Request to open file from recent documents: ' + path);
@@ -203,32 +202,32 @@ function handleCloseApp() {
     app.quit();
 }
 
-function handleModelClosed (_event, fileName) {
+function handleModelClosed(_event, fileName) {
     logger.log.debug('Close model notification from renderer for file name: ' + fileName);
     menu.modelClosed();
 }
 
-function handleModelOpenConfirmed (_event, fileName) {
+function handleModelOpenConfirmed(_event, fileName) {
     logger.log.debug('Open model confirmation from renderer for file name: ' + fileName);
     menu.openModel(fileName);
 }
 
-function handleModelOpened (_event, fileName) {
+function handleModelOpened(_event, fileName) {
     logger.log.debug('Open model notification from renderer for file name: ' + fileName);
     menu.modelOpened();
 }
 
-function handleModelPrint (_event, format) {
+function handleModelPrint(_event, format) {
     logger.log.debug('Model print request from renderer with printer : ' + format);
     menu.modelPrint(format);
 }
 
-function handleModelSave (_event, modelData, fileName) {
+function handleModelSave(_event, modelData, fileName) {
     logger.log.debug('Model save request from renderer with file name : ' + fileName);
     menu.modelSave(modelData, fileName);
 }
 
-function handleUpdateMenu (_event, locale) {
+function handleUpdateMenu(_event, locale) {
     logger.log.debug('Re-labeling the menu system for: ' + locale);
     menu.setLocale(locale);
     const template = menu.getMenuTemplate();
