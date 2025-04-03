@@ -237,6 +237,23 @@ export default {
             this.$store.dispatch(tmActions.update, { fileId: this.$route.params.fileId });
             console.debug('File ID stored from route params:', this.$route.params.fileId);
         }
+        
+        // For Google Drive provider, check that we have model data
+        if (this.providerType === 'google' && (!this.model || !this.model.summary)) {
+            console.debug('Google provider detected but missing model data, attempting to load from fileId:', this.fileId);
+            
+            // If we have a fileId but no model data, try to fetch the model data
+            if (this.fileId) {
+                try {
+                    // Try to directly fetch the model data using the stored fileId
+                    console.debug('Attempting to fetch model data from Google Drive fileId:', this.fileId);
+                    await this.$store.dispatch(tmActions.fetch, this.fileId);
+                    console.debug('Model data loaded successfully from fileId');
+                } catch (error) {
+                    console.error('Failed to fetch model data from fileId:', error);
+                }
+            }
+        }
     },
     methods: {
         init() {

@@ -245,15 +245,30 @@ const pickerCallback = async (data) => {
                 isLoading.value = true;
                 const content = await fetchFileContent(document.id);
                 await sendToBackend(document.id, content);
+                
+                // Parse the content and store the whole model in the store
+                try {
+                    const parsedModel = JSON.parse(content);
+                    // First, store the complete model data in the store
+                    store.commit('THREATMODEL_SELECTED', parsedModel);
+                    
+                    // Then update the metadata (fileName, fileId)
+                    store.commit(THREATMODEL_UPDATE, {
+                        fileName: document.name,
+                        fileId: document.id
+                    });
+                    
+                    console.debug('Successfully stored model data in store before navigation');
+                } catch (parseError) {
+                    console.error('Error parsing threat model JSON:', parseError);
+                    toast.error('File format error. Could not parse the threat model.');
+                    isLoading.value = false;
+                    return;
+                }
+                
                 toast.success('File imported successfully!');
                 
-                // Store fileId in the store
-                store.commit(THREATMODEL_UPDATE, {
-                    fileName: document.name,
-                    fileId: document.id
-                });
-                
-                // Now redirect directly to edit page
+                // After model is fully loaded in store, navigate to edit page
                 router.push({
                     name: 'googleThreatModelEdit',
                     params: {
