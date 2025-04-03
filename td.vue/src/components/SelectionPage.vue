@@ -15,7 +15,11 @@
                     <b-row>
                         <b-col>
                             <b-form-group id="filter-group">
-                                <b-form-input id="filter" v-model="filter" :placeholder="$t('forms.search')" />
+                                <b-form-input
+                                    id="filter"
+                                    v-model="filter"
+                                    :placeholder="$t('forms.search')"
+                                />
                             </b-form-group>
                         </b-col>
                     </b-row>
@@ -30,13 +34,20 @@
                         ...
                     </b-list-group-item>
 
-                    <b-list-group-item v-if="items.length === 0 && !!emptyStateText" href="#"
-                        @click="$emit('empty-state-click')">
+                    <b-list-group-item
+                        v-if="items.length === 0 && !!emptyStateText"
+                        href="#"
+                        @click="$emit('empty-state-click')"
+                    >
                         {{ emptyStateText }}
                     </b-list-group-item>
 
-                    <b-list-group-item v-for="(item, idx) in displayedItems" :key="idx" href="#"
-                        @click="$emit('item-click', item)">
+                    <b-list-group-item
+                        v-for="(item, idx) in displayedItems"
+                        :key="idx"
+                        href="#"
+                        @click="$emit('item-click', item)"
+                    >
                         {{ isGoogleProvider ? item.name : item }}
                     </b-list-group-item>
                 </b-list-group>
@@ -79,7 +90,7 @@ export default {
         onBackClick: {
             required: false,
             type: Function,
-            default: () => { }
+            default: () => {}
         },
         isGoogleProvider: Boolean
     },

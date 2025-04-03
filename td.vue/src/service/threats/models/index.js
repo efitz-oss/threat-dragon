@@ -82,43 +82,43 @@ const getThreatTypesByElement = (modelType, cellType) => {
 
         case 'PLOT4AI':
             switch (cellType) {
-            case 'tm.Actor':
-                types = plot4ai.actor;
-                break;
-            case 'tm.Process':
-                types = plot4ai.process;
-                break;
-            case 'tm.Store':
-                types = plot4ai.store;
-                break;
-            case 'tm.Flow':
-            default:
-                types = plot4ai.flow;
-                break;
+                case 'tm.Actor':
+            types = plot4ai.actor;
+            break;
+        case 'tm.Process':
+            types = plot4ai.process;
+                    break;
+        case 'tm.Store':
+            types = plot4ai.store;
+            break;
+        case 'tm.Flow':
+        default:
+            types = plot4ai.flow;
+            break;
             }
             break;
 
         case 'STRIDE':
             switch (cellType) {
-            case 'tm.Actor':
-                types = stride.actor;
-                break;
-            case 'tm.Process':
-                types = stride.process;
-                break;
-            case 'tm.Store':
-                types = stride.store;
-                break;
-            case 'tm.Flow':
-            default:
-                types = stride.flow;
-                break;
+                case 'tm.Actor':
+            types = stride.actor;
+                    break;
+        case 'tm.Process':
+                    types = stride.process;
+                    break;
+        case 'tm.Store':
+            types = stride.store;
+            break;
+        case 'tm.Flow':
+        default:
+            types = stride.flow;
+            break;
             }
             break;
 
         default:
             return generic;
-        }
+    }
     /**
      * swapping the key-value pairs of types to be consistent with how generic (returned as default)
      * is formed

@@ -110,7 +110,7 @@ export const createNewTypedThreat = function (modelType, cellType, number) {
                 title = tc('threats.generic.default');
                 type = tc('threats.model.stride.spoofing');
                 break;
-            }
+        }
 
     return {
         id: v4(),

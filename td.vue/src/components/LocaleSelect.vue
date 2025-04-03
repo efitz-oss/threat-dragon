@@ -2,12 +2,22 @@
     <div class="locale-changer">
         <b-dropdown right :text="getLanguageName(locale)" variant="primary">
             <div class="px-2 py-2">
-                <input v-model="searchQuery" type="text" class="form-control" placeholder="Search language..."
-                    @click.stop @input="filterLocales" />
+                <input
+                    v-model="searchQuery"
+                    type="text"
+                    class="form-control"
+                    placeholder="Search language..."
+                    @click.stop
+                    @input="filterLocales"
+                />
             </div>
             <div class="dropdown-items-container">
-                <b-dropdown-item v-for="localeCode in filteredLocales" :key="`locale-${localeCode}`" :value="localeCode"
-                    @click="updateLocale(localeCode)">
+                <b-dropdown-item
+                    v-for="localeCode in filteredLocales"
+                    :key="`locale-${localeCode}`"
+                    :value="localeCode"
+                    @click="updateLocale(localeCode)"
+                >
                     {{ getLanguageName(localeCode) }}
                 </b-dropdown-item>
             </div>

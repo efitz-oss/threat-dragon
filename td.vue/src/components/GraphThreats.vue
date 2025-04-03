@@ -3,11 +3,12 @@
         <b-card-text>
             <b-row>
                 <b-col>
-                    <a v-if="!!number" href="javascript:void(0)" @click="threatSelected()">#{{ number }} {{ title ||
-                        'Unknown Threat' }}</a>
+                    <a v-if="!!number" href="javascript:void(0)" @click="threatSelected()"
+                    >#{{ number }} {{ title || 'Unknown Threat' }}</a
+                    >
                     <a v-else href="javascript:void(0)" @click="threatSelected()">{{
                         title || 'Unknown Threat'
-                        }}</a>
+                    }}</a>
                 </b-col>
             </b-row>
             <b-row>
@@ -17,16 +18,36 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <font-awesome-icon v-if="status !== 'Open'" icon="check" class="threat-icon green-icon"
-                        :title="status" />
-                    <font-awesome-icon v-if="status === 'Open'" icon="exclamation-triangle" class="threat-icon red-icon"
-                        :title="status" />
-                    <font-awesome-icon v-if="severity === 'High'" icon="circle" class="threat-icon red-icon"
-                        :title="severity" />
-                    <font-awesome-icon v-if="severity === 'Medium'" icon="circle" class="threat-icon yellow-icon"
-                        :title="severity" />
-                    <font-awesome-icon v-if="severity === 'Low'" icon="circle" class="threat-icon green-icon"
-                        :title="severity" />
+                    <font-awesome-icon
+                        v-if="status !== 'Open'"
+                        icon="check"
+                        class="threat-icon green-icon"
+                        :title="status"
+                    />
+                    <font-awesome-icon
+                        v-if="status === 'Open'"
+                        icon="exclamation-triangle"
+                        class="threat-icon red-icon"
+                        :title="status"
+                    />
+                    <font-awesome-icon
+                        v-if="severity === 'High'"
+                        icon="circle"
+                        class="threat-icon red-icon"
+                        :title="severity"
+                    />
+                    <font-awesome-icon
+                        v-if="severity === 'Medium'"
+                        icon="circle"
+                        class="threat-icon yellow-icon"
+                        :title="severity"
+                    />
+                    <font-awesome-icon
+                        v-if="severity === 'Low'"
+                        icon="circle"
+                        class="threat-icon green-icon"
+                        :title="severity"
+                    />
                 </b-col>
                 <b-col align-h="end">
                     <b-badge v-if="!!modelType">

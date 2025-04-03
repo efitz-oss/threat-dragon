@@ -58,7 +58,7 @@ const getDiagramType = (representation) => {
                 diagram.diagramType = 'Generic';
                 diagram.thumbnail = './public/content/images/thumbnail.jpg';
                 diagram.placeholder = 'New generic diagram description';
-            }
+        }
     } else {
         diagram.diagramType = 'Generic';
         diagram.thumbnail = './public/content/images/thumbnail.jpg';

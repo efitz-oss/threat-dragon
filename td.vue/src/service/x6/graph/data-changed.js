@@ -134,7 +134,7 @@ const setType = (cell) => {
             break;
         default:
             console.debug('Unrecognized shape');
-        }
+    }
 };
 
 export default {

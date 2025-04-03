@@ -1,12 +1,34 @@
 <template>
-    <b-modal id="add-new-branch" size="md" ok-variant="primary" header-bg-variant="primary" header-text-variant="light"
-        :title="modalTitle" visible centered hide-footer @hide="closeDialog">
+    <b-modal
+        id="add-new-branch"
+        size="md"
+        ok-variant="primary"
+        header-bg-variant="primary"
+        header-text-variant="light"
+        :title="modalTitle"
+        visible
+        centered
+        hide-footer
+        @hide="closeDialog"
+    >
         <form @submit.prevent="addBranch">
             <b-row>
                 <b-col lg="12" class="pb-2">
-                    <b-form-group id="input-group-1" :label="$t('branch.name')" label-for="branchName">
-                        <b-form-input id="branchName" v-model="newBranchName" type="text" :state="isError"
-                            lazy-formatter trim required @input="validate" />
+                    <b-form-group
+                        id="input-group-1"
+                        :label="$t('branch.name')"
+                        label-for="branchName"
+                    >
+                        <b-form-input
+                            id="branchName"
+                            v-model="newBranchName"
+                            type="text"
+                            :state="isError"
+                            lazy-formatter
+                            trim
+                            required
+                            @input="validate"
+                        />
                         <b-form-invalid-feedback :state="isError">
                             {{ branchNameError }}
                         </b-form-invalid-feedback>
@@ -15,15 +37,26 @@
             </b-row>
             <b-row>
                 <b-col lg="12" class="pb-2">
-                    <b-form-group id="input-group-2" :label="$t('branch.refBranch')" label-for="refBranch">
-                        <b-form-select id="refBranch" v-model="refBranch" :options="branchNames" size="md" required />
+                    <b-form-group
+                        id="input-group-2"
+                        :label="$t('branch.refBranch')"
+                        label-for="refBranch"
+                    >
+                        <b-form-select
+                            id="refBranch"
+                            v-model="refBranch"
+                            :options="branchNames"
+                            size="md"
+                            required
+                        />
                     </b-form-group>
                 </b-col>
             </b-row>
         </form>
         <hr />
         <div class="d-flex justify-content-end">
-            <b-overlay :show="wait" variant="light" blur="true" opacity="0.8" spinner-small>
+            <b-overlay :show="wait" variant="light" blur="true"
+opacity="0.8" spinner-small>
                 <b-button variant="primary" type="submit" class="m-1" @click="addBranch">
                     {{ $t('branch.add') }}
                 </b-button>

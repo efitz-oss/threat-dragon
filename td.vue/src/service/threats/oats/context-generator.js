@@ -35,7 +35,7 @@ function fixupByContext(suggestions, modelType) {
                     suggestion.type = 'threats.model.linddun.nonCompliance';
                 else if (modelType === 'CIA') suggestion.type = 'threats.model.cia.integrity';
                 break;
-            }
+        }
         return suggestion;
     });
 }
