@@ -33,7 +33,18 @@ import {
     BModal,
     BTable,
     BBadge,
-    BCardText
+    BCardText,
+    // Add missing components
+    BFormRow,
+    BFormTags,
+    BDropdownItemButton,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupAppend,
+    BInputGroupText,
+    BFormSelect,
+    BFormRadioGroup,
+    BCardBody
 } from 'bootstrap-vue-next';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -74,7 +85,18 @@ const components = {
     BModal,
     BTable,
     BBadge,
-    BCardText
+    BCardText,
+    // Add missing components
+    BFormRow,
+    BFormTags,
+    BDropdownItemButton,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupAppend,
+    BInputGroupText,
+    BFormSelect,
+    BFormRadioGroup,
+    BCardBody
 };
 
 // This is a bootstrap-vue-next plugin that registers all required
@@ -123,5 +145,16 @@ export {
     BModal,
     BTable,
     BBadge,
-    BCardText
+    BCardText,
+    // Add missing components
+    BFormRow,
+    BFormTags,
+    BDropdownItemButton,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupAppend,
+    BInputGroupText,
+    BFormSelect,
+    BFormRadioGroup,
+    BCardBody
 };
