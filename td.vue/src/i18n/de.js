@@ -203,7 +203,18 @@ const deu = {
             toggleGrid: 'Gitter umschalten',
             undo: 'Bearbeitung zurücknehmen',
             zoomIn: 'Vergrößern',
-            zoomOut: 'Verkleinern'
+            zoomOut: 'Verkleinern',
+            save: 'Speichern'
+        },
+        controlButtons: {
+            delete: 'Auswahl löschen',
+            redo: 'Bearbeitung wiederholen',
+            shortcuts: 'Tastaturkürzel',
+            toggleGrid: 'Gitter umschalten',
+            undo: 'Bearbeitung zurücknehmen',
+            zoomIn: 'Vergrößern',
+            zoomOut: 'Verkleinern',
+            save: 'Speichern'
         },
         shortcuts: {
             title: 'Abkürzungen',

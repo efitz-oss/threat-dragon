@@ -188,7 +188,18 @@ const ms = {
             toggleGrid: 'Togel grid',
             undo: 'Buat asal semula suntingan',
             zoomIn: 'Zum masuk',
-            zoomOut: 'Zum keluar'
+            zoomOut: 'Zum keluar',
+            save: 'Simpan'
+        },
+        controlButtons: {
+            delete: 'Padam yang dipilih',
+            redo: 'Buat semula suntingan',
+            shortcuts: 'Pintasan papan kekunci',
+            toggleGrid: 'Togel grid',
+            undo: 'Buat asal semula suntingan',
+            zoomIn: 'Zum masuk',
+            zoomOut: 'Zum keluar',
+            save: 'Simpan'
         },
         shortcuts: {
             title: 'Pintasan',

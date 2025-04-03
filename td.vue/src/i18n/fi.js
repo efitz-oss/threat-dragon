@@ -190,7 +190,18 @@ const fin = {
             toggleGrid: 'Ruudukko',
             undo: 'Kumoa muokkaus',
             zoomIn: 'Lähennä',
-            zoomOut: 'Loitonna'
+            zoomOut: 'Loitonna',
+            save: 'Tallenna'
+        },
+        controlButtons: {
+            delete: 'Poista valitut',
+            redo: 'Muokkaa uudestaan',
+            shortcuts: 'Pikavalinnat',
+            toggleGrid: 'Ruudukko',
+            undo: 'Kumoa muokkaus',
+            zoomIn: 'Lähennä',
+            zoomOut: 'Loitonna',
+            save: 'Tallenna'
         },
         shortcuts: {
             title: 'Pikavalinnat',

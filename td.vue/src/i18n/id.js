@@ -188,7 +188,18 @@ const ind = {
             toggleGrid: 'Aktifkan grid',
             undo: 'Batalkan lagi',
             zoomIn: 'Perbesar',
-            zoomOut: 'Perkecil'
+            zoomOut: 'Perkecil',
+            save: 'Simpan'
+        },
+        controlButtons: {
+            delete: 'Hapus yang dipilih',
+            redo: 'Lakukan lagi',
+            shortcuts: 'Pintasan keyboard',
+            toggleGrid: 'Aktifkan grid',
+            undo: 'Batalkan lagi',
+            zoomIn: 'Perbesar',
+            zoomOut: 'Perkecil',
+            save: 'Simpan'
         },
         shortcuts: {
             title: 'Pintasan',

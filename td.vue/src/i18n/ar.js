@@ -216,6 +216,16 @@ const ara = {
             zoomOut: 'تصغير',
             save: 'حفظ'
         },
+        controlButtons: {
+            delete: 'حذف المحدد',
+            redo: 'إعادة القيام بالتحرير',
+            shortcuts: 'اختصارات لوحة المفاتيح',
+            toggleGrid: 'تبديل الشبكة',
+            undo: 'تراجع عن التحرير',
+            zoomIn: 'تكبير',
+            zoomOut: 'تصغير',
+            save: 'حفظ'
+        },
 
         shortcuts: {
             title: 'اختصارات لوحة المفاتيح',

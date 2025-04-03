@@ -213,6 +213,16 @@ const jpn = {
             zoomOut: '縮小',
             save: '保存'
         },
+        controlButtons: {
+            delete: '選択を削除',
+            redo: '繰り返す',
+            shortcuts: 'キーボードショートカット',
+            toggleGrid: 'グリッドの表示',
+            undo: '戻す',
+            zoomIn: '拡大',
+            zoomOut: '縮小',
+            save: '保存'
+        },
         shortcuts: {
             title: 'キーボードショートカット',
             copy: {

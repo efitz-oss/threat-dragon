@@ -188,7 +188,18 @@ const hin = {
             toggleGrid: 'टॉगल ग्रिड',
             undo: 'संपादन पूर्ववत करें',
             zoomIn: 'ज़ूम इन',
-            zoomOut: 'ज़ूम आउट'
+            zoomOut: 'ज़ूम आउट',
+            save: 'सहेजें'
+        },
+        controlButtons: {
+            delete: 'चयनित हटाएं',
+            redo: 'फिर से संपादित करें',
+            shortcuts: 'कीबोर्ड शॉर्टकट',
+            toggleGrid: 'टॉगल ग्रिड',
+            undo: 'संपादन पूर्ववत करें',
+            zoomIn: 'ज़ूम इन',
+            zoomOut: 'ज़ूम आउट',
+            save: 'सहेजें'
         },
         shortcuts: {
             title: 'शॉर्टकट',
