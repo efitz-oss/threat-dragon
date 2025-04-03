@@ -11,7 +11,10 @@ import { isElectronMode } from './utils/environment';
 import configActions from './store/actions/config.js';
 // Add support for passive event listeners with appropriate options
 import passiveEventsSupport from 'passive-events-support/dist/main.js'; 
-passiveEventsSupport.configure({ strict: false, capture: false });
+// In the web version, the module is imported directly and we need to check if configure exists
+if (passiveEventsSupport && typeof passiveEventsSupport.configure === 'function') {
+    passiveEventsSupport.configure({ strict: false, capture: false });
+}
 
 // Check if we're in web-only mode
 const isWebOnly = process.env.VUE_APP_WEB_ONLY === 'true';
