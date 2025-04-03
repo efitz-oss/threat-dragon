@@ -15,29 +15,29 @@ export class TokenStore {
     }
 
     /**
-   * Adds a refresh token to the store
-   * @param {String} token - The token to store
-   */
+     * Adds a refresh token to the store
+     * @param {String} token - The token to store
+     */
     add(token) {
         logger.debug('Adding refresh token to repository');
         this.backend.add(token);
     }
 
     /**
-   * Removes a token from the refresh store
-   * This is the same as invalidating the refresh token
-   * @param {String} token - The token to remove
-   */
+     * Removes a token from the refresh store
+     * This is the same as invalidating the refresh token
+     * @param {String} token - The token to remove
+     */
     remove(token) {
         logger.debug('Removing / invalidating refresh token from repository');
         this.backend.remove(token);
     }
 
     /**
-   * Verifies that a refresh token is valid
-   * @param {String} token - The token to verify
-   * @returns {Object|Boolean} The decoded token or false if invalid
-   */
+     * Verifies that a refresh token is valid
+     * @param {String} token - The token to verify
+     * @returns {Object|Boolean} The decoded token or false if invalid
+     */
     verify(token) {
         if (!this.backend.exists(token)) {
             logger.audit('Refresh token not found in repository');

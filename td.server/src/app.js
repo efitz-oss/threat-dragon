@@ -44,36 +44,39 @@ const configureRateLimiting = (app, logger) => {
 const configureServer = (app, logger) => {
     // Configure trust proxy more securely
     app.set('trust proxy', env.get().config.TRUST_PROXY_LIST || '127.0.0.1');
-    
+
     // Configure security features
     securityHeaders.config(app);
     app.use(https.middleware); // Force HTTPS in production
-    
+
     // static content
     app.use('/public', express.static(siteDir));
     app.use('/docs', express.static(docsDir));
-    
+
     // parsers and routes
     parsers.config(app);
     routes.config(app);
-    
+
     // Set port
     const serverApiPort = env.get().config.SERVER_API_PORT || env.get().config.PORT || 3000;
     app.set('port', serverApiPort);
     logger.info('Express API server listening on ' + app.get('port'));
-    
+
     // Add CORS headers in development mode
     if (process.env.NODE_ENV === 'development') {
         app.use((req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+            res.header(
+                'Access-Control-Allow-Headers',
+                'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+            );
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-            
+
             // Handle preflight requests
             if (req.method === 'OPTIONS') {
                 return res.status(200).end();
             }
-            
+
             return next();
         });
         logger.info('CORS enabled for development mode');
@@ -97,7 +100,9 @@ const create = () => {
         logger.info('OWASP Threat Dragon API server started');
         return app;
     } catch (e) {
-        if (!logger) { logger = console; }
+        if (!logger) {
+            logger = console;
+        }
         logger.error('OWASP Threat Dragon API server failed to start');
         logger.error(e.message);
         throw e;

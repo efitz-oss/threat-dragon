@@ -44,7 +44,8 @@ const por = {
         googleDrive: {
             displayName: 'Google Drive',
             loginWith: 'Abrir',
-            description: 'Selecione um arquivo de modelo de ameaça ou pasta de destino do Google Drive',
+            description:
+                'Selecione um arquivo de modelo de ameaça ou pasta de destino do Google Drive',
             saveThreatModel: 'Salvar Modelo de Ameaça no Google Drive',
             saveDescription: 'Selecione uma pasta no Google Drive para salvar seu modelo de ameaça',
             fileName: 'Nome do Arquivo',
@@ -182,7 +183,8 @@ const por = {
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
             save: 'Error saving the Threat Model. Check the developer console for more information',
-            googleDriveSave: 'Erro ao salvar no Google Drive. Certifique-se de ter as permissões adequadas.'
+            googleDriveSave:
+                'Erro ao salvar no Google Drive. Certifique-se de ter as permissões adequadas.'
         },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',

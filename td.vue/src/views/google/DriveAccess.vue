@@ -187,11 +187,11 @@ const pickerCallback = async (data) => {
 
                 if (savedFileId) {
                     toast.success('Threat model saved to Google Drive!');
-                    
+
                     // Store the file ID in the store so we can update it later
-                    store.commit('threatmodel/update', { 
+                    store.commit('threatmodel/update', {
                         fileName: fileNameToSave,
-                        fileId: savedFileId 
+                        fileId: savedFileId
                     });
 
                     // Navigate to the edit view
@@ -200,7 +200,8 @@ const pickerCallback = async (data) => {
                         params: {
                             provider: route.params.provider,
                             folder: document.id,
-                            threatmodel: modelName
+                            threatmodel: modelName,
+                            fileId: savedFileId // Pass fileId in the params
                         }
                     });
                 }

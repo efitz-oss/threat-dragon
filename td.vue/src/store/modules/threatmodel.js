@@ -139,24 +139,24 @@ const actions = {
                 try {
                     const fileName = `${state.data.summary.title}.json`;
                     console.debug('Creating file:', fileName);
-                    
+
                     const res = await googleDriveApi.createAsync(
                         rootState.folder.selected,
                         state.data,
                         fileName
                     );
-                    
+
                     console.debug('File created successfully, result:', res.data);
-                    
+
                     if (res.data && res.data.id) {
                         // Save the file ID in the state for future saves
-                        commit(THREATMODEL_UPDATE, { 
+                        commit(THREATMODEL_UPDATE, {
                             fileName: fileName,
-                            fileId: res.data.id 
+                            fileId: res.data.id
                         });
                         console.debug('Updated state with fileId:', res.data.id);
                     }
-                    
+
                     toast.success(t('threatmodel.saved') + ' : ' + fileName);
                 } catch (err) {
                     console.error('Error creating file in Google Drive:', err);
@@ -296,13 +296,13 @@ const actions = {
                 // For Google Drive we need to use the fileId from the state rather than folder.selected
                 console.debug('Google Drive save - fileId:', state.fileId);
                 console.debug('Google Drive provider selected:', rootState.provider.selected);
-                
+
                 if (!state.fileId) {
                     console.error('No file ID found in state for Google Drive save');
                     toast.error(t('threatmodel.errors.googleDriveSave'));
                     throw new Error('No file ID found for Google Drive save');
                 }
-                
+
                 try {
                     console.debug('Attempting to update file with ID:', state.fileId);
                     await googleDriveApi.updateAsync(state.fileId, state.data);

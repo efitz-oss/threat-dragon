@@ -1,16 +1,16 @@
 import { Env } from './Env.js';
 
 class GitlabEnv extends Env {
-    constructor () {
+    constructor() {
         super('Gitlab');
     }
 
-    get prefix () {
+    get prefix() {
         return 'GITLAB_';
     }
 
     // Note that the actual env var will be prepended with GITLAB_
-    get properties () {
+    get properties() {
         return [
             { key: 'CLIENT_ID', required: false },
             { key: 'CLIENT_SECRET', required: false },

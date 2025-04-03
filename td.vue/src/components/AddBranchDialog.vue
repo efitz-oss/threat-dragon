@@ -55,7 +55,10 @@
         </form>
         <hr />
         <div class="d-flex justify-content-end">
-            <b-overlay :show="wait" variant="light" blur="true" opacity="0.8" spinner-small>
+            <b-overlay
+:show="wait"
+variant="light" blur="true" opacity="0.8"
+spinner-small>
                 <b-button
 variant="primary"
 type="submit" class="m-1"

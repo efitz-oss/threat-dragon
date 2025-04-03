@@ -220,6 +220,7 @@ export default {
         ...mapState({
             fileHandle: (state) => state.threatmodel.fileHandle,
             fileName: (state) => state.threatmodel.fileName,
+            fileId: (state) => state.threatmodel.fileId,
             model: (state) => state.threatmodel.data,
             providerType: (state) => getProviderType(state.provider.selected),
             diagramTop: (state) => state.threatmodel.data.detail.diagramTop,
@@ -236,6 +237,11 @@ export default {
     },
     async mounted() {
         this.init();
+        // If fileId is passed in route params, store it in the threatmodel state
+        if (this.$route && this.$route.params && this.$route.params.fileId) {
+            this.$store.dispatch(tmActions.update, { fileId: this.$route.params.fileId });
+            console.debug('File ID stored from route params:', this.$route.params.fileId);
+        }
     },
     methods: {
         init() {

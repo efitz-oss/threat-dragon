@@ -124,9 +124,11 @@ const spa = {
         googleDrive: {
             displayName: 'Google Drive',
             loginWith: 'Abrir',
-            description: 'Seleccione un archivo de modelo de amenazas o carpeta de destino desde Google Drive',
+            description:
+                'Seleccione un archivo de modelo de amenazas o carpeta de destino desde Google Drive',
             saveThreatModel: 'Guardar Modelo de Amenazas en Google Drive',
-            saveDescription: 'Seleccione una carpeta en Google Drive para guardar su modelo de amenazas',
+            saveDescription:
+                'Seleccione una carpeta en Google Drive para guardar su modelo de amenazas',
             fileName: 'Nombre del Archivo',
             fileNamePlaceholder: 'Ingrese un nombre para su archivo',
             selectFolder: 'Seleccione una carpeta en Google Drive',
@@ -261,7 +263,8 @@ const spa = {
             onlyJsonAllowed: 'Solamente archivos con extensión .json son soportados.',
             open: 'Error al abrir el modelo de amenazas. Consulte la consola de desarrollador para obtener más información.',
             save: 'Error al guardar el modelo de amenazas. Consulte la consola de desarrollador para obtener más información.',
-            googleDriveSave: 'Error al guardar en Google Drive. Asegúrese de tener los permisos adecuados.'
+            googleDriveSave:
+                'Error al guardar en Google Drive. Asegúrese de tener los permisos adecuados.'
         },
         opened: 'El modelo de amenazas se abrió con éxito',
         saved: 'El modelo de amenazas se guardó con éxito',

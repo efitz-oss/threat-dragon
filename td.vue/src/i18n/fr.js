@@ -7,11 +7,11 @@ const fra = {
             'Les modèles de menace de la version 2.0 ne sont pas rétrocompatibles avec les modèles Threat Dragon de la version 1.x. Les modèles importés de la version 1.x seront mis à niveau vers le schéma de la version 2.0',
         loggedInAs: 'Connecté en tant que',
         logOut: 'Log out',
-        tos: 'Conditions d\'utilisation',
+        tos: "Conditions d'utilisation",
         privacy: 'Politique de confidentialité'
     },
     tos: {
-        title: 'Conditions d\'utilisation',
+        title: "Conditions d'utilisation",
         content: `<h2>Conditions d'utilisation</h2>
 <p>Bienvenue à OWASP Threat Dragon. En utilisant notre application, vous acceptez ces conditions d'utilisation.</p>
 
@@ -124,9 +124,11 @@ const fra = {
         googleDrive: {
             displayName: 'Google Drive',
             loginWith: 'Ouvrir',
-            description: 'Sélectionnez un fichier de modèle de menace ou un dossier de destination depuis Google Drive',
+            description:
+                'Sélectionnez un fichier de modèle de menace ou un dossier de destination depuis Google Drive',
             saveThreatModel: 'Enregistrer le modèle de menace sur Google Drive',
-            saveDescription: 'Sélectionnez un dossier dans Google Drive pour enregistrer votre modèle de menace',
+            saveDescription:
+                'Sélectionnez un dossier dans Google Drive pour enregistrer votre modèle de menace',
             fileName: 'Nom du fichier',
             fileNamePlaceholder: 'Entrez un nom pour votre fichier',
             selectFolder: 'Sélectionner un dossier dans Google Drive',
@@ -214,8 +216,9 @@ const fra = {
         },
         placeholder: {
             title: 'Titre du modèle de menace',
-            owner: 'Nom du propriétaire ou de l\'équipe',
-            description: 'Entrez une description de haut niveau du système en cours de modélisation',
+            owner: "Nom du propriétaire ou de l'équipe",
+            description:
+                'Entrez une description de haut niveau du système en cours de modélisation',
             reviewer: 'Nom du réviseur'
         },
         buttons: {
@@ -262,7 +265,8 @@ const fra = {
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: "Erreur lors de l'ouverture de ce modèle de menace. Vérifiez la console de développement pour plus d'informations",
             save: "Erreur lors de la sauvegarde de ce modèle de menace. Vérifiez la console de développement pour plus d'informations",
-            googleDriveSave: "Erreur lors de l'enregistrement sur Google Drive. Assurez-vous de disposer des autorisations appropriées."
+            googleDriveSave:
+                "Erreur lors de l'enregistrement sur Google Drive. Assurez-vous de disposer des autorisations appropriées."
         },
         opened: 'Modèle de menace ouvert avec succès',
         saved: 'Modèle de menace sauvegardé avec succès',

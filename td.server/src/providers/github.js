@@ -21,7 +21,7 @@ const isConfigured = () => Boolean(env.get().config.GITHUB_CLIENT_ID);
  */
 const getGithubUrl = () => {
     const enterpriseHostname = env.get().config.GITHUB_ENTERPRISE_HOSTNAME;
-    if(enterpriseHostname) {
+    if (enterpriseHostname) {
         const port = env.get().config.GITHUB_ENTERPRISE_PORT || '';
         const protocol = env.get().config.GITHUB_ENTERPRISE_PROTOCOL || 'https';
         return `${protocol}://${enterpriseHostname}${port ? ':' + port : ''}`;
@@ -36,7 +36,9 @@ const getGithubUrl = () => {
  */
 const getOauthRedirectUrl = (providerName) => {
     const scope = env.get().config.GITHUB_SCOPE || 'public_repo';
-    return `${getGithubUrl()}/login/oauth/authorize?scope=${scope}&client_id=${env.get().config.GITHUB_CLIENT_ID}&state=${providerName}`;
+    return `${getGithubUrl()}/login/oauth/authorize?scope=${scope}&client_id=${
+        env.get().config.GITHUB_CLIENT_ID
+    }&state=${providerName}`;
 };
 
 /**

@@ -21,7 +21,7 @@ const isConfigured = () => Boolean(env.get().config.BITBUCKET_CLIENT_ID);
  */
 const getBitbucketUrl = () => {
     const enterpriseHostname = env.get().config.BITBUCKET_ENTERPRISE_HOSTNAME;
-    if(enterpriseHostname) {
+    if (enterpriseHostname) {
         const port = env.get().config.BITBUCKET_ENTERPRISE_PORT || '';
         const protocol = env.get().config.BITBUCKET_ENTERPRISE_PROTOCOL || 'https';
         return `${protocol}://${enterpriseHostname}${port ? ':' + port : ''}`;
@@ -36,7 +36,9 @@ const getBitbucketUrl = () => {
  */
 const getOauthRedirectUrl = (providerName) => {
     const scope = env.get().config.BITBUCKET_SCOPE || '';
-    return `${getBitbucketUrl()}/site/oauth2/authorize?scope=${scope}&response_type=code&client_id=${env.get().config.BITBUCKET_CLIENT_ID}&state=${providerName}`;
+    return `${getBitbucketUrl()}/site/oauth2/authorize?scope=${scope}&response_type=code&client_id=${
+        env.get().config.BITBUCKET_CLIENT_ID
+    }&state=${providerName}`;
 };
 
 /**
@@ -66,7 +68,7 @@ const completeLoginAsync = async (code) => {
     form.append('code', code);
     const options = {
         headers: {
-            'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
+            'Content-Type': `multipart/form-data; boundary=${form._boundary}`
         }
     };
 

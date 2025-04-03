@@ -182,7 +182,8 @@ const rus = {
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
             save: 'Error saving the Threat Model. Check the developer console for more information',
-            googleDriveSave: 'Ошибка при сохранении в Google Drive. Убедитесь, что у вас есть необходимые разрешения.'
+            googleDriveSave:
+                'Ошибка при сохранении в Google Drive. Убедитесь, что у вас есть необходимые разрешения.'
         },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',

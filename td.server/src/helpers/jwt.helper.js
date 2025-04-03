@@ -4,8 +4,12 @@ import jwt from 'jsonwebtoken';
 import loggerHelper from '../helpers/logger.helper.js';
 
 const createAsync = async (providerName, providerOptions, user) => {
-    const encryptedProviderOptions = await encryptionHelper.encryptPromise(JSON.stringify(providerOptions));
-    const providerOptsEncoded = Buffer.from(JSON.stringify(encryptedProviderOptions)).toString('base64');
+    const encryptedProviderOptions = await encryptionHelper.encryptPromise(
+        JSON.stringify(providerOptions)
+    );
+    const providerOptsEncoded = Buffer.from(JSON.stringify(encryptedProviderOptions)).toString(
+        'base64'
+    );
     const provider = {
         [providerName]: providerOptsEncoded
     };
@@ -28,7 +32,9 @@ const createAsync = async (providerName, providerOptions, user) => {
 const decodeProvider = (encodedProvider) => {
     const providerName = Object.keys(encodedProvider)[0];
 
-    const decodedProvider = JSON.parse(Buffer.from(encodedProvider[providerName], 'base64').toString('utf-8'));
+    const decodedProvider = JSON.parse(
+        Buffer.from(encodedProvider[providerName], 'base64').toString('utf-8')
+    );
 
     const provider = JSON.parse(encryptionHelper.decrypt(decodedProvider));
 
@@ -37,7 +43,6 @@ const decodeProvider = (encodedProvider) => {
 };
 
 const decode = (token, key) => {
-
     try {
         // Verify the token
         const { provider, user } = jwt.verify(token, key);
@@ -54,7 +59,6 @@ const decode = (token, key) => {
         throw new Error('Invalid JWT');
     }
 };
-
 
 const verifyToken = (token) => decode(token, env.get().config.ENCRYPTION_JWT_SIGNING_KEY);
 

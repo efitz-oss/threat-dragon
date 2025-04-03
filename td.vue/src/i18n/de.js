@@ -42,9 +42,11 @@ const deu = {
         googleDrive: {
             displayName: 'Google Drive',
             loginWith: 'Öffnen',
-            description: 'Wählen Sie eine Bedrohungsmodelldatei oder einen Zielordner aus Google Drive',
+            description:
+                'Wählen Sie eine Bedrohungsmodelldatei oder einen Zielordner aus Google Drive',
             saveThreatModel: 'Bedrohungsmodell in Google Drive speichern',
-            saveDescription: 'Wählen Sie einen Ordner in Google Drive zum Speichern Ihres Bedrohungsmodells',
+            saveDescription:
+                'Wählen Sie einen Ordner in Google Drive zum Speichern Ihres Bedrohungsmodells',
             fileName: 'Dateiname',
             fileNamePlaceholder: 'Geben Sie einen Namen für Ihre Datei ein',
             selectFolder: 'Wählen Sie einen Ordner in Google Drive',

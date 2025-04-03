@@ -1,8 +1,8 @@
 import env from '../env/Env.js';
-import {Gitlab} from '@gitbeaker/rest';
+import { Gitlab } from '@gitbeaker/rest';
 
-
-const repoRootDirectory = () => env.get().config.GITLAB_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
+const repoRootDirectory = () =>
+    env.get().config.GITLAB_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
 
 export class GitlabClientWrapper {
     static getClient(clientOptions) {
@@ -13,20 +13,21 @@ export class GitlabClientWrapper {
 export const getClient = (accessToken) => {
     const clientOptions = {
         auth: {
-            oauthToken: accessToken,
-        },
+            oauthToken: accessToken
+        }
     };
     if (env.get().config.GITLAB_HOST) {
-        clientOptions.auth.host=env.get().config.GITLAB_HOST;
+        clientOptions.auth.host = env.get().config.GITLAB_HOST;
     }
 
     return GitlabClientWrapper.getClient(clientOptions.auth);
 };
 
-export const reposAsync = (page, accessToken, searchQuerys = []) => searchAsync(page, accessToken, searchQuerys);
+export const reposAsync = (page, accessToken, searchQuerys = []) =>
+    searchAsync(page, accessToken, searchQuerys);
 
 export const getPagination = (paginationInfo, page) => {
-    const pagination = {page, next: false, prev: false};
+    const pagination = { page, next: false, prev: false };
     if (Number.isInteger(paginationInfo.next)) {
         pagination.next = true;
     }
@@ -37,7 +38,12 @@ export const getPagination = (paginationInfo, page) => {
 };
 
 export const searchAsync = async (page, accessToken, searchQuerys = []) => {
-    const repos = await getClient(accessToken).Projects.all({page: page, membership: true, showExpanded: true, search: searchQuerys.join('&')});
+    const repos = await getClient(accessToken).Projects.all({
+        page: page,
+        membership: true,
+        showExpanded: true,
+        search: searchQuerys.join('&')
+    });
     repos.data.map((repo) => {
         repo.full_name = repo.path_with_namespace;
         return repo;
@@ -62,22 +68,30 @@ export const branchesAsync = async (repoInfo, accessToken) => {
 };
 
 export const modelsAsync = async (branchInfo, accessToken) => {
-    const models = await getClient(accessToken).Repositories.allRepositoryTrees(getRepoFullName(branchInfo), {path: repoRootDirectory(), ref:branchInfo.branch });
+    const models = await getClient(accessToken).Repositories.allRepositoryTrees(
+        getRepoFullName(branchInfo),
+        { path: repoRootDirectory(), ref: branchInfo.branch }
+    );
     return [models];
 };
 
 export const modelAsync = async (modelInfo, accessToken) => {
-    const model = await getClient(accessToken).RepositoryFiles.show(getRepoFullName(modelInfo), getModelPath(modelInfo), modelInfo.branch);
+    const model = await getClient(accessToken).RepositoryFiles.show(
+        getRepoFullName(modelInfo),
+        getModelPath(modelInfo),
+        modelInfo.branch
+    );
     return [model];
 };
 
 export const createAsync = (modelInfo, accessToken) => {
     const client = getClient(accessToken);
-    return client.RepositoryFiles.create(getRepoFullName(modelInfo),
+    return client.RepositoryFiles.create(
+        getRepoFullName(modelInfo),
         getModelPath(modelInfo),
         modelInfo.branch,
         getModelContent(modelInfo),
-        'Created by OWASP Threat Dragon',
+        'Created by OWASP Threat Dragon'
     );
 };
 
@@ -86,19 +100,22 @@ export const updateAsync = (modelInfo, accessToken) => {
     const path = getModelPath(modelInfo);
     const modelContent = getModelContent(modelInfo);
 
-    return getClient(accessToken).RepositoryFiles.edit(repo,
+    return getClient(accessToken).RepositoryFiles.edit(
+        repo,
         path,
         modelInfo.branch,
         modelContent,
-        'Updated by OWASP Threat Dragon',
+        'Updated by OWASP Threat Dragon'
     );
 };
 
-export const deleteAsync = (modelInfo, accessToken) => getClient(accessToken).RepositoryFiles.remove(getRepoFullName(modelInfo),
-    getModelPath(modelInfo),
-    modelInfo.branch,
-    'Deleted by OWASP Threat Dragon',
-);
+export const deleteAsync = (modelInfo, accessToken) =>
+    getClient(accessToken).RepositoryFiles.remove(
+        getRepoFullName(modelInfo),
+        getModelPath(modelInfo),
+        modelInfo.branch,
+        'Deleted by OWASP Threat Dragon'
+    );
 
 export const createBranchAsync = (repoInfo, accessToken) => {
     const client = getClient(accessToken);
@@ -107,7 +124,8 @@ export const createBranchAsync = (repoInfo, accessToken) => {
 };
 
 const getRepoFullName = (info) => `${info.organisation}/${info.repo}`;
-const getModelPath = (modelInfo) => `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
+const getModelPath = (modelInfo) =>
+    `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
 
 export default {
@@ -120,5 +138,5 @@ export default {
     reposAsync,
     searchAsync,
     updateAsync,
-    userAsync,
+    userAsync
 };

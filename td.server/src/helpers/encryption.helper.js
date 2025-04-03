@@ -95,8 +95,7 @@ const encryptPromise = (plainText) => {
     const key = getPrimaryKey();
     logger.debug('Encrypting plaintext');
 
-    return cryptoPromise.randomBytes(16).
-        then((iv) => encryptData(plainText, key, iv));
+    return cryptoPromise.randomBytes(16).then((iv) => encryptData(plainText, key, iv));
 };
 
 /**

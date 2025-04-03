@@ -27,8 +27,11 @@ const getGitlabUrl = () => env.get().config.GITLAB_HOST || 'https://gitlab.com';
  * @returns {String}
  */
 const getOauthRedirectUrl = (providerName) => {
-    const scope = env.get().config.GITLAB_SCOPE || 'read_user read_repository write_repository profile';
-    return `${getGitlabUrl()}/oauth/authorize?scope=${scope}&redirect_uri=${env.get().config.GITLAB_REDIRECT_URI}&response_type=code&client_id=${env.get().config.GITLAB_CLIENT_ID}&state=${providerName}`;
+    const scope =
+        env.get().config.GITLAB_SCOPE || 'read_user read_repository write_repository profile';
+    return `${getGitlabUrl()}/oauth/authorize?scope=${scope}&redirect_uri=${
+        env.get().config.GITLAB_REDIRECT_URI
+    }&response_type=code&client_id=${env.get().config.GITLAB_CLIENT_ID}&state=${providerName}`;
 };
 
 /**
@@ -68,7 +71,6 @@ const completeLoginAsync = async (code) => {
     };
 
     const providerResp = await axios.post(url, body, options);
-
 
     repositories.set('gitlabrepo');
     const repo = repositories.get();

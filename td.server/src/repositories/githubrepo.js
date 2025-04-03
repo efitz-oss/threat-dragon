@@ -1,7 +1,8 @@
 import env from '../env/Env.js';
 import fetch from 'node-fetch';
 
-const repoRootDirectory = () => env.get().config.GITHUB_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
+const repoRootDirectory = () =>
+    env.get().config.GITHUB_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
 
 const getBaseUrl = () => {
     const enterpriseHostname = env.get().config.GITHUB_ENTERPRISE_HOSTNAME;
@@ -18,8 +19,8 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
     const response = await fetch(`${baseUrl}${path}`, {
         ...options,
         headers: {
-            'Authorization': `token ${accessToken}`,
-            'Accept': 'application/vnd.github.v3+json',
+            Authorization: `token ${accessToken}`,
+            Accept: 'application/vnd.github.v3+json',
             ...options.headers
         }
     });
@@ -36,14 +37,17 @@ const reposAsync = async (page, accessToken) => {
     return fetchGitHub('/user/repos', accessToken, {
         method: 'GET',
         headers: {
-            'Accept': 'application/vnd.github.v3+json'
+            Accept: 'application/vnd.github.v3+json'
         }
     });
 };
 
 const searchAsync = async (page, accessToken, searchQuery) => {
     await Promise.resolve(); // Ensure async function has await expression
-    const data = await fetchGitHub(`/search/repositories?q=${encodeURIComponent(searchQuery)}&page=${page}`, accessToken);
+    const data = await fetchGitHub(
+        `/search/repositories?q=${encodeURIComponent(searchQuery)}&page=${page}`,
+        accessToken
+    );
     return data.items;
 };
 
@@ -54,13 +58,18 @@ const userAsync = async (accessToken) => {
 
 const branchesAsync = async (repoInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    return fetchGitHub(`/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`, accessToken);
+    return fetchGitHub(
+        `/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`,
+        accessToken
+    );
 };
 
 const modelsAsync = async (branchInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
     return fetchGitHub(
-        `/repos/${branchInfo.organisation}/${branchInfo.repo}/contents/${repoRootDirectory()}?ref=${branchInfo.branch}`,
+        `/repos/${branchInfo.organisation}/${branchInfo.repo}/contents/${repoRootDirectory()}?ref=${
+            branchInfo.branch
+        }`,
         accessToken
     );
 };
@@ -68,7 +77,9 @@ const modelsAsync = async (branchInfo, accessToken) => {
 const modelAsync = async (modelInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
     const data = await fetchGitHub(
-        `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}?ref=${modelInfo.branch}`,
+        `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
+            modelInfo
+        )}?ref=${modelInfo.branch}`,
         accessToken
     );
     return [data];
@@ -125,7 +136,8 @@ const deleteAsync = async (modelInfo, accessToken) => {
     );
 };
 
-const getModelPath = (modelInfo) => `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
+const getModelPath = (modelInfo) =>
+    `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
 
 export default {

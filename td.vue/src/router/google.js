@@ -40,10 +40,11 @@ export const googleRoutes = [
             import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
     },
     {
-        path: `/${providerType}/:provider/:folder/:threatmodel/edit`,
+        path: `/${providerType}/:provider/:folder/:threatmodel/edit/:fileId?`,
         name: `${providerType}ThreatModelEdit`,
         component: () =>
-            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
+            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue'),
+        props: true
     },
     {
         path: `/${providerType}/:provider/:folder/:threatmodel/edit/:diagram`,

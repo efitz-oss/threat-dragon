@@ -47,21 +47,17 @@ const _logger = winston.createLogger({
         format.json()
     ),
     defaultMeta: { service: 'threat-dragon' },
-    transports: [
-        transports.audit,
-        transports.app,
-        transports.console
-    ],
+    transports: [transports.audit, transports.app, transports.console],
     silent: process.env.NODE_ENV === 'test'
 });
 
 class Logger {
-    constructor (service, logger) {
+    constructor(service, logger) {
         this.service = service;
         this.logger = logger || _logger;
     }
 
-    _formatMessage (service, message, level) {
+    _formatMessage(service, message, level) {
         if (typeof message === 'string') {
             return `${service}: ${message}`;
         }
@@ -69,9 +65,9 @@ class Logger {
         this.logger.log(level, message);
     }
 
-    transformToString (complexObject) {
+    transformToString(complexObject) {
         const cache = [];
-        const resultString = JSON.stringify(complexObject, function(key, value) {
+        const resultString = JSON.stringify(complexObject, function (key, value) {
             if (typeof value === 'object' && value !== null) {
                 if (cache.indexOf(value) !== -1) {
                     // Circular reference found
@@ -84,19 +80,33 @@ class Logger {
         return resultString;
     }
 
-    log (level, message) { this.logger.log(level, this._formatMessage(this.service, message)); }
+    log(level, message) {
+        this.logger.log(level, this._formatMessage(this.service, message));
+    }
 
-    silly (message) { this.logger.silly(this._formatMessage(this.service, message, 'silly')); }
+    silly(message) {
+        this.logger.silly(this._formatMessage(this.service, message, 'silly'));
+    }
 
-    debug (message) { this.logger.debug(this._formatMessage(this.service, message, 'debug')); }
+    debug(message) {
+        this.logger.debug(this._formatMessage(this.service, message, 'debug'));
+    }
 
-    info (message) { this.logger.info(this._formatMessage(this.service, message, 'info')); }
+    info(message) {
+        this.logger.info(this._formatMessage(this.service, message, 'info'));
+    }
 
-    warn (message) { this.logger.warn(this._formatMessage(this.service, message, 'warn')); }
+    warn(message) {
+        this.logger.warn(this._formatMessage(this.service, message, 'warn'));
+    }
 
-    error (message) { this.logger.error(this._formatMessage(this.service, message, 'error')); }
+    error(message) {
+        this.logger.error(this._formatMessage(this.service, message, 'error'));
+    }
 
-    audit (message) { this.logger.error(this._formatMessage(this.service, message, 'audit')); }
+    audit(message) {
+        this.logger.error(this._formatMessage(this.service, message, 'audit'));
+    }
 }
 
 /**
@@ -107,7 +117,10 @@ class Logger {
  */
 const get = (service, logger) => new Logger(service, logger);
 
-const level = (logLevel) => { transports.console.level = logLevel; transports.app.level = logLevel; };
+const level = (logLevel) => {
+    transports.console.level = logLevel;
+    transports.app.level = logLevel;
+};
 
 export default {
     level,
