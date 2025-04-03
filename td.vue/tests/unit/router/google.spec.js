@@ -66,7 +66,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/:folder/:threatmodel/edit/:fileId?');
+            expect(route.path).toEqual('/google/:provider/:folder/:threatmodel/edit');
         });
 
         it('uses a lazily loaded component for ThreatModelEdit', async () => {

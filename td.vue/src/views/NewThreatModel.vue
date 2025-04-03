@@ -10,71 +10,62 @@
             <b-col lg="8" offset-lg="2">
                 <b-card class="mt-3 mb-5">
                     <b-form @submit.prevent="saveModel">
-                    <b-form-group 
-                        :label="$t('threatmodel.title') + ' *'" 
-                        label-for="threat-model-title"
-                        class="required-field"
-                    >
-                        <b-form-input
-                            id="threat-model-title"
-                            v-model="threatModel.summary.title"
-                            required
-                            :placeholder="$t('threatmodel.placeholder.title')"
-                        ></b-form-input>
-                    </b-form-group>
+                        <b-form-group 
+                            :label="$t('threatmodel.title') + ' *'" 
+                            label-for="threat-model-title"
+                            class="required-field"
+                        >
+                            <b-form-input
+                                id="threat-model-title"
+                                v-model="threatModel.summary.title"
+                                required
+                                :placeholder="$t('threatmodel.placeholder.title')"
+                            ></b-form-input>
+                        </b-form-group>
 
-                    <b-form-group :label="$t('threatmodel.owner')" label-for="threat-model-owner">
-                        <b-form-input
-                            id="threat-model-owner"
-                            v-model="threatModel.summary.owner"
-                            :placeholder="$t('threatmodel.placeholder.owner')"
-                        ></b-form-input>
-                    </b-form-group>
+                        <b-form-group :label="$t('threatmodel.owner')" label-for="threat-model-owner">
+                            <b-form-input
+                                id="threat-model-owner"
+                                v-model="threatModel.summary.owner"
+                                :placeholder="$t('threatmodel.placeholder.owner')"
+                            ></b-form-input>
+                        </b-form-group>
 
-                    <b-form-group
-                        :label="$t('threatmodel.description')"
-                        label-for="threat-model-description"
-                    >
-                        <b-form-textarea
-                            id="threat-model-description"
-                            v-model="threatModel.summary.description"
-                            rows="3"
-                            :placeholder="$t('threatmodel.placeholder.description')"
-                        ></b-form-textarea>
-                    </b-form-group>
+                        <b-form-group
+                            :label="$t('threatmodel.description')"
+                            label-for="threat-model-description"
+                        >
+                            <b-form-textarea
+                                id="threat-model-description"
+                                v-model="threatModel.summary.description"
+                                rows="3"
+                                :placeholder="$t('threatmodel.placeholder.description')"
+                            ></b-form-textarea>
+                        </b-form-group>
 
-                    <b-form-group
-                        :label="$t('threatmodel.reviewer')"
-                        label-for="threat-model-reviewer"
-                    >
-                        <b-form-input
-                            id="threat-model-reviewer"
-                            v-model="threatModel.detail.reviewer"
-                            :placeholder="$t('threatmodel.placeholder.reviewer')"
-                        ></b-form-input>
-                    </b-form-group>
+                        <b-form-group
+                            :label="$t('threatmodel.reviewer')"
+                            label-for="threat-model-reviewer"
+                        >
+                            <b-form-input
+                                id="threat-model-reviewer"
+                                v-model="threatModel.detail.reviewer"
+                                :placeholder="$t('threatmodel.placeholder.reviewer')"
+                            ></b-form-input>
+                        </b-form-group>
 
-                    <div class="text-right mt-4">
-                        <b-button type="submit" variant="primary">
-                            {{ $t('forms.save') }}
-                        </b-button>
-                    </div>
-                </b-form>
-                <small class="text-muted mt-3">* {{ $t('forms.requiredField') }}</small>
+                        <div class="text-right mt-4">
+                            <b-button type="submit" variant="primary">
+                                {{ $t('forms.save') }}
+                            </b-button>
+                        </div>
+                    </b-form>
+                    <small class="text-muted mt-3">* {{ $t('forms.requiredField') }}</small>
                 </b-card>
             </b-col>
         </b-row>
     </b-container>
 </template>
-
-<style lang="scss" scoped>
-.required-field label {
-    font-weight: 600;
-}
-.form-group {
-    margin-bottom: 1.5rem;
-}
-</style>
 
 <script>
 import { mapState } from 'vuex';
@@ -152,3 +143,12 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+.required-field label {
+    font-weight: 600;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+</style>

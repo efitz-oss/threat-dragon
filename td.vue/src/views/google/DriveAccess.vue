@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import api from '@/service/api/api.js';
+import { THREATMODEL_UPDATE } from '@/store/actions/threatmodel.js';
 
 // Add Google Drive icon to FontAwesome library
 library.add(faGoogleDrive);
@@ -212,7 +213,7 @@ const pickerCallback = async (data) => {
                     toast.success('Threat model saved to Google Drive!');
 
                     // Store the file ID in the store so we can update it later
-                    store.commit('threatmodel/update', {
+                    store.commit(THREATMODEL_UPDATE, {
                         fileName: fileNameToSave,
                         fileId: savedFileId
                     });
@@ -225,6 +226,7 @@ const pickerCallback = async (data) => {
                             folder: document.id,
                             threatmodel: fileNameToSave.replace(/\.json$/, ''),
                             fileId: savedFileId // Pass fileId in the params
+                            // Note: fileId is marked as optional in the route
                         }
                     });
                 }
