@@ -31,27 +31,26 @@ export default {
     border-radius: 0.3rem; /* Add rounded corners */
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Light shadow */
     margin-bottom: 1.5rem; /* Space below jumbotron */
-    text-align: center; /* Ensure text alignment */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 .td-description {
     font-size: 20px;
     max-width: 80%;
-    margin: 10px auto; /* Ensure description stays centered */
+    margin: 10px auto; /* Keep horizontal centering of the container */
+    text-align: left; /* Left-justify the text */
 }
 
 /* Custom styling for lists in the content */
 .td-description ul {
-    display: table;
-    margin: 0 auto;
+    display: block; /* Change from table to block display */
     text-align: left;
+    padding-left: 2rem; /* Add some padding for list items */
 }
 
 .td-description h2 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
+    text-align: left; /* Left-justify headings */
 }
 </style>
