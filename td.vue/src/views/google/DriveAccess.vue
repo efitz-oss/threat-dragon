@@ -2,7 +2,13 @@
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useToast } from 'vue-toast-notification';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import api from '@/service/api/api.js';
+
+// Add Google Drive icon to FontAwesome library
+library.add(faGoogleDrive);
 
 const store = useStore();
 const toast = useToast();
@@ -176,14 +182,78 @@ onMounted(() => {
 </script>
 
 <template>
-    <button class="btn btn-primary" :disabled="isLoading" @click="handleAuth">
-        <span v-if="isLoading">Loading...</span>
-        <span v-else>Open Google Picker</span>
-    </button>
+    <b-container fluid>
+        <div class="welcome-jumbotron">
+            <b-row class="text-center mb-2">
+                <b-col md="12">
+                    <p class="td-description mt-2">
+                        {{ $t("providers.googleDrive.description") }}
+                    </p>
+                </b-col>
+            </b-row>
+            <b-row class="flex-grow-1 align-items-center">
+                <b-col md="12" class="text-center">
+                    <BButton
+                        id="google-drive-btn"
+                        class="m-1 google-drive-button"
+                        variant="secondary"
+                        :disabled="isLoading"
+                        @click="handleAuth"
+                    > 
+                        <span class="login-btn-icon">
+                            <font-awesome-icon
+                                :icon="['fab', 'google-drive']"
+                                size="2x"
+                                color="white"
+                                class="mr-2"
+                            />
+                        </span>
+                        <span>
+                            {{ $t('providers.googleDrive.loginWith') }} {{ $t('providers.googleDrive.displayName') }}
+                        </span>
+                    </BButton>
+                </b-col>
+            </b-row>
+        </div>
 
-    <!-- Display imported JSON file content -->
-    <div v-if="fileContent" class="mt-3 p-3 border rounded">
-        <h5>Imported File Content:</h5>
-        <pre>{{ fileContent }}</pre>
-    </div>
+        <!-- Display imported JSON file content -->
+        <div v-if="fileContent" class="mt-3 p-3 border rounded">
+            <h5>Imported File Content:</h5>
+            <pre>{{ fileContent }}</pre>
+        </div>
+    </b-container>
 </template>
+
+<style lang="scss" scoped>
+/* Recreating BootstrapVue's b-jumbotron styling */
+.welcome-jumbotron {
+    background-color: #f8f9fa; /* Light grey background like BootstrapVue jumbotron */
+    padding: 3rem 2rem; /* Increase padding to match BootstrapVue */
+    border-radius: 0.3rem; /* Add rounded corners */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Light shadow */
+    margin-bottom: 1.5rem; /* Space below jumbotron */
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh; /* Ensure jumbotron takes most of the screen */
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.td-description {
+    font-size: 20px;
+    max-width: 80%;
+    margin: 10px auto; /* Center the description */
+    text-align: center;
+}
+
+.google-drive-button {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+}
+
+.login-btn-icon {
+    display: block;
+}
+</style>

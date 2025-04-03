@@ -42,6 +42,13 @@ const providers = {
         type: providerTypes.google,
         icon: ['fab', 'google']
     },
+    googleDrive: {
+        key: 'googleDrive',
+        displayName: 'Google Drive',
+        provider: googleProvider,
+        type: providerTypes.google,
+        icon: ['fab', 'google-drive']
+    },
     local: {
         key: 'local',
         displayName: 'Local Session',

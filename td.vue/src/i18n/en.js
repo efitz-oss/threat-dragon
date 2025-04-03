@@ -118,6 +118,11 @@ const eng = {
         local: {
             displayName: 'Local Session',
             loginWith: 'Login to'
+        },
+        googleDrive: {
+            displayName: 'Google Drive',
+            loginWith: 'Open',
+            description: 'Select a threat model file or destination folder from Google Drive'
         }
     },
     dashboard: {
