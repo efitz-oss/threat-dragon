@@ -18,7 +18,7 @@ const get = (graph, container, StencilConstructor) => {
         stencilGraphWidth: 160,
         stencilGraphHeight: 500, // Fixed height instead of 'auto'
         width: '100%',
-        minWidth: 150,
+        minWidth: 160, // Match the stencilGraphWidth
         height: '100%',
         title: 'Shapes',
         collapsable: false,
@@ -61,29 +61,29 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({
-        width: 100,
-        height: 70,
+        width: 140, // Increased to 90% of stencil width
+        height: 85, // Maintain aspect ratio
         visible: true,
         zIndex: 10, // Higher z-index to ensure visibility
         opacity: 1  // Full opacity
     });
     const process = new shapes.ProcessShape({
-        width: 100,
-        height: 70,
+        width: 140, // Increased to 90% of stencil width
+        height: 85, // Maintain aspect ratio
         visible: true,
         zIndex: 10, 
         opacity: 1
     });
     const store = new shapes.StoreShape({
-        width: 100,
-        height: 70,
+        width: 140, // Increased to 90% of stencil width
+        height: 85, // Maintain aspect ratio
         visible: true,
         zIndex: 10,
         opacity: 1
     });
     const text = new shapes.TextBlock({
-        width: 100,
-        height: 50,
+        width: 140, // Increased to 90% of stencil width
+        height: 60, // Maintain aspect ratio
         visible: true,
         zIndex: 10,
         opacity: 1
@@ -91,15 +91,15 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create boundary nodes
     const boundaryBox = new shapes.TrustBoundaryBox({
-        width: 120,
-        height: 80,
+        width: 140, // Increased to 90% of stencil width
+        height: 90, // Maintain aspect ratio
         visible: true,
         zIndex: 10,
         opacity: 1
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
-        width: 120,
-        height: 20,
+        width: 140, // Increased to 90% of stencil width
+        height: 25, // Maintain aspect ratio
         visible: true,
         zIndex: 10,
         opacity: 1
@@ -107,8 +107,8 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create flow
     const flow = new shapes.FlowStencil({
-        width: 120,
-        height: 20,
+        width: 140, // Increased to 90% of stencil width
+        height: 25, // Maintain aspect ratio
         visible: true,
         zIndex: 10,
         opacity: 1

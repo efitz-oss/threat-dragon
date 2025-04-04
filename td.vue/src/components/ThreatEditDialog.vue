@@ -100,6 +100,7 @@
                                 rows="5"
                                 :no-auto-shrink="true"
                                 no-resize
+                                style="min-height: 100px"
                             />
                         </b-form-group>
                     </b-col>
@@ -118,6 +119,7 @@
                                 rows="5"
                                 :no-auto-shrink="true"
                                 no-resize
+                                style="min-height: 100px"
                             />
                         </b-form-group>
                     </b-col>

@@ -61,6 +61,7 @@
                             :no-auto-shrink="true"
                             no-resize
                             graph-pro
+                            style="min-height: 60px"
                             @update="onChangeName()"
                         />
                     </b-form-group>
@@ -79,6 +80,7 @@
                             :rows="3"
                             :no-auto-shrink="true"
                             no-resize
+                            style="min-height: 80px"
                             @change="onChangeProperties()"
                         />
                     </b-form-group>
@@ -138,6 +140,7 @@
                             :rows="3"
                             :no-auto-shrink="true"
                             no-resize
+                            style="min-height: 80px"
                             :disabled="!cellRef.data.outOfScope"
                             @change="onChangeProperties()"
                         />
@@ -346,9 +349,8 @@ export default {
         margin-bottom: 1rem;
     }
     
-    /* Ensure textareas have appropriate fixed height */
+    /* Ensure textareas have appropriate fixed height - min-height moved to inline styles */
     :deep(textarea.form-control) {
-        min-height: 60px;
         height: auto !important;
         resize: none !important;
     }

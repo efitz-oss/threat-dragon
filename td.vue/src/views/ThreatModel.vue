@@ -148,12 +148,15 @@ export default {
             this.$store.dispatch(tmActions.diagramSelected, diagram);
             
             // Use named route instead of path manipulation
+            // Ensure the current provider is included in the params
+            const params = {
+                ...this.$route.params,
+                provider: this.$route.params.provider || 'local', // Default to local if no provider
+                diagram: encodeURIComponent(diagram.title)
+            };
             this.$router.push({
                 name: `${this.providerType}DiagramEdit`,
-                params: {
-                    ...this.$route.params,
-                    diagram: encodeURIComponent(diagram.title)
-                }
+                params: params
             });
         }
     }
