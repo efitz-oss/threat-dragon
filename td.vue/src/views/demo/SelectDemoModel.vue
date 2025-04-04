@@ -50,12 +50,25 @@ export default {
                 // tell any electron server that the model has changed
                 window.electronAPI.modelOpened(model.name);
             }
-            // Ensure the provider parameter is included for the local route
-            const params = Object.assign({}, this.$route.params, { 
-                threatmodel: model.name,
-                provider: 'local' // Add the required provider parameter
-            });
-            this.$router.push({ name: 'localThreatModel', params });
+            // Store the current auth provider for use later
+            const currentProvider = this.$route.params.provider;
+            
+            // If we're coming from Google login, use google provider type with proper parameters
+            if (currentProvider === 'google') {
+                const params = Object.assign({}, this.$route.params, { 
+                    threatmodel: model.name,
+                    provider: 'google', 
+                    folder: 'demo'  // Use demo as the folder name for Google Drive demo models
+                });
+                this.$router.push({ name: 'googleThreatModel', params });
+            } else {
+                // Otherwise use the local provider (for desktop/local workflows)
+                const params = Object.assign({}, this.$route.params, { 
+                    threatmodel: model.name,
+                    provider: 'local'
+                });
+                this.$router.push({ name: 'localThreatModel', params });
+            }
         }
     }
 };

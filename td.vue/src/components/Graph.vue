@@ -1,10 +1,10 @@
 <template>
     <div class="diagram-editor">
         <b-row class="main-content-row">
-            <b-col md="2" class="stencil-column">
+            <b-col md="2" lg="2" class="stencil-column">
                 <div ref="stencil_container" class="stencil-container" />
             </b-col>
-            <b-col md="10" class="content-column">
+            <b-col md="10" lg="10" class="content-column">
                 <b-row class="header-row">
                     <b-col>
                         <h3 class="td-graph-title">
@@ -153,6 +153,7 @@ export default {
         height: 100%;
         padding: 0;
         border-right: 1px solid #eee;
+        min-width: 200px; /* Ensure minimum width for stencil column */
     }
     
     .stencil-container {
@@ -166,6 +167,7 @@ export default {
     .stencil-container :deep(.x6-widget-stencil) {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 180px !important; /* Minimum width to prevent text wrapping */
         visibility: visible !important;
         display: block !important;
         overflow: visible !important;
@@ -176,6 +178,7 @@ export default {
         display: block !important;
         height: auto !important;
         min-height: 100px !important;
+        width: 100% !important;
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-content) {
@@ -194,6 +197,9 @@ export default {
         padding: 8px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #eee;
+        white-space: nowrap !important; /* Prevent text wrapping */
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     
     /* Force node visibility */
@@ -207,6 +213,7 @@ export default {
         height: 100%;
         display: flex;
         flex-direction: column;
+        min-width: 800px; /* Ensure minimum width for the graph area */
     }
     
     .header-row {
@@ -221,6 +228,12 @@ export default {
     .graph-container {
         height: 100%;
         width: 100%;
+    }
+    
+    /* Make the SVG viewport take up more space */
+    :deep(.x6-graph-svg-viewport) {
+        width: 100% !important;
+        height: 100% !important;
     }
     
     /* Style the X6 stencil container to fit within its parent */
