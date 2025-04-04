@@ -49,6 +49,7 @@ import { getProviderType } from '@/service/provider/providers.js';
 import diagramService from '@/service/migration/diagram.js';
 import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
+import '@/service/x6/stencil.scss'; // Import dedicated stencil stylesheet
 
 export default {
     name: 'TdGraph',
@@ -61,7 +62,8 @@ export default {
     },
     data() {
         return {
-            graph: null
+            graph: null,
+            stencilInstance: null
         };
     },
     computed: mapState({
@@ -72,12 +74,18 @@ export default {
         this.init();
     },
     unmounted() {
+        // Dispose of the stencil instance if it exists
+        if (this.stencilInstance && this.stencilInstance.dispose) {
+            this.stencilInstance.dispose();
+        }
+        
+        // Dispose of the graph
         diagramService.dispose(this.graph);
     },
     methods: {
         init() {
             this.graph = diagramService.edit(this.$refs.graph_container, this.diagram);
-            stencil.get(this.graph, this.$refs.stencil_container);
+            this.stencilInstance = stencil.get(this.graph, this.$refs.stencil_container);
             this.$store.dispatch(tmActions.notModified);
             this.graph.getPlugin('history').on('change', () => {
                 const updated = Object.assign({}, this.diagram);
@@ -133,6 +141,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    /* Stencil dimension variables for easier configuration */
+    :root {
+        --stencil-container-min-width: 200px;
+        --stencil-graph-width-percentage: 95%;
+        --stencil-item-width-percentage: 95%;
+        --stencil-item-margin: 5px;
+        --stencil-item-padding: 5px 0;
+    }
     .diagram-editor {
         display: flex;
         flex-direction: column;
@@ -153,7 +169,7 @@ export default {
         height: 100%;
         padding: 0;
         border-right: 1px solid #eee;
-        min-width: 200px; /* Ensure minimum width for stencil column */
+        min-width: var(--stencil-container-min-width); /* Using CSS variable */
     }
     
     .stencil-container {
@@ -203,13 +219,15 @@ export default {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 5px 0 !important;
+        padding: var(--stencil-item-padding) !important;
+        margin: var(--stencil-item-margin) auto !important;
     }
     
     /* Scale SVG containers in stencil items */
     .stencil-container :deep(.x6-graph) {
-        width: 90% !important;
+        width: var(--stencil-graph-width-percentage) !important;
         margin: 0 auto !important;
+        max-width: none !important; /* Remove max-width constraint */
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-title) {

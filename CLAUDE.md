@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 -   run all npm scripts from the project root
 -   honor and use npm workspaces
--   Start development: `npm run dev:root` (both server and vue)
--   Build app: `npm run build:root`
+-   Start development: `npm run dev` (both server and vue)
+-   Build app: `npm run build`
 -   Test: `npm run test` (all tests)
 -   Test a single test: `npm run test:single "**/path/to/test.spec.js"`
 -   Lint: `npm run lint`

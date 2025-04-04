@@ -12,9 +12,21 @@ import factory from './factory.js';
 const get = (graph, container, StencilConstructor) => {
     console.debug('Setting up stencil for diagram editor');
 
-    // Get container width for responsive sizing
-    const containerWidth = container.offsetWidth || 200;
-    const stencilGraphWidth = Math.max(containerWidth - 20, 160); // Use container width with slight padding
+    let resizeObserver;
+
+    // Function to calculate dimensions based on container size
+    const calculateDimensions = () => {
+        // Get container width for responsive sizing
+        const containerWidth = container.offsetWidth || 200;
+        // Calculate stencil dimensions based on container size
+        return {
+            stencilGraphWidth: Math.max(containerWidth - 10, 180), // Reduced padding for larger stencils
+            containerWidth
+        };
+    };
+
+    // Initial dimensions
+    const { stencilGraphWidth, containerWidth } = calculateDimensions();
 
     // Create stencil configuration
     const stencilConfig = {
@@ -61,10 +73,10 @@ const get = (graph, container, StencilConstructor) => {
     };
 
     // Create the stencil instance
-    const stencil = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
+    const stencilInstance = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
-    // Calculate component size based on container width
-    const shapeWidth = Math.min(stencilGraphWidth * 0.9, 160); // 90% of stencil width, max 160px
+    // Calculate component size based on container width - now using 95% of width and higher max
+    const shapeWidth = Math.min(stencilGraphWidth * 0.95, 200); // 95% of stencil width, max 200px
     
     // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({
@@ -122,14 +134,42 @@ const get = (graph, container, StencilConstructor) => {
     });
 
     // Add shapes to the stencil
-    stencil.load([actor, process, store, text], 'components');
-    stencil.load([boundaryBox, boundaryCurve], 'boundaries');
-    stencil.load([flow], 'metadata');
+    stencilInstance.load([actor, process, store, text], 'components');
+    stencilInstance.load([boundaryBox, boundaryCurve], 'boundaries');
+    stencilInstance.load([flow], 'metadata');
 
     // Add to DOM
-    container.appendChild(stencil.container);
+    container.appendChild(stencilInstance.container);
 
-    return stencil;
+    // Setup resize observer to handle responsive behavior
+    if (window.ResizeObserver) {
+        resizeObserver = new ResizeObserver((_entries) => {
+            // We only have one container, so we can just use the first entry
+            const { stencilGraphWidth } = calculateDimensions();
+            
+            // Update stencil dimensions
+            if (stencilInstance && stencilInstance.resize) {
+                stencilInstance.resize(stencilGraphWidth);
+            }
+        });
+        
+        // Start observing the container
+        resizeObserver.observe(container);
+    }
+
+    // Return stencil with cleanup method
+    const result = {
+        ...stencilInstance,
+        dispose: () => {
+            // Cleanup resize observer when stencil is disposed
+            if (resizeObserver) {
+                resizeObserver.disconnect();
+                resizeObserver = null;
+            }
+        }
+    };
+
+    return result;
 };
 
 export default {
