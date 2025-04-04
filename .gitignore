@@ -236,6 +236,8 @@ sbom.xml
 !td.vue/tests/unit/views/*.spec.js
 !td.vue/tests/unit/views/demo/
 !td.vue/tests/unit/views/demo/*.spec.js
+!td.vue/tests/unit/views/google/
+!td.vue/tests/unit/views/google/*.spec.js
 !td.vue/package.json
 !td.vue/package-lock.json
 !td.vue/.browserslistrc
