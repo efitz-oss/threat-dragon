@@ -19,6 +19,7 @@ sbom.xml
 !.markdownlint.yaml
 !.eslintrc.js
 !.prettierrc
+!.prettierignore
 
 # docker files
 !.dockerignore
