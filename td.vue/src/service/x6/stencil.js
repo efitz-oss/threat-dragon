@@ -15,11 +15,7 @@ const get = (graph, container, StencilConstructor) => {
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
-        stencilGraphWidth: 180,
-        stencilGraphHeight: 'auto',
-        width: 200,
-        title: 'Shapes',
-        collapsable: false,
+        stencilGraphWidth: 200,
         groups: [
             {
                 name: 'components',
@@ -47,11 +43,11 @@ const get = (graph, container, StencilConstructor) => {
         },
         search: {
             placeholder: 'Search shapes',
-            width: 150
+            width: 160 // Constrain the search input width
         }
     };
 
-    // Create the stencil instance using our factory (which creates the correct Addon.Stencil)
+    // Create the stencil instance
     const stencil = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
     // Create component nodes

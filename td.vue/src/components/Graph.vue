@@ -1,33 +1,31 @@
 <template>
-    <div class="diagram-editor">
+    <div>
         <b-row>
-            <b-col cols="12">
-                <b-row class="header-row">
-                    <b-col md="6">
+            <b-col md="2">
+                <div ref="stencil_container" class="stencil-container" />
+            </b-col>
+            <b-col md="10">
+                <b-row>
+                    <b-col>
                         <h3 class="td-graph-title">
                             {{ diagram.title }}
                         </h3>
                     </b-col>
-                    <b-col md="6" class="text-right">
+                    <b-col align="right">
                         <td-graph-buttons :graph="graph" @saved="saved" @closed="closed" />
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <div
+                            id="graph-container"
+                            ref="graph_container"
+                            style="height: 65vh; width: 100%; flex: 1"
+                        />
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
-        
-        <b-row class="main-content-row">
-            <b-col md="2" class="stencil-col">
-                <div ref="stencil_container" class="stencil-container" />
-            </b-col>
-            <b-col md="10">
-                <div
-                    id="graph-container"
-                    ref="graph_container"
-                    class="graph-container"
-                />
-            </b-col>
-        </b-row>
-        
         <td-graph-meta @threat-selected="threatSelected" @threat-suggest="threatSuggest" />
 
         <div>
@@ -135,59 +133,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .diagram-editor {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 120px);
-        width: 100%;
-        overflow: hidden;
-    }
-    
-    .header-row {
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        align-items: center;
-    }
-    
-    .main-content-row {
-        flex: 1;
-        overflow: hidden;
-        height: calc(100% - 80px);
-    }
-    
-    .stencil-col {
-        border-right: 1px solid #eee;
-        height: 100%;
-        padding: 0;
+    .td-graph-title {
+        margin-right: 15px;
     }
     
     .stencil-container {
         height: 100%;
-        overflow-y: auto;
-    }
-    
-    .graph-container {
-        height: 100%;
-        width: 100%;
-    }
-    
-    .td-graph-title {
-        margin-right: 15px;
-        margin-bottom: 0;
-    }
-    
-    /* Fix for stencil layout */
-    :deep(.x6-widget-stencil) {
-        width: 100% !important;
-        max-width: 100% !important;
         
-        .x6-widget-stencil-search {
-            width: 80% !important;
+        /* Fix for stencil search width */
+        :deep(.x6-widget-stencil-search) {
+            width: 90% !important;
+            max-width: 180px !important;
             margin: 8px auto !important;
-        }
-        
-        .x6-widget-stencil-content {
-            padding: 5px;
         }
     }
 </style>
