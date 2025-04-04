@@ -138,7 +138,6 @@
                         {{ $t('forms.apply') }}
                     </b-button>
                     <b-button
-                        v-if="!newThreat"
                         variant="secondary"
                         class="float-right mr-2"
                         @click="hideModal()"
@@ -280,6 +279,19 @@ export default {
             dataChanged.updateStyleAttrs(this.cellRef);
         },
         hideModal() {
+            // If this is a new threat and hasn't been saved yet,
+            // we need to make sure it's not inadvertently added
+            if (this.newThreat && this.threat) {
+                // Remove from the cell's threats if it was already added
+                this.cellRef.data.threats = this.cellRef.data.threats.filter(
+                    (x) => x.id !== this.threat.id
+                );
+                this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
+                    (t) => t.status === 'Open'
+                );
+                this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
+                dataChanged.updateStyleAttrs(this.cellRef);
+            }
             this.$refs.editModal.hide();
         },
         async confirmDelete() {

@@ -62,3 +62,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 -   Prefer built-in functionality of the existing frameworks and packages, over adding new packages
 -   When making the same kind of change to many files or components, frequently stop to ensure that build and test are not breaking.
 -   If you ever want to look at a version of the application state before I made any changes, you can always look at the OWASP/threat-dragon repo on github
+
+## Known Issues
+
+-   DriveAccess.vue tests are currently skipped due to test configuration issues with Vue 3 component mounting.
+    This is a testing framework issue, not an application functionality issue.

@@ -225,10 +225,22 @@ export default {
             this.$refs.editModal.show();
         },
         hideModal() {
+            // Make sure we clean up everything to prevent accidental additions
             this.threat = {};
             this.suggestions = [];
             this.types = [];
             this.index = 0;
+            
+            // If any temporary threats were added, clean them up
+            if (this.cellRef && this.cellRef.data && this.cellRef.data.threats) {
+                this.cellRef.data.threats = this.cellRef.data.threats.filter(t => !t.new);
+                this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
+                    (t) => t.status === 'Open'
+                );
+                this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
+                dataChanged.updateStyleAttrs(this.cellRef);
+            }
+            
             this.$refs.editModal.hide();
         },
         next() {
@@ -261,9 +273,12 @@ export default {
                         objRef.threatFrequency[k]++;
                 });
             }
+            // Mark it as a real threat, not a temporary one
             this.threat.new = false;
             this.cellRef.data.threats.push(this.threat);
-            this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
+            this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
+                (t) => t.status === 'Open'
+            );
             this.$store.dispatch(tmActions.update, { threatTop: this.threatTop + 1 });
             this.$store.dispatch(tmActions.modified);
             this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);

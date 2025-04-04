@@ -162,6 +162,18 @@ export default {
         position: relative;
     }
     
+    /* Ensure stencil elements are visible */
+    .stencil-container :deep(.x6-widget-stencil-group) {
+        visibility: visible !important;
+        display: block !important;
+    }
+    
+    .stencil-container :deep(.x6-widget-stencil-group-content) {
+        visibility: visible !important;
+        display: block !important;
+        min-height: 100px;
+    }
+    
     .content-column {
         height: 100%;
         display: flex;

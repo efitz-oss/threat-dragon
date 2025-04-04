@@ -18,6 +18,8 @@ const get = (graph, container, StencilConstructor) => {
         stencilGraphWidth: 180,
         stencilGraphHeight: 'auto',
         width: '100%',
+        minWidth: 150,
+        height: '100%',
         title: 'Shapes',
         collapsable: false,
         groups: [
@@ -54,18 +56,46 @@ const get = (graph, container, StencilConstructor) => {
     // Create the stencil instance
     const stencil = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
-    // Create component nodes
-    const actor = new shapes.ActorShape();
-    const process = new shapes.ProcessShape();
-    const store = new shapes.StoreShape();
-    const text = new shapes.TextBlock();
+    // Create component nodes with explicit sizing and visibility
+    const actor = new shapes.ActorShape({
+        width: 120,
+        height: 80,
+        visible: true
+    });
+    const process = new shapes.ProcessShape({
+        width: 120,
+        height: 80,
+        visible: true
+    });
+    const store = new shapes.StoreShape({
+        width: 120,
+        height: 80,
+        visible: true
+    });
+    const text = new shapes.TextBlock({
+        width: 120,
+        height: 60,
+        visible: true
+    });
 
     // Create boundary nodes
-    const boundaryBox = new shapes.TrustBoundaryBox();
-    const boundaryCurve = new shapes.TrustBoundaryCurveStencil();
+    const boundaryBox = new shapes.TrustBoundaryBox({
+        width: 150,
+        height: 100,
+        visible: true
+    });
+    const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
+        width: 150,
+        height: 20,
+        visible: true
+    });
 
     // Create flow
-    const flow = new shapes.FlowStencil();
+    const flow = new shapes.FlowStencil({
+        width: 150,
+        height: 20,
+        visible: true
+    });
 
     // Add shapes to the stencil
     stencil.load([actor, process, store, text], 'components');
