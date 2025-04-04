@@ -188,6 +188,28 @@ export default {
         min-height: 100px !important;
         height: auto !important;
         overflow: visible !important;
+        width: 100% !important;
+    }
+    
+    /* Apply correct width to the stencil content container */
+    .stencil-container :deep(.x6-widget-stencil-content) {
+        width: 100% !important;
+        overflow: visible !important;
+    }
+    
+    /* Scale stencil items to fit container */
+    .stencil-container :deep(.x6-widget-stencil-item) {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 5px 0 !important;
+    }
+    
+    /* Scale SVG containers in stencil items */
+    .stencil-container :deep(.x6-graph) {
+        width: 90% !important;
+        margin: 0 auto !important;
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-title) {
@@ -200,13 +222,17 @@ export default {
         white-space: nowrap !important; /* Prevent text wrapping */
         overflow: hidden !important;
         text-overflow: ellipsis !important;
+        width: 100% !important;
     }
     
-    /* Force node visibility */
+    /* Force node visibility and set width */
     .stencil-container :deep(.x6-node) {
         visibility: visible !important;
         display: block !important;
         opacity: 1 !important;
+        /* Scale shapes to fit container width */
+        transform-origin: center center !important;
+        transform: scale(1) !important;
     }
     
     .content-column {
@@ -244,10 +270,14 @@ export default {
     /* Fix for stencil search width */
     :deep(.x6-widget-stencil-search) {
         width: 90% !important;
-        max-width: 180px !important;
         margin: 8px auto !important;
         visibility: visible !important;
         display: block !important;
+    }
+    
+    /* Make stencil search input full width */
+    :deep(.x6-widget-stencil-search input) {
+        width: 100% !important;
     }
     
     /* Ensure stencil items are visible in all browsers */

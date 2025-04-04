@@ -99,8 +99,11 @@ describe('service/x6/stencil.js', () => {
             expect(stencilCfg.target).toEqual(target);
         });
         
-        it('has a width', () => {
-            expect(stencilCfg.stencilGraphWidth).toEqual(160);
+        it('has a responsive width based on container size', () => {
+            // Test that stencilGraphWidth is calculated dynamically
+            // The implementation now uses Math.max(containerWidth - 20, 160)
+            // Since our mock doesn't have a real offsetWidth, it should default to 180 (200-20)
+            expect(stencilCfg.stencilGraphWidth).toEqual(180);
         });
         
         it('provides layout options', () => {
