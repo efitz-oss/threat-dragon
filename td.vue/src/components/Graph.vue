@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <b-row>
-            <b-col md="2">
-                <div ref="stencil_container" />
+    <div class="diagram-editor">
+        <b-row class="main-content-row">
+            <b-col md="2" class="stencil-column">
+                <div ref="stencil_container" class="stencil-container" />
             </b-col>
-            <b-col md="10">
-                <b-row>
+            <b-col md="10" class="content-column">
+                <b-row class="header-row">
                     <b-col>
                         <h3 class="td-graph-title">
                             {{ diagram.title }}
@@ -15,12 +15,12 @@
                         <td-graph-buttons :graph="graph" @saved="saved" @closed="closed" />
                     </b-col>
                 </b-row>
-                <b-row>
-                    <b-col style="display: flex; width: 100vw">
+                <b-row class="graph-row">
+                    <b-col>
                         <div
                             id="graph-container"
                             ref="graph_container"
-                            style="height: 65vh; width: 100%; flex: 1"
+                            class="graph-container"
                         />
                     </b-col>
                 </b-row>
@@ -133,7 +133,64 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .diagram-editor {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 120px);
+    }
+    
     .td-graph-title {
         margin-right: 15px;
+    }
+    
+    .main-content-row {
+        flex: 1;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .stencil-column {
+        height: 100%;
+        padding: 0;
+        border-right: 1px solid #eee;
+    }
+    
+    .stencil-container {
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+        position: relative;
+    }
+    
+    .content-column {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .header-row {
+        padding: 8px;
+    }
+    
+    .graph-row {
+        flex: 1;
+        overflow: hidden;
+    }
+    
+    .graph-container {
+        height: 100%;
+        width: 100%;
+    }
+    
+    /* Style the X6 stencil container to fit within its parent */
+    :deep(.x6-widget-stencil) {
+        width: 100% !important;
+    }
+    
+    /* Fix for stencil search width */
+    :deep(.x6-widget-stencil-search) {
+        width: 90% !important;
+        max-width: 180px !important;
+        margin: 8px auto !important;
     }
 </style>

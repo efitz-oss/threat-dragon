@@ -17,7 +17,7 @@ const get = (graph, container, StencilConstructor) => {
         target: graph,
         stencilGraphWidth: 180,
         stencilGraphHeight: 'auto',
-        width: 200,
+        width: '100%',
         title: 'Shapes',
         collapsable: false,
         groups: [
