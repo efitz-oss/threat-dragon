@@ -118,7 +118,7 @@
                                 rows="5"
                                 :no-auto-shrink="true"
                                 no-resize
-                             />
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
