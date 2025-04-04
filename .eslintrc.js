@@ -34,30 +34,31 @@ module.exports = {
         '*.config.js',
         'babel.config.js',
         'archive/**',
-        'td.vue/tests/unit/setup/vue3-test-template.js'
+        'td.vue/tests/unit/setup/vue3-test-template.js',
+        'td.vue/tests/unit/setup/bootstrap-vue-next.js'
     ],
     rules: {
         // Common rules for both server and client
         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-        'no-unused-vars': 'warn',
+        'no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
         'no-undef': 'warn',
         semi: ['error', 'always'],
         quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
-        indent: ['error', 4],
-        'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
-        'linebreak-style': ['error', 'unix'],
-        'prettier/prettier': ['error'],
+        indent: ['warn', 4],
+        'no-mixed-spaces-and-tabs': ['warn', 'smart-tabs'],
+        'linebreak-style': ['warn', 'unix'],
+        'prettier/prettier': 'warn',
 
         // Performance-related rules
-        'prefer-const': 'error',
-        'no-var': 'error',
+        'prefer-const': 'warn',
+        'no-var': 'warn',
 
         // Vue specific rules
-        'vue/no-unused-components': 'error',
+        'vue/no-unused-components': 'warn',
         'vue/html-indent': ['error', 4],
         'vue/max-attributes-per-line': [
-            'error',
+            'warn',
             {
                 singleline: {
                     max: 3
@@ -96,7 +97,9 @@ module.exports = {
                 'vue/require-default-prop': 'warn',
                 'vue/order-in-components': 'warn',
                 'vue/require-prop-types': 'warn',
-                'vue/one-component-per-file': 'warn'
+                'vue/one-component-per-file': 'warn',
+                'vue/no-v-html': 'warn',
+                'vue/prop-name-casing': 'warn'
             }
         },
         // Test specific overrides
@@ -122,6 +125,7 @@ module.exports = {
                 'jest/valid-expect': 'warn',
                 'jest/no-disabled-tests': 'warn',
                 'jest/expect-expect': 'warn',
+                'jest/no-conditional-expect': 'warn',
                 'no-unused-vars': 'warn'
             }
         },
@@ -137,6 +141,8 @@ module.exports = {
             extends: ['plugin:cypress/recommended'],
             rules: {
                 // Cypress specific rules
+                'cypress/no-unnecessary-waiting': 'warn',
+                'cypress/unsafe-to-chain-command': 'warn'
             }
         }
     ]

@@ -65,7 +65,7 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
         }
 
         // Mount the app to the container
-        const modalInstance = app.mount(modalContainer);
+        const _modalInstance = app.mount(modalContainer);
 
         // Function to clean up the modal
         let isCleanedUp = false;

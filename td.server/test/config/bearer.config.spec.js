@@ -54,10 +54,9 @@ describe('config/bearer.config.js', () => {
             bearer.middleware(req, res, next);
         });
 
-        'returns an unauthorized response',
-            () => {
-                expect(errors.unauthorized).to.have.been.calledWith(res);
-            };
+        it('returns an unauthorized response', () => {
+            expect(errors.unauthorized).to.have.been.calledWith(res);
+        });
     });
 
     describe('without an auth header', () => {
@@ -65,10 +64,9 @@ describe('config/bearer.config.js', () => {
             bearer.middleware(req, res, next);
         });
 
-        'returns an unauthorized response',
-            () => {
-                expect(errors.unauthorized).to.have.been.calledWith(res);
-            };
+        it('returns an unauthorized response', () => {
+            expect(errors.unauthorized).to.have.been.calledWith(res);
+        });
     });
 
     describe('with a generic error', () => {

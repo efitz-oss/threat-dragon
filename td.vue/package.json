@@ -30,7 +30,7 @@
     "lint:fix:vue": "cd .. && npm run lint:fix:vue",
     "lint:desktop": "cd .. && npm run lint:desktop",
     "lint:fix:desktop": "cd .. && npm run lint:fix:desktop",
-    "pretest": "npm run lint:vue || true && npm run lint:desktop || true",
+    "pretest": "npm run lint:vue && npm run lint:desktop",
     "start:vue": "cd ../.. && npm run start",
     "start:desktop": "npm run build:desktop:simple && cd dist-desktop && NODE_DEBUG=module ELECTRON_ENABLE_LOGGING=true ELECTRON_LOG_LEVEL=debug npx electron@25.8.4 .",
     "start:desktop:dev": "vue-cli-service electron:serve",
