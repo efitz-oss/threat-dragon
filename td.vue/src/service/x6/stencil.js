@@ -15,13 +15,16 @@ const get = (graph, container, StencilConstructor) => {
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
-        stencilGraphWidth: 180,
-        stencilGraphHeight: 'auto',
+        stencilGraphWidth: 160,
+        stencilGraphHeight: 500, // Fixed height instead of 'auto'
         width: '100%',
         minWidth: 150,
         height: '100%',
         title: 'Shapes',
         collapsable: false,
+        // Explicitly ensure we can see stencil content
+        snapline: false,
+        resizing: false,
         groups: [
             {
                 name: 'components',
@@ -56,45 +59,59 @@ const get = (graph, container, StencilConstructor) => {
     // Create the stencil instance
     const stencil = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
-    // Create component nodes with explicit sizing and visibility
+    // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({
-        width: 120,
-        height: 80,
-        visible: true
+        width: 100,
+        height: 70,
+        visible: true,
+        zIndex: 10, // Higher z-index to ensure visibility
+        opacity: 1  // Full opacity
     });
     const process = new shapes.ProcessShape({
-        width: 120,
-        height: 80,
-        visible: true
+        width: 100,
+        height: 70,
+        visible: true,
+        zIndex: 10, 
+        opacity: 1
     });
     const store = new shapes.StoreShape({
-        width: 120,
-        height: 80,
-        visible: true
+        width: 100,
+        height: 70,
+        visible: true,
+        zIndex: 10,
+        opacity: 1
     });
     const text = new shapes.TextBlock({
-        width: 120,
-        height: 60,
-        visible: true
+        width: 100,
+        height: 50,
+        visible: true,
+        zIndex: 10,
+        opacity: 1
     });
 
     // Create boundary nodes
     const boundaryBox = new shapes.TrustBoundaryBox({
-        width: 150,
-        height: 100,
-        visible: true
+        width: 120,
+        height: 80,
+        visible: true,
+        zIndex: 10,
+        opacity: 1
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
-        width: 150,
+        width: 120,
         height: 20,
-        visible: true
+        visible: true,
+        zIndex: 10,
+        opacity: 1
     });
 
     // Create flow
     const flow = new shapes.FlowStencil({
-        width: 150,
+        width: 120,
         height: 20,
-        visible: true
+        visible: true,
+        zIndex: 10,
+        opacity: 1
     });
 
     // Add shapes to the stencil

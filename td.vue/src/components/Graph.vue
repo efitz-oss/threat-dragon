@@ -163,15 +163,44 @@ export default {
     }
     
     /* Ensure stencil elements are visible */
+    .stencil-container :deep(.x6-widget-stencil) {
+        width: 100% !important;
+        max-width: 100% !important;
+        visibility: visible !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+    
     .stencil-container :deep(.x6-widget-stencil-group) {
         visibility: visible !important;
         display: block !important;
+        height: auto !important;
+        min-height: 100px !important;
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-content) {
         visibility: visible !important;
         display: block !important;
-        min-height: 100px;
+        opacity: 1 !important;
+        min-height: 100px !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .stencil-container :deep(.x6-widget-stencil-group-title) {
+        visibility: visible !important;
+        display: block !important;
+        font-weight: bold;
+        padding: 8px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* Force node visibility */
+    .stencil-container :deep(.x6-node) {
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
     }
     
     .content-column {
@@ -204,5 +233,14 @@ export default {
         width: 90% !important;
         max-width: 180px !important;
         margin: 8px auto !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+    
+    /* Ensure stencil items are visible in all browsers */
+    :deep(.x6-widget-stencil-item) {
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
     }
 </style>

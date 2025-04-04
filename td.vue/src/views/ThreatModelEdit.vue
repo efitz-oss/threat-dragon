@@ -65,6 +65,9 @@
                                     id="description"
                                     v-model="model.summary.description"
                                     type="text"
+                                    rows="3"
+                                    :no-auto-shrink="true"
+                                    no-resize
                                     @input="onModifyModel()"
                                 />
                             </b-form-group>

@@ -39,6 +39,8 @@
                                 id="threat-model-description"
                                 v-model="threatModel.summary.description"
                                 rows="3"
+                                :no-auto-shrink="true"
+                                no-resize
                                 :placeholder="$t('threatmodel.placeholder.description')"
                             ></b-form-textarea>
                         </b-form-group>
