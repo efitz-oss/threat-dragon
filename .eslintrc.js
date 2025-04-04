@@ -31,7 +31,6 @@ module.exports = {
         'node_modules/',
         'dist/',
         'dist-electron/',
-        '.vite_cache/',
         '*.config.js',
         'babel.config.js',
         'archive/**',

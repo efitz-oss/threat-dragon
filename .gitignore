@@ -5,6 +5,21 @@
 sbom.json
 sbom.xml
 
+# Logs and environment files
+*.log
+.env
+.env.*
+!.env.example
+!example.env
+!minimal.env
+
+# Dependencies and build outputs
+node_modules/
+dist/
+dist-desktop/
+.vite_cache/
+coverage/
+
 # allow github, workflows and templates
 !.github/
 !.github/*.yaml

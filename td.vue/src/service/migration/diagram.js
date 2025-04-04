@@ -1,68 +1,48 @@
-// Implementation for diagram services in production
-// This replaces the test mock that was causing issues
+import dataChanged from '@/service/x6/graph/data-changed.js';
+import graphFactory from '@/service/x6/graph/graph.js';
+import events from '@/service/x6/graph/events.js';
+import store from '@/store/index.js';
+import tmActions from '@/store/actions/threatmodel.js';
+import { passiveSupport } from 'passive-events-support/src/utils';
 
-/**
- * Creates a simple diagram drawing
- * @param {HTMLElement} container - The container element
- * @param {Object} diagram - The diagram data
- * @returns {Object} - A graph instance
- */
-const draw = (container, diagram) => {
-    console.debug('Drawing diagram', diagram ? diagram.title : 'untitled');
+const appVersion = require('../../../package.json').version;
 
-    // Return a minimal implementation that satisfies the interface
-    return {
-        toJSON: () => ({ cells: diagram.cells || [] }),
-        dispose: () => {
-            console.debug('Disposing read-only diagram');
-        }
-    };
-};
+passiveSupport({
+    events: ['touchstart', 'mousewheel']
+});
 
-/**
- * Creates an editable diagram
- * @param {HTMLElement} container - The container element
- * @param {Object} diagram - The diagram data
- * @returns {Object} - A graph instance
- */
-const edit = (container, diagram) => {
-    console.debug('Editing diagram', diagram ? diagram.title : 'untitled');
-
-    // Return a minimal implementation that satisfies the interface
-    // We need to ensure the object has the structure expected by the app
-    return {
-        toJSON: () => ({ cells: diagram.cells || [] }),
-        getPlugin: (name) => {
-            if (name === 'history') {
-                return {
-                    on: (event) => {
-                        // Set up event listener but don't do anything
-                        console.debug(`Set up ${event} listener for history plugin`);
-                        // Return a no-op function as off() handler
-                        return () => {};
-                    }
-                };
-            }
-            return { on: () => {} };
-        },
-        dispose: () => {
-            console.debug('Disposing editable diagram');
-        }
-    };
-};
-
-/**
- * Disposes a graph instance
- * @param {Object} graph - The graph to dispose
- */
-const dispose = (graph) => {
-    if (graph && typeof graph.dispose === 'function') {
-        graph.dispose();
+const drawGraph = (diagram, graph) => {
+    if (diagram.version && diagram.version.startsWith('2.')) {
+        console.debug('open diagram version: ' + diagram.version);
+        diagram.version = appVersion;
+        graph.fromJSON(diagram);
+    } else {
+        console.debug('upgrade version 1.x diagram');
+        // For older versions, we'll just create empty cells
+        const updated = graph.toJSON();
+        updated.version = appVersion;
+        updated.title = diagram.title;
+        updated.description = diagram.description;
+        updated.thumbnail = diagram.thumbnail;
+        updated.id = diagram.id;
+        updated.diagramType = diagram.diagramType;
+        store.get().dispatch(tmActions.diagramSaved, updated);
+        store.get().dispatch(tmActions.stash);
+        store.get().dispatch(tmActions.notModified);
     }
+    return graph;
+};
+
+const draw = (container, diagram) => drawGraph(diagram, graphFactory.getReadonlyGraph(container));
+const edit = (container, diagram) => drawGraph(diagram, graphFactory.getEditGraph(container));
+
+const dispose = (graph) => {
+    events.removeListeners(graph);
+    graph.dispose();
 };
 
 export default {
+    dispose,
     draw,
-    edit,
-    dispose
+    edit
 };
