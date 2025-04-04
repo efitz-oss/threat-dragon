@@ -68,11 +68,23 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
         const modalInstance = app.mount(modalContainer);
 
         // Function to clean up the modal
+        let isCleanedUp = false;
         const cleanup = () => {
+            if (isCleanedUp) return; // Prevent multiple cleanup calls
+            
+            isCleanedUp = true;
             setTimeout(() => {
-                modalInstance.$destroy;
-                app.unmount();
-                document.body.removeChild(modalContainer);
+                try {
+                    // $destroy is not needed in Vue 3, app.unmount() is sufficient
+                    app.unmount();
+                    
+                    // Only try to remove if it's still a child of document.body
+                    if (document.body.contains(modalContainer)) {
+                        document.body.removeChild(modalContainer);
+                    }
+                } catch (error) {
+                    console.warn('Modal cleanup error:', error);
+                }
             }, 100);
         };
     });

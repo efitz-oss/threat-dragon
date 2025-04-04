@@ -50,7 +50,11 @@ export default {
                 // tell any electron server that the model has changed
                 window.electronAPI.modelOpened(model.name);
             }
-            const params = Object.assign({}, this.$route.params, { threatmodel: model.name });
+            // Ensure the provider parameter is included for the local route
+            const params = Object.assign({}, this.$route.params, { 
+                threatmodel: model.name,
+                provider: 'local' // Add the required provider parameter
+            });
             this.$router.push({ name: 'localThreatModel', params });
         }
     }
