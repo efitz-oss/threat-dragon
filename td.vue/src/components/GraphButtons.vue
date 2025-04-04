@@ -78,8 +78,9 @@ export default {
     },
     props: {
         graph: {
-            required: true,
-            type: Object
+            required: false,
+            type: Object,
+            default: null
         }
     },
     emits: ['saved', 'closed'],
@@ -111,16 +112,18 @@ export default {
             this.$root.$emit('bv::show::modal', 'shortcuts');
         },
         undo() {
-            if (this.graph.getPlugin('history').canUndo()) {
+            if (this.graph && this.graph.getPlugin('history') && this.graph.getPlugin('history').canUndo()) {
                 this.graph.getPlugin('history').undo();
             }
         },
         redo() {
-            if (this.graph.getPlugin('history').canRedo()) {
+            if (this.graph && this.graph.getPlugin('history') && this.graph.getPlugin('history').canRedo()) {
                 this.graph.getPlugin('history').redo();
             }
         },
         zoomIn() {
+            if (!this.graph || typeof this.graph.zoom !== 'function') return;
+            
             if (this.graph.zoom() < 1.0) {
                 this.graph.zoom(0.1);
             } else {
@@ -129,6 +132,8 @@ export default {
             console.debug('zoom to ' + this.graph.zoom());
         },
         zoomOut() {
+            if (!this.graph || typeof this.graph.zoom !== 'function') return;
+            
             if (this.graph.zoom() < 1.0) {
                 this.graph.zoom(-0.1);
             } else {
@@ -137,28 +142,42 @@ export default {
             console.debug('zoom to ' + this.graph.zoom());
         },
         deleteSelected() {
+            if (!this.graph || typeof this.graph.removeCells !== 'function' || typeof this.graph.getSelectedCells !== 'function') return;
+            
             this.graph.removeCells(this.graph.getSelectedCells());
         },
         toggleGrid() {
+            if (!this.graph) return;
+            
             if (this.gridShowing) {
-                this.graph.hideGrid();
-                this.gridShowing = false;
+                if (typeof this.graph.hideGrid === 'function') {
+                    this.graph.hideGrid();
+                    this.gridShowing = false;
+                }
             } else {
-                this.graph.showGrid();
-                this.gridShowing = true;
+                if (typeof this.graph.showGrid === 'function') {
+                    this.graph.showGrid();
+                    this.gridShowing = true;
+                }
             }
         },
         exportPNG() {
+            if (!this.graph || typeof this.graph.exportPNG !== 'function') return;
+            
             this.graph.exportPNG(`${this.diagram.title}.png`, {
                 padding: 50
             });
         },
         exportJPEG() {
+            if (!this.graph || typeof this.graph.exportJPEG !== 'function') return;
+            
             this.graph.exportJPEG(`${this.diagram.title}.jpeg`, {
                 padding: 50
             });
         },
         exportSVG() {
+            if (!this.graph || typeof this.graph.exportSVG !== 'function') return;
+            
             this.graph.exportSVG(`${this.diagram.title}.svg`);
         }
     }
