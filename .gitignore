@@ -5,6 +5,9 @@
 sbom.json
 sbom.xml
 
+# Claude related files
+CLAUDE.md
+
 # Logs and environment files
 *.log
 .env
