@@ -1,62 +1,76 @@
 // Stencil implementation for diagram editing
 import shapes from './shapes/index.js';
+import factory from './factory.js';
 
 /**
  * Gets or creates a stencil for the graph
  * @param {Object} graph - The graph instance
  * @param {HTMLElement} container - The container element
- * @param {Function} Stencil - The stencil constructor (for testing)
+ * @param {Function} StencilConstructor - The stencil constructor (for testing)
  * @returns {Object} - A stencil instance
  */
-const get = (graph, container, Stencil) => {
+const get = (graph, container, StencilConstructor) => {
     console.debug('Setting up stencil for diagram editor');
 
-    // If we're in testing mode and Stencil is provided, use it to create a mock
-    if (Stencil) {
-        // Create stencil configuration
-        const stencilConfig = {
-            target: graph,
-            stencilGraphWidth: 500,
-            layoutOptions: {
-                columns: 1,
-                center: true,
-                resizeToFit: true
+    // Create stencil configuration
+    const stencilConfig = {
+        target: graph,
+        stencilGraphWidth: 200,
+        groups: [
+            {
+                name: 'components',
+                title: 'Components',
+                collapsable: true,
+                collapsed: false
+            },
+            {
+                name: 'boundaries',
+                title: 'Boundaries',
+                collapsable: true,
+                collapsed: false
+            },
+            {
+                name: 'metadata',
+                title: 'Metadata',
+                collapsable: true,
+                collapsed: false
             }
-        };
-
-        // Create shape instances for testing
-        shapes.TrustBoundaryBox();
-        shapes.ProcessShape();
-        shapes.ActorShape();
-        shapes.StoreShape();
-
-        // Create the stencil instance
-        const stencil = new Stencil(stencilConfig);
-
-        // Set up the stencil
-        stencil.load([{}, {}, {}, {}], 'components');
-        stencil.load([{}, {}], 'boundaries');
-        stencil.load([{}], 'metadata');
-
-        // Set up events
-        stencil.onSearch();
-        stencil.onSearch();
-
-        // Add to DOM
-        container.appendChild(stencil.container);
-
-        return stencil;
-    }
-
-    // Return a simple stencil that satisfies the interface for production
-    return {
-        load: () => {
-            console.debug('Loading stencil');
+        ],
+        layoutOptions: {
+            columns: 1,
+            center: true,
+            resizeToFit: true
         },
-        unload: () => {
-            console.debug('Unloading stencil');
+        search: {
+            placeholder: 'Search shapes'
         }
     };
+
+    // Create the stencil instance using our factory (which creates the correct Addon.Stencil)
+    const stencil = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
+
+    // Create component nodes
+    const actor = new shapes.ActorShape();
+    const process = new shapes.ProcessShape();
+    const store = new shapes.StoreShape();
+    const text = new shapes.TextBlock();
+
+    // Create boundary nodes
+    const boundaryBox = new shapes.TrustBoundaryBox();
+    const boundaryCurve = new shapes.TrustBoundaryCurveStencil();
+
+    // Create flow
+    const flow = new shapes.FlowStencil();
+
+    // Add shapes to the stencil
+    stencil.load([actor, process, store, text], 'components');
+    stencil.load([boundaryBox, boundaryCurve], 'boundaries');
+    stencil.load([flow], 'metadata');
+
+    // Add to DOM
+    container.appendChild(stencil.container);
+
+    return stencil;
 };
 
 export default {
