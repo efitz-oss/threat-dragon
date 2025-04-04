@@ -15,7 +15,11 @@ const get = (graph, container, StencilConstructor) => {
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
-        stencilGraphWidth: 200,
+        stencilGraphWidth: 180,
+        stencilGraphHeight: 'auto',
+        width: 200,
+        title: 'Shapes',
+        collapsable: false,
         groups: [
             {
                 name: 'components',
@@ -43,7 +47,7 @@ const get = (graph, container, StencilConstructor) => {
         },
         search: {
             placeholder: 'Search shapes',
-            width: 160 // Constrain the search input width
+            width: 150
         }
     };
 
