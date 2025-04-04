@@ -58,6 +58,8 @@
                             id="name"
                             v-model="cellRef.data.name"
                             :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
+                            :no-auto-shrink="true"
+                            no-resize
                             graph-pro
                             @update="onChangeName()"
                         />
@@ -74,6 +76,9 @@
                         <b-form-textarea
                             id="description"
                             v-model="cellRef.data.description"
+                            :rows="3"
+                            :no-auto-shrink="true"
+                            no-resize
                             @change="onChangeProperties()"
                         />
                     </b-form-group>
@@ -130,6 +135,9 @@
                         <b-form-textarea
                             id="reasonoutofscope"
                             v-model="cellRef.data.reasonOutOfScope"
+                            :rows="3"
+                            :no-auto-shrink="true"
+                            no-resize
                             :disabled="!cellRef.data.outOfScope"
                             @change="onChangeProperties()"
                         />
@@ -338,9 +346,11 @@ export default {
         margin-bottom: 1rem;
     }
     
-    /* Ensure textareas have appropriate height */
+    /* Ensure textareas have appropriate fixed height */
     :deep(textarea.form-control) {
         min-height: 60px;
+        height: auto !important;
+        resize: none !important;
     }
     
     /* Improve form elements spacing */

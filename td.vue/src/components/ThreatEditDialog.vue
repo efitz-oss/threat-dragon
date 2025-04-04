@@ -98,6 +98,8 @@
                                 id="description"
                                 v-model="threat.description"
                                 rows="5"
+                                :no-auto-shrink="true"
+                                no-resize
                             />
                         </b-form-group>
                     </b-col>
@@ -110,7 +112,13 @@
                             :label="$t('threats.properties.mitigation')"
                             label-for="mitigation"
                         >
-                            <b-form-textarea id="mitigation" v-model="threat.mitigation" rows="5" />
+                            <b-form-textarea 
+                                id="mitigation" 
+                                v-model="threat.mitigation" 
+                                rows="5"
+                                :no-auto-shrink="true"
+                                no-resize
+                             />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
