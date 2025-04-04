@@ -327,8 +327,36 @@ export default {
 };
 </script>
 
-<style lang="scss">
-    label {
+<style lang="scss" scoped>
+    #props-card {
+        max-height: 100%;
+        overflow-y: auto;
+    }
+    
+    /* Make form layout more responsive */
+    :deep(.form-group) {
+        margin-bottom: 1rem;
+    }
+    
+    /* Ensure textareas have appropriate height */
+    :deep(textarea.form-control) {
+        min-height: 60px;
+    }
+    
+    /* Improve form elements spacing */
+    :deep(.form-check) {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Style form labels */
+    :deep(label) {
         font-size: 12px !important;
+    }
+    
+    /* Improve responsive behavior for columns */
+    @media (max-width: 767.98px) {
+        :deep(.col-md-6) {
+            margin-bottom: 1rem;
+        }
     }
 </style>

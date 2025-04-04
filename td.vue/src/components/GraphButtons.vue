@@ -1,69 +1,71 @@
 <template>
-    <BButtonGroup>
-        <td-form-button
-            :on-btn-click="deleteSelected"
-            icon="trash"
-            :title="t('threatmodel.controlButtons.delete')"
-            text=""
-        />
+    <div class="graph-buttons-wrapper">
+        <BButtonGroup class="graph-button-group">
+            <td-form-button
+                :on-btn-click="deleteSelected"
+                icon="trash"
+                :title="t('threatmodel.controlButtons.delete')"
+                text=""
+            />
 
-        <td-form-button
-            :on-btn-click="showShortcuts"
-            icon="keyboard"
-            :title="t('threatmodel.controlButtons.shortcuts')"
-            text=""
-        />
+            <td-form-button
+                :on-btn-click="showShortcuts"
+                icon="keyboard"
+                :title="t('threatmodel.controlButtons.shortcuts')"
+                text=""
+            />
 
-        <td-form-button
-            :on-btn-click="undo"
-            icon="undo"
-            :title="t('threatmodel.controlButtons.undo')"
-            text=""
-        />
+            <td-form-button
+                :on-btn-click="undo"
+                icon="undo"
+                :title="t('threatmodel.controlButtons.undo')"
+                text=""
+            />
 
-        <td-form-button
-            :on-btn-click="redo"
-            icon="redo"
-            :title="t('threatmodel.controlButtons.redo')"
-            text=""
-        />
+            <td-form-button
+                :on-btn-click="redo"
+                icon="redo"
+                :title="t('threatmodel.controlButtons.redo')"
+                text=""
+            />
 
-        <td-form-button
-            :on-btn-click="zoomIn"
-            icon="search-plus"
-            :title="t('threatmodel.controlButtons.zoomIn')"
-            text=""
-        />
+            <td-form-button
+                :on-btn-click="zoomIn"
+                icon="search-plus"
+                :title="t('threatmodel.controlButtons.zoomIn')"
+                text=""
+            />
 
-        <td-form-button
-            :on-btn-click="zoomOut"
-            icon="search-minus"
-            :title="t('threatmodel.controlButtons.zoomOut')"
-            text=""
-        />
+            <td-form-button
+                :on-btn-click="zoomOut"
+                icon="search-minus"
+                :title="t('threatmodel.controlButtons.zoomOut')"
+                text=""
+            />
 
-        <td-form-button
-            :on-btn-click="toggleGrid"
-            icon="th"
-            :title="t('threatmodel.controlButtons.toggleGrid')"
-            text=""
-        />
+            <td-form-button
+                :on-btn-click="toggleGrid"
+                icon="th"
+                :title="t('threatmodel.controlButtons.toggleGrid')"
+                text=""
+            />
 
-        <b-dropdown id="export-graph-btn" right :text="t('forms.export')">
-            <b-dropdown-item id="export-graph-png" @click="exportPNG"> PNG </b-dropdown-item>
-            <b-dropdown-item id="export-graph-jpeg" @click="exportJPEG"> JPEG </b-dropdown-item>
-            <b-dropdown-item id="export-graph-svg" @click="exportSVG"> SVG </b-dropdown-item>
-        </b-dropdown>
+            <b-dropdown id="export-graph-btn" right :text="t('forms.export')">
+                <b-dropdown-item id="export-graph-png" @click="exportPNG"> PNG </b-dropdown-item>
+                <b-dropdown-item id="export-graph-jpeg" @click="exportJPEG"> JPEG </b-dropdown-item>
+                <b-dropdown-item id="export-graph-svg" @click="exportSVG"> SVG </b-dropdown-item>
+            </b-dropdown>
 
-        <td-form-button :on-btn-click="closeDiagram" icon="times" :text="t('forms.close')" />
+            <td-form-button :on-btn-click="closeDiagram" icon="times" :text="t('forms.close')" />
 
-        <td-form-button
-            :is-primary="true"
-            :on-btn-click="save"
-            icon="save"
-            :text="t('forms.save')"
-        />
-    </BButtonGroup>
+            <td-form-button
+                :is-primary="true"
+                :on-btn-click="save"
+                icon="save"
+                :text="t('forms.save')"
+            />
+        </BButtonGroup>
+    </div>
 </template>
 
 <script>
@@ -183,3 +185,27 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+    .graph-buttons-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+    
+    .graph-button-group {
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    /* Responsive adjustments for button group */
+    @media (max-width: 767.98px) {
+        .graph-buttons-wrapper {
+            justify-content: center;
+        }
+        
+        :deep(.btn) {
+            margin-bottom: 0.25rem;
+        }
+    }
+</style>

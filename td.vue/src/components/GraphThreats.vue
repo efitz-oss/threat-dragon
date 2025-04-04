@@ -1,26 +1,32 @@
 <template>
-    <b-card class="threat-card">
+    <b-card class="threat-card h-100">
         <b-card-text>
             <b-row>
                 <b-col>
                     <a
                         v-if="!!number"
                         href="javascript:void(0)"
+                        class="threat-title text-truncate d-block"
                         @click="threatSelected()"
                     >#{{ number }} {{ title || 'Unknown Threat' }}</a
                     >
-                    <a v-else href="javascript:void(0)" @click="threatSelected()">{{
+                    <a 
+                        v-else 
+                        href="javascript:void(0)" 
+                        class="threat-title text-truncate d-block"
+                        @click="threatSelected()"
+                    >{{
                         title || 'Unknown Threat'
                     }}</a>
                 </b-col>
             </b-row>
-            <b-row>
+            <b-row class="mt-2">
                 <b-col>
-                    {{ type }}
+                    <span class="threat-type text-truncate d-block">{{ type }}</span>
                 </b-col>
             </b-row>
-            <b-row>
-                <b-col>
+            <b-row class="mt-2">
+                <b-col cols="6">
                     <font-awesome-icon
                         v-if="status !== 'Open'"
                         icon="check"
@@ -52,7 +58,7 @@
                         :title="severity"
                     />
                 </b-col>
-                <b-col align-h="end">
+                <b-col cols="6" class="text-right">
                     <b-badge v-if="!!modelType">
                         {{ modelType }}
                     </b-badge>
@@ -115,13 +121,27 @@ export default {
 <style lang="scss" scoped>
     @use '@/styles/colors.scss' as colors;
 
-    /* Import SCSS variables */
     .threat-card {
         font-size: 14px;
+        transition: transform 0.2s;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
     }
 
     .threat-title {
         margin-bottom: 5px;
+        font-weight: 500;
+        line-height: 1.2;
+        max-width: 100%;
+    }
+    
+    .threat-type {
+        font-size: 12px;
+        color: #666;
+        max-width: 100%;
     }
 
     .threat-icon {
@@ -130,16 +150,13 @@ export default {
 
     .green-icon {
         color: colors.$green;
-        /* Use SCSS variable */
     }
 
     .red-icon {
         color: colors.$red;
-        /* Use SCSS variable */
     }
 
     .yellow-icon {
         color: colors.$yellow;
-        /* Use SCSS variable */
     }
 </style>
