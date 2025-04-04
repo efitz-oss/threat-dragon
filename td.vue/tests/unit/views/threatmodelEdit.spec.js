@@ -296,8 +296,8 @@ describe('views/ThreatmodelEdit.vue', () => {
                 wrapper.vm.getConfirmModal = jest.fn().mockResolvedValue(true);
             });
             
-            it('returns a promise', () => {
-                expect(wrapper.vm.getConfirmModal()).resolves.toBe(true);
+            it('returns a promise', async () => {
+                await expect(wrapper.vm.getConfirmModal()).resolves.toBe(true);
             });
         });
 

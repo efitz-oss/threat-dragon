@@ -130,11 +130,9 @@ describe('repositories/gitlabrepo.js', () => {
         beforeEach(async () => {});
 
         it('creates the gitlab client', async () => {
-            sinon
-                .stub(env, 'get')
-                .returns({
-                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
-                });
+            sinon.stub(env, 'get').returns({
+                config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+            });
             await threatModelRepository.getClient(accessToken);
             expect(GitlabClientWrapper.getClient).to.have.been.calledWith(clientOptions.auth);
         });
@@ -206,11 +204,9 @@ describe('repositories/gitlabrepo.js', () => {
         const branchInfo = { branch: 'main', repo: 'repo' };
 
         beforeEach(async () => {
-            sinon
-                .stub(env, 'get')
-                .returns({
-                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
-                });
+            sinon.stub(env, 'get').returns({
+                config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+            });
             await threatModelRepository.modelsAsync(branchInfo, accessToken);
         });
 
@@ -235,11 +231,9 @@ describe('repositories/gitlabrepo.js', () => {
         };
 
         beforeEach(async () => {
-            sinon
-                .stub(env, 'get')
-                .returns({
-                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
-                });
+            sinon.stub(env, 'get').returns({
+                config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+            });
             await threatModelRepository.modelAsync(modelInfo, accessToken);
         });
 
@@ -265,11 +259,9 @@ describe('repositories/gitlabrepo.js', () => {
         };
 
         beforeEach(async () => {
-            sinon
-                .stub(env, 'get')
-                .returns({
-                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
-                });
+            sinon.stub(env, 'get').returns({
+                config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+            });
             await threatModelRepository.createAsync(createAysncInfo, accessToken);
         });
 
@@ -298,11 +290,9 @@ describe('repositories/gitlabrepo.js', () => {
         };
 
         beforeEach(async () => {
-            sinon
-                .stub(env, 'get')
-                .returns({
-                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
-                });
+            sinon.stub(env, 'get').returns({
+                config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+            });
             await threatModelRepository.updateAsync(updateAysncInfo, accessToken);
         });
 

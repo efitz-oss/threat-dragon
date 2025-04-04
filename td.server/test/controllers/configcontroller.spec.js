@@ -38,16 +38,14 @@ describe('controllers/configcontroller.js', () => {
 
     describe('getConfig', () => {
         it('all true', () => {
-            sinon
-                .stub(env, 'get')
-                .returns({
-                    config: {
-                        BITBUCKET_CLIENT_ID: '123',
-                        GITHUB_CLIENT_ID: '456',
-                        GITLAB_CLIENT_ID: '456',
-                        GOOGLE_CLIENT_ID: '123'
-                    }
-                });
+            sinon.stub(env, 'get').returns({
+                config: {
+                    BITBUCKET_CLIENT_ID: '123',
+                    GITHUB_CLIENT_ID: '456',
+                    GITLAB_CLIENT_ID: '456',
+                    GOOGLE_CLIENT_ID: '123'
+                }
+            });
             expect(getConfig()).to.deep.equal({
                 bitbucketEnabled: true,
                 githubEnabled: true,

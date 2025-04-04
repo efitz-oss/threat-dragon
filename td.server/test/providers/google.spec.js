@@ -87,15 +87,13 @@ describe('providers/google.js', () => {
 
         beforeEach(async () => {
             sinon.stub(axios, 'post').resolves({ data: { access_token: 'test-token' } });
-            sinon
-                .stub(axios, 'get')
-                .resolves({
-                    data: {
-                        name: 'John Doe',
-                        email: 'john.doe@example.com',
-                        picture: 'https://example.com/pic.jpg'
-                    }
-                });
+            sinon.stub(axios, 'get').resolves({
+                data: {
+                    name: 'John Doe',
+                    email: 'john.doe@example.com',
+                    picture: 'https://example.com/pic.jpg'
+                }
+            });
             sinon.stub(env, 'get').returns({ config });
 
             await googleProvider.completeLoginAsync(code);

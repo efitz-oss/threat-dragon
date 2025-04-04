@@ -667,7 +667,7 @@ describe('DriveAccess.vue', () => {
             });
             
             // Verify no further processing occurred
-            expect(fetch.mock.calls.length).toBe(1); // Only the initial token fetch
+            expect(fetch.mock.calls).toHaveLength(1); // Only the initial token fetch
         });
         
         it('shows warning when selected file is not JSON in open mode', async () => {
