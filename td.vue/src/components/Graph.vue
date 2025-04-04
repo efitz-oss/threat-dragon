@@ -1,31 +1,31 @@
 <template>
-    <div>
-        <b-row>
-            <b-col md="2">
-                <div ref="stencil_container" class="stencil-container" />
+    <div class="diagram-editor">
+        <!-- Top row for title and controls -->
+        <b-row class="header-row mb-3">
+            <b-col md="6">
+                <h3 class="td-graph-title">
+                    {{ diagram.title }}
+                </h3>
             </b-col>
-            <b-col md="10">
-                <b-row>
-                    <b-col>
-                        <h3 class="td-graph-title">
-                            {{ diagram.title }}
-                        </h3>
-                    </b-col>
-                    <b-col align="right">
-                        <td-graph-buttons :graph="graph" @saved="saved" @closed="closed" />
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <div
-                            id="graph-container"
-                            ref="graph_container"
-                            style="height: 65vh; width: 100%; flex: 1"
-                        />
-                    </b-col>
-                </b-row>
+            <b-col md="6" class="text-right">
+                <td-graph-buttons :graph="graph" @saved="saved" @closed="closed" />
             </b-col>
         </b-row>
+        
+        <!-- Main content row with stencil and graph -->
+        <b-row class="main-content-row">
+            <b-col md="2" class="stencil-column">
+                <div ref="stencil_container" class="stencil-container" />
+            </b-col>
+            <b-col md="10" class="graph-column">
+                <div
+                    id="graph-container"
+                    ref="graph_container"
+                    class="graph-container"
+                />
+            </b-col>
+        </b-row>
+        
         <td-graph-meta @threat-selected="threatSelected" @threat-suggest="threatSuggest" />
 
         <div>
@@ -133,12 +133,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .diagram-editor {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 120px);
+    }
+    
+    .header-row {
+        padding: 8px 16px;
+        border-bottom: 1px solid #eee;
+        align-items: center;
+        min-height: 60px;
+    }
+    
     .td-graph-title {
-        margin-right: 15px;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+    
+    .main-content-row {
+        flex: 1;
+        overflow: hidden;
+    }
+    
+    .stencil-column {
+        padding-top: 10px;
+        border-right: 1px solid #eee;
+        height: 100%;
     }
     
     .stencil-container {
         height: 100%;
+        width: 100%;
+        overflow-y: auto;
         
         /* Fix for stencil search width */
         :deep(.x6-widget-stencil-search) {
@@ -146,5 +173,15 @@ export default {
             max-width: 180px !important;
             margin: 8px auto !important;
         }
+    }
+    
+    .graph-column {
+        padding: 0;
+        height: 100%;
+    }
+    
+    .graph-container {
+        height: 100%;
+        width: 100%;
     }
 </style>
