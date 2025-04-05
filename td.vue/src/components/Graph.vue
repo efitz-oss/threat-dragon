@@ -6,7 +6,7 @@
                 lg="2"
                 xl="2"
                 class="stencil-column">
-                <div ref="stencil_container" class="stencil-container" />
+                <div ref="stencil_container" class="stencil-container td-stencil-theme" />
             </b-col>
             <b-col
                 md="9"
@@ -57,6 +57,9 @@ import { getProviderType } from '@/service/provider/providers.js';
 import diagramService from '@/service/migration/diagram.js';
 import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
+
+// Import custom stencil theme
+import '@/assets/css/stencil-theme.css';
 
 export default {
     name: 'TdGraph',
@@ -170,102 +173,6 @@ export default {
         position: relative;
     }
     
-    /* Ensure stencil elements are visible */
-    .stencil-container :deep(.x6-widget-stencil) {
-        width: 100% !important;
-        max-width: 100% !important;
-        visibility: visible !important;
-        display: block !important;
-        overflow: visible !important;
-    }
-    
-    .stencil-container :deep(.x6-widget-stencil-group) {
-        visibility: visible !important;
-        display: block !important;
-        height: auto !important;
-        min-height: 100px !important;
-        width: 100% !important;
-    }
-    
-    /* Special handling for collapsed groups */
-    .stencil-container :deep(.x6-widget-stencil-group.collapsed) {
-        min-height: unset !important; 
-        max-height: 32px !important;
-        padding-bottom: 0 !important;
-    }
-    
-    .stencil-container :deep(.x6-widget-stencil-group-content) {
-        visibility: visible !important;
-        display: block !important;
-        opacity: 1 !important;
-        min-height: 100px !important;
-        height: auto !important;
-        overflow: visible !important;
-        width: 100% !important;
-    }
-    
-    /* Hide content in collapsed groups */
-    .stencil-container :deep(.x6-widget-stencil-group.collapsed .x6-widget-stencil-group-content) {
-        display: none !important;
-    }
-    
-    /* Apply correct width to the stencil content container */
-    .stencil-container :deep(.x6-widget-stencil-content) {
-        width: 100% !important;
-        overflow: visible !important;
-    }
-    
-    /* Style stencil items to fit container */
-    .stencil-container :deep(.x6-widget-stencil-item) {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        padding: 5px 0 !important;
-        margin: 2px auto !important;
-    }
-    
-    /* Style SVG containers in stencil items */
-    .stencil-container :deep(.x6-graph) {
-        width: 100% !important;
-        margin: 0 auto !important;
-        position: relative !important;
-        z-index: 10 !important;
-    }
-    
-    /* Enhance SVG visibility */
-    .stencil-container :deep(.x6-graph svg) {
-        visibility: visible !important;
-        opacity: 1 !important;
-        z-index: 10 !important;
-        pointer-events: auto !important;
-    }
-    
-    .stencil-container :deep(.x6-widget-stencil-group-title) {
-        visibility: visible !important;
-        display: flex !important;
-        align-items: center !important;
-        font-weight: bold;
-        padding: 8px 8px 8px 32px;
-        line-height: 20px;
-        font-size: 14px;
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #eee;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        width: 100% !important;
-        position: relative !important;
-    }
-    
-    /* Force node visibility */
-    .stencil-container :deep(.x6-node) {
-        visibility: visible !important;
-        display: block !important;
-        opacity: 1 !important;
-        transform-origin: center center !important;
-    }
-    
     .content-column {
         height: 100%;
         display: flex;
@@ -293,30 +200,10 @@ export default {
         height: 100% !important;
     }
     
-    /* Style the X6 stencil container to fit within its parent */
-    :deep(.x6-widget-stencil) {
-        width: 100% !important;
+    /* Style the X6 graph container to fit within its parent */
+    :deep(.x6-graph-svg-viewport) {
+        width: 100%;
+        height: 100%;
     }
     
-    /* Style stencil search */
-    :deep(.x6-widget-stencil-search) {
-        width: 90% !important;
-        margin: 8px auto !important;
-        visibility: visible !important;
-        display: block !important;
-    }
-    
-    /* Make stencil search input full width */
-    :deep(.x6-widget-stencil-search input) {
-        width: 100% !important;
-        padding: 5px 8px !important;
-        font-size: 14px !important;
-    }
-    
-    /* Ensure stencil items are visible in all browsers */
-    :deep(.x6-widget-stencil-item) {
-        visibility: visible !important;
-        display: block !important;
-        opacity: 1 !important;
-    }
 </style>

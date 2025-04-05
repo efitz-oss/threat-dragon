@@ -85,7 +85,8 @@ describe('service/x6/stencil.js', () => {
                     load: jest.fn(),
                     onSearch: jest.fn(),
                     container: {},
-                    unload: jest.fn()
+                    unload: jest.fn(),
+                    resize: jest.fn()
                 };
                 return stencilInstance;
             });
@@ -105,11 +106,17 @@ describe('service/x6/stencil.js', () => {
             expect(stencilCfg.stencilGraphWidth).toEqual(200);
         });
         
+        it('calls resize after loading shapes', () => {
+            expect(stencilInstance.resize).toHaveBeenCalledWith(200);
+        });
+        
         it('provides layout options', () => {
             expect(stencilCfg.layoutOptions).toEqual({
                 columns: 1,
                 center: true,
                 resizeToFit: true,
+                dx: 10,
+                dy: 20
             });
         });
         

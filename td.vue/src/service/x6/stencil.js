@@ -63,7 +63,9 @@ const get = (graph, container, StencilConstructor) => {
         layoutOptions: {
             columns: 1,
             center: true,
-            resizeToFit: true
+            resizeToFit: true,
+            dx: 10, // Add horizontal spacing
+            dy: 20  // Add vertical spacing between items
         },
         search: {
             placeholder: 'Search shapes'
@@ -131,10 +133,15 @@ const get = (graph, container, StencilConstructor) => {
         opacity: 1
     });
 
-    // Add shapes to the stencil
+    // Add shapes to the stencil with explicit layout options
     stencilInstance.load([actor, process, store, text], 'components');
     stencilInstance.load([boundaryBox, boundaryCurve], 'boundaries');
     stencilInstance.load([flow], 'metadata');
+    
+    // Force resize after loading if the method is available (not in tests)
+    if (stencilInstance && typeof stencilInstance.resize === 'function') {
+        stencilInstance.resize(stencilGraphWidth);
+    }
 
     // Add to DOM
     container.appendChild(stencilInstance.container);
