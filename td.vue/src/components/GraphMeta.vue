@@ -18,7 +18,7 @@
                                 :disabled="disableNewThreat"
                                 variant="primary"
                                 size="sm"
-                                @click="newThreat()"
+                                @click="onNewThreat()"
                             >
                                 <font-awesome-icon icon="plus" class="mr-1" />
                                 {{ $t('threats.newThreat') }}
@@ -45,7 +45,7 @@
                                         :mitigation="threat.mitigation"
                                         :model-type="threat.modelType"
                                         :number="threat.number"
-                                        @threat-selected="threatSelected"
+                                        @threat-selected="onThreatSelected"
                                     />
                                 </b-col>
                             </b-row>
@@ -60,7 +60,7 @@
                         v-if="!disableNewThreat"
                         href="javascript:void(0)"
                         class="new-threat-by-type m-2"
-                        @click="AddThreatByType()"
+                        @click="onAddThreatByType()"
                     >
                         <font-awesome-icon icon="plus" />
                         {{ $t('threats.newThreatByType') }}
@@ -69,7 +69,7 @@
                         v-if="!disableNewThreat"
                         href="javascript:void(0)"
                         class="new-threat-by-type m-2"
-                        @click="AddThreatByContext()"
+                        @click="onAddThreatByContext()"
                     >
                         <font-awesome-icon icon="plus" />
                         {{ $t('threats.newThreatByContext') }}
@@ -81,11 +81,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
-import { createNewTypedThreat } from '@/service/threats/index.js';
-import { CELL_DATA_UPDATED, CELL_UNSELECTED } from '@/store/actions/cell.js';
-import dataChanged from '@/service/x6/graph/data-changed.js';
+import { computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useThreatEditor } from '@/composables/useThreatEditor';
+import { CELL_UNSELECTED } from '@/store/actions/cell.js';
 import tmActions from '@/store/actions/threatmodel.js';
 import TdGraphProperties from '@/components/GraphProperties.vue';
 import TdGraphThreats from '@/components/GraphThreats.vue';
@@ -97,58 +96,82 @@ export default {
         TdGraphThreats
     },
     emits: ['threatSelected', 'threatSuggest'],
-    computed: mapState({
-        cellRef: (state) => state.cell.ref,
-        threats: (state) => state.cell.threats,
-        diagram: (state) => state.threatmodel.selectedDiagram,
-        threatTop: (state) => state.threatmodel.data.detail.threatTop,
-        disableNewThreat: function (state) {
-            if (!state.cell?.ref?.data) {
+    setup(props, { emit }) {
+        const store = useStore();
+        const { createNewThreat } = useThreatEditor();
+        
+        // Computed state from store
+        const cellRef = computed(() => store.state.cell.ref);
+        const threats = computed(() => store.state.cell.threats);
+        const diagram = computed(() => store.state.threatmodel.selectedDiagram);
+        const threatTop = computed(() => store.state.threatmodel.data.detail.threatTop);
+        const disableNewThreat = computed(() => {
+            if (!store.state.cell?.ref?.data) {
                 return true;
             }
             return (
-                state.cell.ref.data.outOfScope ||
-                    state.cell.ref.data.isTrustBoundary ||
-                    state.cell.ref.data.type === 'tm.Text'
+                store.state.cell.ref.data.outOfScope ||
+                store.state.cell.ref.data.isTrustBoundary ||
+                store.state.cell.ref.data.type === 'tm.Text'
             );
-        }
-    }),
-    async mounted() {
-        this.init();
-    },
-    methods: {
-        init() {
-            this.$store.dispatch(CELL_UNSELECTED);
-        },
-        threatSelected(threatId, state) {
-            console.debug('selected threat ID: ' + threatId);
-            this.$emit('threatSelected', threatId, state);
-        },
-        newThreat() {
-            const threat = createNewTypedThreat(
-                this.diagram.diagramType,
-                this.cellRef.data.type,
-                this.threatTop + 1
+        });
+        
+        // Initialize component
+        const init = () => {
+            store.dispatch(CELL_UNSELECTED);
+        };
+        
+        onMounted(() => {
+            init();
+        });
+        
+        // Event handlers
+        const onThreatSelected = (threatId, state) => {
+            console.debug('Selected threat ID:', threatId);
+            emit('threatSelected', threatId, state);
+        };
+        
+        const onNewThreat = () => {
+            if (!cellRef.value || !diagram.value) return;
+            
+            // Create a new threat but don't add it to the store yet
+            // This will create the in-memory representation only
+            const threat = createNewThreat(
+                diagram.value.diagramType,
+                cellRef.value.data.type,
+                threatTop.value + 1
             );
             
-            // Ensure new flag is set (should already be set in createNewTypedThreat)
-            threat.new = true;
+            // Update the threat top in the store (we still need this even with the new pattern)
+            store.dispatch(tmActions.update, { threatTop: threatTop.value + 1 });
             
-            console.debug('new threat ID:', threat.id, 'new flag:', threat.new);
-            this.cellRef.data.threats.push(threat);
-            this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
-            this.$store.dispatch(tmActions.update, { threatTop: this.threatTop + 1 });
-            this.$store.dispatch(tmActions.modified);
-            this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-            dataChanged.updateStyleAttrs(this.cellRef);
-            this.threatSelected(threat.id, 'new');
-        },
-        AddThreatByType() {
-            this.$emit('threatSuggest', 'type');
-        },
-        AddThreatByContext() {
-            this.$emit('threatSuggest', 'context');
-        }
+            // Emit the event to show the edit dialog
+            // The threat will be persisted to the store only when user clicks Save/Create
+            emit('threatSelected', threat.id, 'new');
+        };
+        
+        const onAddThreatByType = () => {
+            emit('threatSuggest', 'type');
+        };
+        
+        const onAddThreatByContext = () => {
+            emit('threatSuggest', 'context');
+        };
+        
+        return {
+            // State
+            cellRef,
+            threats,
+            diagram,
+            threatTop,
+            disableNewThreat,
+            
+            // Methods
+            onThreatSelected,
+            onNewThreat,
+            onAddThreatByType,
+            onAddThreatByContext
+        };
     }
 };
 </script>

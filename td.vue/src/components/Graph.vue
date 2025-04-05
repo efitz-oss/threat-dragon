@@ -45,7 +45,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useStore } from 'vuex';
 
 import TdGraphButtons from '@/components/GraphButtons.vue';
 import TdGraphMeta from '@/components/GraphMeta.vue';
@@ -69,95 +70,144 @@ export default {
         TdThreatEditDialog,
         TdThreatSuggestDialog
     },
-    data() {
-        return {
-            graph: null,
-            stencilInstance: null
-        };
-    },
-    computed: mapState({
-        diagram: (state) => state.threatmodel.selectedDiagram,
-        providerType: (state) => getProviderType(state.provider.selected)
-    }),
-    async mounted() {
-        this.init();
+    setup() {
+        const store = useStore();
+        const graph = ref(null);
+        const stencilInstance = ref(null);
+        const graphContainer = ref(null);
+        const stencilContainer = ref(null);
+        const threatEditDialog = ref(null);
+        const threatSuggestDialog = ref(null);
         
-        // Force stencil redraw after initialization
-        setTimeout(() => {
-            if (this.graph && this.$refs.stencil_container) {
-                console.debug('Forcing stencil redraw');
-                const container = this.$refs.stencil_container;
-                const width = container.offsetWidth;
-                // Trigger a resize event to force redraw
-                window.dispatchEvent(new Event('resize'));
-                // Also force a redraw of the stencil
-                if (this.stencilInstance && typeof this.stencilInstance.resize === 'function') {
-                    this.stencilInstance.resize(width);
-                }
-            }
-        }, 100); // Short delay to ensure component is fully mounted
-    },
-    unmounted() {
-        // Dispose stencil instance if it exists
-        if (this.stencilInstance && typeof this.stencilInstance.dispose === 'function') {
-            this.stencilInstance.dispose();
-        }
-        diagramService.dispose(this.graph);
-    },
-    methods: {
-        init() {
-            this.graph = diagramService.edit(this.$refs.graph_container, this.diagram);
-            this.stencilInstance = stencil.get(this.graph, this.$refs.stencil_container);
-            this.$store.dispatch(tmActions.notModified);
-            this.graph.getPlugin('history').on('change', () => {
-                const updated = Object.assign({}, this.diagram);
-                updated.cells = this.graph.toJSON().cells;
-                this.$store.dispatch(tmActions.diagramModified, updated);
+        // Computed state
+        const diagram = computed(() => store.state.threatmodel.selectedDiagram);
+        const providerType = computed(() => getProviderType(store.state.provider.selected));
+        
+        // Initialize the graph
+        const init = () => {
+            graph.value = diagramService.edit(graphContainer.value, diagram.value);
+            stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+            store.dispatch(tmActions.notModified);
+            
+            // Listen for graph changes
+            graph.value.getPlugin('history').on('change', () => {
+                const updated = Object.assign({}, diagram.value);
+                updated.cells = graph.value.toJSON().cells;
+                store.dispatch(tmActions.diagramModified, updated);
             });
-        },
-        threatSelected(threatId, state) {
-            this.$refs.threatEditDialog.editThreat(threatId, state);
-        },
-        threatSuggest(type) {
-            this.$refs.threatSuggestDialog.showModal(type);
-        },
-        saved() {
+        };
+        
+        // Event handlers
+        const threatSelected = (threatId, state) => {
+            if (threatEditDialog.value) {
+                // Use the new public showDialog method
+                threatEditDialog.value.showDialog(threatId, state);
+            }
+        };
+        
+        const threatSuggest = (type) => {
+            if (threatSuggestDialog.value) {
+                threatSuggestDialog.value.showModal(type);
+            }
+        };
+        
+        const saved = () => {
             console.debug('Save diagram');
-            const updated = Object.assign({}, this.diagram);
-            updated.cells = this.graph.toJSON().cells;
-            this.$store.dispatch(tmActions.diagramSaved, updated);
-            this.$store.dispatch(tmActions.saveModel);
-        },
-        async closed() {
-            if (!this.$store.getters.modelChanged || (await this.getConfirmModal())) {
-                await this.$store.dispatch(tmActions.diagramClosed);
-                
-                // Create a clean copy of params without any diagram parameter
-                const cleanParams = { ...this.$route.params };
-                if ('diagram' in cleanParams) {
-                    delete cleanParams.diagram;
-                }
-                
-                this.$router.push({
-                    name: `${this.providerType}ThreatModel`,
-                    params: cleanParams
-                });
-            }
-        },
-        getConfirmModal() {
-            // Import the showConfirmDialog function directly here to avoid circular dependencies
-            return import('@/utils/modal-helper.js').then(({ showConfirmDialog }) => {
-                return showConfirmDialog(this, {
-                    title: this.$t('forms.discardTitle'),
-                    message: this.$t('forms.discardMessage'),
-                    okTitle: this.$t('forms.ok'),
-                    cancelTitle: this.$t('forms.cancel'),
-                    okVariant: 'danger',
-                    hideHeaderClose: true,
-                    centered: true
-                });
+            const updated = Object.assign({}, diagram.value);
+            updated.cells = graph.value.toJSON().cells;
+            store.dispatch(tmActions.diagramSaved, updated);
+            store.dispatch(tmActions.saveModel);
+        };
+        
+        const getConfirmModal = () => {
+            // In the composition API, we need to use the Vue instance to access $bvModal
+            // This will need to be handled at the component level when the closed method is called
+            // Since we need access to the component instance and its methods
+            return new Promise(resolve => {
+                setTimeout(async () => {
+                    const { showConfirmDialog } = await import('@/utils/modal-helper.js');
+                    const result = await showConfirmDialog(this, {
+                        title: this.$t('forms.discardTitle'),
+                        message: this.$t('forms.discardMessage'),
+                        okTitle: this.$t('forms.ok'),
+                        cancelTitle: this.$t('forms.cancel'),
+                        okVariant: 'danger',
+                        hideHeaderClose: true,
+                        centered: true
+                    });
+                    resolve(result);
+                }, 0);
             });
-        }
+        };
+        
+        const closed = async () => {
+            // Check if the model was modified
+            if (!store.getters.modelChanged || (await getConfirmModal())) {
+                await store.dispatch(tmActions.diagramClosed);
+                
+                // Use the router from the component instance
+                // This is a bit of a hack but needed because of how Vue Router works
+                // We'll need to access the router from the component instance
+                setTimeout(() => {
+                    const routeParams = { ...this.$route.params };
+                    if ('diagram' in routeParams) {
+                        delete routeParams.diagram;
+                    }
+                    
+                    this.$router.push({
+                        name: `${providerType.value}ThreatModel`,
+                        params: routeParams
+                    });
+                }, 0);
+            }
+        };
+        
+        // Lifecycle hooks
+        onMounted(() => {
+            init();
+            
+            // Force stencil redraw after initialization
+            setTimeout(() => {
+                if (graph.value && stencilContainer.value) {
+                    console.debug('Forcing stencil redraw');
+                    const container = stencilContainer.value;
+                    const width = container.offsetWidth;
+                    // Trigger a resize event to force redraw
+                    window.dispatchEvent(new Event('resize'));
+                    // Also force a redraw of the stencil
+                    if (stencilInstance.value && typeof stencilInstance.value.resize === 'function') {
+                        stencilInstance.value.resize(width);
+                    }
+                }
+            }, 100); // Short delay to ensure component is fully mounted
+        });
+        
+        onUnmounted(() => {
+            // Dispose stencil instance if it exists
+            if (stencilInstance.value && typeof stencilInstance.value.dispose === 'function') {
+                stencilInstance.value.dispose();
+            }
+            diagramService.dispose(graph.value);
+        });
+        
+        return {
+            // Refs
+            graph,
+            graph_container: graphContainer,
+            stencil_container: stencilContainer,
+            threatEditDialog,
+            threatSuggestDialog,
+            
+            // Computed state
+            diagram,
+            providerType,
+            
+            // Methods
+            threatSelected,
+            threatSuggest,
+            saved,
+            closed
+        };
     }
 };
 </script>
@@ -224,5 +274,4 @@ export default {
         width: 100%;
         height: 100%;
     }
-    
 </style>

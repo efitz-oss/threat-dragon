@@ -132,6 +132,8 @@ coverage/
 !td.vue/src/components/printed-report/*.vue
 !td.vue/src/components/report/
 !td.vue/src/components/report/*.vue
+!td.vue/src/composables/
+!td.vue/src/composables/*.js
 !td.vue/src/desktop/
 !td.vue/src/desktop/*.html
 !td.vue/src/desktop/*.js

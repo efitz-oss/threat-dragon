@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-modal
-            v-if="!!threat"
+            v-if="editingThreat"
             id="threat-edit"
             ref="editModal"
             size="lg"
@@ -9,6 +9,7 @@
             header-bg-variant="primary"
             header-text-variant="light"
             :title="modalTitle"
+            @hidden="onModalHidden"
         >
             <b-form>
                 <b-form-row>
@@ -20,7 +21,7 @@
                         >
                             <b-form-input
                                 id="title"
-                                v-model="threat.title"
+                                v-model="editingThreat.title"
                                 type="text"
                                 required />
                         </b-form-group>
@@ -36,7 +37,7 @@
                         >
                             <b-form-select
                                 id="threat-type"
-                                v-model="threat.type"
+                                v-model="editingThreat.type"
                                 :options="threatTypes"
                             />
                         </b-form-group>
@@ -53,7 +54,7 @@
                         >
                             <b-form-radio-group
                                 id="status"
-                                v-model="threat.status"
+                                v-model="editingThreat.status"
                                 :options="statuses"
                                 buttons
                                 size="sm"
@@ -70,7 +71,12 @@
                             label-for="score"
                             class="text-center"
                         >
-                            <b-form-input id="score" v-model="threat.score" type="text" class="text-center" />
+                            <b-form-input 
+                                id="score" 
+                                v-model="editingThreat.score" 
+                                type="text" 
+                                class="text-center" 
+                            />
                         </b-form-group>
                     </b-col>
 
@@ -83,7 +89,7 @@
                         >
                             <b-form-radio-group
                                 id="priority"
-                                v-model="threat.severity"
+                                v-model="editingThreat.severity"
                                 :options="priorities"
                                 buttons
                                 size="sm"
@@ -103,7 +109,7 @@
                         >
                             <td-safe-form-textarea
                                 id="description"
-                                v-model="threat.description"
+                                v-model="editingThreat.description"
                                 rows="5"
                             />
                         </b-form-group>
@@ -119,7 +125,7 @@
                         >
                             <td-safe-form-textarea 
                                 id="mitigation" 
-                                v-model="threat.mitigation" 
+                                v-model="editingThreat.mitigation" 
                                 rows="5"
                             />
                         </b-form-group>
@@ -130,34 +136,28 @@
             <template #modal-footer>
                 <div class="w-100 d-flex justify-content-between">
                     <div class="left-buttons">
+                        <!-- Only show Delete button for existing threats -->
                         <b-button
-                            v-if="!newThreat"
+                            v-if="!isNewThreat"
                             variant="danger"
-                            @click="confirmDelete()"
+                            @click="onDelete"
                         >
                             {{ $t('forms.delete') }}
-                        </b-button>
-                        <b-button
-                            v-if="newThreat"
-                            variant="danger"
-                            @click="immediateDelete()"
-                        >
-                            {{ $t('forms.remove') }}
                         </b-button>
                     </div>
                     <div class="right-buttons">
                         <b-button
                             variant="secondary"
                             class="mr-2"
-                            @click="hideModal()"
+                            @click="onCancel"
                         >
                             {{ $t('forms.cancel') }}
                         </b-button>
                         <b-button 
-                            variant="secondary" 
-                            @click="updateThreat()"
+                            variant="primary" 
+                            @click="onSave"
                         >
-                            {{ $t('forms.apply') }}
+                            {{ isNewThreat ? $t('forms.create') : $t('forms.apply') }}
                         </b-button>
                     </div>
                 </div>
@@ -167,13 +167,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
-import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
+import { ref, computed, watch } from 'vue';
+import { useStore } from 'vuex';
 import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
-import tmActions from '@/store/actions/threatmodel.js';
-import dataChanged from '@/service/x6/graph/data-changed.js';
 import threatModels from '@/service/threats/models/index.js';
+import { useThreatEditor } from '@/composables/useThreatEditor';
 
 /**
  * ThreatEditDialog Component
@@ -184,196 +182,151 @@ export default {
     components: {
         TdSafeFormTextarea
     },
-    data() {
-        return {
-            threat: {},
-            modelTypes: ['CIA', 'DIE', 'LINDDUN', 'PLOT4ai', 'STRIDE'],
-            number: 0,
-            newThreat: false
+    setup() {
+        const { 
+            editingThreat,
+            isEditing,
+            isNewThreat,
+            saveThreat,
+            cancelEdit,
+            deleteThreat,
+            editExistingThreat
+            // createNewThreat - Not used in this component
+        } = useThreatEditor();
+        
+        const editModal = ref(null);
+        
+        // Get i18n function from component instance
+        const $t = (key) => {
+            return this.$t(key);
         };
-    },
-    computed: {
-        ...mapState({
-            cellRef: (state) => state.cell.ref,
-            threatTop: (state) => state.threatmodel.data.detail.threatTop
-        }),
-        threatTypes() {
-            if (!this.cellRef || !this.threat || !this.threat.modelType) {
+        
+        // Computed properties for form data
+        const modalTitle = computed(() => {
+            if (!editingThreat.value) return '';
+            return isNewThreat.value 
+                ? `${$t('threats.new')} #${editingThreat.value.number}` 
+                : `${$t('threats.edit')} #${editingThreat.value.number}`;
+        });
+        
+        const threatTypes = computed(() => {
+            if (!editingThreat.value?.modelType) {
+                return [];
+            }
+            
+            const store = useStore();
+            const cell = store.state.cell.ref;
+            if (!cell || !cell.data) {
                 return [];
             }
 
             const res = [];
-            const threatTypes = threatModels.getThreatTypesByElement(
-                this.threat.modelType,
-                this.cellRef.data.type
+            const threatTypesMap = threatModels.getThreatTypesByElement(
+                editingThreat.value.modelType,
+                cell.data.type
             );
-            Object.keys(threatTypes).forEach((type) => {
-                res.push(this.$t(type));
-            }, this);
-            if (!res.includes(this.threat.type)) res.push(this.threat.type);
+            Object.keys(threatTypesMap).forEach((type) => {
+                res.push($t(type));
+            });
+            if (!res.includes(editingThreat.value.type)) {
+                res.push(editingThreat.value.type);
+            }
             return res;
-        },
-        statuses() {
-            return [
-                { value: 'NotApplicable', text: this.$t('threats.status.notApplicable') },
-                { value: 'Open', text: this.$t('threats.status.open') },
-                { value: 'Mitigated', text: this.$t('threats.status.mitigated') }
-            ];
-        },
-        priorities() {
-            return [
-                { value: 'TBD', text: this.$t('threats.priority.tbd') },
-                { value: 'Low', text: this.$t('threats.priority.low') },
-                { value: 'Medium', text: this.$t('threats.priority.medium') },
-                { value: 'High', text: this.$t('threats.priority.high') },
-                { value: 'Critical', text: this.$t('threats.priority.critical') }
-            ];
-        },
-        modalTitle() {
-            return this.$t('threats.edit') + ' #' + this.number;
-        }
-    },
-    methods: {
-        editThreat(threatId, state) {
-            const crnthreat = this.cellRef.data.threats.find((x) => x.id === threatId);
-            this.threat = { ...crnthreat };
-            if (!this.threat) {
-                // this should never happen with a valid threatId
-                console.warn('Trying to access a non-existent threatId: ' + threatId);
+        });
+        
+        const statuses = computed(() => [
+            { value: 'NotApplicable', text: $t('threats.status.notApplicable') },
+            { value: 'Open', text: $t('threats.status.open') },
+            { value: 'Mitigated', text: $t('threats.status.mitigated') }
+        ]);
+        
+        const priorities = computed(() => [
+            { value: 'TBD', text: $t('threats.priority.tbd') },
+            { value: 'Low', text: $t('threats.priority.low') },
+            { value: 'Medium', text: $t('threats.priority.medium') },
+            { value: 'High', text: $t('threats.priority.high') },
+            { value: 'Critical', text: $t('threats.priority.critical') }
+        ]);
+        
+        // Methods
+        const showDialog = (threatId, mode) => {
+            if (mode === 'new') {
+                // For new threats, the threatId is already for the in-memory threat
+                // The threat has already been created by createNewThreat in GraphMeta
+                // So we don't need to do anything here
             } else {
-                this.number = this.threat.number;
-                // Set newThreat flag based on state parameter or threat.new property
-                this.newThreat = state === 'new' || (this.threat && this.threat.new === true);
-                console.debug('Setting newThreat flag to:', this.newThreat, 'for threat:', threatId);
-                this.$refs.editModal.show();
-            }
-        },
-        updateThreat() {
-            console.debug('Updating threat, newThreat flag:', this.newThreat);
-            
-            const threatRef = this.cellRef.data.threats.find((x) => x.id === this.threat.id);
-            if (threatRef) {
-                const objRef = this.cellRef.data;
-                if (!objRef.threatFrequency) {
-                    const tmpfreq = threatModels.getFrequencyMapByElement(
-                        this.threat.modelType,
-                        this.cellRef.data.type
-                    );
-                    if (tmpfreq !== null) objRef.threatFrequency = tmpfreq;
-                }
-                if (objRef.threatFrequency) {
-                    Object.keys(objRef.threatFrequency).forEach((k) => {
-                        if (
-                            this.$t(
-                                `threats.model.${this.threat.modelType.toLowerCase()}.${k}`
-                            ) === this.threat.type
-                        )
-                            objRef.threatFrequency[k]++;
-                    });
-                }
-                
-                // Update the threat properties
-                threatRef.status = this.threat.status;
-                threatRef.severity = this.threat.severity;
-                threatRef.title = this.threat.title;
-                threatRef.type = this.threat.type;
-                threatRef.description = this.threat.description;
-                threatRef.mitigation = this.threat.mitigation;
-                threatRef.modelType = this.threat.modelType;
-                threatRef.number = this.number;
-                threatRef.score = this.threat.score;
-                
-                // Mark as no longer new once saved
-                threatRef.new = false;
-                console.debug('Threat saved, new flag set to false for ID:', threatRef.id);
-                
-                // Update the store and UI
-                this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-                this.$store.dispatch(tmActions.modified);
-                dataChanged.updateStyleAttrs(this.cellRef);
-            } else {
-                console.warn('Could not find threat with ID:', this.threat.id);
+                // For existing threats, load from store
+                editExistingThreat(threatId);
             }
             
-            // Close the modal
-            this.hideModal();
-        },
-        deleteThreat() {
-            if (!this.threat.new) {
-                const threatMap = this.cellRef.data.threatFrequency;
-                Object.keys(threatMap).forEach((k) => {
-                    if (
-                        this.$t(`threats.model.${this.threat.modelType.toLowerCase()}.${k}`) ===
-                            this.threat.type
-                    )
-                        threatMap[k]--;
-                });
+            if (editModal.value) {
+                editModal.value.show();
             }
-            this.cellRef.data.threats = this.cellRef.data.threats.filter(
-                (x) => x.id !== this.threat.id
-            );
-            this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
-            this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-            this.$store.dispatch(tmActions.modified);
-            dataChanged.updateStyleAttrs(this.cellRef);
-        },
-        hideModal() {
-            console.debug('Hide modal called. newThreat:', this.newThreat, 'threat ID:', this.threat?.id);
-            
-            // If this is a new threat and hasn't been saved yet (i.e., Cancel button clicked),
-            // we need to remove it completely
-            if (this.newThreat && this.threat && this.threat.id) {
-                console.debug('Removing new threat with ID:', this.threat.id);
-                
-                // Remove from the cell's threats
-                const originalLength = this.cellRef.data.threats.length;
-                this.cellRef.data.threats = this.cellRef.data.threats.filter(
-                    (x) => x.id !== this.threat.id
-                );
-                const removedCount = originalLength - this.cellRef.data.threats.length;
-                console.debug('Removed threats:', removedCount);
-                
-                if (removedCount > 0) {
-                    // Update open threats status
-                    this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
-                        (t) => t.status === 'Open'
-                    );
-                    
-                    // Update the store and UI
-                    this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-                    this.$store.dispatch(tmActions.modified);
-                    dataChanged.updateStyleAttrs(this.cellRef);
-                    console.debug('Updated cell data after threat removal');
-                } else {
-                    console.warn('Failed to remove new threat, it may have already been removed');
-                }
-            }
-            
-            // Hide the modal
-            this.$refs.editModal.hide();
-        },
-        async confirmDelete() {
+        };
+        
+        // Event handlers
+        const onSave = () => {
+            saveThreat();
+        };
+        
+        const onCancel = () => {
+            cancelEdit();
+            hideDialog();
+        };
+        
+        const onDelete = async () => {
+            // Due to how BV Modal works in the Composition API, we'll use the component instance
+            // to access msgBoxConfirm
             const confirmed = await this.$bvModal.msgBoxConfirm(
-                this.$t('threats.confirmDeleteMessage'),
+                $t('threats.confirmDeleteMessage'),
                 {
-                    title: this.$t('threats.confirmDeleteTitle'),
-                    okTitle: this.$t('forms.delete'),
-                    cancelTitle: this.$t('forms.cancel'),
+                    title: $t('threats.confirmDeleteTitle'),
+                    okTitle: $t('forms.delete'),
+                    cancelTitle: $t('forms.cancel'),
                     okVariant: 'danger'
                 }
             );
-
-            if (!confirmed) {
-                return;
+            
+            if (confirmed) {
+                deleteThreat();
+                hideDialog();
             }
-
-            this.deleteThreat();
-            this.hideModal();
-        },
-        async immediateDelete() {
-            this.deleteThreat();
-            this.hideModal();
-        }
+        };
+        
+        const hideDialog = () => {
+            if (editModal.value) {
+                editModal.value.hide();
+            }
+        };
+        
+        const onModalHidden = () => {
+            // If modal is closed via escape key or clicking outside
+            if (isEditing.value) {
+                cancelEdit();
+            }
+        };
+        
+        // Watch for isEditing changes
+        watch(isEditing, (newValue) => {
+            if (!newValue && editModal.value) {
+                hideDialog();
+            }
+        });
+        
+        return {
+            editModal,
+            editingThreat,
+            isNewThreat,
+            modalTitle,
+            threatTypes,
+            statuses,
+            priorities,
+            showDialog,
+            onSave,
+            onCancel,
+            onDelete,
+            onModalHidden
+        };
     }
 };
 </script>
