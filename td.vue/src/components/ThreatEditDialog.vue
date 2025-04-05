@@ -43,13 +43,13 @@
                     </b-col>
                 </b-form-row>
 
-                <b-form-row>
-                    <b-col md="5">
+                <b-form-row class="threat-controls-row">
+                    <b-col md="4" class="status-col">
                         <b-form-group
                             id="status-group"
-                            class="float-left"
                             :label="$t('threats.properties.status')"
                             label-for="status"
+                            class="text-left"
                         >
                             <b-form-radio-group
                                 id="status"
@@ -58,26 +58,28 @@
                                 buttons
                                 size="sm"
                                 button-variant="outline-secondary"
+                                class="status-radio-group"
                             />
                         </b-form-group>
                     </b-col>
 
-                    <b-col md="2">
+                    <b-col md="2" class="score-col">
                         <b-form-group
                             id="score-group"
                             :label="$t('threats.properties.score')"
                             label-for="score"
+                            class="text-center"
                         >
-                            <b-form-input id="score" v-model="threat.score" type="text" />
+                            <b-form-input id="score" v-model="threat.score" type="text" class="text-center" />
                         </b-form-group>
                     </b-col>
 
-                    <b-col md="5">
+                    <b-col md="6" class="priority-col">
                         <b-form-group
                             id="priority-group"
-                            class="float-right"
                             :label="$t('threats.properties.priority')"
                             label-for="priority"
+                            class="text-right"
                         >
                             <b-form-radio-group
                                 id="priority"
@@ -86,6 +88,7 @@
                                 buttons
                                 size="sm"
                                 button-variant="outline-secondary"
+                                class="priority-radio-group"
                             />
                         </b-form-group>
                     </b-col>
@@ -240,7 +243,7 @@ export default {
             } else {
                 this.number = this.threat.number;
                 // Set newThreat flag based on state parameter or threat.new property
-                this.newThreat = state === 'new' || (this.threat.new === true);
+                this.newThreat = state === 'new' || (this.threat && this.threat.new === true);
                 console.debug('Setting newThreat flag to:', this.newThreat, 'for threat:', threatId);
                 this.$refs.editModal.show();
             }
@@ -315,28 +318,35 @@ export default {
             dataChanged.updateStyleAttrs(this.cellRef);
         },
         hideModal() {
-            console.debug('Hide modal called. newThreat:', this.newThreat, 'threat ID:', this.threat.id);
+            console.debug('Hide modal called. newThreat:', this.newThreat, 'threat ID:', this.threat?.id);
             
-            // If this is a new threat and hasn't been saved yet,
-            // we need to make sure it's not inadvertently added
+            // If this is a new threat and hasn't been saved yet (i.e., Cancel button clicked),
+            // we need to remove it completely
             if (this.newThreat && this.threat && this.threat.id) {
                 console.debug('Removing new threat with ID:', this.threat.id);
                 
-                // Remove from the cell's threats if it was already added
+                // Remove from the cell's threats
                 const originalLength = this.cellRef.data.threats.length;
                 this.cellRef.data.threats = this.cellRef.data.threats.filter(
                     (x) => x.id !== this.threat.id
                 );
-                console.debug('Removed threats:', originalLength - this.cellRef.data.threats.length);
+                const removedCount = originalLength - this.cellRef.data.threats.length;
+                console.debug('Removed threats:', removedCount);
                 
-                // Update open threats status
-                this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
-                    (t) => t.status === 'Open'
-                );
-                
-                // Update the store and UI
-                this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
-                dataChanged.updateStyleAttrs(this.cellRef);
+                if (removedCount > 0) {
+                    // Update open threats status
+                    this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
+                        (t) => t.status === 'Open'
+                    );
+                    
+                    // Update the store and UI
+                    this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
+                    this.$store.dispatch(tmActions.modified);
+                    dataChanged.updateStyleAttrs(this.cellRef);
+                    console.debug('Updated cell data after threat removal');
+                } else {
+                    console.warn('Failed to remove new threat, it may have already been removed');
+                }
             }
             
             // Hide the modal
@@ -401,28 +411,110 @@ export default {
         min-height: 100px;
     }
     
+    /* Status, Score, Priority row styling */
+    .threat-controls-row {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        
+        .status-col {
+            display: flex;
+            justify-content: flex-start;
+            
+            :deep(.form-group) {
+                width: 100%;
+            }
+            
+            :deep(.status-radio-group) {
+                display: flex;
+                justify-content: flex-start;
+                max-width: 100%;
+                
+                .btn {
+                    padding: 0.375rem 0.5rem;
+                    font-size: 0.8rem;
+                }
+            }
+        }
+        
+        .score-col {
+            display: flex;
+            justify-content: center;
+            
+            :deep(.form-group) {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        .priority-col {
+            display: flex;
+            justify-content: flex-end;
+            
+            :deep(.form-group) {
+                width: 100%;
+                text-align: right;
+            }
+            
+            :deep(.priority-radio-group) {
+                display: flex;
+                justify-content: flex-end;
+                max-width: 100%;
+                
+                .btn {
+                    padding: 0.375rem 0.5rem;
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+    
     /* Radio/button group styling */
     :deep(.btn-group) {
         margin-top: 0.25rem;
-        width: 100%;
         display: flex;
+        flex-wrap: nowrap;
     }
     
-    /* Style the radio buttons to distribute space evenly */
+    /* Style the radio buttons to fit within width */
     :deep(.btn-group .btn) {
-        flex: 1 1 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 0.85rem;
-        padding: 0.375rem 0.5rem;
+        font-size: 0.8rem;
+        padding: 0.375rem 0.4rem;
+        flex: 0 1 auto;
+        min-width: auto;
+    }
+    
+    /* Make buttons in priority and status group more compact */
+    :deep(.status-radio-group .btn),
+    :deep(.priority-radio-group .btn) {
+        max-width: 90px; /* Prevent buttons from growing too wide */
     }
     
     /* Make small screens stack properly */
     @media (max-width: 767.98px) {
-        :deep(.col-md-5),
-        :deep(.col-md-2) {
-            margin-bottom: 1rem;
+        .threat-controls-row {
+            flex-direction: column;
+            
+            .status-col,
+            .score-col,
+            .priority-col {
+                margin-bottom: 1rem;
+                width: 100%;
+                max-width: 100%;
+                flex: 0 0 100%;
+                
+                :deep(.form-group) {
+                    text-align: left;
+                }
+                
+                :deep(.status-radio-group),
+                :deep(.priority-radio-group) {
+                    justify-content: flex-start;
+                }
+            }
         }
     }
     
@@ -444,11 +536,6 @@ export default {
     :deep(.btn) {
         padding: 0.5rem 1rem;
         min-width: 90px;
-    }
-    
-    /* Ensure consistent button heights */
-    :deep(.btn-group > .btn) {
-        flex: 1 1 auto;
     }
     
     /* Responsive button layout for small screens */
