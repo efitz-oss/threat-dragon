@@ -221,9 +221,11 @@ export default {
     
     .stencil-container :deep(.x6-widget-stencil-group-title) {
         visibility: visible !important;
-        display: block !important;
+        display: flex !important;
+        align-items: center !important;
         font-weight: bold;
-        padding: 8px;
+        padding: 8px 8px 8px 32px;
+        line-height: 20px;
         font-size: 14px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #eee;
@@ -231,6 +233,7 @@ export default {
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         width: 100% !important;
+        position: relative !important;
     }
     
     /* Force node visibility */

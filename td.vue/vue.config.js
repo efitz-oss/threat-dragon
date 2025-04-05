@@ -253,7 +253,7 @@ module.exports = {
         }
     },
     configureWebpack: {
-        devtool: 'source-map',
+        devtool: process.env.NODE_ENV === 'production' ? false : 'eval-cheap-module-source-map',
         plugins: [
             new (require('webpack')).DefinePlugin({
                 __VUE_OPTIONS_API__: JSON.stringify(true),
@@ -262,19 +262,56 @@ module.exports = {
             })
         ],
         output: {
-            hashFunction: 'xxhash64'
+            hashFunction: 'xxhash64',
+            filename: process.env.NODE_ENV === 'production' ? '[name].[contenthash].js' : '[name].js',
+            chunkFilename: process.env.NODE_ENV === 'production' ? '[name].[contenthash].js' : '[name].js'
+        },
+        performance: {
+            hints: process.env.NODE_ENV === 'production' ? 'warning' : false
+        },
+        // Enable Babel caching through Webpack configuration
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    include: path.resolve('src'),
+                    use: [
+                        {
+                            loader: 'babel-loader',
+                            options: {
+                                cacheDirectory: true,
+                                cacheCompression: false
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         optimization: {
+            runtimeChunk: 'single',
+            moduleIds: 'deterministic',
             splitChunks: {
                 chunks: 'all',
                 minSize: 20000,
                 maxSize: 244000, // Keep chunks under recommended size (244 KiB)
                 cacheGroups: {
-                    vendors: {
+                    vendor: {
                         test: /[\\/]node_modules[\\/]/,
+                        name(module) {
+                            // Get the package name
+                            const packageName = module.context.match(/[\\/]node_modules[\\/]([^\\/\\@]+)/)?.[1] || 'vendors';
+                            return `vendor.${packageName.replace('@', '')}`;
+                        },
                         priority: -10,
-                        chunks: 'initial',
-                        name: 'vendors'
+                        chunks: 'all',
+                        enforce: true
+                    },
+                    framework: {
+                        test: /[\\/]node_modules[\\/](vue|vue-router|vuex|bootstrap)/,
+                        name: 'framework',
+                        priority: 20,
+                        chunks: 'all',
+                        enforce: true
                     },
                     common: {
                         name: 'common',
@@ -285,6 +322,15 @@ module.exports = {
                 }
             }
         },
+        // Cache module results between builds
+        cache: {
+            type: 'filesystem',
+            buildDependencies: {
+                config: [__filename]
+            }
+        },
+        // Control build parallelism, but increase when using a faster machine
+        parallelism: 4,
         resolve: {
             alias: {
                 vue$: 'vue/dist/vue.runtime.esm-bundler.js',
