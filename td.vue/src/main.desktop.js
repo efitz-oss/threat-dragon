@@ -66,6 +66,9 @@ window.addEventListener('error', (event) => {
 // Mount the app
 const app = vueApp.mount('#app');
 
+// Make app available globally for components that need it during the transition to Composition API
+window._vueApp = vueApp;
+
 // Log that the app has mounted
 console.log('App mounted successfully!');
 

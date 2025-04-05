@@ -1,5 +1,6 @@
 /**
  * A utility function to show a confirmation dialog using Bootstrap Vue Next's modal functionality
+ * @param {Object|null} vueInstance Vue component instance (optional in Composition API context)
  * @param {Object} options Configuration options for the modal
  * @param {string} options.title The modal title
  * @param {string} options.message The message to display
@@ -11,8 +12,8 @@
  * @returns {Promise<boolean>} Resolves to true if confirmed, false if cancelled
  */
 export const showConfirmDialog = async (vueInstance, options = {}) => {
-    // If no Vue instance or no options, reject
-    if (!vueInstance || !options) {
+    // If no options, reject
+    if (!options) {
         console.error('showConfirmDialog: Invalid parameters');
         return Promise.reject(new Error('Invalid parameters'));
     }
@@ -60,9 +61,23 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
         });
 
         // Use the i18n plugin if available in the Vue instance
-        if (vueInstance.$i18n) {
-            app.use(vueInstance.$i18n);
-        }
+        // We need to use a Promise-based approach here since this is not an async function
+        import('@/i18n/index.js').then(i18nFactory => {
+            try {
+                const i18n = i18nFactory.default.get();
+                
+                if (i18n) {
+                    app.use(i18n);
+                } else if (vueInstance && vueInstance.$i18n) {
+                    // Fallback to instance i18n if available (legacy approach)
+                    app.use(vueInstance.$i18n);
+                }
+            } catch (e) {
+                console.warn('Could not load i18n for modal:', e);
+            }
+        }).catch(e => {
+            console.warn('Could not import i18n for modal:', e);
+        });
 
         // Mount the app to the container
         const _modalInstance = app.mount(modalContainer);

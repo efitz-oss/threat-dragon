@@ -16,7 +16,7 @@
                     <b-col>
                         <b-form-group
                             id="title-group"
-                            :label="$t('threats.properties.title')"
+                            :label="t('threats.properties.title')"
                             label-for="title"
                         >
                             <b-form-input
@@ -32,7 +32,7 @@
                     <b-col>
                         <b-form-group
                             id="threat-type-group"
-                            :label="$t('threats.properties.type')"
+                            :label="t('threats.properties.type')"
                             label-for="threat-type"
                         >
                             <b-form-select
@@ -48,7 +48,7 @@
                     <b-col md="4" class="status-col">
                         <b-form-group
                             id="status-group"
-                            :label="$t('threats.properties.status')"
+                            :label="t('threats.properties.status')"
                             label-for="status"
                             class="text-left"
                         >
@@ -67,7 +67,7 @@
                     <b-col md="2" class="score-col">
                         <b-form-group
                             id="score-group"
-                            :label="$t('threats.properties.score')"
+                            :label="t('threats.properties.score')"
                             label-for="score"
                             class="text-center"
                         >
@@ -83,7 +83,7 @@
                     <b-col md="6" class="priority-col">
                         <b-form-group
                             id="priority-group"
-                            :label="$t('threats.properties.priority')"
+                            :label="t('threats.properties.priority')"
                             label-for="priority"
                             class="text-right"
                         >
@@ -104,7 +104,7 @@
                     <b-col>
                         <b-form-group
                             id="description-group"
-                            :label="$t('threats.properties.description')"
+                            :label="t('threats.properties.description')"
                             label-for="description"
                         >
                             <td-safe-form-textarea
@@ -120,7 +120,7 @@
                     <b-col>
                         <b-form-group
                             id="mitigation-group"
-                            :label="$t('threats.properties.mitigation')"
+                            :label="t('threats.properties.mitigation')"
                             label-for="mitigation"
                         >
                             <td-safe-form-textarea 
@@ -142,7 +142,7 @@
                             variant="danger"
                             @click="onDelete"
                         >
-                            {{ $t('forms.delete') }}
+                            {{ t('forms.delete') }}
                         </b-button>
                     </div>
                     <div class="right-buttons">
@@ -151,13 +151,13 @@
                             class="mr-2"
                             @click="onCancel"
                         >
-                            {{ $t('forms.cancel') }}
+                            {{ t('forms.cancel') }}
                         </b-button>
                         <b-button 
                             variant="primary" 
                             @click="onSave"
                         >
-                            {{ isNewThreat ? $t('forms.create') : $t('forms.apply') }}
+                            {{ isNewThreat ? t('forms.create') : t('forms.apply') }}
                         </b-button>
                     </div>
                 </div>
@@ -172,6 +172,7 @@ import { useStore } from 'vuex';
 import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 import threatModels from '@/service/threats/models/index.js';
 import { useThreatEditor } from '@/composables/useThreatEditor';
+import { useI18n } from '@/i18n/index.js';
 
 /**
  * ThreatEditDialog Component
@@ -196,17 +197,15 @@ export default {
         
         const editModal = ref(null);
         
-        // Get i18n function from component instance
-        const $t = (key) => {
-            return this.$t(key);
-        };
+        // Use Vue 3's Composition API for i18n
+        const { t } = useI18n();
         
         // Computed properties for form data
         const modalTitle = computed(() => {
             if (!editingThreat.value) return '';
             return isNewThreat.value 
-                ? `${$t('threats.new')} #${editingThreat.value.number}` 
-                : `${$t('threats.edit')} #${editingThreat.value.number}`;
+                ? `${t('threats.new')} #${editingThreat.value.number}` 
+                : `${t('threats.edit')} #${editingThreat.value.number}`;
         });
         
         const threatTypes = computed(() => {
@@ -226,7 +225,7 @@ export default {
                 cell.data.type
             );
             Object.keys(threatTypesMap).forEach((type) => {
-                res.push($t(type));
+                res.push(t(type));
             });
             if (!res.includes(editingThreat.value.type)) {
                 res.push(editingThreat.value.type);
@@ -235,17 +234,17 @@ export default {
         });
         
         const statuses = computed(() => [
-            { value: 'NotApplicable', text: $t('threats.status.notApplicable') },
-            { value: 'Open', text: $t('threats.status.open') },
-            { value: 'Mitigated', text: $t('threats.status.mitigated') }
+            { value: 'NotApplicable', text: t('threats.status.notApplicable') },
+            { value: 'Open', text: t('threats.status.open') },
+            { value: 'Mitigated', text: t('threats.status.mitigated') }
         ]);
         
         const priorities = computed(() => [
-            { value: 'TBD', text: $t('threats.priority.tbd') },
-            { value: 'Low', text: $t('threats.priority.low') },
-            { value: 'Medium', text: $t('threats.priority.medium') },
-            { value: 'High', text: $t('threats.priority.high') },
-            { value: 'Critical', text: $t('threats.priority.critical') }
+            { value: 'TBD', text: t('threats.priority.tbd') },
+            { value: 'Low', text: t('threats.priority.low') },
+            { value: 'Medium', text: t('threats.priority.medium') },
+            { value: 'High', text: t('threats.priority.high') },
+            { value: 'Critical', text: t('threats.priority.critical') }
         ]);
         
         // Methods
@@ -275,17 +274,17 @@ export default {
         };
         
         const onDelete = async () => {
-            // Due to how BV Modal works in the Composition API, we'll use the component instance
-            // to access msgBoxConfirm
-            const confirmed = await this.$bvModal.msgBoxConfirm(
-                $t('threats.confirmDeleteMessage'),
-                {
-                    title: $t('threats.confirmDeleteTitle'),
-                    okTitle: $t('forms.delete'),
-                    cancelTitle: $t('forms.cancel'),
-                    okVariant: 'danger'
-                }
-            );
+            // Import the modal helper to access the confirmation dialog
+            const { showConfirmDialog } = await import('@/utils/modal-helper.js');
+            
+            // Use the confirmation dialog that doesn't depend on this.$bvModal
+            const confirmed = await showConfirmDialog(null, {
+                title: t('threats.confirmDeleteTitle'),
+                message: t('threats.confirmDeleteMessage'),
+                okTitle: t('forms.delete'),
+                cancelTitle: t('forms.cancel'),
+                okVariant: 'danger'
+            });
             
             if (confirmed) {
                 deleteThreat();
@@ -321,6 +320,7 @@ export default {
             threatTypes,
             statuses,
             priorities,
+            t, // Expose the translation function to the template
             showDialog,
             onSave,
             onCancel,

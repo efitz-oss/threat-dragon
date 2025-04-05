@@ -119,25 +119,25 @@ export default {
             store.dispatch(tmActions.saveModel);
         };
         
-        const getConfirmModal = () => {
-            // In the composition API, we need to use the Vue instance to access $bvModal
-            // This will need to be handled at the component level when the closed method is called
-            // Since we need access to the component instance and its methods
-            return new Promise(resolve => {
-                setTimeout(async () => {
-                    const { showConfirmDialog } = await import('@/utils/modal-helper.js');
-                    const result = await showConfirmDialog(this, {
-                        title: this.$t('forms.discardTitle'),
-                        message: this.$t('forms.discardMessage'),
-                        okTitle: this.$t('forms.ok'),
-                        cancelTitle: this.$t('forms.cancel'),
-                        okVariant: 'danger',
-                        hideHeaderClose: true,
-                        centered: true
-                    });
-                    resolve(result);
-                }, 0);
-            });
+        const getConfirmModal = async () => {
+            try {
+                // Use the modal helper with proper i18n access
+                const { showConfirmDialog } = await import('@/utils/modal-helper.js');
+                const { t } = await import('@/i18n/index.js').then(m => m.useI18n());
+                
+                return await showConfirmDialog(null, {
+                    title: t('forms.discardTitle'),
+                    message: t('forms.discardMessage'),
+                    okTitle: t('forms.ok'),
+                    cancelTitle: t('forms.cancel'),
+                    okVariant: 'danger',
+                    hideHeaderClose: true,
+                    centered: true
+                });
+            } catch (error) {
+                console.error('Error showing confirm modal:', error);
+                return false;
+            }
         };
         
         const closed = async () => {
@@ -145,19 +145,27 @@ export default {
             if (!store.getters.modelChanged || (await getConfirmModal())) {
                 await store.dispatch(tmActions.diagramClosed);
                 
-                // Use the router from the component instance
-                // This is a bit of a hack but needed because of how Vue Router works
-                // We'll need to access the router from the component instance
+                // Use inject to access the router in Composition API
+                // We'll need to update this when we introduce app-wide router injection
+                // For now, we'll use window to access the router since this is transitional code
                 setTimeout(() => {
-                    const routeParams = { ...this.$route.params };
-                    if ('diagram' in routeParams) {
-                        delete routeParams.diagram;
-                    }
+                    // Get router and route from the global app instance
+                    const router = window._vueApp?.$router;
+                    const route = window._vueApp?.$route;
                     
-                    this.$router.push({
-                        name: `${providerType.value}ThreatModel`,
-                        params: routeParams
-                    });
+                    if (router && route) {
+                        const routeParams = { ...route.params };
+                        if ('diagram' in routeParams) {
+                            delete routeParams.diagram;
+                        }
+                        
+                        router.push({
+                            name: `${providerType.value}ThreatModel`,
+                            params: routeParams
+                        });
+                    } else {
+                        console.error('Unable to access router in Composition API context');
+                    }
                 }, 0);
             }
         };

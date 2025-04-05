@@ -8,6 +8,22 @@ import TdGraphMeta from '@/components/GraphMeta.vue';
 import TdKeyboardShortcuts from '@/components/KeyboardShortcuts.vue';
 import TdThreatEditDialog from '@/components/ThreatEditDialog.vue';
 
+// Set up global process.env.NODE_ENV for tests
+process.env.NODE_ENV = 'test';
+
+// Mocking the i18n module for tests
+jest.mock('@/i18n/index.js', () => {
+    const originalModule = jest.requireActual('@/i18n/index.js');
+    return {
+        ...originalModule,
+        useI18n: jest.fn().mockReturnValue({
+            t: (key) => key,
+            locale: { value: 'eng' },
+            availableLocales: ['eng', 'deu', 'fra']
+        })
+    };
+});
+
 import diagramService from '@/service/migration/diagram.js';
 import stencilService from '@/service/x6/stencil.js';
 import providerService from '@/service/provider/providers.js';
@@ -172,51 +188,15 @@ describe('components/Graph.vue', () => {
     });
 
     describe('Component Initialization', () => {
-        it('creates the diagram in mounted hook', async () => {
-            // Vue 3 Migration: In Vue 3, the mounted hook is asynchronous
-            // We need to spy on the init method to verify it's called
+        it('creates and initializes the component', async () => {
+            // With Composition API, we don't need to mock the methods anymore
+            // since we can inspect the init function call directly
             
             // Reset mock counters
             jest.clearAllMocks();
             
-            // Create a mock for the init method
-            const initSpy = jest.spyOn(TdGraph.methods, 'init').mockImplementation(() => {});
-            
-            // Remount the component to trigger the mounted hook
-            const localWrapper = shallowMount(TdGraph, {
-                global: {
-                    plugins: [storeMock],
-                    stubs: {
-                        'b-row': true,
-                        'b-col': true,
-                        'td-threat-edit-dialog': true,
-                        'td-threat-suggest-dialog': true,
-                        'td-graph-buttons': true,
-                        'td-graph-meta': true,
-                        'td-keyboard-shortcuts': true
-                    },
-                    mocks: {
-                        $t: (t) => t,
-                        $toast: { info: jest.fn() },
-                        $route: routerMock,
-                        $router: routerMock
-                    },
-                    provide: {
-                        $bvModal: {
-                            msgBoxConfirm: jest.fn().mockResolvedValue(true)
-                        }
-                    }
-                }
-            });
-            
-            // Wait for Vue to process the mounted hook
-            await nextTick();
-            
-            // Verify the init method was called
-            expect(initSpy).toHaveBeenCalled();
-            
-            // Clean up
-            initSpy.mockRestore();
+            // We already have the wrapper from beforeEach, just verify it was called
+            expect(wrapper.vm.init).toHaveBeenCalled();
         });
         
         it('calls diagramService.edit when initialized', () => {
@@ -282,9 +262,12 @@ describe('components/Graph.vue', () => {
 
     describe('Component Methods', () => {
         it('shows the threat edit modal dialog', () => {
-            // Test the threatSelected method directly
+            // Create threat edit dialog ref with showDialog method
+            wrapper.vm.threatEditDialog = { value: { showDialog: jest.fn() } };
+            
+            // Test the updated threatSelected method
             wrapper.vm.threatSelected('asdf', 'new');
-            expect(threatEditStub.methods.editThreat).toHaveBeenCalledWith('asdf', 'new');
+            expect(wrapper.vm.threatEditDialog.value.showDialog).toHaveBeenCalledWith('asdf', 'new');
         });
         
         it('disposes the graph when destroyed', () => {
@@ -327,12 +310,25 @@ describe('components/Graph.vue', () => {
             // Setup for test
             wrapper.vm.graph = graphMock;
             
+            // Mock the getConfirmModal to return resolved promise
+            wrapper.vm.getConfirmModal = jest.fn().mockResolvedValue(true);
+            
+            // Mock the window._vueApp global for router access
+            global.window = {
+                ...global.window,
+                _vueApp: {
+                    $router: { push: jest.fn() },
+                    $route: { params: {} }
+                }
+            };
+            
             // Call the method under test
             await wrapper.vm.closed();
             
             // Verify the expected behavior
             expect(storeMock.dispatch).toHaveBeenCalledWith(tmActions.diagramClosed);
-            expect(routerMock.push).toHaveBeenCalled();
+            // Router push is now called through window._vueApp
+            expect(global.window._vueApp.$router.push).toHaveBeenCalled();
         });
     });
 });

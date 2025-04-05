@@ -3,6 +3,35 @@ import { createStore } from 'vuex';
 import TdGraphMeta from '@/components/GraphMeta.vue';
 import TdGraphThreats from '@/components/GraphThreats.vue';
 import { CELL_DATA_UPDATED, CELL_UNSELECTED } from '@/store/actions/cell.js';
+import { useThreatEditor } from '@/composables/useThreatEditor';
+
+// Set up global process.env.NODE_ENV for tests
+process.env.NODE_ENV = 'test';
+
+// Mocking the composables
+jest.mock('@/composables/useThreatEditor', () => ({
+    useThreatEditor: jest.fn().mockReturnValue({
+        createNewThreat: jest.fn().mockReturnValue({
+            id: 'new-threat-id',
+            title: 'New Test Threat',
+            status: 'Open',
+            severity: 'TBD'
+        })
+    })
+}));
+
+// Mock the i18n module for testing
+jest.mock('@/i18n/index.js', () => {
+    const originalModule = jest.requireActual('@/i18n/index.js');
+    return {
+        ...originalModule,
+        useI18n: jest.fn().mockReturnValue({
+            t: (key) => key,
+            locale: { value: 'eng' },
+            availableLocales: ['eng', 'deu', 'fra']
+        })
+    };
+});
 
 // Import individual components from bootstrap-vue-next for better testing
 import {
@@ -218,13 +247,13 @@ describe('components/GraphMeta.vue', () => {
             });
         });
 
-        it('has the threatSelected method', () => {
-            expect(typeof wrapper.vm.threatSelected).toBe('function');
+        it('has the onThreatSelected method', () => {
+            expect(typeof wrapper.vm.onThreatSelected).toBe('function');
         });
         
-        it('emits events when calling threatSelected', async () => {
+        it('emits events when calling onThreatSelected', async () => {
             // VUE3 MIGRATION: Testing method behavior directly
-            await wrapper.vm.threatSelected('test-id', 'edit');
+            await wrapper.vm.onThreatSelected('test-id', 'edit');
             expect(wrapper.emitted()).toHaveProperty('threatSelected');
             
             const emitted = wrapper.emitted('threatSelected');
@@ -232,8 +261,8 @@ describe('components/GraphMeta.vue', () => {
         });
         
         // VUE3 MIGRATION: Testing the component's ability to emit events
-        it('emits threatSuggest events when calling AddThreatByType', async () => {
-            await wrapper.vm.AddThreatByType();
+        it('emits threatSuggest events when calling onAddThreatByType', async () => {
+            await wrapper.vm.onAddThreatByType();
             expect(wrapper.emitted()).toHaveProperty('threatSuggest');
             
             const emitted = wrapper.emitted('threatSuggest');

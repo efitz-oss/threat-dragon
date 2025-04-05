@@ -37,6 +37,9 @@ app.use(toastNotificationPlugin, {
 
 app.directive('tooltip', Tooltip);
 
+// Make app available globally for components that need it during the transition to Composition API
+window._vueApp = app;
+
 // Mount the app
 app.mount('#app');
 
