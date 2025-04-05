@@ -59,7 +59,7 @@ import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
 
 // Import custom stencil theme
-import '@/assets/css/stencil-theme.css';
+import '../assets/css/stencil-theme.css';
 
 export default {
     name: 'TdGraph',
