@@ -9,8 +9,6 @@ const name = 'trust-boundary-curve-stencil';
 // trust boundary curve (edge, dotted line, gray opaque background)
 export const TrustBoundaryCurveStencil = Shape.Path.define({
     constructorName: name,
-    width: 200,
-    height: 100,
     zIndex: 10,
     markup: [
         {

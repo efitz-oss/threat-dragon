@@ -161,7 +161,6 @@ export default {
         height: 100%;
         padding: 0;
         border-right: 1px solid #eee;
-        min-width: 240px; /* Increased minimum width for stencil column */
     }
     
     .stencil-container {
@@ -175,7 +174,6 @@ export default {
     .stencil-container :deep(.x6-widget-stencil) {
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 220px !important; /* Increased minimum width to prevent text wrapping */
         visibility: visible !important;
         display: block !important;
         overflow: visible !important;
@@ -205,46 +203,42 @@ export default {
         overflow: visible !important;
     }
     
-    /* Scale stencil items to fit container */
+    /* Style stencil items to fit container */
     .stencil-container :deep(.x6-widget-stencil-item) {
         width: 100% !important;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 8px 0 !important; /* Increased vertical padding */
-        margin: 5px auto !important; /* Added margin for better spacing */
+        padding: 5px 0 !important;
+        margin: 2px auto !important;
     }
     
-    /* Scale SVG containers in stencil items */
+    /* Style SVG containers in stencil items */
     .stencil-container :deep(.x6-graph) {
-        width: 95% !important; /* Increased width to use more available space */
+        width: 100% !important;
         margin: 0 auto !important;
-        transform: scale(1.05); /* Slightly scale up the SVG elements */
-        transform-origin: center center;
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-title) {
         visibility: visible !important;
         display: block !important;
         font-weight: bold;
-        padding: 10px; /* Increased padding */
-        font-size: 14px; /* Explicit font size */
+        padding: 8px;
+        font-size: 14px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #eee;
-        white-space: nowrap !important; /* Prevent text wrapping */
+        white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        width: 100% !important; /* Ensure full width */
+        width: 100% !important;
     }
     
-    /* Force node visibility and set width */
+    /* Force node visibility */
     .stencil-container :deep(.x6-node) {
         visibility: visible !important;
         display: block !important;
         opacity: 1 !important;
-        /* Scale shapes to fit container width */
         transform-origin: center center !important;
-        transform: scale(1.15) !important; /* Scale up the node elements */
     }
     
     .content-column {
@@ -279,10 +273,10 @@ export default {
         width: 100% !important;
     }
     
-    /* Fix for stencil search width */
+    /* Style stencil search */
     :deep(.x6-widget-stencil-search) {
-        width: 95% !important; /* Increased width */
-        margin: 10px auto !important; /* Increased margin */
+        width: 90% !important;
+        margin: 8px auto !important;
         visibility: visible !important;
         display: block !important;
     }
@@ -290,8 +284,8 @@ export default {
     /* Make stencil search input full width */
     :deep(.x6-widget-stencil-search input) {
         width: 100% !important;
-        padding: 6px 10px !important; /* Increased padding */
-        font-size: 14px !important; /* Explicit font size */
+        padding: 5px 8px !important;
+        font-size: 14px !important;
     }
     
     /* Ensure stencil items are visible in all browsers */

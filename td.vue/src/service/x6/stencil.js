@@ -17,24 +17,23 @@ const get = (graph, container, StencilConstructor) => {
     // Function to calculate dimensions based on container size
     const calculateDimensions = () => {
         // Get container width for responsive sizing
-        const containerWidth = container.offsetWidth || 240;
+        const containerWidth = container.offsetWidth || 200;
         // Calculate stencil dimensions based on container size
         return {
-            stencilGraphWidth: Math.max(containerWidth - 20, 220), // Reduced padding, increased minimum width
+            stencilGraphWidth: containerWidth,
             containerWidth
         };
     };
 
     // Initial dimensions
-    const { stencilGraphWidth, containerWidth } = calculateDimensions();
+    const { stencilGraphWidth } = calculateDimensions();
 
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
         stencilGraphWidth: stencilGraphWidth,
-        stencilGraphHeight: 500, // Fixed height instead of 'auto'
+        stencilGraphHeight: 'auto',
         width: '100%',
-        minWidth: containerWidth * 0.9, // 90% of container width
         height: '100%',
         title: 'Shapes',
         collapsable: false,
@@ -67,16 +66,15 @@ const get = (graph, container, StencilConstructor) => {
             resizeToFit: true
         },
         search: {
-            placeholder: 'Search shapes',
-            width: 180 /* Increased search box width */
+            placeholder: 'Search shapes'
         }
     };
 
     // Create the stencil instance
     const stencilInstance = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
-    // Calculate component size based on container width - increased maximum size
-    const shapeWidth = Math.min(stencilGraphWidth * 0.95, 300); // 95% of stencil width, max 300px
+    // Calculate component size based on container width
+    const shapeWidth = stencilGraphWidth * 0.9; // 90% of stencil width
     
     // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({

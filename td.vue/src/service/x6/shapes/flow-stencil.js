@@ -9,8 +9,6 @@ const name = 'flow-stencil';
 // stencil item for data flow (edge)
 export const FlowStencil = Shape.Path.define({
     constructorName: name,
-    width: 200,
-    height: 100,
     zIndex: 10,
     markup: [
         {

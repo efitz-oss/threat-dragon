@@ -3,7 +3,6 @@
         v-bind="$attrs"
         ref="safeTextarea"
         no-resize
-        v-on="$attrs"
     />
 </template>
 
