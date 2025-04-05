@@ -56,6 +56,8 @@
                                 v-model="threat.status"
                                 :options="statuses"
                                 buttons
+                                size="sm"
+                                button-variant="outline-secondary"
                             />
                         </b-form-group>
                     </b-col>
@@ -82,6 +84,8 @@
                                 v-model="threat.severity"
                                 :options="priorities"
                                 buttons
+                                size="sm"
+                                button-variant="outline-secondary"
                             />
                         </b-form-group>
                     </b-col>
@@ -98,7 +102,6 @@
                                 id="description"
                                 v-model="threat.description"
                                 rows="5"
-                                style="min-height: 100px"
                             />
                         </b-form-group>
                     </b-col>
@@ -115,7 +118,6 @@
                                 id="mitigation" 
                                 v-model="threat.mitigation" 
                                 rows="5"
-                                style="min-height: 100px"
                             />
                         </b-form-group>
                     </b-col>
@@ -123,33 +125,38 @@
             </b-form>
 
             <template #modal-footer>
-                <div class="w-100">
-                    <b-button
-                        v-if="!newThreat"
-                        variant="danger"
-                        class="float-left"
-                        @click="confirmDelete()"
-                    >
-                        {{ $t('forms.delete') }}
-                    </b-button>
-                    <b-button
-                        v-if="newThreat"
-                        variant="danger"
-                        class="float-left"
-                        @click="immediateDelete()"
-                    >
-                        {{ $t('forms.remove') }}
-                    </b-button>
-                    <b-button variant="secondary" class="float-right" @click="updateThreat()">
-                        {{ $t('forms.apply') }}
-                    </b-button>
-                    <b-button
-                        variant="secondary"
-                        class="float-right mr-2"
-                        @click="hideModal()"
-                    >
-                        {{ $t('forms.cancel') }}
-                    </b-button>
+                <div class="w-100 d-flex justify-content-between">
+                    <div class="left-buttons">
+                        <b-button
+                            v-if="!newThreat"
+                            variant="danger"
+                            @click="confirmDelete()"
+                        >
+                            {{ $t('forms.delete') }}
+                        </b-button>
+                        <b-button
+                            v-if="newThreat"
+                            variant="danger"
+                            @click="immediateDelete()"
+                        >
+                            {{ $t('forms.remove') }}
+                        </b-button>
+                    </div>
+                    <div class="right-buttons">
+                        <b-button
+                            variant="secondary"
+                            class="mr-2"
+                            @click="hideModal()"
+                        >
+                            {{ $t('forms.cancel') }}
+                        </b-button>
+                        <b-button 
+                            variant="secondary" 
+                            @click="updateThreat()"
+                        >
+                            {{ $t('forms.apply') }}
+                        </b-button>
+                    </div>
                 </div>
             </template>
         </b-modal>
@@ -165,6 +172,10 @@ import tmActions from '@/store/actions/threatmodel.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
 import threatModels from '@/service/threats/models/index.js';
 
+/**
+ * ThreatEditDialog Component
+ * Responsible for editing individual threats within the threat model
+ */
 export default {
     name: 'TdThreatEditDialog',
     components: {
@@ -228,11 +239,15 @@ export default {
                 console.warn('Trying to access a non-existent threatId: ' + threatId);
             } else {
                 this.number = this.threat.number;
-                this.newThreat = state === 'new';
+                // Set newThreat flag based on state parameter or threat.new property
+                this.newThreat = state === 'new' || (this.threat.new === true);
+                console.debug('Setting newThreat flag to:', this.newThreat, 'for threat:', threatId);
                 this.$refs.editModal.show();
             }
         },
         updateThreat() {
+            console.debug('Updating threat, newThreat flag:', this.newThreat);
+            
             const threatRef = this.cellRef.data.threats.find((x) => x.id === this.threat.id);
             if (threatRef) {
                 const objRef = this.cellRef.data;
@@ -253,6 +268,8 @@ export default {
                             objRef.threatFrequency[k]++;
                     });
                 }
+                
+                // Update the threat properties
                 threatRef.status = this.threat.status;
                 threatRef.severity = this.threat.severity;
                 threatRef.title = this.threat.title;
@@ -260,13 +277,22 @@ export default {
                 threatRef.description = this.threat.description;
                 threatRef.mitigation = this.threat.mitigation;
                 threatRef.modelType = this.threat.modelType;
-                threatRef.new = false;
                 threatRef.number = this.number;
                 threatRef.score = this.threat.score;
+                
+                // Mark as no longer new once saved
+                threatRef.new = false;
+                console.debug('Threat saved, new flag set to false for ID:', threatRef.id);
+                
+                // Update the store and UI
                 this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
                 this.$store.dispatch(tmActions.modified);
                 dataChanged.updateStyleAttrs(this.cellRef);
+            } else {
+                console.warn('Could not find threat with ID:', this.threat.id);
             }
+            
+            // Close the modal
             this.hideModal();
         },
         deleteThreat() {
@@ -289,19 +315,31 @@ export default {
             dataChanged.updateStyleAttrs(this.cellRef);
         },
         hideModal() {
+            console.debug('Hide modal called. newThreat:', this.newThreat, 'threat ID:', this.threat.id);
+            
             // If this is a new threat and hasn't been saved yet,
             // we need to make sure it's not inadvertently added
-            if (this.newThreat && this.threat) {
+            if (this.newThreat && this.threat && this.threat.id) {
+                console.debug('Removing new threat with ID:', this.threat.id);
+                
                 // Remove from the cell's threats if it was already added
+                const originalLength = this.cellRef.data.threats.length;
                 this.cellRef.data.threats = this.cellRef.data.threats.filter(
                     (x) => x.id !== this.threat.id
                 );
+                console.debug('Removed threats:', originalLength - this.cellRef.data.threats.length);
+                
+                // Update open threats status
                 this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.some(
                     (t) => t.status === 'Open'
                 );
+                
+                // Update the store and UI
                 this.$store.dispatch(CELL_DATA_UPDATED, this.cellRef.data);
                 dataChanged.updateStyleAttrs(this.cellRef);
             }
+            
+            // Hide the modal
             this.$refs.editModal.hide();
         },
         async confirmDelete() {
@@ -329,3 +367,101 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+    /* --- Modal Form Styling --- */
+    
+    /* Consistent spacing between form rows */
+    :deep(.form-row) {
+        margin-bottom: 1.25rem;
+    }
+    
+    /* Form group styling */
+    :deep(.form-group) {
+        margin-bottom: 0.75rem;
+    }
+    
+    /* Label styling */
+    :deep(label) {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Input controls */
+    :deep(.form-control) {
+        padding: 0.5rem 0.75rem;
+        line-height: 1.5;
+    }
+    
+    /* Textarea styling - consistent with the GraphProperties component */
+    :deep(textarea.form-control) {
+        height: auto !important;
+        resize: none !important;
+        min-height: 100px;
+    }
+    
+    /* Radio/button group styling */
+    :deep(.btn-group) {
+        margin-top: 0.25rem;
+        width: 100%;
+        display: flex;
+    }
+    
+    /* Style the radio buttons to distribute space evenly */
+    :deep(.btn-group .btn) {
+        flex: 1 1 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.85rem;
+        padding: 0.375rem 0.5rem;
+    }
+    
+    /* Make small screens stack properly */
+    @media (max-width: 767.98px) {
+        :deep(.col-md-5),
+        :deep(.col-md-2) {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    /* --- Modal Footer Styling --- */
+    
+    /* Footer button layout */
+    :deep(.modal-footer) {
+        padding: 1rem;
+    }
+    
+    /* Button groups */
+    .left-buttons,
+    .right-buttons {
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Button styling */
+    :deep(.btn) {
+        padding: 0.5rem 1rem;
+        min-width: 90px;
+    }
+    
+    /* Ensure consistent button heights */
+    :deep(.btn-group > .btn) {
+        flex: 1 1 auto;
+    }
+    
+    /* Responsive button layout for small screens */
+    @media (max-width: 575.98px) {
+        .w-100.d-flex {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .left-buttons,
+        .right-buttons {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

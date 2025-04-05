@@ -130,7 +130,11 @@ export default {
                 this.cellRef.data.type,
                 this.threatTop + 1
             );
-            console.debug('new threat ID: ' + threat.id);
+            
+            // Ensure new flag is set (should already be set in createNewTypedThreat)
+            threat.new = true;
+            
+            console.debug('new threat ID:', threat.id, 'new flag:', threat.new);
             this.cellRef.data.threats.push(threat);
             this.cellRef.data.hasOpenThreats = this.cellRef.data.threats.length > 0;
             this.$store.dispatch(tmActions.update, { threatTop: this.threatTop + 1 });

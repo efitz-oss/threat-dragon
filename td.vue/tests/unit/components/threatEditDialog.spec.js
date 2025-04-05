@@ -300,6 +300,144 @@ describe('components/ThreatEditDialog.vue', () => {
         });
     });
     
+    describe('newThreat flag setting', () => {
+        beforeEach(() => {
+            // Reset mock counters
+            jest.clearAllMocks();
+        });
+        
+        it('should set newThreat flag based on state parameter', () => {
+            // Create a simplified test for the new flag setting logic
+            
+            // The original editThreat function (what we're testing)
+            const editThreatFn = TdThreatEditDialog.methods.editThreat;
+            
+            // Mock the required context
+            const context = {
+                $refs: {
+                    editModal: {
+                        show: jest.fn()
+                    }
+                },
+                cellRef: {
+                    data: {
+                        threats: [
+                            {
+                                id: 'test-id',
+                                number: 42,
+                                new: false
+                            },
+                            {
+                                id: 'test-new-id',
+                                number: 43,
+                                new: true
+                            }
+                        ]
+                    }
+                },
+                number: 0,
+                newThreat: false
+            };
+            
+            // Test with state='new'
+            editThreatFn.call(context, 'test-id', 'new');
+            expect(context.newThreat).toBe(true);
+            
+            // Reset and test with state='old' but threat.new=true
+            context.newThreat = false;
+            editThreatFn.call(context, 'test-new-id', 'old');
+            expect(context.newThreat).toBe(true);
+            
+            // Reset and test with state='old' and threat.new=false
+            context.newThreat = false;
+            editThreatFn.call(context, 'test-id', 'old');
+            expect(context.newThreat).toBe(false);
+        });
+    });
+    
+    describe('hideModal behavior', () => {
+        beforeEach(() => {
+            // Reset mock counters
+            jest.clearAllMocks();
+        });
+        
+        it('should handle new and existing threats correctly when canceled', () => {
+            // The original hideModal function (what we're testing)
+            const hideModalFn = TdThreatEditDialog.methods.hideModal;
+            
+            // Create a mock dispatch function
+            const dispatchMock = jest.fn();
+            
+            // Mock the required context with a new threat
+            const newThreatContext = {
+                $refs: {
+                    editModal: {
+                        hide: jest.fn()
+                    }
+                },
+                $store: {
+                    dispatch: dispatchMock
+                },
+                newThreat: true,
+                threat: { 
+                    id: 'test-new-threat-id',
+                    new: true
+                },
+                cellRef: {
+                    data: {
+                        threats: [
+                            { id: 'test-new-threat-id', new: true },
+                            { id: 'existing-id', new: false }
+                        ]
+                    }
+                }
+            };
+            
+            // Test new threat is removed
+            hideModalFn.call(newThreatContext);
+            
+            // Should have removed the threat
+            expect(newThreatContext.cellRef.data.threats.length).toBe(1);
+            expect(newThreatContext.cellRef.data.threats[0].id).toBe('existing-id');
+            expect(dispatchMock).toHaveBeenCalled();
+            
+            // Reset mocks
+            dispatchMock.mockClear();
+            
+            // Mock the required context with an existing threat
+            const existingThreatContext = {
+                $refs: {
+                    editModal: {
+                        hide: jest.fn()
+                    }
+                },
+                $store: {
+                    dispatch: dispatchMock
+                },
+                newThreat: false,
+                threat: { 
+                    id: 'existing-id',
+                    new: false
+                },
+                cellRef: {
+                    data: {
+                        threats: [
+                            { id: 'existing-id', new: false }
+                        ]
+                    }
+                }
+            };
+            
+            // Test existing threat is not removed
+            hideModalFn.call(existingThreatContext);
+            
+            // Should not have removed the existing threat
+            expect(existingThreatContext.cellRef.data.threats.length).toBe(1);
+            expect(existingThreatContext.cellRef.data.threats[0].id).toBe('existing-id');
+            expect(dispatchMock).not.toHaveBeenCalled();
+        });
+    });
+    
     describe('computed properties', () => {
         beforeEach(async () => {
             // Reset mock counters
