@@ -61,13 +61,11 @@
                                 :label="$t('threatmodel.description')"
                                 label-for="description"
                             >
-                                <b-form-textarea
+                                <td-safe-form-textarea
                                     id="description"
                                     v-model="model.summary.description"
                                     type="text"
                                     rows="3"
-                                    :no-auto-shrink="true"
-                                    no-resize
                                     @input="onModifyModel()"
                                 />
                             </b-form-group>
@@ -208,11 +206,13 @@
 import { mapState } from 'vuex';
 import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
+import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 export default {
     name: 'ThreatModelEdit',
     components: {
-        TdFormButton
+        TdFormButton,
+        TdSafeFormTextarea
     },
     computed: {
         ...mapState({

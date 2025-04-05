@@ -35,14 +35,12 @@
                             :label="$t('threatmodel.description')"
                             label-for="threat-model-description"
                         >
-                            <b-form-textarea
+                            <td-safe-form-textarea
                                 id="threat-model-description"
                                 v-model="threatModel.summary.description"
                                 rows="3"
-                                :no-auto-shrink="true"
-                                no-resize
                                 :placeholder="$t('threatmodel.placeholder.description')"
-                            ></b-form-textarea>
+                            ></td-safe-form-textarea>
                         </b-form-group>
 
                         <b-form-group
@@ -73,11 +71,15 @@
 import { mapState } from 'vuex';
 
 import isElectron from 'is-electron';
+import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
 import { getProviderType } from '@/service/provider/providers.js';
 import tmActions from '@/store/actions/threatmodel.js';
 
 export default {
     name: 'NewThreatModel',
+    components: {
+        TdSafeFormTextarea
+    },
     data() {
         return {
             threatModel: {

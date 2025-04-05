@@ -94,12 +94,10 @@
                             :label="$t('threats.properties.description')"
                             label-for="description"
                         >
-                            <b-form-textarea
+                            <td-safe-form-textarea
                                 id="description"
                                 v-model="threat.description"
                                 rows="5"
-                                :no-auto-shrink="true"
-                                no-resize
                                 style="min-height: 100px"
                             />
                         </b-form-group>
@@ -113,12 +111,10 @@
                             :label="$t('threats.properties.mitigation')"
                             label-for="mitigation"
                         >
-                            <b-form-textarea 
+                            <td-safe-form-textarea 
                                 id="mitigation" 
                                 v-model="threat.mitigation" 
                                 rows="5"
-                                :no-auto-shrink="true"
-                                no-resize
                                 style="min-height: 100px"
                             />
                         </b-form-group>
@@ -164,12 +160,16 @@
 import { mapState } from 'vuex';
 
 import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
+import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
 import threatModels from '@/service/threats/models/index.js';
 
 export default {
     name: 'TdThreatEditDialog',
+    components: {
+        TdSafeFormTextarea
+    },
     data() {
         return {
             threat: {},

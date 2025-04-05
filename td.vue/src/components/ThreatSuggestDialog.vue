@@ -93,12 +93,10 @@
                             :label="$t('threats.properties.description')"
                             label-for="description"
                         >
-                            <b-form-textarea
+                            <td-safe-form-textarea
                                 id="description"
                                 v-model="threat.description"
                                 rows="5"
-                                :no-auto-shrink="true"
-                                no-resize
                             />
                         </b-form-group>
                     </b-col>
@@ -111,12 +109,10 @@
                             :label="$t('threats.properties.mitigation')"
                             label-for="mitigation"
                         >
-                            <b-form-textarea 
+                            <td-safe-form-textarea 
                                 id="mitigation" 
                                 v-model="threat.mitigation" 
                                 rows="5"
-                                :no-auto-shrink="true"
-                                no-resize
                             />
                         </b-form-group>
                     </b-col>
@@ -146,6 +142,7 @@
 <script>
 import { mapState } from 'vuex';
 import { createNewTypedThreat } from '@/service/threats/index.js';
+import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
 import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
 import tmActions from '@/store/actions/threatmodel.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
@@ -154,6 +151,9 @@ import { GetContextSuggestions } from '@/service/threats/oats/context-generator.
 import { v4 } from 'uuid';
 export default {
     name: 'TdThreatSuggest',
+    components: {
+        TdSafeFormTextarea
+    },
     data() {
         return {
             suggestions: [],

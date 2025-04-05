@@ -54,12 +54,10 @@
                         "
                         label-for="name"
                     >
-                        <b-form-textarea
+                        <td-safe-form-textarea
                             id="name"
                             v-model="cellRef.data.name"
                             :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
-                            :no-auto-shrink="true"
-                            no-resize
                             graph-pro
                             style="min-height: 60px"
                             @update="onChangeName()"
@@ -74,12 +72,10 @@
                         :label="$t('threatmodel.properties.description')"
                         label-for="description"
                     >
-                        <b-form-textarea
+                        <td-safe-form-textarea
                             id="description"
                             v-model="cellRef.data.description"
                             :rows="3"
-                            :no-auto-shrink="true"
-                            no-resize
                             style="min-height: 80px"
                             @change="onChangeProperties()"
                         />
@@ -134,12 +130,10 @@
                         :label="$t('threatmodel.properties.reasonOutOfScope')"
                         label-for="reasonoutofscope"
                     >
-                        <b-form-textarea
+                        <td-safe-form-textarea
                             id="reasonoutofscope"
                             v-model="cellRef.data.reasonOutOfScope"
                             :rows="3"
-                            :no-auto-shrink="true"
-                            no-resize
                             style="min-height: 80px"
                             :disabled="!cellRef.data.outOfScope"
                             @change="onChangeProperties()"
@@ -303,9 +297,13 @@
 <script>
 import { mapState } from 'vuex';
 import dataChanged from '@/service/x6/graph/data-changed.js';
+import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
 
 export default {
     name: 'TdGraphProperties',
+    components: {
+        TdSafeFormTextarea
+    },
     computed: mapState({
         cellRef: (state) => state.cell.ref
     }),
