@@ -160,7 +160,7 @@
 import { mapState } from 'vuex';
 
 import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
-import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
+import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
 import threatModels from '@/service/threats/models/index.js';

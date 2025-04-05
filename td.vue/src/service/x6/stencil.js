@@ -17,10 +17,10 @@ const get = (graph, container, StencilConstructor) => {
     // Function to calculate dimensions based on container size
     const calculateDimensions = () => {
         // Get container width for responsive sizing
-        const containerWidth = container.offsetWidth || 200;
+        const containerWidth = container.offsetWidth || 240;
         // Calculate stencil dimensions based on container size
         return {
-            stencilGraphWidth: Math.max(containerWidth - 10, 180), // Reduced padding for larger stencils
+            stencilGraphWidth: Math.max(containerWidth - 20, 220), // Reduced padding, increased minimum width
             containerWidth
         };
     };
@@ -68,15 +68,15 @@ const get = (graph, container, StencilConstructor) => {
         },
         search: {
             placeholder: 'Search shapes',
-            width: 150
+            width: 180 /* Increased search box width */
         }
     };
 
     // Create the stencil instance
     const stencilInstance = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
-    // Calculate component size based on container width - now using 95% of width and higher max
-    const shapeWidth = Math.min(stencilGraphWidth * 0.95, 200); // 95% of stencil width, max 200px
+    // Calculate component size based on container width - increased maximum size
+    const shapeWidth = Math.min(stencilGraphWidth * 0.95, 300); // 95% of stencil width, max 300px
     
     // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({

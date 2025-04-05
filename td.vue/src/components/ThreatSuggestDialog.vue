@@ -142,7 +142,7 @@
 <script>
 import { mapState } from 'vuex';
 import { createNewTypedThreat } from '@/service/threats/index.js';
-import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
+import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
 import tmActions from '@/store/actions/threatmodel.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';

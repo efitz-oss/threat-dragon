@@ -297,7 +297,7 @@
 <script>
 import { mapState } from 'vuex';
 import dataChanged from '@/service/x6/graph/data-changed.js';
-import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
+import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 
 export default {
     name: 'TdGraphProperties',

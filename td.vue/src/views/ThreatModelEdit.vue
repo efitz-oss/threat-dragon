@@ -206,7 +206,7 @@
 import { mapState } from 'vuex';
 import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
-import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
+import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 export default {
     name: 'ThreatModelEdit',

@@ -10,8 +10,19 @@
             </b-row>
             <b-row>
                 <b-col md="12">
+                    <div class="td-operator mt-5 text-left"> {{ $t('operator.operatedby') }} </div>
+                    <div class="td-operator mt-5 text-left"> {{ $t('operator.name') }} </div>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col md="12">
                     <!-- Using v-html with trusted content from translations -->
                     <div class="td-description mt-5 text-left" v-html="$t('privacy.content')" />
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col md="12">
+                    <div class="td-contact mt-5 text-left"> {{ $t('operator.contact') }} </div>
                 </b-col>
             </b-row>
         </div>
@@ -25,33 +36,58 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    /* Recreating BootstrapVue's b-jumbotron styling */
-    .welcome-jumbotron {
-        background-color: #f8f9fa; /* Light grey background like BootstrapVue jumbotron */
-        padding: 3rem 2rem; /* Increase padding to match BootstrapVue */
-        border-radius: 0.3rem; /* Add rounded corners */
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Light shadow */
-        margin-bottom: 1.5rem; /* Space below jumbotron */
-        display: flex;
-        flex-direction: column;
-    }
-    .td-description {
-        font-size: 20px;
-        max-width: 80%;
-        margin: 10px auto; /* Keep horizontal centering of the container */
-        text-align: left; /* Left-justify the text */
-    }
+/* Recreating BootstrapVue's b-jumbotron styling */
+.welcome-jumbotron {
+    background-color: #f8f9fa;
+    /* Light grey background like BootstrapVue jumbotron */
+    padding: 3rem 2rem;
+    /* Increase padding to match BootstrapVue */
+    border-radius: 0.3rem;
+    /* Add rounded corners */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    /* Light shadow */
+    margin-bottom: 1.5rem;
+    /* Space below jumbotron */
+    display: flex;
+    flex-direction: column;
+}
 
-    /* Custom styling for lists in the content */
-    .td-description ul {
-        display: block; /* Change from table to block display */
-        text-align: left;
-        padding-left: 2rem; /* Add some padding for list items */
-    }
+.td-description {
+    font-size: 20px;
+    max-width: 80%;
+    margin: 10px auto;
+    /* Keep horizontal centering of the container */
+    text-align: left;
+    /* Left-justify the text */
+}
 
-    .td-description h2 {
-        margin-top: 1.5rem;
-        margin-bottom: 1rem;
-        text-align: left; /* Left-justify headings */
-    }
+.td-operator {
+    font-size: 18px;
+    max-width: 80%;
+    margin: 10px auto;
+    font-weight: 500;
+}
+
+.td-contact {
+    font-size: 18px;
+    max-width: 80%;
+    margin: 20px auto 10px;
+    font-style: italic;
+}
+
+/* Custom styling for lists in the content */
+.td-description ul {
+    display: block;
+    /* Change from table to block display */
+    text-align: left;
+    padding-left: 2rem;
+    /* Add some padding for list items */
+}
+
+.td-description h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    /* Left-justify headings */
+}
 </style>

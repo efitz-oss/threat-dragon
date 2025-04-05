@@ -1,16 +1,17 @@
 <template>
     <b-form-textarea
         v-bind="$attrs"
-        v-on="$listeners"
         ref="safeTextarea"
         no-resize
+        v-on="$attrs"
     />
 </template>
 
 <script>
 export default {
-    name: 'TdSafeFormTextarea',
+    name: 'TdFormTextareaWrapper',
     inheritAttrs: false,
+    emits: ['update:modelValue', 'input', 'change', 'update'],
     data() {
         return {
             textareaRef: null
@@ -21,11 +22,7 @@ export default {
         this.textareaRef = this.$refs.safeTextarea;
     },
     beforeUnmount() {
-        // Clear reference before component is unmounted
-        this.textareaRef = null;
-    },
-    beforeDestroy() {
-        // For Vue 2 compatibility (Vue 3 uses beforeUnmount)
+        // For Vue 2 compatibility 
         this.textareaRef = null;
     }
 };

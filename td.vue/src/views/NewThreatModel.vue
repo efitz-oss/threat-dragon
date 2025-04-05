@@ -71,7 +71,7 @@
 import { mapState } from 'vuex';
 
 import isElectron from 'is-electron';
-import TdSafeFormTextarea from '@/components/SafeFormTextarea.vue';
+import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 import { getProviderType } from '@/service/provider/providers.js';
 import tmActions from '@/store/actions/threatmodel.js';
 

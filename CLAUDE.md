@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
--   run all npm scripts from the project root
+-   run all npm scripts from the project root directory
 -   honor and use npm workspaces
 -   Start development: `npm run dev` (both server and vue)
 -   Build app: `npm run build`

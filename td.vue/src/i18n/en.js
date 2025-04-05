@@ -10,91 +10,73 @@ const eng = {
         tos: 'Terms of Service',
         privacy: 'Privacy Policy'
     },
+    operator: {
+        operatedby: 'This web site and instance of OWASP Threat Dragon is operated by:',
+        name: `${process.env.VUE_APP_OPERATOR_NAME || 'the operator of this web site'}`,
+        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator of this web site through appropriate channels'}`,
+    },
     tos: {
         title: 'Terms of Service',
         content: `<h2>Terms of Service</h2>
-<p>Welcome to OWASP Threat Dragon. By using our application, you agree to these Terms of Service.</p>
+
+<p>Last updated: April 4, 2025</p>
+
+</p>
+
+<p>Welcome to our instance of OWASP Threat Dragon.  These Terms of Use ("Terms") govern your access to and use of this website, which is an instance of an open-source web application made available by the operator listed above ("The Operator").</p>
+
+</p>
 
 <h2>1. Acceptance of Terms</h2>
-<p>By accessing and using OWASP Threat Dragon, you accept and agree to be bound by the terms and provisions of this agreement.</p>
+<p>By accessing and using this web site, you accept and agree to be bound by the terms and provisions of this agreement.  If you do not agree to these terms, please do not use this web site.</p>
 
-<h2>2. Description of Service</h2>
-<p>OWASP Threat Dragon is a free, open-source threat modeling tool that helps you create threat model diagrams and identify threats to your system.</p>
+<h2>2. Use of the Website</h2>
+<p>This website is provided as-is, leveraging OWASP Threat Dragon, an open-source software licensed under the Apache 2.0 License. You may use the website for lawful purposes only. You agree not to misuse, disrupt, or attempt to gain unauthorized access to the website or its underlying systems.</p>
 
-<h2>3. License and Restrictions</h2>
-<p>OWASP Threat Dragon is released under the Apache 2.0 License. You are free to:</p>
-<ul>
-  <li>Use the application for personal or commercial purposes</li>
-  <li>Modify the application</li>
-  <li>Distribute the application</li>
-</ul>
-<p>Subject to the terms and conditions of the Apache 2.0 License.</p>
+<h2>3. No Warranty</h2>
+<p>The website is provided "as is" without warranties of any kind, express or implied, including but not limited to fitness for a particular purpose, availability, or accuracy. We do not guarantee uninterrupted or error-free operation.</p>
 
-<h2>4. User Responsibilities</h2>
-<p>You are responsible for:</p>
-<ul>
-  <li>All activity that occurs under your account</li>
-  <li>Maintaining the confidentiality of your account information</li>
-  <li>The content of your threat models</li>
-</ul>
+<h2>4. Limitation of Liability</h2>
+<p>To the fullest extent permitted by law, The Operator shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of or inability to use the website.</p>
 
-<h2>5. No Warranty</h2>
-<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</p>
+<h2>5. Open Source Software</h2>
+<p>This website runs the OWASP Threat Dragon software, and its source code is available at https://www.github.com/OWASP/threat-dragon. Your use of the software is subject to its open-source license terms. We are not responsible for the software itself, only for operating this instance.  The operator of this web site is not affiliated with OWASP.</p>
 
-<h2>6. Limitation of Liability</h2>
-<p>IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<h2>6. Changes to Terms</h2>
+<p>The Operator may update these Terms at any time. Continued use of the website after changes constitutes acceptance of the updated Terms.</p>
 
-<h2>7. Modifications to Terms</h2>
-<p>We reserve the right to modify these Terms at any time. Your continued use of the application after such modifications constitutes your acceptance of the modified terms.</p>
+<h2>7. Termination</h2>
+<p>The Operator reserves the right to suspend or terminate access to the website at The Operator's discretion, without notice, for any reason.</p>
 
 <h2>8. Governing Law</h2>
-<p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'} operates, without regard to its conflict of law provisions.</p>
+<p>These Terms are governed by the laws of ${process.env.VUE_APP_OPERATOR_JURISDICTION || 'the jurisdiction in which The Operator is headquartered (in the case of an organization) or resides (in the case of an individual)'}, without regard to conflict of law principles.</p>
 
-<h2>9. Operator Information</h2>
-<p>This instance of OWASP Threat Dragon is operated by ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'}. For questions related to this deployment, please contact ${process.env.VUE_APP_OPERATOR_CONTACT_ESCAPED || 'the operator through appropriate channels'}.</p>
+</p>
 
-<h2>10. Contact</h2>
-<p>If you have any questions about these Terms, please contact us through the OWASP Threat Dragon GitHub repository.</p>
-
-<p>Last updated: March 19, 2025</p>`
+<p>If you have any questions about these Terms, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator of this web site through appropriate channels'}</p>`
     },
     privacy: {
         title: 'Privacy Policy',
-        content: `<h2>Overview</h2>
-<p>OWASP Threat Dragon is committed to protecting your privacy. This application is designed to respect your data and keep you in control.</p>
+        content: `<h2>Privacy Policy</h2>
+</p>
 
-<h2>Data Collection</h2>
-<p>Threat Dragon does not:</p>
-<ul>
-  <li>Track or collect personal information</li>
-  <li>Store user behavior data</li>
-  <li>Utilize cookies or tracking technologies</li>
-  <li>Sell or share any user information</li>
-</ul>
+<p>Last updated: April 4, 2025</p>
 
-<h2>Authentication</h2>
-<p>When using Google authentication, we only receive basic profile information necessary for authentication purposes. This information is not stored on our servers or shared with any third parties.</p>
+</p>
 
-<h2>Your Threat Models</h2>
-<ul>
-  <li>All threat model data created within the application remains under your control</li>
-  <li>Your data is only stored locally or in repositories that you explicitly authorize</li>
-  <li>We have no access to your threat model content</li>
-</ul>
+<p>The Operator runs an instance of an open-source application and is committed to protecting your privacy. This Privacy Policy explains how your information is handled.</p>
 
-<h2>Data Security</h2>
-<p>We implement appropriate security measures to ensure the safety of any data that passes through our systems, although we do not retain this data.</p>
+<h2>No Data Collection or Storage</h2>
+<p>The Operator does not collect, store, or process any personal data from users. The Operator does not track your activities, store your information, or share any data about you with third parties for any purpose.</p>
 
-<h2>Operator Information</h2>
-<p>This instance of OWASP Threat Dragon is operated by ${process.env.VUE_APP_OPERATOR_NAME || 'the operator'}. For questions related to this deployment or data handling practices, please contact ${process.env.VUE_APP_OPERATOR_CONTACT_ESCAPED || 'the operator through appropriate channels'}.</p>
+<h2>Legal Compliance</h2>
+<p>The Operator will only disclose information if required to do so by law, such as in response to a valid government order or subpoena. In such cases, The Operator will comply with applicable legal obligations.</p>
 
 <h2>Changes to This Policy</h2>
-<p>We may update this privacy policy from time to time. Any changes will be posted on this page.</p>
+<p>The Operator may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date.</p>
 
-<h2>Contact</h2>
-<p>If you have questions about this Privacy Policy, please contact ${process.env.VUE_APP_OPERATOR_CONTACT_ESCAPED || 'the operator through appropriate channels'}.</p>
-
-<p>Last updated: March 19, 2025</p>`
+<h2>Contact Us</h2>
+<p>If you have any questions about this Privacy Policy, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator of this web site through appropriate channels'}</p>`
     },
     home: {
         title: 'OWASP Threat Dragon',

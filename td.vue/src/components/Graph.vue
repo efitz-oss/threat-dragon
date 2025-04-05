@@ -1,10 +1,18 @@
 <template>
     <div class="diagram-editor">
         <b-row class="main-content-row">
-            <b-col md="2" lg="2" class="stencil-column">
+            <b-col
+                md="3"
+                lg="2"
+                xl="2"
+                class="stencil-column">
                 <div ref="stencil_container" class="stencil-container" />
             </b-col>
-            <b-col md="10" lg="10" class="content-column">
+            <b-col
+                md="9"
+                lg="10"
+                xl="10"
+                class="content-column">
                 <b-row class="header-row">
                     <b-col>
                         <h3 class="td-graph-title">
@@ -153,7 +161,7 @@ export default {
         height: 100%;
         padding: 0;
         border-right: 1px solid #eee;
-        min-width: 200px; /* Ensure minimum width for stencil column */
+        min-width: 240px; /* Increased minimum width for stencil column */
     }
     
     .stencil-container {
@@ -167,7 +175,7 @@ export default {
     .stencil-container :deep(.x6-widget-stencil) {
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 180px !important; /* Minimum width to prevent text wrapping */
+        min-width: 220px !important; /* Increased minimum width to prevent text wrapping */
         visibility: visible !important;
         display: block !important;
         overflow: visible !important;
@@ -203,26 +211,30 @@ export default {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 5px 0 !important;
+        padding: 8px 0 !important; /* Increased vertical padding */
+        margin: 5px auto !important; /* Added margin for better spacing */
     }
     
     /* Scale SVG containers in stencil items */
     .stencil-container :deep(.x6-graph) {
-        width: 90% !important;
+        width: 95% !important; /* Increased width to use more available space */
         margin: 0 auto !important;
+        transform: scale(1.05); /* Slightly scale up the SVG elements */
+        transform-origin: center center;
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-title) {
         visibility: visible !important;
         display: block !important;
         font-weight: bold;
-        padding: 8px;
+        padding: 10px; /* Increased padding */
+        font-size: 14px; /* Explicit font size */
         background-color: #f8f9fa;
         border-bottom: 1px solid #eee;
         white-space: nowrap !important; /* Prevent text wrapping */
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        width: 100% !important;
+        width: 100% !important; /* Ensure full width */
     }
     
     /* Force node visibility and set width */
@@ -232,7 +244,7 @@ export default {
         opacity: 1 !important;
         /* Scale shapes to fit container width */
         transform-origin: center center !important;
-        transform: scale(1) !important;
+        transform: scale(1.15) !important; /* Scale up the node elements */
     }
     
     .content-column {
@@ -269,8 +281,8 @@ export default {
     
     /* Fix for stencil search width */
     :deep(.x6-widget-stencil-search) {
-        width: 90% !important;
-        margin: 8px auto !important;
+        width: 95% !important; /* Increased width */
+        margin: 10px auto !important; /* Increased margin */
         visibility: visible !important;
         display: block !important;
     }
@@ -278,6 +290,8 @@ export default {
     /* Make stencil search input full width */
     :deep(.x6-widget-stencil-search input) {
         width: 100% !important;
+        padding: 6px 10px !important; /* Increased padding */
+        font-size: 14px !important; /* Explicit font size */
     }
     
     /* Ensure stencil items are visible in all browsers */
