@@ -71,7 +71,8 @@ export default {
     },
     data() {
         return {
-            graph: null
+            graph: null,
+            stencilInstance: null
         };
     },
     computed: mapState({
@@ -80,14 +81,33 @@ export default {
     }),
     async mounted() {
         this.init();
+        
+        // Force stencil redraw after initialization
+        setTimeout(() => {
+            if (this.graph && this.$refs.stencil_container) {
+                console.debug('Forcing stencil redraw');
+                const container = this.$refs.stencil_container;
+                const width = container.offsetWidth;
+                // Trigger a resize event to force redraw
+                window.dispatchEvent(new Event('resize'));
+                // Also force a redraw of the stencil
+                if (this.stencilInstance && typeof this.stencilInstance.resize === 'function') {
+                    this.stencilInstance.resize(width);
+                }
+            }
+        }, 100); // Short delay to ensure component is fully mounted
     },
     unmounted() {
+        // Dispose stencil instance if it exists
+        if (this.stencilInstance && typeof this.stencilInstance.dispose === 'function') {
+            this.stencilInstance.dispose();
+        }
         diagramService.dispose(this.graph);
     },
     methods: {
         init() {
             this.graph = diagramService.edit(this.$refs.graph_container, this.diagram);
-            stencil.get(this.graph, this.$refs.stencil_container);
+            this.stencilInstance = stencil.get(this.graph, this.$refs.stencil_container);
             this.$store.dispatch(tmActions.notModified);
             this.graph.getPlugin('history').on('change', () => {
                 const updated = Object.assign({}, this.diagram);
