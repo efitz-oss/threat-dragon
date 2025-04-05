@@ -58,8 +58,7 @@ import diagramService from '@/service/migration/diagram.js';
 import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
 
-// Import custom stencil theme
-import '../assets/css/stencil-theme.css';
+// Stencil theme is loaded via link tag in public/index.html
 
 export default {
     name: 'TdGraph',
