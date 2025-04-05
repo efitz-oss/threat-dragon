@@ -187,6 +187,13 @@ export default {
         width: 100% !important;
     }
     
+    /* Special handling for collapsed groups */
+    .stencil-container :deep(.x6-widget-stencil-group.collapsed) {
+        min-height: unset !important; 
+        max-height: 32px !important;
+        padding-bottom: 0 !important;
+    }
+    
     .stencil-container :deep(.x6-widget-stencil-group-content) {
         visibility: visible !important;
         display: block !important;
@@ -195,6 +202,11 @@ export default {
         height: auto !important;
         overflow: visible !important;
         width: 100% !important;
+    }
+    
+    /* Hide content in collapsed groups */
+    .stencil-container :deep(.x6-widget-stencil-group.collapsed .x6-widget-stencil-group-content) {
+        display: none !important;
     }
     
     /* Apply correct width to the stencil content container */
@@ -217,6 +229,16 @@ export default {
     .stencil-container :deep(.x6-graph) {
         width: 100% !important;
         margin: 0 auto !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+    
+    /* Enhance SVG visibility */
+    .stencil-container :deep(.x6-graph svg) {
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 10 !important;
+        pointer-events: auto !important;
     }
     
     .stencil-container :deep(.x6-widget-stencil-group-title) {
