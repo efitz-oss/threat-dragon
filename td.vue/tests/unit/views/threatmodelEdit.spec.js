@@ -56,7 +56,11 @@ describe('views/ThreatmodelEdit.vue', () => {
 
         mockRouter = {
             push: jest.fn(),
-            path
+            path,
+            params: {
+                provider: 'local',
+                folder: 'demo'
+            }
         };
 
         // Create mock for $bvModal
@@ -225,7 +229,10 @@ describe('views/ThreatmodelEdit.vue', () => {
                 it('routes back to the threatmodel view', () => {
                     expect(mockRouter.push).toHaveBeenCalledWith({
                         name: 'localThreatModel',
-                        params: mockRouter.params
+                        params: {
+                            provider: 'local',
+                            folder: 'demo'
+                        }
                     });
                 });
             });

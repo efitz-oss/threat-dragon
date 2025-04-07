@@ -193,9 +193,15 @@ export default {
                 return;
             }
 
+            // Ensure all required params are included
+            const routeParams = {
+                ...params,
+                provider: params.provider || 'local', // Default to local if no provider
+                folder: params.folder || 'demo'       // Default to demo if no folder
+            };
             this.$router.push({
                 name: `${this.providerType}ThreatModel`,
-                params
+                params: routeParams
             });
         }
     }

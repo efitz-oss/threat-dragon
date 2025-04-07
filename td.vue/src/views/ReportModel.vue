@@ -173,9 +173,15 @@ export default {
     },
     methods: {
         onCloseClick() {
+            // Ensure all required params are included
+            const params = {
+                ...this.$route.params,
+                provider: this.$route.params.provider || 'local', // Default to local if no provider
+                folder: this.$route.params.folder || 'demo'       // Default to demo if no folder
+            };
             this.$router.push({
                 name: `${this.providerType}ThreatModel`,
-                params: this.$route.params
+                params: params
             });
         },
         print() {

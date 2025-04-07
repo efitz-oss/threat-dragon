@@ -107,7 +107,11 @@ describe('views/ReportModel.vue', () => {
         wrapper.vm.onCloseClick();
         expect(routerMock.push).toHaveBeenCalledWith({
             name: 'localThreatModel',
-            params: routerMock.params
+            params: {
+                ...routerMock.params,
+                provider: 'local',
+                folder: 'demo'
+            }
         });
     });
 

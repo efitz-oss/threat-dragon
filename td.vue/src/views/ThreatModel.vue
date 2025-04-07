@@ -123,9 +123,15 @@ export default {
         },
         onReportClick(evt) {
             evt.preventDefault();
+            // Ensure all required params are included, similar to editDiagram method
+            const params = {
+                ...this.$route.params,
+                provider: this.$route.params.provider || 'local', // Default to local if no provider
+                folder: this.$route.params.folder || 'demo'       // Default to demo if no folder
+            };
             this.$router.push({
                 name: `${this.providerType}Report`,
-                params: this.$route.params
+                params: params
             });
         },
         onCloseClick(evt) {

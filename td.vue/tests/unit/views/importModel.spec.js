@@ -87,7 +87,11 @@ describe('ImportModel.vue', () => {
         it('navigates to the threatmodel view', () => {
             expect(mockRouter.push).toHaveBeenCalledWith({
                 name: 'localThreatModel', 
-                params: { threatmodel: 'foo' }
+                params: { 
+                    threatmodel: 'foo',
+                    provider: 'local',
+                    folder: 'demo'
+                }
             });
         });
     });

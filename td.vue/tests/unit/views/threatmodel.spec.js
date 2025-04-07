@@ -102,7 +102,14 @@ describe('views/Threatmodel.vue', () => {
             });
 
             it('routes to the report view', () => {
-                expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitReport', params: mockRouter.params});
+                expect(mockRouter.push).toHaveBeenCalledWith({ 
+                    name: 'gitReport', 
+                    params: {
+                        ...mockRouter.params,
+                        provider: 'local',
+                        folder: 'demo'
+                    }
+                });
             });
         });
 

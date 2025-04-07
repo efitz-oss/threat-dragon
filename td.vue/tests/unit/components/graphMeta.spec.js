@@ -9,16 +9,28 @@ import { useThreatEditor } from '@/composables/useThreatEditor';
 process.env.NODE_ENV = 'test';
 
 // Mocking the composables
-jest.mock('@/composables/useThreatEditor', () => ({
-    useThreatEditor: jest.fn().mockReturnValue({
+jest.mock('@/composables/useThreatEditor', () => {
+    const mockImplementation = () => ({
         createNewThreat: jest.fn().mockReturnValue({
             id: 'new-threat-id',
             title: 'New Test Threat',
             status: 'Open',
             severity: 'TBD'
-        })
-    })
-}));
+        }),
+        editExistingThreat: jest.fn(),
+        saveThreat: jest.fn(),
+        cancelEdit: jest.fn(),
+        deleteThreat: jest.fn(),
+        isEditing: { value: false },
+        editingThreat: { value: null },
+        isNewThreat: { value: false }
+    });
+    
+    return {
+        __esModule: true,
+        useThreatEditor: mockImplementation
+    };
+});
 
 // Mock the i18n module for testing
 jest.mock('@/i18n/index.js', () => {
