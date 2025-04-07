@@ -9,7 +9,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/folder');
+            expect(route.path).toEqual('/drive/folder');
         });
 
         it('uses a lazily loaded component for DriveAccess', async () => {
@@ -28,7 +28,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/:folder/:threatmodel');
+            expect(route.path).toEqual('/drive/:folder/:threatmodel');
         });
 
         it('uses a lazily loaded component for ThreatModel', async () => {
@@ -47,7 +47,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/:folder/new');
+            expect(route.path).toEqual('/drive/:folder/new');
         });
 
         it('uses a lazily loaded component for NewThreatModel', async () => {
@@ -66,7 +66,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/:folder/:threatmodel/edit');
+            expect(route.path).toEqual('/drive/:folder/:threatmodel/edit');
         });
 
         it('uses a lazily loaded component for ThreatModelEdit', async () => {
@@ -85,7 +85,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/:folder/:threatmodel/edit/:diagram');
+            expect(route.path).toEqual('/drive/:folder/:threatmodel/edit/:diagram');
         });
 
         it('uses a lazily loaded component for DiagramEdit', async () => {
@@ -104,7 +104,7 @@ describe('routes/google.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/google/:provider/:folder/:threatmodel/report');
+            expect(route.path).toEqual('/drive/:folder/:threatmodel/report');
         });
 
         it('uses a lazily loaded component for ReportModel', async () => {

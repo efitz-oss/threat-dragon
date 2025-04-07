@@ -8,6 +8,8 @@ import fontAwesome from './plugins/fontawesome-vue'; // FontAwesome plugin
 import { toastNotificationPlugin } from './plugins/toast-notification.js';
 import Tooltip from 'primevue/tooltip';
 import { isElectronMode } from './utils/environment';
+// Import CSS directly to ensure it's included in the bundle
+import './assets/css/stencil-theme.css';
 import configActions from './store/actions/config.js';
 // Add support for passive event listeners with appropriate options
 import passiveEventsSupport from 'passive-events-support/dist/main.js'; 
