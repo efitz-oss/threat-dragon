@@ -53,7 +53,7 @@ console.log(`Vue app is configured to run on ${hasTlsCredentials ? `https (Port 
 
 
 module.exports = {
-    publicPath: process.env.VUE_APP_IS_ELECTRON === 'true' ? './' : (process.env.NODE_ENV === 'production' ? '/public' : '/'),
+    publicPath: process.env.VUE_APP_IS_ELECTRON === 'true' ? './' : (process.env.NODE_ENV === 'production' ? '/' : '/'),
     productionSourceMap: false,
     devServer: devServerConfig,
     lintOnSave: false,

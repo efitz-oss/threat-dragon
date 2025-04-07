@@ -4,36 +4,42 @@ const providerType = providerTypes.local;
 
 export const localRoutes = [
     {
-        path: `/${providerType}/:threatmodel`,
+        path: '/models/:threatmodel',
         name: `${providerType}ThreatModel`,
-        component: () => import(/* webpackChunkName: "threatmodel" */ '../views/ThreatModel.vue')
+        component: () => import(/* webpackChunkName: "threatmodel" */ '../views/ThreatModel.vue'),
+        meta: { provider: 'local' }
     },
     {
-        path: `/${providerType}/:threatmodel/edit`,
+        path: '/models/:threatmodel/edit',
         name: `${providerType}ThreatModelEdit`,
         component: () =>
-            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue')
+            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue'),
+        meta: { provider: 'local' }
     },
     {
-        path: `/${providerType}/:threatmodel/edit/:diagram`,
+        path: '/models/:threatmodel/edit/:diagram',
         name: `${providerType}DiagramEdit`,
-        component: () => import(/* webpackChunkName: "diagram-edit" */ '../views/DiagramEdit.vue')
+        component: () => import(/* webpackChunkName: "diagram-edit" */ '../views/DiagramEdit.vue'),
+        meta: { provider: 'local' }
     },
     {
-        path: `/${providerType}/threatmodel/import`,
+        path: '/import',
         name: `${providerType}ThreatModelImport`,
         component: () =>
-            import(/* webpackChunkName: "threatmodel-import" */ '../views/ImportModel.vue')
+            import(/* webpackChunkName: "threatmodel-import" */ '../views/ImportModel.vue'),
+        meta: { provider: 'local' }
     },
     {
-        path: `/${providerType}/threatmodel/new`,
+        path: '/new',
         name: `${providerType}NewThreatModel`,
         component: () =>
-            import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue')
+            import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue'),
+        meta: { provider: 'local' }
     },
     {
-        path: `/${providerType}/:threatmodel/report`,
+        path: '/models/:threatmodel/report',
         name: `${providerType}Report`,
-        component: () => import(/* webpackChunkName: "report-model" */ '../views/ReportModel.vue')
+        component: () => import(/* webpackChunkName: "report-model" */ '../views/ReportModel.vue'),
+        meta: { provider: 'local' }
     }
 ];

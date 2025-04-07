@@ -61,4 +61,19 @@ const router = createRouter({
     routes
 });
 
+// Navigation guard to ensure provider is available in the route params
+router.beforeEach((to, from, next) => {
+    // If the route has provider metadata but no provider param, add it
+    if (to.meta.provider && !to.params.provider) {
+        const newParams = { ...to.params, provider: to.meta.provider };
+        next({
+            ...to,
+            params: newParams,
+            replace: true
+        });
+    } else {
+        next();
+    }
+});
+
 export default router;
