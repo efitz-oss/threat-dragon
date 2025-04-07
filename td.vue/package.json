@@ -108,6 +108,7 @@
     "@vue/cli-plugin-unit-jest": "~5.0.8",
     "@vue/cli-service": "~5.0.8",
     "@vue/test-utils": "^2.4.6",
+    "copy-webpack-plugin": "^13.0.0",
     "cypress": "^14.2.1",
     "dotenv": "^16.4.7",
     "electron": "^25.8.4",

@@ -54,6 +54,11 @@ console.log(`Vue app is configured to run on ${hasTlsCredentials ? `https (Port 
 
 module.exports = {
     publicPath: process.env.VUE_APP_IS_ELECTRON === 'true' ? './' : '/',
+    // Configure webpack to handle CSS files
+    css: {
+        extract: process.env.NODE_ENV === 'production',
+        sourceMap: process.env.NODE_ENV !== 'production'
+    },
     productionSourceMap: false,
     devServer: devServerConfig,
     lintOnSave: false,
@@ -259,6 +264,15 @@ module.exports = {
                 __VUE_OPTIONS_API__: JSON.stringify(true),
                 __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
                 __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
+            }),
+            // Copy the stencil-theme.css file to the output directory
+            new (require('copy-webpack-plugin'))({
+                patterns: [
+                    { 
+                        from: 'src/assets/css/stencil-theme.css', 
+                        to: 'css/stencil-theme.css' 
+                    }
+                ]
             })
         ],
         output: {
