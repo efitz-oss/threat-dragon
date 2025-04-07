@@ -12,17 +12,27 @@ import TdThreatEditDialog from '@/components/ThreatEditDialog.vue';
 process.env.NODE_ENV = 'test';
 
 // Mocking the i18n module for tests
-jest.mock('@/i18n/index.js', () => {
-    const originalModule = jest.requireActual('@/i18n/index.js');
-    return {
-        ...originalModule,
-        useI18n: jest.fn().mockReturnValue({
-            t: (key) => key,
-            locale: { value: 'eng' },
-            availableLocales: ['eng', 'deu', 'fra']
+jest.mock('@/i18n/index.js', () => ({
+    __esModule: true,
+    default: {
+        get: jest.fn().mockReturnValue({
+            global: {
+                t: jest.fn().mockImplementation(key => key)
+            }
         })
-    };
-});
+    },
+    useI18n: jest.fn().mockReturnValue({
+        t: jest.fn().mockImplementation(key => key),
+        locale: { value: 'eng' },
+        availableLocales: ['eng', 'deu', 'fra']
+    }),
+    tc: jest.fn().mockImplementation(key => key)
+}));
+
+// Mock modal-helper
+jest.mock('@/utils/modal-helper.js', () => ({
+    showConfirmDialog: jest.fn().mockResolvedValue(true)
+}));
 
 import diagramService from '@/service/migration/diagram.js';
 import stencilService from '@/service/x6/stencil.js';
@@ -127,6 +137,12 @@ describe('components/Graph.vue', () => {
         });
         jest.spyOn(storeMock, 'dispatch');
         
+        // Mock window._vueApp for router access
+        window._vueApp = {
+            $router: routerMock,
+            $route: { params: {} }
+        };
+        
         // Shallow mount with improved stubs configuration for Vue 3
         wrapper = shallowMount(TdGraph, {
             global: {
@@ -158,6 +174,12 @@ describe('components/Graph.vue', () => {
         // and we can't properly mock the refs in the test environment
         // Instead, we'll call the init method directly
         wrapper.vm.init = jest.fn();
+        
+        // Force setup function results to be properly defined
+        Object.defineProperty(wrapper.vm, 't', {
+            get: () => jest.fn(key => key)
+        });
+        
         await nextTick();
     });
 

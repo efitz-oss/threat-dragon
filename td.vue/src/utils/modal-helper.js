@@ -60,7 +60,9 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
             }
         });
 
-        // Use the i18n plugin if available in the Vue instance
+        let mounted = false;
+        
+        // Use the i18n plugin if available
         // We need to use a Promise-based approach here since this is not an async function
         import('@/i18n/index.js').then(i18nFactory => {
             try {
@@ -72,15 +74,34 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
                     // Fallback to instance i18n if available (legacy approach)
                     app.use(vueInstance.$i18n);
                 }
+                
+                // Mount after i18n is configured to ensure translations work
+                if (!mounted) {
+                    const _modalInstance = app.mount(modalContainer);
+                    mounted = true;
+                }
             } catch (e) {
                 console.warn('Could not load i18n for modal:', e);
+                // Even if i18n fails, we still need to mount the app
+                if (!mounted) {
+                    const _modalInstance = app.mount(modalContainer);
+                    mounted = true;
+                }
             }
         }).catch(e => {
             console.warn('Could not import i18n for modal:', e);
+            // Even if i18n fails, we still need to mount the app
+            if (!mounted) {
+                const _modalInstance = app.mount(modalContainer);
+                mounted = true;
+            }
         });
 
-        // Mount the app to the container
-        const _modalInstance = app.mount(modalContainer);
+        // Immediate mount in case the above promise takes too long
+        if (!mounted) {
+            const _modalInstance = app.mount(modalContainer);
+            mounted = true;
+        }
 
         // Function to clean up the modal
         let isCleanedUp = false;

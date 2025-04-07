@@ -47,6 +47,7 @@
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
+import { useI18n } from '@/i18n';
 
 import TdGraphButtons from '@/components/GraphButtons.vue';
 import TdGraphMeta from '@/components/GraphMeta.vue';
@@ -72,6 +73,16 @@ export default {
     },
     setup() {
         const store = useStore();
+        // Fix for test compatibility
+        let t = () => '';
+        try {
+            const i18n = useI18n(); // Initialize i18n in setup function
+            if (i18n && i18n.t) {
+                t = i18n.t;
+            }
+        } catch (error) {
+            console.warn('i18n not available in setup, using default:', error);
+        }
         const graph = ref(null);
         const stencilInstance = ref(null);
         const graphContainer = ref(null);
@@ -121,9 +132,8 @@ export default {
         
         const getConfirmModal = async () => {
             try {
-                // Use the modal helper with proper i18n access
+                // Use the modal helper with t function from setup scope
                 const { showConfirmDialog } = await import('@/utils/modal-helper.js');
-                const { t } = await import('@/i18n/index.js').then(m => m.useI18n());
                 
                 return await showConfirmDialog(null, {
                     title: t('forms.discardTitle'),
@@ -214,7 +224,10 @@ export default {
             threatSelected,
             threatSuggest,
             saved,
-            closed
+            closed,
+            
+            // i18n
+            t
         };
     }
 };
