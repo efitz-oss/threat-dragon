@@ -62,7 +62,21 @@ const router = createRouter({
 });
 
 // Navigation guard to ensure provider is available in the route params
+// and to handle legacy route compatibility
 router.beforeEach((to, from, next) => {
+    // If this is a legacy route with /google/google/ pattern, redirect to new route format
+    if (to.path.startsWith('/google/google/')) {
+        const newPath = to.path.replace('/google/google/', '/drive/');
+        console.log(`Redirecting legacy route ${to.path} to ${newPath}`);
+        next({
+            path: newPath, 
+            params: to.params,
+            query: to.query,
+            replace: true
+        });
+        return;
+    }
+
     // If the route has provider metadata but no provider param, add it
     if (to.meta.provider && !to.params.provider) {
         const newParams = { ...to.params, provider: to.meta.provider };

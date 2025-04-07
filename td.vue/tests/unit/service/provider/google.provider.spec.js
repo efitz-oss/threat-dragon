@@ -11,7 +11,7 @@ describe('service/google.provider.js', () => {
             });
 
             it('links to the folder page', () => {
-                expect(action.to).toEqual('/google/google/folder');
+                expect(action.to).toEqual('/drive/folder');
             });
 
             it('uses the Google Drive icon', () => {
@@ -28,7 +28,7 @@ describe('service/google.provider.js', () => {
             });
 
             it('links to the new threat model page', () => {
-                expect(action.to).toEqual('/google/google/new');
+                expect(action.to).toEqual('/drive/new');
             });
 
             it('uses the plus icon', () => {

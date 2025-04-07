@@ -4,13 +4,13 @@ const providerType = providerTypes.google;
 
 const getDashboardActions = () => [
     {
-        to: `/${providerType}/google/folder`,
+        to: '/drive/folder',
         key: 'openExisting',
         icon: 'google-drive',
         iconPreface: 'fab'
     },
     {
-        to: `/${providerType}/google/new`,
+        to: '/drive/new',
         key: 'createNew',
         icon: 'plus'
     },
