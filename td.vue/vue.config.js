@@ -265,15 +265,8 @@ module.exports = {
                 __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
                 __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
             }),
-            // Copy the stencil-theme.css file to the output directory
-            new (require('copy-webpack-plugin'))({
-                patterns: [
-                    { 
-                        from: 'src/assets/css/stencil-theme.css', 
-                        to: 'css/stencil-theme.css' 
-                    }
-                ]
-            })
+            // Note: We no longer need to copy the CSS file here
+            // The CSS is already in public/css and will be copied to the output directory automatically
         ],
         output: {
             hashFunction: 'xxhash64',
