@@ -21,7 +21,7 @@
             <!-- Ensure alignment to the right -->
             <b-navbar-nav class="ms-auto d-flex align-items-center justify-content-end">
                 <b-nav-text v-show="username" class="logged-in-as">
-                    {{ t('nav.loggedInAs') }} {{ username }}
+                    ({{ providerDisplayName }}) {{ username }}
                 </b-nav-text>
                 <b-nav-item v-show="username" id="nav-sign-out" @click="onLogOut">
                     <font-awesome-icon
@@ -96,6 +96,7 @@ import { useStore } from 'vuex';
 import { LOGOUT } from '@/store/actions/auth.js';
 import { useI18n } from '@/i18n';
 import TdLocaleSelect from './LocaleSelect.vue';
+import { getDisplayName } from '@/service/provider/providers.js';
 
 export default {
     name: 'TdNavbar',
@@ -111,6 +112,17 @@ export default {
         const packageBuildVersion = computed(() => store.state.packageBuildVersion);
         const packageBuildState = computed(() => store.state.packageBuildState);
         const config = computed(() => store.state.config.config);
+        
+        // Get the provider display name for the navbar
+        const selectedProvider = computed(() => store.state.provider.selected || 'local');
+        const providerDisplayName = computed(() => {
+            try {
+                return getDisplayName(selectedProvider.value);
+            } catch (err) {
+                console.warn('Error getting provider display name:', err);
+                return selectedProvider.value;
+            }
+        });
         
         const googleEnabled = computed(() => 
             config.value && config.value.googleEnabled && !store.getters.isElectronMode
@@ -158,6 +170,7 @@ export default {
             packageBuildVersion,
             packageBuildState,
             googleEnabled,
+            providerDisplayName,
             onLogOut
         };
     }

@@ -123,15 +123,50 @@ export default {
         },
         onReportClick(evt) {
             evt.preventDefault();
-            // Ensure all required params are included, similar to editDiagram method
-            const params = {
-                ...this.$route.params,
-                provider: this.$route.params.provider || 'local', // Default to local if no provider
-                folder: this.$route.params.folder || 'demo'       // Default to demo if no folder
-            };
+            console.debug(`Generating report with provider: ${this.providerType}`);
+            
+            // Special handling for local provider
+            if (this.providerType === 'local') {
+                console.debug('Using local route structure for report');
+                this.$router.push({
+                    name: 'localReport',
+                    params: {
+                        threatmodel: this.$route.params.threatmodel
+                    },
+                    replace: true
+                });
+                return;
+            }
+            
+            // For other providers, use the same validation logic as editDiagram
+            const params = { ...this.$route.params };
+            
+            // Provider-specific validation
+            if (this.providerType === 'google') {
+                console.debug('Validating Google Drive params for report');
+                if (!params.folder) {
+                    console.error('Missing folder parameter for Google Drive route');
+                    if (this.$store.state.folder && this.$store.state.folder.selected) {
+                        params.folder = this.$store.state.folder.selected;
+                    } else {
+                        this.$router.push({ name: 'googleFolder' });
+                        return;
+                    }
+                }
+            } else if (this.providerType === 'git') {
+                console.debug('Validating Git params for report');
+                if (!params.repository || !params.branch) {
+                    console.error('Missing required Git parameters');
+                    this.$router.push({ name: 'MainDashboard' });
+                    return;
+                }
+            }
+            
+            console.debug(`Navigating to ${this.providerType}Report with params:`, params);
             this.$router.push({
                 name: `${this.providerType}Report`,
-                params: params
+                params: params,
+                replace: true
             });
         },
         onCloseClick(evt) {
@@ -153,41 +188,63 @@ export default {
 
             this.$store.dispatch(tmActions.diagramSelected, diagram);
             
+            console.debug(`Editing diagram "${diagram.title}" with provider: ${this.providerType}`);
+            
             // When in local mode (demo models), use a simpler route structure
             // This avoids provider param issues that can cause infinite redirects
             if (this.providerType === 'local') {
+                console.debug('Using local route structure for diagram edit');
                 this.$router.push({
                     name: 'localDiagramEdit',
                     params: {
                         threatmodel: this.$route.params.threatmodel,
                         diagram: encodeURIComponent(diagram.title)
-                    }
+                    },
+                    replace: true // Use replace to clean up navigation history
                 });
                 return;
             }
             
-            // For other provider types, include all necessary params
+            // For other provider types, include all necessary params with validation
             const params = {
                 ...this.$route.params,
                 diagram: encodeURIComponent(diagram.title)
             };
             
-            // Special handling for Google Drive provider to ensure folder param is present
-            if (this.providerType === 'google' && !params.folder) {
-                console.error('Missing folder parameter for Google Drive route');
-                // Use a default folder ID if available in the state
-                if (this.$store.state.folder && this.$store.state.folder.selected) {
-                    params.folder = this.$store.state.folder.selected;
-                } else {
-                    // Redirect to folder selection if we don't have a folder
-                    this.$router.push({ name: 'googleFolder' });
+            // Provider-specific validation
+            if (this.providerType === 'google') {
+                console.debug('Validating Google Drive params for diagram edit');
+                // Special handling for Google Drive provider to ensure folder param is present
+                if (!params.folder) {
+                    console.error('Missing folder parameter for Google Drive route');
+                    // Use a default folder ID if available in the state
+                    if (this.$store.state.folder && this.$store.state.folder.selected) {
+                        console.debug('Using folder ID from state:', this.$store.state.folder.selected);
+                        params.folder = this.$store.state.folder.selected;
+                    } else {
+                        // Redirect to folder selection if we don't have a folder
+                        console.debug('No folder ID available, redirecting to folder selection');
+                        this.$router.push({ name: 'googleFolder' });
+                        return;
+                    }
+                }
+            } else if (this.providerType === 'git') {
+                console.debug('Validating Git params for diagram edit');
+                // Ensure repository and branch are set
+                if (!params.repository || !params.branch) {
+                    console.error('Missing required Git parameters:', 
+                        !params.repository ? 'repository' : 'branch');
+                    // Fall back to dashboard as we can't proceed without these params
+                    this.$router.push({ name: 'MainDashboard' });
                     return;
                 }
             }
             
+            console.debug(`Navigating to ${this.providerType}DiagramEdit with params:`, params);
             this.$router.push({
                 name: `${this.providerType}DiagramEdit`,
-                params: params
+                params: params,
+                replace: true // Use replace to clean up navigation history
             });
         }
     }

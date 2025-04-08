@@ -45,13 +45,23 @@ export default {
     },
     methods: {
         onModelClick(model) {
+            // 1. First explicitly clear provider state when selecting demo model
+            // This prevents routing conflict with previous provider (e.g., Google Drive)
+            this.$store.dispatch('PROVIDER_CLEAR');
+            console.debug('Cleared provider state');
+            
+            // 2. Select the local provider explicitly
+            this.$store.dispatch('PROVIDER_SELECTED', 'local');
+            console.debug('Selected local provider');
+            
+            // 3. Select the threat model
             this.$store.dispatch(tmActions.selected, model.model);
+            console.debug('Selected threat model data');
+            
             if (isElectron()) {
                 // tell any electron server that the model has changed
                 window.electronAPI.modelOpened(model.name);
             }
-            // Store the current auth provider for reference (prefixed with _ as it's unused)
-            const _currentProvider = this.$route.params.provider;
             
             // Always use local provider for demo models, regardless of login method
             // This is because demo models are local static files, not stored in Google Drive
@@ -63,9 +73,13 @@ export default {
 
             // First try to navigate by name, but if that fails, use path as fallback
             try {
-                // We deliberately avoid preserving provider from route.params
-                // to prevent routing errors with Google Drive routes
-                this.$router.push({ name: 'localThreatModel', params });
+                // We deliberately use the local route name and simplified params
+                // to prevent routing errors with other providers
+                this.$router.push({ 
+                    name: 'localThreatModel', 
+                    params,
+                    replace: true // Use replace to avoid adding to history
+                });
             } catch (err) {
                 console.error('Error navigating by route name, falling back to path:', err);
                 // Fallback to direct path navigation to avoid route naming issues

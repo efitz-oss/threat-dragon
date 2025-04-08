@@ -155,23 +155,55 @@ export default {
             if (!store.getters.modelChanged || (await getConfirmModal())) {
                 await store.dispatch(tmActions.diagramClosed);
                 
-                // Use inject to access the router in Composition API
-                // We'll need to update this when we introduce app-wide router injection
-                // For now, we'll use window to access the router since this is transitional code
+                // Use setTimeout to ensure state is updated before navigation
                 setTimeout(() => {
                     // Get router and route from the global app instance
                     const router = window._vueApp?.$router;
                     const route = window._vueApp?.$route;
                     
                     if (router && route) {
+                        console.debug(`Closing diagram with provider: ${providerType.value}`);
                         const routeParams = { ...route.params };
+                        
+                        // Remove diagram param as we're going back to the model view
                         if ('diagram' in routeParams) {
                             delete routeParams.diagram;
                         }
                         
+                        // Special handling for local provider
+                        if (providerType.value === 'local') {
+                            console.debug('Using local route structure for diagram close');
+                            router.push({
+                                name: 'localThreatModel',
+                                params: {
+                                    threatmodel: routeParams.threatmodel
+                                },
+                                replace: true
+                            });
+                            return;
+                        }
+                        
+                        // Provider-specific validation
+                        if (providerType.value === 'google' && !routeParams.folder) {
+                            console.error('Missing folder parameter for Google Drive route');
+                            if (store.state.folder && store.state.folder.selected) {
+                                routeParams.folder = store.state.folder.selected;
+                            } else {
+                                router.push({ name: 'googleFolder' });
+                                return;
+                            }
+                        } else if (providerType.value === 'git' && 
+                                  (!routeParams.repository || !routeParams.branch)) {
+                            console.error('Missing required Git parameters');
+                            router.push({ name: 'MainDashboard' });
+                            return;
+                        }
+                        
+                        console.debug(`Navigating to ${providerType.value}ThreatModel with params:`, routeParams);
                         router.push({
                             name: `${providerType.value}ThreatModel`,
-                            params: routeParams
+                            params: routeParams,
+                            replace: true
                         });
                     } else {
                         console.error('Unable to access router in Composition API context');
