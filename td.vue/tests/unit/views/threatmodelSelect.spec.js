@@ -9,25 +9,46 @@ import TdSelectionPage from '@/components/SelectionPage.vue';
 import ThreatModelSelect from '@/views/git/ThreatModelSelect.vue';
 import { THREATMODEL_CLEAR, THREATMODEL_CREATE, THREATMODEL_FETCH, THREATMODEL_SELECTED, THREATMODEL_UPDATE, THREATMODEL_NOT_MODIFIED } from '../../../src/store/actions/threatmodel';
 
+// Mock Vue Router composables
+import * as vueRouter from 'vue-router';
+vueRouter.useRoute = jest.fn();
+vueRouter.useRouter = jest.fn();
+
+// Mock i18n composable
+jest.mock('@/i18n', () => ({
+    useI18n: () => ({
+        t: (key) => key,
+        locale: { value: 'eng' }
+    })
+}));
 
 describe('views/ThreatModelSelect.vue', () => {
     const branch = 'aBranch', repo = 'someRepo';
-    let wrapper, mockStore, mockRouter;
+    let wrapper, mockStore, mockRouter, mockRoute;
 
     beforeEach(() => {
         mockStore = getMockStore();
     });
 
-    const mountComponent = (mockRoute) => {
+    const mountComponent = (routeParams) => {
+        // Set up mock route
+        mockRoute = {
+            params: routeParams.params || {},
+            query: routeParams.query || {}
+        };
+        vueRouter.useRoute.mockReturnValue(mockRoute);
+        
+        // Set up mock router
         mockRouter = { push: jest.fn() };
+        vueRouter.useRouter.mockReturnValue(mockRouter);
+        
         jest.spyOn(mockStore, 'dispatch');
         wrapper = shallowMount(ThreatModelSelect, {
             global: {
                 plugins: [mockStore],
-                mocks: {
-                    $route: mockRoute,
-                    $router: mockRouter,
-                    $t: key => key
+                // No need to mock $route and $router since we're mocking the composables
+                stubs: {
+                    'td-selection-page': true
                 }
             }
         });

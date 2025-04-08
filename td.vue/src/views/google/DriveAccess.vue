@@ -8,6 +8,7 @@ import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import api from '@/service/api/api.js';
 import { THREATMODEL_UPDATE } from '@/store/actions/threatmodel.js';
+import { useI18n } from '@/i18n';
 
 // Add Google Drive icon to FontAwesome library
 library.add(faGoogleDrive);
@@ -29,10 +30,10 @@ const route = useRoute();
 const router = useRouter();
 const apiKey = process.env.VUE_APP_GOOGLE_API_KEY || '';
 const appId = process.env.VUE_APP_GOOGLE_APP_ID || '';
+const { t } = useI18n();
 
 const accessToken = ref(null);
 const isLoading = ref(false);
-// const fileContent = ref(null); // Removed unused variable
 const fileName = ref('');
 
 // Determine if we're saving or opening based on route or props
@@ -437,16 +438,16 @@ onMounted(() => {
             <b-row class="text-center mb-2">
                 <b-col md="12">
                     <h1 v-if="isSaveMode">
-                        {{ $t('providers.googleDrive.saveThreatModel') }}
+                        {{ t('providers.googleDrive.saveThreatModel') }}
                     </h1>
                     <h1 v-else>
-                        {{ $t('providers.googleDrive.selectThreatModel') }}
+                        {{ t('providers.googleDrive.selectThreatModel') }}
                     </h1>
                     <p class="td-description mt-2">
                         {{
                             isSaveMode
-                                ? $t('providers.googleDrive.saveDescription')
-                                : $t('providers.googleDrive.description')
+                                ? t('providers.googleDrive.saveDescription')
+                                : t('providers.googleDrive.description')
                         }}
                     </p>
                 </b-col>
@@ -456,13 +457,13 @@ onMounted(() => {
             <b-row v-if="isSaveMode" class="my-3">
                 <b-col md="6" offset-md="3">
                     <b-form-group
-                        :label="$t('providers.googleDrive.fileName')"
+                        :label="t('providers.googleDrive.fileName')"
                         label-for="file-name"
                     >
                         <b-form-input
                             id="file-name"
                             v-model="fileName"
-                            :placeholder="$t('providers.googleDrive.fileNamePlaceholder')"
+                            :placeholder="t('providers.googleDrive.fileNamePlaceholder')"
                         ></b-form-input>
                     </b-form-group>
                 </b-col>
@@ -488,8 +489,8 @@ onMounted(() => {
                         <span>
                             {{
                                 isSaveMode
-                                    ? $t('providers.googleDrive.selectFolder')
-                                    : $t('providers.googleDrive.selectFile')
+                                    ? t('providers.googleDrive.selectFolder')
+                                    : t('providers.googleDrive.selectFile')
                             }}
                         </span>
                     </BButton>

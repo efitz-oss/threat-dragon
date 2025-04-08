@@ -1,7 +1,4 @@
-import { providerTypes } from './providerTypes.js';
-
-// Prefix unused variable with underscore to satisfy linting rules
-const _providerType = providerTypes.google;
+// The providerTypes import was removed as it's not needed in this file
 
 const getDashboardActions = () => [
     {

@@ -7,10 +7,10 @@ import { useI18n as _useI18n } from '@/i18n';
 
 // Mock the i18n composable
 jest.mock('@/i18n', () => ({
-    useI18n: jest.fn(() => ({
-        t: jest.fn(key => key),
+    useI18n: () => ({
+        t: (key) => key,
         locale: { value: 'eng' }
-    }))
+    })
 }));
 
 // Mock the data-changed service

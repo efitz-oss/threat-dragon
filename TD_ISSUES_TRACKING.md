@@ -13,9 +13,9 @@ This document tracks the issues and their status as we work through the improvem
 | "New Threat" Button Not Working | ✅ Fixed | Added debugging and improved event handling |
 | Double-Click Required to Open Threat Dialog | ✅ Fixed | Added nextTick to ensure event handling order |
 | Stencil Component Only Shows Headers | ✅ Fixed | Improved stencil initialization and redraw logic |
-| Unused Variables and Imports | 🔄 In Progress | Ongoing cleanup |
+| Unused Variables and Imports | 🔄 In Progress | Removed unused variables in DriveAccess.vue, migrated ThreatModelSelect.vue to Composition API |
 | Provider State Architecture | 📝 Planned | Split into auth and storage components |
-| i18n Migration to Composition API | 📝 Planned | Need to identify remaining components |
+| i18n Migration to Composition API | 🔄 In Progress | Started migration (2/28 components done) |
 
 ## Detailed Findings and Fixes
 
@@ -161,10 +161,11 @@ This document tracks the issues and their status as we work through the improvem
 
 ## Next Steps
 
-1. Continue cleaning up unused variables and imports
+1. Continue cleaning up unused variables and imports (removed in google.provider.js)
 2. Design and implement the provider state architecture redesign to separate authentication from storage
-3. Complete the i18n migration to the Composition API
-4. Further testing to ensure all fixes work correctly
+3. Continue the i18n migration to the Composition API (2/28 components migrated)
+4. Update test fixtures to work with components migrated to Composition API
+5. Further testing to ensure all fixes work correctly
 
 ## Questions for Team Discussion
 
