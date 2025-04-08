@@ -1,0 +1,206 @@
+/**
+ * Threat Dragon Stencil Theme
+ * 
+ * This CSS file provides a custom theme for the X6 stencil component used in Threat Dragon.
+ * It's designed to improve visibility and usability of the stencil elements while maintaining
+ * a consistent style with the rest of the application.
+ */
+
+/* ================= STENCIL CONTAINER VARIABLES ================= */
+:root {
+  --td-stencil-bg-color: #f5f5f5;
+  --td-stencil-title-bg: #ededed;
+  --td-stencil-border-color: #eee;
+  --td-stencil-title-color: #666;
+  --td-stencil-title-hover-color: #444;
+  --td-stencil-title-height: 32px;
+  --td-stencil-item-height: 80px;
+  --td-stencil-group-min-height: 100px;
+  --td-stencil-padding: 8px;
+  --td-stencil-font-size: 14px;
+  --td-stencil-z-index: 10;
+  --td-stencil-collapsed-height: 32px;
+}
+
+/* ================= MAIN STENCIL CONTAINER ================= */
+.td-stencil-theme .x6-widget-stencil {
+  width: 100%;
+  max-width: 100%;
+  visibility: visible;
+  display: block;
+  overflow: visible;
+  background-color: var(--td-stencil-bg-color);
+  color: var(--td-stencil-title-color);
+}
+
+/* ================= STENCIL GROUPS ================= */
+.td-stencil-theme .x6-widget-stencil-group {
+  visibility: visible;
+  display: block;
+  height: auto;
+  min-height: var(--td-stencil-group-min-height);
+  width: 100%;
+  padding: 0;
+  padding-bottom: var(--td-stencil-padding);
+  overflow: hidden;
+  margin-bottom: 1px;
+}
+
+/* Collapsed groups */
+.td-stencil-theme .x6-widget-stencil-group.collapsed {
+  min-height: unset; 
+  max-height: var(--td-stencil-collapsed-height);
+  padding-bottom: 0;
+  height: auto;
+}
+
+/* Group content container */
+.td-stencil-theme .x6-widget-stencil-group-content {
+  visibility: visible;
+  display: block;
+  opacity: 1;
+  min-height: var(--td-stencil-group-min-height);
+  height: auto;
+  overflow: visible;
+  width: 100%;
+}
+
+/* Hide content in collapsed groups */
+.td-stencil-theme .x6-widget-stencil-group.collapsed .x6-widget-stencil-group-content {
+  display: none;
+}
+
+/* ================= GROUP TITLES ================= */
+.td-stencil-theme .x6-widget-stencil-group-title {
+  visibility: visible;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  height: var(--td-stencil-title-height);
+  padding: 0 var(--td-stencil-padding) 0 32px;
+  line-height: 20px;
+  font-size: var(--td-stencil-font-size);
+  background-color: var(--td-stencil-title-bg);
+  border-bottom: 1px solid var(--td-stencil-border-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  position: relative;
+}
+
+/* Collapsible title styling */
+.td-stencil-theme .x6-widget-stencil-group.collapsable > .x6-widget-stencil-group-title {
+  cursor: pointer;
+}
+
+.td-stencil-theme .x6-widget-stencil-group.collapsable > .x6-widget-stencil-group-title:hover {
+  color: var(--td-stencil-title-hover-color);
+}
+
+/* Expand/collapse button styling */
+.td-stencil-theme .x6-widget-stencil-group.collapsable > .x6-widget-stencil-group-title::before {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  border: none;
+  content: ' ';
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+.td-stencil-theme .x6-widget-stencil-group.collapsable > .x6-widget-stencil-group-title:hover::before {
+  opacity: 0.8;
+}
+
+/* ================= STENCIL CONTENT CONTAINER ================= */
+.td-stencil-theme .x6-widget-stencil-content {
+  width: 100%;
+  overflow: visible;
+  position: absolute;
+}
+
+/* ================= STENCIL ITEMS ================= */
+.td-stencil-theme .x6-widget-stencil-item {
+  width: 100%;
+  height: var(--td-stencil-item-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0;
+  margin: 5px auto;
+  position: relative;
+  overflow: visible;
+}
+
+/* ================= GRAPH ELEMENTS IN STENCIL ================= */
+.td-stencil-theme .x6-graph {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: var(--td-stencil-z-index);
+  background: transparent;
+  box-shadow: none;
+}
+
+/* SVG elements */
+.td-stencil-theme .x6-graph svg {
+  visibility: visible;
+  opacity: 1;
+  z-index: var(--td-stencil-z-index);
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Shape elements */
+.td-stencil-theme .x6-node {
+  visibility: visible;
+  display: block;
+  opacity: 1;
+  transform-origin: center center;
+}
+
+/* SVG child elements */
+.td-stencil-theme svg path,
+.td-stencil-theme svg rect,
+.td-stencil-theme svg circle,
+.td-stencil-theme svg text {
+  visibility: visible;
+  display: block;
+  opacity: 1;
+}
+
+/* ================= STENCIL SEARCH ================= */
+.td-stencil-theme .x6-widget-stencil-search {
+  width: 90%;
+  margin: 8px auto;
+  visibility: visible;
+  display: block;
+}
+
+.td-stencil-theme .x6-widget-stencil-search input {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: var(--td-stencil-font-size);
+  border: 1px solid var(--td-stencil-border-color);
+  border-radius: 12px;
+  outline: 0;
+}
+
+/* ================= NOT FOUND STATE ================= */
+.td-stencil-theme.not-found::after {
+  color: #808080;
+  font-weight: 600;
+  font-size: var(--td-stencil-font-size);
+  background: transparent;
+}
