@@ -18,7 +18,7 @@
                                 <b-form-input
                                     id="filter"
                                     v-model="filter"
-                                    :placeholder="$t('forms.search')"
+                                    :placeholder="t('forms.search')"
                                 />
                             </b-form-group>
                         </b-col>
@@ -57,11 +57,11 @@
         <b-row>
             <b-col md="6" offset="3">
                 <div class="pagination">
-                    <button :disabled="!pagePrev" @click="prevPage">Previous</button>
+                    <button :disabled="!pagePrev" @click="prevPage">{{ t('pagination.previous') }}</button>
                     <button class="btn" disabled>
                         {{ pageRef }}
                     </button>
-                    <button :disabled="!pageNext" @click="nextPage">Next</button>
+                    <button :disabled="!pageNext" @click="nextPage">{{ t('pagination.next') }}</button>
                 </div>
             </b-col>
         </b-row>
@@ -70,6 +70,8 @@
 
 <script>
 import { ref, computed } from 'vue';
+import { useI18n } from '@/i18n';
+
 export default {
     name: 'TdSelectionPage',
     props: {
@@ -120,8 +122,10 @@ export default {
     },
     emits: ['back-click', 'empty-state-click', 'item-click', 'paginate'],
     setup(props, { emit }) {
+        const { t } = useI18n();
         const filter = ref('');
         const pageRef = ref(props.page);
+        
         const displayedItems = computed(() => {
             if (!filter.value) return props.items;
             return props.isGoogleProvider
@@ -132,24 +136,28 @@ export default {
                     item.toLowerCase().includes(filter.value.toLowerCase())
                 );
         });
+        
         const prevPage = () => {
             if (props.pagePrev) {
                 pageRef.value--;
                 emit('paginate', pageRef.value);
             }
         };
+        
         const nextPage = () => {
             if (props.pageNext) {
                 pageRef.value++;
                 emit('paginate', pageRef.value);
             }
         };
+        
         return {
             filter,
             pageRef,
             displayedItems,
             prevPage,
-            nextPage
+            nextPage,
+            t
         };
     }
 };

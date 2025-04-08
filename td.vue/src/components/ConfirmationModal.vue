@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
     name: 'ConfirmationModal',
     props: {
@@ -36,39 +38,53 @@ export default {
         }
     },
     emits: ['confirmed', 'cancelled', 'closed'],
-    data() {
-        return {
-            resolvePromise: null
-        };
-    },
-    methods: {
-        show() {
-            this.$refs.confirmModal.show();
+    setup(props, { emit, expose }) {
+        const confirmModal = ref(null);
+        const resolvePromise = ref(null);
+        
+        const show = () => {
+            confirmModal.value.show();
             return new Promise((resolve) => {
-                this.resolvePromise = resolve;
+                resolvePromise.value = resolve;
             });
-        },
-        confirm() {
-            if (this.resolvePromise) {
-                this.resolvePromise(true);
-                this.resolvePromise = null;
+        };
+        
+        const confirm = () => {
+            if (resolvePromise.value) {
+                resolvePromise.value(true);
+                resolvePromise.value = null;
             }
-            this.$emit('confirmed');
-        },
-        cancel() {
-            if (this.resolvePromise) {
-                this.resolvePromise(false);
-                this.resolvePromise = null;
+            emit('confirmed');
+        };
+        
+        const cancel = () => {
+            if (resolvePromise.value) {
+                resolvePromise.value(false);
+                resolvePromise.value = null;
             }
-            this.$emit('cancelled');
-        },
-        hide() {
-            if (this.resolvePromise) {
-                this.resolvePromise(false);
-                this.resolvePromise = null;
+            emit('cancelled');
+        };
+        
+        const hide = () => {
+            if (resolvePromise.value) {
+                resolvePromise.value(false);
+                resolvePromise.value = null;
             }
-            this.$emit('closed');
-        }
+            emit('closed');
+        };
+        
+        // Expose methods to be called externally
+        expose({
+            show
+        });
+        
+        return {
+            confirmModal,
+            show,
+            confirm,
+            cancel,
+            hide
+        };
     }
 };
 </script>

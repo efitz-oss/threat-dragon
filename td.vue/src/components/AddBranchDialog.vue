@@ -16,7 +16,7 @@
                 <b-col lg="12" class="pb-2">
                     <b-form-group
                         id="input-group-1"
-                        :label="$t('branch.name')"
+                        :label="t('branch.name')"
                         label-for="branchName"
                     >
                         <b-form-input
@@ -39,7 +39,7 @@
                 <b-col lg="12" class="pb-2">
                     <b-form-group
                         id="input-group-2"
-                        :label="$t('branch.refBranch')"
+                        :label="t('branch.refBranch')"
                         label-for="refBranch"
                     >
                         <b-form-select
@@ -66,16 +66,19 @@
                     type="submit"
                     class="m-1"
                     @click="addBranch">
-                    {{ $t('branch.add') }}
+                    {{ t('branch.add') }}
                 </b-button>
             </b-overlay>
             <b-button variant="secondary" class="m-1" @click="closeDialog">
-                {{ $t('branch.cancel') }}
+                {{ t('branch.cancel') }}
             </b-button>
         </div>
     </b-modal>
 </template>
 <script>
+import { ref, computed, watch, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from '@/i18n';
 import branchActions from '@/store/actions/branch.js';
 
 export default {
@@ -95,71 +98,99 @@ export default {
         }
     },
     emits: ['close-dialog'],
-    data() {
-        return {
-            newBranchName: '',
-            refBranch: '',
-            modalTitle: this.$t('branch.addNew'),
-            branchNameError: '',
-            isError: null,
-            wait: false
-        };
-    },
-    computed: {
-        branchNames() {
-            return this.branches.map((branch) => branch.value || branch);
-        }
-    },
-    watch: {
-        branches: function (newBranches) {
+    setup(props, { emit }) {
+        const { t } = useI18n();
+        const store = useStore();
+        
+        // Reactive state
+        const newBranchName = ref('');
+        const refBranch = ref('');
+        const modalTitle = t('branch.addNew');
+        const branchNameError = ref('');
+        const isError = ref(null);
+        const wait = ref(false);
+        
+        // Computed properties
+        const branchNames = computed(() => {
+            return props.branches.map((branch) => branch.value || branch);
+        });
+        
+        // Watchers
+        watch(() => props.branches, (newBranches) => {
             if (newBranches.length > 0) {
-                this.refBranch = this.branchNames.slice(-1)[0];
+                refBranch.value = branchNames.value.slice(-1)[0];
             }
-        }
-    },
-    mounted() {
-        this.refBranch = this.branchNames.slice(-1)[0];
-    },
-    methods: {
-        closeDialog() {
-            this.$emit('close-dialog');
-        },
-        validate() {
-            if (this.newBranchName === '') {
-                this.branchNameError = this.$t('branch.nameRequired');
-                this.isError = false;
-            } else if (this.branchNames.includes(this.newBranchName)) {
-                this.branchNameError = this.$t('branch.nameExists');
-                this.isError = false;
+        });
+        
+        // Lifecycle hooks
+        onMounted(() => {
+            refBranch.value = branchNames.value.slice(-1)[0];
+        });
+        
+        // Methods
+        const closeDialog = () => {
+            emit('close-dialog');
+        };
+        
+        const validate = () => {
+            if (newBranchName.value === '') {
+                branchNameError.value = t('branch.nameRequired');
+                isError.value = false;
+            } else if (branchNames.value.includes(newBranchName.value)) {
+                branchNameError.value = t('branch.nameExists');
+                isError.value = false;
             } else {
-                this.branchNameError = '';
-                this.isError = true;
+                branchNameError.value = '';
+                isError.value = true;
             }
-        },
-        async addBranch() {
-            this.wait = true;
-            this.validate();
-            if (!this.isError) {
-                this.wait = false;
+        };
+        
+        const addBranch = async () => {
+            wait.value = true;
+            validate();
+            if (!isError.value) {
+                wait.value = false;
                 return;
             }
-            this.$store.dispatch(branchActions.create, {
-                branchName: this.newBranchName,
-                refBranch: this.refBranch
+            
+            store.dispatch(branchActions.create, {
+                branchName: newBranchName.value,
+                refBranch: refBranch.value
             });
 
             // sometimes the branch is not immediately available, so we wait for it (only for 30 seconds)
             for (let i = 0; i < 30; i++) {
-                await this.$store.dispatch(branchActions.fetch, 1);
-                if (this.branchNames.includes(this.newBranchName)) {
+                await store.dispatch(branchActions.fetch, 1);
+                if (branchNames.value.includes(newBranchName.value)) {
                     break;
                 }
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             }
 
-            this.wait = false;
-            this.closeDialog();
-        }
+            wait.value = false;
+            closeDialog();
+        };
+        
+        return {
+            // State
+            newBranchName,
+            refBranch,
+            modalTitle,
+            branchNameError,
+            isError,
+            wait,
+            
+            // Computed
+            branchNames,
+            
+            // Methods
+            closeDialog,
+            validate,
+            addBranch,
+            
+            // i18n
+            t
+        };
     }
 };
 </script>

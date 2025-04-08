@@ -20,10 +20,12 @@
                         <h2>{{ t('tos.title') }}</h2>
                         <p>{{ t('tos.lastUpdated') }}</p>
                         <p>{{ t('tos.introduction') }}</p>
-                        <div v-for="(section, index) in t('tos.sections')" :key="index" class="mt-4">
-                            <h2>{{ section.heading }}</h2>
-                            <p>{{ section.content }}</p>
-                        </div>
+                        <template v-for="(section, index) in tos.sections" :key="index">
+                            <div class="mt-4">
+                                <h2>{{ section.heading }}</h2>
+                                <p>{{ section.content }}</p>
+                            </div>
+                        </template>
                         <p class="mt-4">{{ t('tos.contact') }}</p>
                     </div>
                 </b-col>
@@ -45,8 +47,14 @@ export default {
     setup() {
         const { t } = useI18n();
         
+        // Get all ToS sections directly as an object from translations
+        const tos = {
+            sections: t('tos.sections')
+        };
+        
         return {
-            t
+            t,
+            tos
         };
     }
 };

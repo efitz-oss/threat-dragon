@@ -60,8 +60,8 @@ import diagramService from '@/service/migration/diagram.js';
 import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
 
-// Import stencil theme directly to avoid MIME type issues
-import '@/assets/css/stencil-theme.css';
+// Import stencil theme with relative path to avoid webpack chunking issues
+import '../assets/css/stencil-theme.css';
 
 export default {
     name: 'TdGraph',

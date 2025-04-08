@@ -16,7 +16,7 @@ This document tracks the issues and their status as we work through the improvem
 | Build Error with stencil-theme.css | ✅ Fixed | Ensured CSS file is correctly located in src/assets/css directory |
 | Unused Variables and Imports | 🔄 In Progress | Removed unused variables in google.provider.js, fixed searchAsync in bitbucketrepo.js |
 | Provider State Architecture | ✅ Fixed | Updated all git routes to use meta.provider and store, removing params usage |
-| i18n Migration to Composition API | 🔄 In Progress | Started migration (4/28 components done) |
+| i18n Migration to Composition API | 🔄 In Progress | Started migration (7/28 components done) |
 
 ## Detailed Findings and Fixes
 
@@ -249,9 +249,11 @@ This document tracks the issues and their status as we work through the improvem
    - Updated all git routes to use meta.provider approach (like google and local providers)
    - Removed all references to provider in route params
    - Updated components to use only Vuex store for provider state
-3. Continue the i18n migration to the Composition API (4/28 components migrated)
-   - Completed: DriveAccess.vue, ThreatModelSelect.vue, BranchAccess.vue, RepositoryAccess.vue
-   - Next targets: Components in /src/components/ directory
+3. Continue the i18n migration to the Composition API (7/28 components migrated)
+   - Completed: 
+     - Views: DriveAccess.vue, ThreatModelSelect.vue, BranchAccess.vue, RepositoryAccess.vue
+     - Components: SelectionPage.vue, AddBranchDialog.vue, ConfirmationModal.vue
+   - Next targets: Continue with components in /src/components/ directory
 4. Update test fixtures to work with components migrated to Composition API
    - Fixed: graphProperties.spec.js
    - Still needs work: threatmodelSelect.spec.js

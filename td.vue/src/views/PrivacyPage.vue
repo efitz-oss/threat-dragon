@@ -19,10 +19,12 @@
                     <div class="td-description mt-5 text-left">
                         <p>{{ t('privacy.lastUpdated') }}</p>
                         <p>{{ t('privacy.introduction') }}</p>
-                        <div v-for="(section, index) in t('privacy.sections')" :key="index" class="mt-4">
-                            <h2>{{ section.heading }}</h2>
-                            <p>{{ section.content }}</p>
-                        </div>
+                        <template v-for="(section, index) in privacy.sections" :key="index">
+                            <div class="mt-4">
+                                <h2>{{ section.heading }}</h2>
+                                <p>{{ section.content }}</p>
+                            </div>
+                        </template>
                     </div>
                 </b-col>
             </b-row>
@@ -43,8 +45,14 @@ export default {
     setup() {
         const { t } = useI18n();
         
+        // Get all Privacy sections directly as an object from translations
+        const privacy = {
+            sections: t('privacy.sections')
+        };
+        
         return {
-            t
+            t,
+            privacy
         };
     }
 };

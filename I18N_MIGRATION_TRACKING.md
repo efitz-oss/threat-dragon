@@ -6,9 +6,9 @@ This document tracks the migration of internationalization (i18n) from Vue 2's O
 
 | Status | Description | Count |
 |--------|-------------|-------|
-| ✅ | Components migrated to Composition API | 4 |
+| ✅ | Components migrated to Composition API | 7 |
 | 🔄 | Components in progress | 0 |
-| 📝 | Components not yet migrated | 24 |
+| 📝 | Components not yet migrated | 21 |
 
 ## Current Approach
 
@@ -181,3 +181,6 @@ This tracking list will be updated as components are migrated.
 | /views/git/ThreatModelSelect.vue | ✅ | Migrated to Composition API, also converted to full Composition API |
 | /views/git/BranchAccess.vue | ✅ | Migrated to Composition API, also converted to full Composition API |
 | /views/git/RepositoryAccess.vue | ✅ | Migrated to Composition API, also converted to full Composition API |
+| /components/SelectionPage.vue | ✅ | Migrated to Composition API for i18n |
+| /components/AddBranchDialog.vue | ✅ | Migrated to Composition API, also converted to full Composition API |
+| /components/ConfirmationModal.vue | ✅ | Migrated to Composition API (though it didn't use i18n directly) |
