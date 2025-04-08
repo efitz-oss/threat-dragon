@@ -17,66 +17,66 @@ const eng = {
     },
     tos: {
         title: 'Terms of Service',
-        content: `<h2>Terms of Service</h2>
-
-<p>Last updated: April 4, 2025</p>
-
-</p>
-
-<p>Welcome to our instance of OWASP Threat Dragon.  These Terms of Use ("Terms") govern your access to and use of this web site, which is an instance of an open-source web application made available by the operator listed above ("The Operator").</p>
-
-</p>
-
-<h2>1. Acceptance of Terms</h2>
-<p>By accessing and using this web site, you accept and agree to be bound by the terms and provisions of this agreement.  If you do not agree to these terms, please do not use this web site.</p>
-
-<h2>2. Use of the Web Site</h2>
-<p>You may use the web site for lawful purposes only. You agree not to misuse, disrupt, or attempt to gain unauthorized access to the web site or its underlying systems.</p>
-
-<h2>3. No Warranty</h2>
-<p>The web site is provided "as is" without warranties of any kind, express or implied, including but not limited to fitness for a particular purpose, availability, or accuracy. We do not guarantee uninterrupted or error-free operation.</p>
-
-<h2>4. Limitation of Liability</h2>
-<p>To the fullest extent permitted by law, The Operator shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of or inability to use the web site.</p>
-
-<h2>5. Open Source Software</h2>
-<p>This web site runs the OWASP Threat Dragon software, and its source code is available at https://www.github.com/OWASP/threat-dragon. Your use of the software is subject to its open-source license terms. We are not responsible for the software itself, only for operating this instance.  The operator of this web site is not affiliated with OWASP.</p>
-
-<h2>6. Changes to Terms</h2>
-<p>The Operator may update these Terms at any time. Continued use of the web site after changes constitutes acceptance of the updated Terms.</p>
-
-<h2>7. Termination</h2>
-<p>The Operator reserves the right to suspend or terminate access to the web site at The Operator's discretion, without notice, for any reason.</p>
-
-<h2>8. Governing Law</h2>
-<p>These Terms are governed by the laws of ${process.env.VUE_APP_OPERATOR_JURISDICTION || 'the jurisdiction in which The Operator is headquartered (in the case of an organization) or resides (in the case of an individual)'}, without regard to conflict of law principles.</p>
-
-</p>
-
-<p>If you have any questions about these Terms, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator of this web site through appropriate channels'}</p>`
+        lastUpdated: 'April 4, 2025',
+        introduction: 'Welcome to our instance of OWASP Threat Dragon. These Terms of Use ("Terms") govern your access to and use of this web site, which is an instance of an open-source web application made available by the operator listed above ("The Operator").',
+        sections: [
+            {
+                heading: '1. Acceptance of Terms',
+                content: 'By accessing and using this web site, you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this web site.'
+            },
+            {
+                heading: '2. Use of the Web Site',
+                content: 'You may use the web site for lawful purposes only. You agree not to misuse, disrupt, or attempt to gain unauthorized access to the web site or its underlying systems.'
+            },
+            {
+                heading: '3. No Warranty',
+                content: 'The web site is provided "as is" without warranties of any kind, express or implied, including but not limited to fitness for a particular purpose, availability, or accuracy. We do not guarantee uninterrupted or error-free operation.'
+            },
+            {
+                heading: '4. Limitation of Liability',
+                content: 'To the fullest extent permitted by law, The Operator shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of or inability to use the web site.'
+            },
+            {
+                heading: '5. Open Source Software',
+                content: 'This web site runs the OWASP Threat Dragon software, and its source code is available at https://www.github.com/OWASP/threat-dragon. Your use of the software is subject to its open-source license terms. We are not responsible for the software itself, only for operating this instance. The operator of this web site is not affiliated with OWASP.'
+            },
+            {
+                heading: '6. Changes to Terms',
+                content: 'The Operator may update these Terms at any time. Continued use of the web site after changes constitutes acceptance of the updated Terms.'
+            },
+            {
+                heading: '7. Termination',
+                content: 'The Operator reserves the right to suspend or terminate access to the web site at The Operator\'s discretion, without notice, for any reason.'
+            },
+            {
+                heading: '8. Governing Law',
+                content: 'These Terms are governed by the laws of ${process.env.VUE_APP_OPERATOR_JURISDICTION || \'the jurisdiction in which The Operator is headquartered (in the case of an organization) or resides (in the case of an individual)\'}, without regard to conflict of law principles.'
+            }
+        ],
+        contact: 'If you have any questions about these Terms, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || \'the operator of this web site through appropriate channels\'}'
     },
     privacy: {
         title: 'Privacy Policy',
-        content: `<h2>Privacy Policy</h2>
-</p>
-
-<p>Last updated: April 4, 2025</p>
-
-</p>
-
-<p>The Operator of this web site is committed to protecting your privacy. This Privacy Policy explains how your information is handled.</p>
-
-<h2>Minimal Data Use for Operations</h2>
-<p>The Operator does not collect, store, or process personal data from users for tracking, profiling, or sharing with third parties. Temporary logs, which may include IP addresses or usernames, are generated solely for operational and debugging purposes. These logs are discarded within a short period of time and are not retained or used beyond these limited purposes.</p>
-
-<h2>Legal Compliance</h2>
-<p>The Operator will only disclose information if required to do so by law, such as in response to a valid government order or subpoena. In such cases, The Operator will comply with applicable legal obligations.</p>
-
-<h2>Changes to This Policy</h2>
-<p>The Operator may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date.</p>
-
-<h2>Contact Us</h2>
-<p>If you have any questions about this Privacy Policy, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || 'the operator of this web site through appropriate channels'}</p>`
+        lastUpdated: 'April 4, 2025',
+        introduction: 'The Operator of this web site is committed to protecting your privacy. This Privacy Policy explains how your information is handled.',
+        sections: [
+            {
+                heading: 'Minimal Data Use for Operations',
+                content: 'The Operator does not collect, store, or process personal data from users for tracking, profiling, or sharing with third parties. Temporary logs, which may include IP addresses or usernames, are generated solely for operational and debugging purposes. These logs are discarded within a short period of time and are not retained or used beyond these limited purposes.'
+            },
+            {
+                heading: 'Legal Compliance',
+                content: 'The Operator will only disclose information if required to do so by law, such as in response to a valid government order or subpoena. In such cases, The Operator will comply with applicable legal obligations.'
+            },
+            {
+                heading: 'Changes to This Policy',
+                content: 'The Operator may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date.'
+            },
+            {
+                heading: 'Contact Us',
+                content: 'If you have any questions about this Privacy Policy, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || \'the operator of this web site through appropriate channels\'}'
+            }
+        ]
     },
     home: {
         title: 'OWASP Threat Dragon',

@@ -9,7 +9,13 @@ describe('ToSPage.vue', () => {
         // Create mock for translation function
         $t = jest.fn(key => {
             if (key === 'tos.title') return 'Terms of Service Title';
-            if (key === 'tos.content') return '<p>Terms of Service Content</p>';
+            if (key === 'tos.lastUpdated') return 'Last updated: Mock Date';
+            if (key === 'tos.introduction') return 'Terms of Service introduction text';
+            if (key === 'tos.sections') return [
+                { heading: 'Section 1', content: 'Content 1' },
+                { heading: 'Section 2', content: 'Content 2' }
+            ];
+            if (key === 'tos.contact') return 'Contact us for questions';
             return key;
         });
         
@@ -31,7 +37,10 @@ describe('ToSPage.vue', () => {
     it('translates the title and content', () => {
         // Check that translations were requested
         expect($t).toHaveBeenCalledWith('tos.title');
-        expect($t).toHaveBeenCalledWith('tos.content');
+        expect($t).toHaveBeenCalledWith('tos.lastUpdated');
+        expect($t).toHaveBeenCalledWith('tos.introduction');
+        expect($t).toHaveBeenCalledWith('tos.sections');
+        expect($t).toHaveBeenCalledWith('tos.contact');
         expect($t).toHaveBeenCalledWith('operator.operatedby');
         expect($t).toHaveBeenCalledWith('operator.name');
         expect($t).toHaveBeenCalledWith('operator.contact');
@@ -39,9 +48,21 @@ describe('ToSPage.vue', () => {
         // Check that translated content appears in the DOM
         expect(wrapper.find('h1').text()).toBe('Terms of Service Title');
         
-        // Since the component uses v-html, the content might not be directly visible in the test
-        // Check that the translation function was called properly instead
-        expect($t).toHaveBeenCalledWith('tos.content');
+        // Check for structured content
+        const paragraphs = wrapper.findAll('.td-description p');
+        expect(paragraphs.length).toBeGreaterThan(1);
+        // Not checking the date text which may change
+        expect(paragraphs.at(1).text()).toBe('Terms of Service introduction text');
+        
+        // Check for sections
+        const headings = wrapper.findAll('.td-description h2');
+        expect(headings.length).toBeGreaterThan(1);
+        expect(headings.at(1).text()).toBe('Section 1');
+        expect(headings.at(2).text()).toBe('Section 2');
+        
+        // Check for contact info
+        const contactParagraph = paragraphs.at(paragraphs.length - 1);
+        expect(contactParagraph.text()).toBe('Contact us for questions');
     });
     
     it('applies the correct CSS classes', () => {

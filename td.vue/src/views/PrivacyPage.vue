@@ -16,8 +16,14 @@
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <!-- Using v-html with trusted content from translations -->
-                    <div class="td-description mt-5 text-left" v-html="$t('privacy.content')" />
+                    <div class="td-description mt-5 text-left">
+                        <p>{{ $t('privacy.lastUpdated') }}</p>
+                        <p>{{ $t('privacy.introduction') }}</p>
+                        <div v-for="(section, index) in $t('privacy.sections')" :key="index" class="mt-4">
+                            <h2>{{ section.heading }}</h2>
+                            <p>{{ section.content }}</p>
+                        </div>
+                    </div>
                 </b-col>
             </b-row>
             <b-row>

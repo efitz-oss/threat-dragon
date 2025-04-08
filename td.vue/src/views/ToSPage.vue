@@ -16,8 +16,16 @@
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <!-- Using v-html with trusted content from translations -->
-                    <div class="td-description mt-5 text-left" v-html="$t('tos.content')" />
+                    <div class="td-description mt-5 text-left">
+                        <h2>{{ $t('tos.title') }}</h2>
+                        <p>{{ $t('tos.lastUpdated') }}</p>
+                        <p>{{ $t('tos.introduction') }}</p>
+                        <div v-for="(section, index) in $t('tos.sections')" :key="index" class="mt-4">
+                            <h2>{{ section.heading }}</h2>
+                            <p>{{ section.content }}</p>
+                        </div>
+                        <p class="mt-4">{{ $t('tos.contact') }}</p>
+                    </div>
                 </b-col>
             </b-row>
             <b-row>
