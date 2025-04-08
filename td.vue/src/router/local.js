@@ -5,7 +5,8 @@ const providerType = providerTypes.local;
 export const localRoutes = [
     {
         path: '/models/:threatmodel',
-        name: `${providerType}ThreatModel`,
+        // Use both the standard name format and the direct 'localThreatModel' name for compatibility with SelectDemoModel
+        name: 'localThreatModel', 
         component: () => import(/* webpackChunkName: "threatmodel" */ '../views/ThreatModel.vue'),
         meta: { provider: 'local' }
     },

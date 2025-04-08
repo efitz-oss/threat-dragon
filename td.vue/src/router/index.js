@@ -79,7 +79,7 @@ router.beforeEach((to, from, next) => {
 
     // Skip provider param injection for localThreatModel route
     // This prevents infinite redirection when coming from SelectDemoModel
-    if (to.name === 'localThreatModel') {
+    if (to.name === 'localThreatModel' || to.path.startsWith('/models/')) {
         next();
         return;
     }

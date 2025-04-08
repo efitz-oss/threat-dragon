@@ -59,9 +59,18 @@ export default {
                 threatmodel: model.name
             };
             
-            // We deliberately avoid preserving provider from route.params
-            // to prevent routing errors with Google Drive routes
-            this.$router.push({ name: 'localThreatModel', params });
+            console.debug('Navigating to demo model:', model.name);
+
+            // First try to navigate by name, but if that fails, use path as fallback
+            try {
+                // We deliberately avoid preserving provider from route.params
+                // to prevent routing errors with Google Drive routes
+                this.$router.push({ name: 'localThreatModel', params });
+            } catch (err) {
+                console.error('Error navigating by route name, falling back to path:', err);
+                // Fallback to direct path navigation to avoid route naming issues
+                this.$router.push(`/models/${model.name}`);
+            }
         }
     }
 };
