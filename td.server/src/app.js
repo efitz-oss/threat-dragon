@@ -49,16 +49,48 @@ const configureServer = (app, logger) => {
     securityHeaders.config(app);
     app.use(https.middleware); // Force HTTPS in production
 
-    // static content - serve both from /public and direct paths to ensure compatibility
-    app.use('/public', express.static(siteDir));
-    // Direct access to static asset directories
-    app.use('/css', express.static(path.join(siteDir, 'css')));
-    app.use('/js', express.static(path.join(siteDir, 'js')));
-    app.use('/img', express.static(path.join(siteDir, 'img')));
-    app.use('/fonts', express.static(path.join(siteDir, 'fonts')));
-    app.use('/assets', express.static(path.join(siteDir, 'assets')));
-    app.use('/favicon.ico', express.static(path.join(siteDir, 'favicon.ico')));
-    app.use('/docs', express.static(docsDir));
+    // Define MIME type mapping - especially important for CSS files
+    const mimeTypes = {
+        '.css': 'text/css',
+        '.js': 'application/javascript',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.ico': 'image/x-icon',
+        '.woff': 'font/woff',
+        '.woff2': 'font/woff2',
+        '.ttf': 'font/ttf',
+        '.eot': 'application/vnd.ms-fontobject'
+    };
+
+    // Enhanced static file serving with explicit MIME types
+    const staticOptions = {
+        setHeaders: (res, filePath) => {
+            const ext = path.extname(filePath).toLowerCase();
+            if (mimeTypes[ext]) {
+                res.setHeader('Content-Type', mimeTypes[ext]);
+                logger.debug(`Serving ${filePath} with Content-Type: ${mimeTypes[ext]}`);
+            }
+        }
+    };
+
+    // Static content - serve both from /public and direct paths with explicit MIME types
+    app.use('/public', express.static(siteDir, staticOptions));
+    // Direct access to static asset directories with explicit MIME types
+    app.use('/css', express.static(path.join(siteDir, 'css'), staticOptions));
+    app.use('/js', express.static(path.join(siteDir, 'js'), staticOptions));
+    app.use('/img', express.static(path.join(siteDir, 'img'), staticOptions));
+    app.use('/fonts', express.static(path.join(siteDir, 'fonts'), staticOptions));
+    app.use('/assets', express.static(path.join(siteDir, 'assets'), staticOptions));
+    // Serve favicon explicitly
+    app.use('/favicon.ico', (req, res) => {
+        res.setHeader('Content-Type', 'image/x-icon');
+        res.sendFile(path.join(siteDir, 'favicon.ico'));
+    });
+    app.use('/docs', express.static(docsDir, staticOptions));
 
     // parsers and routes
     parsers.config(app);

@@ -1,13 +1,19 @@
 import { createWrapper } from '../setup/test-utils.js';
 import PrivacyPage from '@/views/PrivacyPage.vue';
+import { useI18n } from '@/i18n';
+
+// Mock i18n
+jest.mock('@/i18n', () => ({
+    useI18n: jest.fn()
+}));
 
 describe('PrivacyPage.vue', () => {
     let wrapper;
-    let $t;
+    let mockT;
 
     beforeEach(() => {
         // Create mock for translation function
-        $t = jest.fn(key => {
+        mockT = jest.fn(key => {
             if (key === 'privacy.title') return 'Privacy Policy Title';
             if (key === 'privacy.lastUpdated') return 'Last updated: Mock Date';
             if (key === 'privacy.introduction') return 'Privacy Policy introduction text';
@@ -18,9 +24,14 @@ describe('PrivacyPage.vue', () => {
             return key;
         });
         
+        // Setup the mock implementation
+        useI18n.mockReturnValue({
+            t: mockT,
+            locale: { value: 'eng' }
+        });
+        
         // Create wrapper with mocks and shallow: false to render child components
         wrapper = createWrapper(PrivacyPage, {
-            mocks: { $t },
             shallow: false // Need to render child components to test properly
         });
     });
@@ -35,13 +46,13 @@ describe('PrivacyPage.vue', () => {
     
     it('translates the title and content', () => {
         // Check that translations were requested
-        expect($t).toHaveBeenCalledWith('privacy.title');
-        expect($t).toHaveBeenCalledWith('privacy.lastUpdated');
-        expect($t).toHaveBeenCalledWith('privacy.introduction');
-        expect($t).toHaveBeenCalledWith('privacy.sections');
-        expect($t).toHaveBeenCalledWith('operator.operatedby');
-        expect($t).toHaveBeenCalledWith('operator.name');
-        expect($t).toHaveBeenCalledWith('operator.contact');
+        expect(mockT).toHaveBeenCalledWith('privacy.title');
+        expect(mockT).toHaveBeenCalledWith('privacy.lastUpdated');
+        expect(mockT).toHaveBeenCalledWith('privacy.introduction');
+        expect(mockT).toHaveBeenCalledWith('privacy.sections');
+        expect(mockT).toHaveBeenCalledWith('operator.operatedby');
+        expect(mockT).toHaveBeenCalledWith('operator.name');
+        expect(mockT).toHaveBeenCalledWith('operator.contact');
         
         // Check that translated content appears in the DOM
         expect(wrapper.find('h1').text()).toBe('Privacy Policy Title');

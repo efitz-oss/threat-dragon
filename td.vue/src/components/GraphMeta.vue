@@ -2,7 +2,7 @@
     <div class="graph-meta">
         <b-row class="meta-row">
             <b-col lg="6" md="12" class="meta-column">
-                <b-card :header="`${$t('threatmodel.properties.title')}`" class="properties-card">
+                <b-card :header="`${t('threatmodel.properties.title')}`" class="properties-card">
                     <b-card-body class="scrollable-card-body">
                         <td-graph-properties />
                     </b-card-body>
@@ -12,7 +12,7 @@
                 <b-card header-tag="header" class="threats-card">
                     <template #header>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span>{{ $t('threatmodel.threats') }}</span>
+                            <span>{{ t('threatmodel.threats') }}</span>
                             <BButton
                                 v-if="!!cellRef"
                                 :disabled="disableNewThreat"
@@ -21,7 +21,7 @@
                                 @click="onNewThreat()"
                             >
                                 <font-awesome-icon icon="plus" class="mr-1" />
-                                {{ $t('threats.newThreat') }}
+                                {{ t('threats.newThreat') }}
                             </BButton>
                         </div>
                     </template>
@@ -51,7 +51,7 @@
                             </b-row>
                         </b-card-text>
                         <b-card-text v-if="!cellRef || !cellRef.data">
-                            {{ $t('threats.emptyThreat') }}
+                            {{ t('threats.emptyThreat') }}
                         </b-card-text>
                     </b-card-body>
                 </b-card>
@@ -63,7 +63,7 @@
                         @click="onAddThreatByType()"
                     >
                         <font-awesome-icon icon="plus" />
-                        {{ $t('threats.newThreatByType') }}
+                        {{ t('threats.newThreatByType') }}
                     </a>
                     <a
                         v-if="!disableNewThreat"
@@ -72,7 +72,7 @@
                         @click="onAddThreatByContext()"
                     >
                         <font-awesome-icon icon="plus" />
-                        {{ $t('threats.newThreatByContext') }}
+                        {{ t('threats.newThreatByContext') }}
                     </a>
                 </div>
             </b-col>
@@ -83,6 +83,7 @@
 <script>
 import { computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import { useI18n } from '@/i18n';
 import { useThreatEditor } from '@/composables/useThreatEditor';
 import { CELL_UNSELECTED } from '@/store/actions/cell.js';
 import tmActions from '@/store/actions/threatmodel.js';
@@ -98,6 +99,7 @@ export default {
     emits: ['threatSelected', 'threatSuggest'],
     setup(props, { emit }) {
         const store = useStore();
+        const { t } = useI18n();
         const { createNewThreat } = useThreatEditor();
         
         // Computed state from store
@@ -170,7 +172,10 @@ export default {
             onThreatSelected,
             onNewThreat,
             onAddThreatByType,
-            onAddThreatByContext
+            onAddThreatByContext,
+            
+            // i18n
+            t
         };
     }
 };

@@ -4,33 +4,33 @@
             <b-row class="text-center mb-2">
                 <b-col md="12">
                     <h1 class="display-3 text-center">
-                        {{ $t('tos.title') }}
+                        {{ t('tos.title') }}
                     </h1>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <div class="td-operator mt-5 text-left"> {{ $t('operator.operatedby') }} </div>
-                    <div class="td-operator mt-5 text-left"> {{ $t('operator.name') }} </div>
+                    <div class="td-operator mt-5 text-left"> {{ t('operator.operatedby') }} </div>
+                    <div class="td-operator mt-5 text-left"> {{ t('operator.name') }} </div>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="12">
                     <div class="td-description mt-5 text-left">
-                        <h2>{{ $t('tos.title') }}</h2>
-                        <p>{{ $t('tos.lastUpdated') }}</p>
-                        <p>{{ $t('tos.introduction') }}</p>
-                        <div v-for="(section, index) in $t('tos.sections')" :key="index" class="mt-4">
+                        <h2>{{ t('tos.title') }}</h2>
+                        <p>{{ t('tos.lastUpdated') }}</p>
+                        <p>{{ t('tos.introduction') }}</p>
+                        <div v-for="(section, index) in t('tos.sections')" :key="index" class="mt-4">
                             <h2>{{ section.heading }}</h2>
                             <p>{{ section.content }}</p>
                         </div>
-                        <p class="mt-4">{{ $t('tos.contact') }}</p>
+                        <p class="mt-4">{{ t('tos.contact') }}</p>
                     </div>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <div class="td-contact mt-5 text-left"> {{ $t('operator.contact') }} </div>
+                    <div class="td-contact mt-5 text-left"> {{ t('operator.contact') }} </div>
                 </b-col>
             </b-row>
         </div>
@@ -38,8 +38,17 @@
 </template>
 
 <script>
+import { useI18n } from '@/i18n';
+
 export default {
-    name: 'ToSPage'
+    name: 'ToSPage',
+    setup() {
+        const { t } = useI18n();
+        
+        return {
+            t
+        };
+    }
 };
 </script>
 

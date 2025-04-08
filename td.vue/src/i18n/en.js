@@ -50,10 +50,10 @@ const eng = {
             },
             {
                 heading: '8. Governing Law',
-                content: 'These Terms are governed by the laws of ${process.env.VUE_APP_OPERATOR_JURISDICTION || \'the jurisdiction in which The Operator is headquartered (in the case of an organization) or resides (in the case of an individual)\'}, without regard to conflict of law principles.'
+                content: 'These Terms are governed by the laws of the jurisdiction in which The Operator is headquartered (in the case of an organization) or resides (in the case of an individual), without regard to conflict of law principles.'
             }
         ],
-        contact: 'If you have any questions about these Terms, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || \'the operator of this web site through appropriate channels\'}'
+        contact: 'If you have any questions about these Terms, please feel free to contact the support team.'
     },
     privacy: {
         title: 'Privacy Policy',
@@ -74,7 +74,7 @@ const eng = {
             },
             {
                 heading: 'Contact Us',
-                content: 'If you have any questions about this Privacy Policy, please feel free to contact ${process.env.VUE_APP_OPERATOR_CONTACT || \'the operator of this web site through appropriate channels\'}'
+                content: 'If you have any questions about this Privacy Policy, please feel free to contact the support team.'
             }
         ]
     },

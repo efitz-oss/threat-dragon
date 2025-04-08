@@ -3,6 +3,15 @@ import { createStore } from 'vuex';
 import { nextTick } from 'vue';
 
 import TdGraphProperties from '@/components/GraphProperties.vue';
+import { useI18n } from '@/i18n';
+
+// Mock the i18n composable
+jest.mock('@/i18n', () => ({
+    useI18n: jest.fn(() => ({
+        t: jest.fn(key => key),
+        locale: { value: 'eng' }
+    }))
+}));
 
 // Mock the data-changed service
 jest.mock('@/service/x6/graph/data-changed.js', () => ({
@@ -32,9 +41,7 @@ describe('components/GraphProperties.vue', () => {
             wrapper = mount(TdGraphProperties, {
                 global: {
                     plugins: [store],
-                    mocks: {
-                        $t: key => key
-                    },
+                    // No mocks needed as useI18n is already mocked globally
                     stubs: {
                         'b-form': true,
                         'b-form-row': true,
@@ -103,9 +110,7 @@ describe('components/GraphProperties.vue', () => {
             wrapper = mount(TdGraphProperties, {
                 global: {
                     plugins: [store],
-                    mocks: {
-                        $t: key => key
-                    },
+                    // No mocks needed as useI18n is already mocked globally
                     stubs: {
                         'b-form': true,
                         'b-form-row': true,
@@ -207,9 +212,7 @@ describe('components/GraphProperties.vue', () => {
             wrapper = mount(TdGraphProperties, {
                 global: {
                     plugins: [store],
-                    mocks: {
-                        $t: key => key
-                    },
+                    // No mocks needed as useI18n is already mocked globally
                     stubs: {
                         'b-form': true,
                         'b-form-row': true,
@@ -262,9 +265,7 @@ describe('components/GraphProperties.vue', () => {
             wrapper = mount(TdGraphProperties, {
                 global: {
                     plugins: [store],
-                    mocks: {
-                        $t: key => key
-                    },
+                    // No mocks needed as useI18n is already mocked globally
                     stubs: {
                         'b-form': true,
                         'b-form-row': true,

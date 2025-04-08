@@ -37,7 +37,7 @@
 
         <b-row v-show="!cellRef">
             <b-col>
-                <p>{{ $t('threatmodel.properties.emptyState') }}</p>
+                <p>{{ t('threatmodel.properties.emptyState') }}</p>
             </b-col>
         </b-row>
 
@@ -49,8 +49,8 @@
                         label-cols="auto"
                         :label="
                             cellRef.data && cellRef.data.type === 'tm.Text'
-                                ? $t('threatmodel.properties.text')
-                                : $t('threatmodel.properties.name')
+                                ? t('threatmodel.properties.text')
+                                : t('threatmodel.properties.name')
                         "
                         label-for="name"
                     >
@@ -69,7 +69,7 @@
                     <b-form-group
                         id="description-group"
                         label-cols="auto"
-                        :label="$t('threatmodel.properties.description')"
+                        :label="t('threatmodel.properties.description')"
                         label-for="description"
                     >
                         <td-safe-form-textarea
@@ -96,7 +96,7 @@
                             v-model="cellRef.data.outOfScope"
                             @change="onChangeScope()"
                         >
-                            {{ $t('threatmodel.properties.outOfScope') }}
+                            {{ t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -108,14 +108,14 @@
                             v-model="cellRef.data.outOfScope"
                             @change="onChangeScope()"
                         >
-                            {{ $t('threatmodel.properties.outOfScope') }}
+                            {{ t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="bidirection"
                             v-model="cellRef.data.isBidirectional"
                             @change="onChangeBidirection()"
                         >
-                            {{ $t('threatmodel.properties.bidirection') }}
+                            {{ t('threatmodel.properties.bidirection') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -127,7 +127,7 @@
                     <b-form-group
                         id="reasonoutofscope-group"
                         label-cols="auto"
-                        :label="$t('threatmodel.properties.reasonOutOfScope')"
+                        :label="t('threatmodel.properties.reasonOutOfScope')"
                         label-for="reasonoutofscope"
                     >
                         <td-safe-form-textarea
@@ -145,7 +145,7 @@
                     <b-form-group
                         id="privilegelevel-group"
                         label-cols="auto"
-                        :label="$t('threatmodel.properties.privilegeLevel')"
+                        :label="t('threatmodel.properties.privilegeLevel')"
                         label-for="privilegelevel"
                     >
                         <b-form-input
@@ -164,14 +164,14 @@
                             v-model="cellRef.data.handlesCardPayment"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.handlesCardPayment') }}
+                            {{ t('threatmodel.properties.handlesCardPayment') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="handlesGoodsOrServices"
                             v-model="cellRef.data.handlesGoodsOrServices"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.handlesGoodsOrServices') }}
+                            {{ t('threatmodel.properties.handlesGoodsOrServices') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -183,7 +183,7 @@
                             v-model="cellRef.data.isWebApplication"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.isWebApplication') }}
+                            {{ t('threatmodel.properties.isWebApplication') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -195,14 +195,14 @@
                             v-model="cellRef.data.isALog"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.isALog') }}
+                            {{ t('threatmodel.properties.isALog') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="storesCredentials"
                             v-model="cellRef.data.storesCredentials"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.storesCredentials') }}
+                            {{ t('threatmodel.properties.storesCredentials') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -214,14 +214,14 @@
                             v-model="cellRef.data.isEncrypted"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.isEncrypted') }}
+                            {{ t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="isSigned"
                             v-model="cellRef.data.isSigned"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.isSigned') }}
+                            {{ t('threatmodel.properties.isSigned') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -233,7 +233,7 @@
                             v-model="cellRef.data.storesInventory"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.storesInventory') }}
+                            {{ t('threatmodel.properties.storesInventory') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -245,7 +245,7 @@
                             v-model="cellRef.data.providesAuthentication"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.providesAuthentication') }}
+                            {{ t('threatmodel.properties.providesAuthentication') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -254,7 +254,7 @@
                     <b-form-group
                         id="protocol-group"
                         label-cols="auto"
-                        :label="$t('threatmodel.properties.protocol')"
+                        :label="t('threatmodel.properties.protocol')"
                         label-for="protocol"
                     >
                         <b-form-input
@@ -273,7 +273,7 @@
                             v-model="cellRef.data.isEncrypted"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.isEncrypted') }}
+                            {{ t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -285,7 +285,7 @@
                             v-model="cellRef.data.isPublicNetwork"
                             @change="onChangeProperties()"
                         >
-                            {{ $t('threatmodel.properties.publicNetwork') }}
+                            {{ t('threatmodel.properties.publicNetwork') }}
                         </b-form-checkbox>
                     </b-form-group>
                 </b-col>
@@ -295,7 +295,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from '@/i18n';
 import dataChanged from '@/service/x6/graph/data-changed.js';
 import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 
@@ -304,34 +306,54 @@ export default {
     components: {
         TdSafeFormTextarea
     },
-    computed: mapState({
-        cellRef: (state) => state.cell.ref
-    }),
-    methods: {
-        updateComponent() {
-            // should not need to need to force an update
-            this.$forceUpdate();
-        },
-        onChangeName() {
-            dataChanged.updateName(this.cellRef);
-            this.updateComponent();
-        },
-        onChangeBidirection() {
-            dataChanged.updateProperties(this.cellRef);
-            dataChanged.updateStyleAttrs(this.cellRef);
-            this.updateComponent();
-        },
-        onChangeProperties() {
-            dataChanged.updateProperties(this.cellRef);
-            this.updateComponent();
-        },
-        onChangeScope() {
-            document.getElementById('reasonoutofscope').disabled =
-                    !this.cellRef.data.outOfScope;
-            dataChanged.updateProperties(this.cellRef);
-            dataChanged.updateStyleAttrs(this.cellRef);
-            this.updateComponent();
-        }
+    setup() {
+        const store = useStore();
+        const { t } = useI18n();
+        
+        // Get cellRef from store
+        const cellRef = computed(() => store.state.cell.ref);
+        
+        // Define component methods
+        const updateComponent = () => {
+            // For Vue 3, forcing update is generally not needed
+            // This function is kept for compatibility
+        };
+        
+        const onChangeName = () => {
+            dataChanged.updateName(cellRef.value);
+            updateComponent();
+        };
+        
+        const onChangeBidirection = () => {
+            dataChanged.updateProperties(cellRef.value);
+            dataChanged.updateStyleAttrs(cellRef.value);
+            updateComponent();
+        };
+        
+        const onChangeProperties = () => {
+            dataChanged.updateProperties(cellRef.value);
+            updateComponent();
+        };
+        
+        const onChangeScope = () => {
+            const reasonOutOfScopeElement = document.getElementById('reasonoutofscope');
+            if (reasonOutOfScopeElement) {
+                reasonOutOfScopeElement.disabled = !cellRef.value.data.outOfScope;
+            }
+            dataChanged.updateProperties(cellRef.value);
+            dataChanged.updateStyleAttrs(cellRef.value);
+            updateComponent();
+        };
+        
+        return {
+            cellRef,
+            updateComponent,
+            onChangeName,
+            onChangeBidirection,
+            onChangeProperties,
+            onChangeScope,
+            t
+        };
     }
 };
 </script>

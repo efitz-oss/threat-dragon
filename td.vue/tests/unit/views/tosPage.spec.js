@@ -1,13 +1,19 @@
 import { createWrapper } from '../setup/test-utils.js';
 import ToSPage from '@/views/ToSPage.vue';
+import { useI18n } from '@/i18n';
+
+// Mock i18n
+jest.mock('@/i18n', () => ({
+    useI18n: jest.fn()
+}));
 
 describe('ToSPage.vue', () => {
     let wrapper;
-    let $t;
+    let mockT;
 
     beforeEach(() => {
         // Create mock for translation function
-        $t = jest.fn(key => {
+        mockT = jest.fn(key => {
             if (key === 'tos.title') return 'Terms of Service Title';
             if (key === 'tos.lastUpdated') return 'Last updated: Mock Date';
             if (key === 'tos.introduction') return 'Terms of Service introduction text';
@@ -19,9 +25,14 @@ describe('ToSPage.vue', () => {
             return key;
         });
         
+        // Setup the mock implementation
+        useI18n.mockReturnValue({
+            t: mockT,
+            locale: { value: 'eng' }
+        });
+        
         // Create wrapper with mocks and shallow: false to render child components
         wrapper = createWrapper(ToSPage, {
-            mocks: { $t },
             shallow: false // Need to render child components to test properly
         });
     });
@@ -36,14 +47,14 @@ describe('ToSPage.vue', () => {
     
     it('translates the title and content', () => {
         // Check that translations were requested
-        expect($t).toHaveBeenCalledWith('tos.title');
-        expect($t).toHaveBeenCalledWith('tos.lastUpdated');
-        expect($t).toHaveBeenCalledWith('tos.introduction');
-        expect($t).toHaveBeenCalledWith('tos.sections');
-        expect($t).toHaveBeenCalledWith('tos.contact');
-        expect($t).toHaveBeenCalledWith('operator.operatedby');
-        expect($t).toHaveBeenCalledWith('operator.name');
-        expect($t).toHaveBeenCalledWith('operator.contact');
+        expect(mockT).toHaveBeenCalledWith('tos.title');
+        expect(mockT).toHaveBeenCalledWith('tos.lastUpdated');
+        expect(mockT).toHaveBeenCalledWith('tos.introduction');
+        expect(mockT).toHaveBeenCalledWith('tos.sections');
+        expect(mockT).toHaveBeenCalledWith('tos.contact');
+        expect(mockT).toHaveBeenCalledWith('operator.operatedby');
+        expect(mockT).toHaveBeenCalledWith('operator.name');
+        expect(mockT).toHaveBeenCalledWith('operator.contact');
         
         // Check that translated content appears in the DOM
         expect(wrapper.find('h1').text()).toBe('Terms of Service Title');

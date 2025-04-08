@@ -33,17 +33,13 @@ jest.mock('@/composables/useThreatEditor', () => {
 });
 
 // Mock the i18n module for testing
-jest.mock('@/i18n/index.js', () => {
-    const originalModule = jest.requireActual('@/i18n/index.js');
-    return {
-        ...originalModule,
-        useI18n: jest.fn().mockReturnValue({
-            t: (key) => key,
-            locale: { value: 'eng' },
-            availableLocales: ['eng', 'deu', 'fra']
-        })
-    };
-});
+jest.mock('@/i18n', () => ({
+    useI18n: jest.fn(() => ({
+        t: jest.fn(key => key),
+        locale: { value: 'eng' },
+        availableLocales: ['eng', 'deu', 'fra']
+    }))
+}));
 
 // Import individual components from bootstrap-vue-next for better testing
 import {
@@ -99,9 +95,7 @@ describe('components/GraphMeta.vue', () => {
                         },
                         'b-button': true
                     },
-                    mocks: {
-                        $t: key => key
-                    }
+                    // No mocks needed as useI18n is already mocked globally
                 }
             });
         });
@@ -168,9 +162,7 @@ describe('components/GraphMeta.vue', () => {
                         },
                         'b-button': true
                     },
-                    mocks: {
-                        $t: key => key
-                    }
+                    // No mocks needed as useI18n is already mocked globally
                 }
             });
         });
@@ -252,9 +244,7 @@ describe('components/GraphMeta.vue', () => {
                         'b-card-text': true,
                         'b-button': true
                     },
-                    mocks: {
-                        $t: key => key
-                    }
+                    // No mocks needed as useI18n is already mocked globally
                 }
             });
         });
@@ -332,9 +322,7 @@ describe('components/GraphMeta.vue', () => {
                         'b-card-text': true,
                         'b-button': true
                     },
-                    mocks: {
-                        $t: key => key
-                    }
+                    // No mocks needed as useI18n is already mocked globally
                 }
             });
         });

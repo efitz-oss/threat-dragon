@@ -4,22 +4,22 @@
             <b-row class="text-center mb-2">
                 <b-col md="12">
                     <h1 class="display-3 text-center">
-                        {{ $t('privacy.title') }}
+                        {{ t('privacy.title') }}
                     </h1>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <div class="td-operator mt-5 text-left"> {{ $t('operator.operatedby') }} </div>
-                    <div class="td-operator mt-5 text-left"> {{ $t('operator.name') }} </div>
+                    <div class="td-operator mt-5 text-left"> {{ t('operator.operatedby') }} </div>
+                    <div class="td-operator mt-5 text-left"> {{ t('operator.name') }} </div>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col md="12">
                     <div class="td-description mt-5 text-left">
-                        <p>{{ $t('privacy.lastUpdated') }}</p>
-                        <p>{{ $t('privacy.introduction') }}</p>
-                        <div v-for="(section, index) in $t('privacy.sections')" :key="index" class="mt-4">
+                        <p>{{ t('privacy.lastUpdated') }}</p>
+                        <p>{{ t('privacy.introduction') }}</p>
+                        <div v-for="(section, index) in t('privacy.sections')" :key="index" class="mt-4">
                             <h2>{{ section.heading }}</h2>
                             <p>{{ section.content }}</p>
                         </div>
@@ -28,7 +28,7 @@
             </b-row>
             <b-row>
                 <b-col md="12">
-                    <div class="td-contact mt-5 text-left"> {{ $t('operator.contact') }} </div>
+                    <div class="td-contact mt-5 text-left"> {{ t('operator.contact') }} </div>
                 </b-col>
             </b-row>
         </div>
@@ -36,8 +36,17 @@
 </template>
 
 <script>
+import { useI18n } from '@/i18n';
+
 export default {
-    name: 'PrivacyPage'
+    name: 'PrivacyPage',
+    setup() {
+        const { t } = useI18n();
+        
+        return {
+            t
+        };
+    }
 };
 </script>
 
