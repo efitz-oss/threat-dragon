@@ -1,4 +1,4 @@
-import { shallowMount, config } from '@vue/test-utils';
+import { shallowMount as _shallowMount, config } from '@vue/test-utils';
 
 import TdCoverSheet from '@/components/printed-report/Coversheet.vue';
 import { createWrapper } from '../../setup/test-utils';

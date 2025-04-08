@@ -3,10 +3,10 @@ import { nextTick } from 'vue';
 import { createStore } from 'vuex';
 
 import TdGraph from '@/components/Graph.vue';
-import TdGraphButtons from '@/components/GraphButtons.vue';
-import TdGraphMeta from '@/components/GraphMeta.vue';
-import TdKeyboardShortcuts from '@/components/KeyboardShortcuts.vue';
-import TdThreatEditDialog from '@/components/ThreatEditDialog.vue';
+import _TdGraphButtons from '@/components/GraphButtons.vue';
+import _TdGraphMeta from '@/components/GraphMeta.vue';
+import _TdKeyboardShortcuts from '@/components/KeyboardShortcuts.vue';
+import _TdThreatEditDialog from '@/components/ThreatEditDialog.vue';
 
 // Set up global process.env.NODE_ENV for tests
 process.env.NODE_ENV = 'test';

@@ -33,7 +33,7 @@ jest.mock('@/service/api/threatmodelApi.js', () => ({
 import { BRANCH_CLEAR, BRANCH_CREATE, BRANCH_FETCH, BRANCH_SELECTED } from '@/store/actions/branch.js';
 import branchModule, { clearState } from '@/store/modules/branch.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
-import { createStore } from 'vuex';
+import { createStore as _createStore } from 'vuex';
 
 // VUE3 MIGRATION: This test file has been migrated to Vue 3 testing patterns.
 // The tests for Vuex modules remain fairly similar between Vue 2 and Vue 3,
@@ -42,7 +42,7 @@ import { createStore } from 'vuex';
 
 describe('store/modules/branch.js', () => {
     // Create a test store with just the branch module
-    let testStore;
+    let _testStore;
     const getMocks = () => ({
         commit: jest.fn(),
         dispatch: jest.fn(),

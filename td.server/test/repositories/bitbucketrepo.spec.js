@@ -4,7 +4,10 @@ import sinon from 'sinon';
 import env from '../../src/env/Env.js';
 import * as threatModelRepository from '../../src/repositories/bitbucketrepo.js';
 import { BitbucketClientWrapper } from '../../src/repositories/bitbucketrepo.js';
-import { getClient, userAsync } from '../../src/repositories/bitbucketrepo.js';
+import {
+    getClient as _getClient,
+    userAsync as _userAsync
+} from '../../src/repositories/bitbucketrepo.js';
 
 describe('repositories/bitbucketrepo.js', () => {
     const workspace = 'threat-workspace';

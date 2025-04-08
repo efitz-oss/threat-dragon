@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon as _FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { shallowMount } from '@vue/test-utils';
 import bootstrapVueNext from '@/plugins/bootstrap-vue-next';
 

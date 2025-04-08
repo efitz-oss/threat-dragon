@@ -79,7 +79,7 @@ describe('components/SelectionPage.vue', () => {
         it('filters the displayed items when filter value changes', async () => {
             // Directly test the filtering logic by accessing the computed property
             // with a mocked filter value
-            const origFilter = wrapper.vm.filter;
+            // const _origFilter = wrapper.vm.filter;
             
             // Create a custom computed property test
             const displayedWithFilter = (filterValue) => {
@@ -104,7 +104,7 @@ describe('components/SelectionPage.vue', () => {
 
     describe('empty state with action callback', () => {
         const items = [];
-        let emptyStateText = 'foobar', onItemClick, onEmptyStateClick;
+        const emptyStateText = 'foobar'; let onItemClick, onEmptyStateClick;
 
         beforeEach(async () => {
             // Setup mock functions
@@ -149,7 +149,7 @@ describe('components/SelectionPage.vue', () => {
 
     describe('empty state without action callback', () => {
         const items = [];
-        let emptyStateText = 'foobar', onItemClick;
+        const emptyStateText = 'foobar'; let onItemClick;
 
         beforeEach(async () => {
             onItemClick = jest.fn();

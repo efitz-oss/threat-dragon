@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+import { nextTick as _nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { shallowMount } from '@vue/test-utils';
 import { createStore } from 'vuex';

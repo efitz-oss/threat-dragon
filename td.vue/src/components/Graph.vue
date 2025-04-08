@@ -60,7 +60,8 @@ import diagramService from '@/service/migration/diagram.js';
 import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
 
-// Stencil theme is loaded via link tag in public/index.html
+// Import stencil theme directly to avoid MIME type issues
+import '@/assets/css/stencil-theme.css';
 
 export default {
     name: 'TdGraph',
@@ -96,8 +97,20 @@ export default {
         
         // Initialize the graph
         const init = () => {
+            // Initialize the graph first
             graph.value = diagramService.edit(graphContainer.value, diagram.value);
+            
+            // Make sure stencil container is properly sized before initializing
+            if (stencilContainer.value) {
+                // Force a proper height on the stencil container
+                stencilContainer.value.style.height = '100%';
+                stencilContainer.value.style.minHeight = '500px';
+            }
+            
+            // Initialize stencil after ensuring container is ready
             stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+            
+            // Notify store that the diagram is in its initial state
             store.dispatch(tmActions.notModified);
             
             // Listen for graph changes
@@ -110,9 +123,12 @@ export default {
         
         // Event handlers
         const threatSelected = (threatId, state) => {
+            console.debug('Graph component received threatSelected event', threatId, state);
             if (threatEditDialog.value) {
                 // Use the new public showDialog method
                 threatEditDialog.value.showDialog(threatId, state);
+            } else {
+                console.error('threatEditDialog ref is not available');
             }
         };
         
@@ -216,20 +232,37 @@ export default {
         onMounted(() => {
             init();
             
-            // Force stencil redraw after initialization
-            setTimeout(() => {
-                if (graph.value && stencilContainer.value) {
+            // Create a series of staggered redraws to ensure proper rendering
+            const redrawStencil = () => {
+                if (graph.value && stencilContainer.value && stencilInstance.value) {
                     console.debug('Forcing stencil redraw');
                     const container = stencilContainer.value;
                     const width = container.offsetWidth;
+                    
                     // Trigger a resize event to force redraw
                     window.dispatchEvent(new Event('resize'));
-                    // Also force a redraw of the stencil
-                    if (stencilInstance.value && typeof stencilInstance.value.resize === 'function') {
+                    
+                    // Force a redraw of the stencil
+                    if (typeof stencilInstance.value.resize === 'function') {
                         stencilInstance.value.resize(width);
                     }
+                    
+                    // Also try to ensure all stencil items are visible
+                    if (stencilInstance.value.groups) {
+                        // Open all groups to ensure visibility
+                        Object.values(stencilInstance.value.groups).forEach(group => {
+                            if (group && typeof group.open === 'function') {
+                                group.open();
+                            }
+                        });
+                    }
                 }
-            }, 100); // Short delay to ensure component is fully mounted
+            };
+            
+            // Multiple redraws at different intervals to handle various timing issues
+            setTimeout(redrawStencil, 100);  // Initial redraw
+            setTimeout(redrawStencil, 500);  // Secondary redraw
+            setTimeout(redrawStencil, 1000); // Final redraw for slower devices
         });
         
         onUnmounted(() => {

@@ -71,7 +71,7 @@ describe('MainDashboard.vue', () => {
         // which can be tricky to test directly.
         
         // Create component with store state
-        const wrapper = createWrapper(MainDashboard, {
+        const _wrapper = createWrapper(MainDashboard, {
             store: {
                 state: {
                     provider: { selected: 'github' }
@@ -92,7 +92,7 @@ describe('MainDashboard.vue', () => {
     });
     
     it('falls back to local provider when selected is not set', () => {
-        const wrapper = createWrapper(MainDashboard, {
+        const _wrapper = createWrapper(MainDashboard, {
             store: {
                 state: {
                     provider: { selected: null }
@@ -136,7 +136,7 @@ describe('MainDashboard.vue', () => {
         // we'll check that the function is called with the right provider
         
         try {
-            createWrapper(MainDashboard, {
+            const _wrapper = createWrapper(MainDashboard, {
                 store: {
                     state: {
                         provider: { selected: 'invalid-provider' }

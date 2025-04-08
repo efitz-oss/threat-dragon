@@ -1,11 +1,13 @@
-import { nextTick } from 'vue';
+import { nextTick as _nextTick } from 'vue';
 import { createStore } from 'vuex';
-import { mount, shallowMount } from '@vue/test-utils';
+import { mount as _mount, shallowMount } from '@vue/test-utils';
 
 import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
 import tmActions from '@/store/actions/threatmodel.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
+const _dataChanged = dataChanged;
 import threatModels from '@/service/threats/models/index.js';
+const _threatModels = threatModels;
 import ThreatSuggestDialog from '@/components/ThreatSuggestDialog.vue';
 
 // Mock the required dependencies

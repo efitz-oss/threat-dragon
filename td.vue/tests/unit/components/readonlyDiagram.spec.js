@@ -35,8 +35,8 @@ describe('components/ReadOnlyDiagram.vue', () => {
     const diagram = { foo: 'bar' };
   
     // Spy on window event listeners
-    const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
-    const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+    const _addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+    const _removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
   
     beforeEach(async () => {
         jest.clearAllMocks();
@@ -85,8 +85,8 @@ describe('components/ReadOnlyDiagram.vue', () => {
         it('cleans up on component unmount', () => {
             // Instead of testing the hook directly, test the behavior when unmounting
             // Store references to verify against after unmount
-            const originalGraph = wrapper.vm.graph;
-            const originalDebouncedResize = wrapper.vm.debouncedResize;
+            const _originalGraph = wrapper.vm.graph;
+            const _originalDebouncedResize = wrapper.vm.debouncedResize;
       
             // Unmount the component
             wrapper.unmount();

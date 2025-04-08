@@ -7,6 +7,7 @@ import { PROVIDER_SELECTED } from '@/store/actions/provider.js';
 import { REPOSITORY_CLEAR, REPOSITORY_SELECTED } from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 import AddBranchDialog from '@/components/AddBranchDialog.vue';
+const _AddBranchDialog = AddBranchDialog;
 
 
 describe('views/BranchAccess.vue', () => {

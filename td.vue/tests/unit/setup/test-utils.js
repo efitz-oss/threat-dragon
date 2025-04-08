@@ -1,7 +1,7 @@
 // Vue 3 test utilities
 import { mount, shallowMount } from '@vue/test-utils';
 import { createStore } from 'vuex';
-import i18nFactory from '@/i18n/index.js';
+import _i18nFactory from '@/i18n/index.js';
 // Import Bootstrap Vue components
 import {
     BOverlay, BContainer, BNavbarToggle, BImg, BNavbarBrand, BCollapse,

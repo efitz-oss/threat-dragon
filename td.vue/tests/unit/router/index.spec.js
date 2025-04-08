@@ -1,4 +1,4 @@
-import { createRouter } from 'vue-router';
+import { createRouter as _createRouter } from 'vue-router';
 
 import router from '@/router/index.js';
 

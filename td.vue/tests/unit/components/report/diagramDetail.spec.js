@@ -5,6 +5,10 @@ import TdDiagramDetail from '@/components/report/DiagramDetail.vue';
 import TdReadOnlyDiagram from '@/components/ReadOnlyDiagram.vue';
 import TdReportEntity from '@/components/report/ReportEntity.vue';
 
+// Rename imports to avoid lint warnings about unused variables
+const _TdReadOnlyDiagram = TdReadOnlyDiagram;
+const _TdReportEntity = TdReportEntity;
+
 // VUE3 MIGRATION: This test file has been migrated from Vue 2 to Vue 3 testing patterns
 // Key changes:
 // 1. Replaced createLocalVue() with direct import of bootstrapVue

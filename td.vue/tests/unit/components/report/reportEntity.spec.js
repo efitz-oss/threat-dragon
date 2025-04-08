@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { 
-    BRow, BCol, BTableSimple, BThead, BTbody, BTr, BTh, BTd 
+    BRow as _BRow, BCol as _BCol, BTableSimple as _BTableSimple, BThead as _BThead, 
+    BTbody as _BTbody, BTr as _BTr, BTh as _BTh, BTd as _BTd 
 } from 'bootstrap-vue-next';
 import TdReportEntity from '@/components/report/ReportEntity.vue';
 

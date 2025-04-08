@@ -5,7 +5,7 @@ import { AUTH_SET_LOCAL } from '@/store/actions/auth.js';
 import loginApi from '@/service/api/loginApi.js';
 import { PROVIDER_SELECTED } from '@/store/actions/provider.js';
 import TdProviderLoginButton from '@/components/ProviderLoginButton.vue';
-import { providerNames } from '@/service/provider/providers.js';
+import { providerNames as _providerNames } from '@/service/provider/providers.js';
 
 // Mock the loginApi module
 jest.mock('@/service/api/loginApi.js', () => ({
@@ -30,7 +30,7 @@ describe('components/ProviderLoginButton.vue', () => {
         icon: ['fab', 'github']
     });
     
-    const getMockDispatch = () => jest.fn().mockImplementation(async (action) => {
+    const getMockDispatch = () => jest.fn().mockImplementation(async (_action) => {
         // Return a resolved promise to simulate async behavior
         return Promise.resolve();
     });

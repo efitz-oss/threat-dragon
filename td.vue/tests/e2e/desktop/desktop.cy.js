@@ -73,7 +73,7 @@ describe('Desktop application', () => {
         it('should handle confirmation dialogs through IPC', () => {
             cy.window().then((win) => {
                 // Spy on the close application request function
-                const closeRequestSpy = cy.spy();
+                const _closeRequestSpy = cy.spy();
                 cy.stub(win.electronAPI, 'appClose');
         
                 // Trigger the close app request

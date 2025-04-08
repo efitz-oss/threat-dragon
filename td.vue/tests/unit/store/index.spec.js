@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { createStore as _createStore } from 'vuex';
 import defaultStore, { store } from '@/store/index.js';
 
 describe('store/index.js', () => {

@@ -1,9 +1,9 @@
 import { mount, shallowMount } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import TdGraphMeta from '@/components/GraphMeta.vue';
-import TdGraphThreats from '@/components/GraphThreats.vue';
+import _TdGraphThreats from '@/components/GraphThreats.vue';
 import { CELL_DATA_UPDATED, CELL_UNSELECTED } from '@/store/actions/cell.js';
-import { useThreatEditor } from '@/composables/useThreatEditor';
+import { useThreatEditor as _useThreatEditor } from '@/composables/useThreatEditor';
 
 // Set up global process.env.NODE_ENV for tests
 process.env.NODE_ENV = 'test';

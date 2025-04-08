@@ -42,7 +42,7 @@ config.global.plugins = [BootstrapVueNextMock];
 // Configure Vue Test Utils to silence the warnings about components that couldn't be auto-resolved
 // This is needed because Vue 3 warns about components that couldn't be resolved, even if they are mocked
 config.global.config = {
-    warnHandler: (msg, instance, trace) => {
+    warnHandler: (msg, _instance, _trace) => {
     // Silence the component resolution warnings that we've already handled with our mocks
         if (msg.includes('Failed to resolve component')) {
             return;

@@ -1,10 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import googleTokenController from '../../src/controllers/googleTokenController.js';
-import { createAuthMiddlewareMock, createMockProvider } from '../helpers/auth.js';
+import {
+    createAuthMiddlewareMock as _createAuthMiddlewareMock,
+    createMockProvider
+} from '../helpers/auth.js';
 
 describe('controllers/googleTokenController.js', () => {
-    let req, res, next;
+    let req, res, _next;
 
     beforeEach(() => {
         // Create mock request, response and next function
@@ -23,7 +26,7 @@ describe('controllers/googleTokenController.js', () => {
             send: sinon.spy()
         };
 
-        next = sinon.spy();
+        _next = sinon.spy();
     });
 
     afterEach(() => {

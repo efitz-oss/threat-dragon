@@ -18,10 +18,10 @@ describe('repositories/githubrepo.js', () => {
         repo: 'testrepo'
     };
     const accessToken = 'test-access-token';
-    const repoFullName = `${info.organisation}/${info.repo}`;
-    const modelPath = `ThreatDragonModels/${info.model}/${info.model}.json`;
+    const _repoFullName = `${info.organisation}/${info.repo}`;
+    const _modelPath = `ThreatDragonModels/${info.model}/${info.model}.json`;
 
-    let githubApiScope;
+    let _githubApiScope;
 
     before(() => {
         // Skip API mocking if using real APIs
@@ -31,7 +31,7 @@ describe('repositories/githubrepo.js', () => {
         }
 
         // Setup GitHub API mocks
-        githubApiScope = mockGitHubApi();
+        _githubApiScope = mockGitHubApi();
     });
 
     after(() => {

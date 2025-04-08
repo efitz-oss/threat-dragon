@@ -112,7 +112,10 @@ export default {
     emits: ['threatSelected'],
     methods: {
         threatSelected() {
-            this.$emit('threatSelected', this.id, 'old');
+            // Use nextTick to ensure the emit happens after any previous events
+            this.$nextTick(() => {
+                this.$emit('threatSelected', this.id, 'old');
+            });
         }
     }
 };

@@ -1,4 +1,4 @@
-import { mount, shallowMount } from '@vue/test-utils';
+import { mount as _mount, shallowMount } from '@vue/test-utils';
 import DriveAccess from '@/views/google/DriveAccess.vue';
 import api from '@/service/api/api.js';
 import { THREATMODEL_UPDATE } from '@/store/actions/threatmodel.js';

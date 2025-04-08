@@ -65,7 +65,7 @@ describe('PrivacyPage.vue', () => {
         
         // Check for sections
         const headings = wrapper.findAll('.td-description h2');
-        expect(headings.length).toBe(2);
+        expect(headings).toHaveLength(2);
         expect(headings.at(0).text()).toBe('Section 1');
         expect(headings.at(1).text()).toBe('Section 2');
     });

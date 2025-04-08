@@ -24,8 +24,8 @@ console.warn = function(msg, ...args) {
 };
 
 // Suppress debug messages during tests
-const originalDebug = console.debug;
-console.debug = function(msg, ...args) {
+const _originalDebug = console.debug;
+console.debug = function(_msg, ..._args) {
     // Suppress all debug messages in tests
     return;
 };

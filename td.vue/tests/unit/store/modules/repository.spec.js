@@ -29,7 +29,7 @@ jest.mock('@/service/api/threatmodelApi.js', () => ({
 import { REPOSITORY_CLEAR, REPOSITORY_FETCH, REPOSITORY_SELECTED } from '@/store/actions/repository.js';
 import repoModule, { clearState } from '@/store/modules/repository.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
-import { createStore } from 'vuex';
+import { createStore as _createStore } from 'vuex';
 
 // VUE3 MIGRATION: This test file has been migrated to Vue 3 testing patterns.
 // The tests for Vuex modules remain fairly similar between Vue 2 and Vue 3,

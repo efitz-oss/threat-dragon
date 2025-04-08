@@ -3,7 +3,7 @@ import { createStore } from 'vuex';
 import { nextTick } from 'vue';
 
 import TdGraphProperties from '@/components/GraphProperties.vue';
-import { useI18n } from '@/i18n';
+import { useI18n as _useI18n } from '@/i18n';
 
 // Mock the i18n composable
 jest.mock('@/i18n', () => ({

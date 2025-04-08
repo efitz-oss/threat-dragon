@@ -1,10 +1,10 @@
 import { nextTick } from 'vue';
-import { mount } from '@vue/test-utils';
+import { mount as _mount } from '@vue/test-utils';
 import { createWrapper } from '../setup/test-utils.js';
 
-import TdFormButton from '@/components/FormButton.vue';
+import _TdFormButton from '@/components/FormButton.vue';
 import TdGraphButtons from '@/components/GraphButtons.vue';
-import bootstrapVueNext from '@/plugins/bootstrap-vue-next';
+import _bootstrapVueNext from '@/plugins/bootstrap-vue-next';
 
 describe('components/GraphButtons.vue', () => {
     let wrapper, graph, mockUndo, mockRedo, mockCanUndo, mockCanRedo;
@@ -129,14 +129,13 @@ describe('components/GraphButtons.vue', () => {
             // Vue 3 Migration: Check if component has the expected structure for export
             // Skip this test as we're mostly testing the component API
             const exportId = wrapper.find('#export-graph-btn');
-            if (exportId.exists()) {
-                expect(exportId.exists()).toBe(true);
-            } else {
-                // Otherwise validate the component's structure through alternative means
-                expect(wrapper.findComponent({ name: 'b-dropdown' }).exists() || 
-                       wrapper.findComponent({ name: 'BDropdown' }).exists() || 
-                       wrapper.find('.dropdown').exists()).toBe(true);
-            }
+            // Check for either the button directly or some dropdown component
+            const hasExportButton = exportId.exists();
+            const hasDropdown = wrapper.findComponent({ name: 'b-dropdown' }).exists() || 
+                wrapper.findComponent({ name: 'BDropdown' }).exists() || 
+                wrapper.find('.dropdown').exists();
+            
+            expect(hasExportButton || hasDropdown).toBe(true);
         });
     });
 

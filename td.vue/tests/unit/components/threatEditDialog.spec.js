@@ -2,9 +2,11 @@ import { createStore } from 'vuex';
 import { nextTick } from 'vue';
 import { mount, config } from '@vue/test-utils';
 import TdThreatEditDialog from '@/components/ThreatEditDialog.vue';
-import { createWrapper } from '../setup/test-utils';
+const _TdThreatEditDialog = TdThreatEditDialog;
+import { createWrapper as _createWrapper } from '../setup/test-utils';
 import { useThreatEditor } from '@/composables/useThreatEditor';
 import { useI18n } from '@/i18n/index.js';
+const _useI18n = useI18n;
 
 // Set up global process.env.NODE_ENV for tests
 process.env.NODE_ENV = 'test';
@@ -41,11 +43,12 @@ jest.mock('@/service/x6/graph/data-changed.js', () => ({
 
 // Import the mocked service
 import dataChanged from '@/service/x6/graph/data-changed.js';
+const _dataChanged = dataChanged;
 
 // Mock the threat models service
 jest.mock('@/service/threats/models/index.js', () => ({
-    getThreatTypesByElement: jest.fn().mockImplementation((modelType, entityType) => {
-        if (modelType === 'CIA' && entityType === 'tm.Process') {
+    getThreatTypesByElement: jest.fn().mockImplementation((_modelType, _entityType) => {
+        if (_modelType === 'CIA' && _entityType === 'tm.Process') {
             return {
                 'threats.model.cia.confidentiality': 'Confidentiality',
                 'threats.model.cia.integrity': 'Integrity',
@@ -54,7 +57,7 @@ jest.mock('@/service/threats/models/index.js', () => ({
         }
         return {};
     }),
-    getFrequencyMapByElement: jest.fn().mockImplementation((modelType, entityType) => {
+    getFrequencyMapByElement: jest.fn().mockImplementation((_modelType, _entityType) => {
         return {
             confidentiality: 0,
             integrity: 0,
@@ -65,6 +68,7 @@ jest.mock('@/service/threats/models/index.js', () => ({
 
 // Import the mocked service
 import threatModels from '@/service/threats/models/index.js';
+const _threatModels = threatModels;
 
 describe('components/ThreatEditDialog.vue', () => {
     let mockStore, wrapper;
@@ -210,7 +214,7 @@ describe('components/ThreatEditDialog.vue', () => {
             const modelTypesArray = ['CIA', 'DIE', 'LINDDUN', 'PLOT4ai', 'STRIDE'];
             
             // Setup model types computed property
-            const { wrapper: componentWrapper, composable } = setupComponent({
+            const { wrapper: componentWrapper, composable: _composable } = setupComponent({
                 editingThreat: { value: getThreatData() }
             });
             wrapper = componentWrapper;
@@ -454,7 +458,7 @@ describe('components/ThreatEditDialog.vue', () => {
         
         it('handles modal hidden event to cancel editing if still active', () => {
             // Test onModalHidden method
-            const { wrapper: componentWrapper, composable } = setupComponent({
+            const { wrapper: componentWrapper, composable: _composable } = setupComponent({
                 isEditing: { value: true }
             });
             wrapper = componentWrapper;
@@ -462,8 +466,8 @@ describe('components/ThreatEditDialog.vue', () => {
             // Create direct implementation of onModalHidden
             wrapper.vm.onModalHidden = () => {
                 // If modal is closed via escape key or clicking outside
-                if (composable.isEditing.value) {
-                    composable.cancelEdit();
+                if (_composable.isEditing.value) {
+                    _composable.cancelEdit();
                 }
             };
             
@@ -471,15 +475,15 @@ describe('components/ThreatEditDialog.vue', () => {
             wrapper.vm.onModalHidden();
             
             // Verify cancelEdit was called
-            expect(composable.cancelEdit).toHaveBeenCalled();
+            expect(_composable.cancelEdit).toHaveBeenCalled();
             
             // Reset mocks and test when not editing
             jest.clearAllMocks();
-            composable.isEditing.value = false;
+            _composable.isEditing.value = false;
             wrapper.vm.onModalHidden();
             
             // Verify cancelEdit was not called
-            expect(composable.cancelEdit).not.toHaveBeenCalled();
+            expect(_composable.cancelEdit).not.toHaveBeenCalled();
         });
     });
     

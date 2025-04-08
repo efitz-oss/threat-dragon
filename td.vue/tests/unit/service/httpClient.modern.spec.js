@@ -63,6 +63,7 @@ window.$toast = mockToast;
 // Import after mocks are setup
 import httpClient from '@/service/httpClient';
 import router from '@/router/index';
+const _router = router;
 
 // Store interceptor callbacks at module level
 const requestInterceptor = { successFn: null, errorFn: null };

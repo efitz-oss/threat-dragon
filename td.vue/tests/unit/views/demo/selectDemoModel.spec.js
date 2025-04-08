@@ -1,11 +1,13 @@
-import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { mount as _mount } from '@vue/test-utils';
+import { createStore as _createStore } from 'vuex';
 import { 
-    BContainer, BRow, BCol, BListGroup, BListGroupItem 
+    BContainer as _BContainer, BRow as _BRow, BCol as _BCol, 
+    BListGroup as _BListGroup, BListGroupItem as _BListGroupItem 
 } from 'bootstrap-vue-next';
 import { createWrapper } from '../../setup/test-utils';
 
 import demoThreatModel from '@/service/demo/v2-threat-model.js';
+const _demoThreatModel = demoThreatModel;
 import SelectDemoModel from '@/views/demo/SelectDemoModel.vue';
 
 /**

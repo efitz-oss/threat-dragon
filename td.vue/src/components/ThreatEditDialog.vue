@@ -138,7 +138,7 @@
                     <div class="left-buttons">
                         <!-- Only show Delete button for existing threats -->
                         <b-button
-                            v-if="!isNewThreat"
+                            v-if="editingThreat && !isNewThreat"
                             variant="danger"
                             @click="onDelete"
                         >

@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils';
+import { mount as _mount } from '@vue/test-utils';
 import TdKeyboardShortcuts from '@/components/KeyboardShortcuts.vue';
-import { BModal, BTable } from 'bootstrap-vue-next';
+import { BModal as _BModal, BTable as _BTable } from 'bootstrap-vue-next';
 import { createWrapper } from '../setup/test-utils';
 
 // VUE3 MIGRATION: This test file has been migrated to Vue 3 testing patterns:
@@ -10,7 +10,7 @@ import { createWrapper } from '../setup/test-utils';
 // 4. Testing component data and props directly instead of relying solely on DOM
 
 describe('components/KeyboardShortcuts.vue', () => {
-    let wrapper, modal;
+    let wrapper, _modal;
 
     beforeEach(() => {
         // VUE3 MIGRATION: Using createWrapper helper to ensure consistent bootstrap-vue-next setup
@@ -30,7 +30,7 @@ describe('components/KeyboardShortcuts.vue', () => {
                 $t: (t) => t
             }
         });
-        modal = wrapper.find('#shortcuts');
+        _modal = wrapper.find('#shortcuts');
     });
 
     it('creates a bootstrap modal', () => {

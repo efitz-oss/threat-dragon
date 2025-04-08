@@ -4,7 +4,10 @@ import sinon from 'sinon';
 import env from '../../src/env/Env.js';
 import * as threatModelRepository from '../../src/repositories/gitlabrepo.js';
 import { GitlabClientWrapper } from '../../src/repositories/gitlabrepo.js';
-import { getClient, userAsync } from '../../src/repositories/gitlabrepo.js';
+import {
+    getClient as _getClient,
+    userAsync as _userAsync
+} from '../../src/repositories/gitlabrepo.js';
 
 describe('repositories/gitlabrepo.js', () => {
     const workspace = 'threat-workspace';

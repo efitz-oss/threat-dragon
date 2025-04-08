@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount as _mount } from '@vue/test-utils';
 import { createWrapper } from '../setup/test-utils';
 
 import ThreatModel from '@/views/ThreatModel.vue';
@@ -17,7 +17,7 @@ describe('views/Threatmodel.vue', () => {
     ];
     const path = '/git/github/foo/bar/baz';
 
-    let wrapper, mockRouter, mockStore;
+    let wrapper, mockRouter, _mockStore;
 
     beforeEach(() => {
         console.log = jest.fn();

@@ -1,4 +1,4 @@
-import crypto, { createDecipheriv } from 'crypto';
+import crypto, { createDecipheriv as _createDecipheriv } from 'crypto';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

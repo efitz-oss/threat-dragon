@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import { createStore } from 'vuex';
-import { AUTH_SET_JWT } from '@/store/actions/auth.js';
+import { AUTH_SET_JWT as _AUTH_SET_JWT } from '@/store/actions/auth.js';
 import loginApi from '@/service/api/loginApi.js';
 import OAuthCallback from '@/views/OAuthCallback.vue';
 import { mount } from '@vue/test-utils';
@@ -27,7 +27,7 @@ describe('views/OAuthCallback.vue', () => {
     const jwt = 'foobar';
     const code = '1234-12345';
     const provider = 'test';
-    let wrapper, mockStore;
+    let _wrapper, mockStore;
     let originalLocation;
 
     beforeEach(() => {
@@ -74,7 +74,7 @@ describe('views/OAuthCallback.vue', () => {
             loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
             
             // Mount the component
-            wrapper = mount(OAuthCallback, {
+            _wrapper = mount(OAuthCallback, {
                 global: {
                     plugins: [mockStore]
                 }
@@ -122,7 +122,7 @@ describe('views/OAuthCallback.vue', () => {
             loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
             
             // Mount the component
-            wrapper = mount(OAuthCallback, {
+            _wrapper = mount(OAuthCallback, {
                 global: {
                     plugins: [mockStore]
                 }
@@ -183,7 +183,7 @@ describe('views/OAuthCallback.vue', () => {
             jest.spyOn(mockStore, 'dispatch');
             
             // Mount component - this will trigger the onMounted hook
-            wrapper = mount(OAuthCallback, {
+            const _wrapper = mount(OAuthCallback, {
                 global: {
                     plugins: [mockStore]
                 }
@@ -222,7 +222,7 @@ describe('views/OAuthCallback.vue', () => {
             loginApi.completeLoginAsync.mockRejectedValue(new Error('API error'));
             
             // Mount the component
-            wrapper = mount(OAuthCallback, {
+            _wrapper = mount(OAuthCallback, {
                 global: {
                     plugins: [mockStore]
                 }

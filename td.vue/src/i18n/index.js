@@ -38,6 +38,7 @@ const getI18n = () => {
         i18n = createI18n({
             legacy: false, // Use Composition API mode
             locale: 'eng',
+            escapeParameter: true, // Escape special characters in parameters
             messages: {
                 ara,
                 deu,

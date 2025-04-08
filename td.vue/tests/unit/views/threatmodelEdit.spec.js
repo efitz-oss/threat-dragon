@@ -275,7 +275,7 @@ describe('views/ThreatmodelEdit.vue', () => {
         });
 
         describe('remove diagram', () => {
-            let diagramCount, link;
+            let diagramCount, _link;
 
             beforeEach(async () => {
                 diagramCount = diagrams.length;

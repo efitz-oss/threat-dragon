@@ -69,9 +69,9 @@ router.beforeEach((to, from, next) => {
     console.log(`  params=${JSON.stringify(to.params)}, meta=${JSON.stringify(to.meta)}`);
     console.log(`  name=${to.name}, path=${to.path}`);
     
-    // If this is a demo selection page, clear provider state before proceeding
+    // If this is a demo selection page, preserve provider state
     if (to.name === 'DemoSelect') {
-        console.log('Navigating to demo selection page - no provider needed');
+        console.log('Navigating to demo selection page with current provider state');
         next();
         return;
     }
@@ -133,19 +133,24 @@ router.beforeEach((to, from, next) => {
         }
     }
 
-    // If the route has provider metadata but no provider param, add it
-    if (to.meta.provider && !to.params.provider) {
-        // For regular routes, add the provider param from the meta
-        const newParams = { ...to.params, provider: to.meta.provider };
-        console.log(`Adding provider param to route: ${to.meta.provider}`);
-        next({
-            ...to,
-            params: newParams,
-            replace: true
-        });
-    } else {
-        next();
+    // Check if this is a provider-specific route that needs special handling
+    if (to.meta.provider) {
+        // Only store the provider in the Vuex store instead of trying to add it to route params
+        // This avoids the Vue Router warning about discarded parameters
+        const store = window._vueApp?.$store;
+        if (store && to.meta.provider) {
+            console.log(`Setting provider in store: ${to.meta.provider}`);
+            try {
+                // Dispatch action to select provider - make sure this action exists in your store
+                store.dispatch('PROVIDER_SELECTED', to.meta.provider);
+            } catch (error) {
+                console.error('Failed to set provider in store:', error);
+            }
+        }
     }
+    
+    // Continue with the navigation
+    next();
 });
 
 export default router;

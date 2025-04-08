@@ -42,7 +42,7 @@ describe('Google Drive Service', () => {
     });
 
     // Helper function to skip tests when using real APIs
-    const skipIfRealApis = (test) => {
+    const skipIfRealApis = (_test) => {
         if (useRealApis()) {
             console.log('Skipping test while using real APIs');
             return true;

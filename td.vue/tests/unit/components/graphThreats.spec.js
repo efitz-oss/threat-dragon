@@ -1,7 +1,7 @@
-import { config, mount } from '@vue/test-utils';
+import { config, mount as _mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { BBadge, BCard, BRow, BCol, BCardText } from 'bootstrap-vue-next';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon as _FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import TdGraphThreats from '@/components/GraphThreats.vue';
 import { createWrapper } from '../setup/test-utils';
