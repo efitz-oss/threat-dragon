@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { nextTick } from 'vue';
+
 export default {
     name: 'TdGraphThreats',
     props: {
@@ -110,13 +112,18 @@ export default {
         }
     },
     emits: ['threatSelected'],
-    methods: {
-        threatSelected() {
+    setup(props, { emit }) {
+        // Methods
+        const threatSelected = () => {
             // Use nextTick to ensure the emit happens after any previous events
-            this.$nextTick(() => {
-                this.$emit('threatSelected', this.id, 'old');
+            nextTick(() => {
+                emit('threatSelected', props.id, 'old');
             });
-        }
+        };
+        
+        return {
+            threatSelected
+        };
     }
 };
 </script>

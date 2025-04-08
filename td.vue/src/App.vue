@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
+import { computed, onMounted, onBeforeUnmount } from 'vue';
+import { useStore } from 'vuex';
 import { LOADER_FINISHED } from '@/store/actions/loader.js';
 import TdNavbar from '@/components/Navbar.vue';
 
@@ -20,22 +20,38 @@ export default {
     components: {
         TdNavbar
     },
-    computed: mapState({
-        isLoading: (state) => state.loader.loading
-    }),
-    mounted() {
-        this.$store.dispatch(LOADER_FINISHED);
-
-        // Listen for schema warnings from non-component code
-        document.addEventListener('schema-warning', (event) => {
-            if (event.detail && event.detail.message) {
-                this.$toast.warning(event.detail.message, { timeout: false });
-            }
+    setup() {
+        const store = useStore();
+        
+        // Computed properties
+        const isLoading = computed(() => store.state.loader.loading);
+        
+        // Lifecycle hooks
+        onMounted(() => {
+            store.dispatch(LOADER_FINISHED);
+            
+            // Listen for schema warnings from non-component code
+            document.addEventListener('schema-warning', handleSchemaWarning);
         });
-    },
-    beforeUnmount() {
-        // Clean up event listener
-        document.removeEventListener('schema-warning');
+        
+        onBeforeUnmount(() => {
+            // Clean up event listener
+            document.removeEventListener('schema-warning', handleSchemaWarning);
+        });
+        
+        // Event handlers
+        const handleSchemaWarning = (event) => {
+            if (event.detail && event.detail.message) {
+                // Access the global toast plugin via window._vueApp
+                if (window._vueApp && window._vueApp.$toast) {
+                    window._vueApp.$toast.warning(event.detail.message, { timeout: false });
+                }
+            }
+        };
+        
+        return {
+            isLoading
+        };
     }
 };
 </script>
