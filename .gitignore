@@ -126,6 +126,7 @@ coverage/
 !td.vue/src/assets/*.jpg
 !td.vue/src/assets/schema/
 !td.vue/src/assets/schema/*.js
+!td.vue/src/assets/css/*.css
 !td.vue/src/components/
 !td.vue/src/components/*.vue
 !td.vue/src/components/printed-report/
