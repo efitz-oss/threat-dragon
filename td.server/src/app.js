@@ -49,13 +49,48 @@ const configureServer = (app, logger) => {
     securityHeaders.config(app);
     app.use(https.middleware); // Force HTTPS in production
 
-    // static content
+    // static content - serve both from /public and direct paths to ensure compatibility
     app.use('/public', express.static(siteDir));
+    // Direct access to static asset directories
+    app.use('/css', express.static(path.join(siteDir, 'css')));
+    app.use('/js', express.static(path.join(siteDir, 'js')));
+    app.use('/img', express.static(path.join(siteDir, 'img')));
+    app.use('/fonts', express.static(path.join(siteDir, 'fonts')));
+    app.use('/assets', express.static(path.join(siteDir, 'assets')));
+    app.use('/favicon.ico', express.static(path.join(siteDir, 'favicon.ico')));
     app.use('/docs', express.static(docsDir));
 
     // parsers and routes
     parsers.config(app);
+
+    // Add debug middleware for static file requests in development mode
+    if (process.env.NODE_ENV === 'development') {
+        app.use((req, res, next) => {
+            // Only log requests for static assets
+            if (req.path.match(/\.(css|js|png|jpg|svg|ico)$/i)) {
+                logger.debug(
+                    `Static asset request: ${req.path} (Content-Type: ${
+                        res.get('Content-Type') || 'not set yet'
+                    })`
+                );
+            }
+            next();
+        });
+    }
+
     routes.config(app);
+
+    // Add 404 handler for static assets
+    app.use((req, res, next) => {
+        // Only log 404s for potential static assets
+        if (
+            req.path.match(/\.(css|js|png|jpg|svg|ico|woff|woff2|ttf|eot)$/i) &&
+            res.statusCode === 404
+        ) {
+            logger.warn(`Static asset not found: ${req.path}`);
+        }
+        next();
+    });
 
     // Set port
     const serverApiPort = env.get().config.SERVER_API_PORT || env.get().config.PORT || 3000;
