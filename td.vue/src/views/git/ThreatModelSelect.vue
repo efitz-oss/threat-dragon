@@ -59,9 +59,8 @@ export default {
         const selectedModel = computed(() => store.state.threatmodel.data);
 
         onMounted(() => {
-            if (provider.value !== route.params.provider) {
-                store.dispatch(providerActions.selected, route.params.provider);
-            }
+            // Provider is now managed via meta.provider in the route configuration
+            // and router navigation guard will set it in the store
 
             if (repoName.value !== route.params.repository) {
                 store.dispatch(repoActions.selected, route.params.repository);

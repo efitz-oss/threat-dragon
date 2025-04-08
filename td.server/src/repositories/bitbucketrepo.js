@@ -48,12 +48,10 @@ const hasNextPage = (response) => response.data.next !== undefined && response.d
 const hasPreviousPage = (response) =>
     response.data.previous !== undefined && response.data.previous !== null;
 
-//Migrate searchAsync required
-const searchAsync = (page, accessToken, searchQuerys) =>
-    getClient(accessToken).search().reposAsync({
-        page: page,
-        q: searchQuerys
-    });
+// Note: searchAsync was previously defined but not implemented properly
+// The Bitbucket API's search functionality is handled via the reposAsync function with search queries
+export const searchAsync = (page, accessToken, searchQueries) => 
+    reposAsync(page, accessToken, searchQueries);
 
 export const userAsync = (accessToken) => getClient(accessToken).users.getAuthedUser();
 

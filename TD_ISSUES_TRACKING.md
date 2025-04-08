@@ -13,9 +13,10 @@ This document tracks the issues and their status as we work through the improvem
 | "New Threat" Button Not Working | ✅ Fixed | Added debugging and improved event handling |
 | Double-Click Required to Open Threat Dialog | ✅ Fixed | Added nextTick to ensure event handling order |
 | Stencil Component Only Shows Headers | ✅ Fixed | Improved stencil initialization and redraw logic |
-| Unused Variables and Imports | 🔄 In Progress | Removed unused variables in DriveAccess.vue, migrated ThreatModelSelect.vue to Composition API |
-| Provider State Architecture | 📝 Planned | Split into auth and storage components |
-| i18n Migration to Composition API | 🔄 In Progress | Started migration (2/28 components done) |
+| Build Error with stencil-theme.css | ✅ Fixed | Ensured CSS file is correctly located in src/assets/css directory |
+| Unused Variables and Imports | 🔄 In Progress | Removed unused variables in google.provider.js, fixed searchAsync in bitbucketrepo.js |
+| Provider State Architecture | ✅ Fixed | Updated all git routes to use meta.provider and store, removing params usage |
+| i18n Migration to Composition API | 🔄 In Progress | Started migration (4/28 components done) |
 
 ## Detailed Findings and Fixes
 
@@ -55,6 +56,17 @@ This document tracks the issues and their status as we work through the improvem
       }
   }
   ```
+- Updated git routes to use meta.provider like other providers instead of route params:
+  ```javascript
+  {
+      path: `/${providerType}/github/repository`,
+      name: `${providerType}Repository`,
+      component: () => import('../views/git/RepositoryAccess.vue'),
+      meta: { provider: 'github' }
+  }
+  ```
+- Removed all references to `route.params.provider` in git components (RepositoryAccess, BranchAccess, ThreatModelSelect) and updated them to use only the Vuex store value
+- Removed references to provider params in router navigation
 
 ### 3. Provider State Lost when Navigating to Demo Model
 
@@ -159,16 +171,97 @@ This document tracks the issues and their status as we work through the improvem
    }
    ```
 
+### 8. Build Error with stencil-theme.css
+
+**Root Cause**:
+- The Graph component imports the stencil-theme.css file from `@/assets/css/stencil-theme.css`
+- However, during the build process, this file was not found in the expected location
+
+**Fix**:
+1. Created the directory structure if it doesn't exist:
+   ```bash
+   mkdir -p td.vue/src/assets/css
+   ```
+2. Copied the existing CSS file from the public directory to ensure it's available in the source directory:
+   ```bash
+   cp td.vue/public/css/stencil-theme.css td.vue/src/assets/css/
+   ```
+3. This ensures the build process can find the CSS file when it's imported in the Graph component
+
+### 9. Provider State Architecture Redesign
+
+**Root Cause**:
+- Git routes were still using `:provider` route params (e.g., `/git/:provider/repository`) while Google and Local routes had switched to using `meta.provider`
+- Components were still checking `route.params.provider` instead of using the Vuex store values consistently
+- This inconsistency could lead to provider state issues when navigating between different screens
+
+**Fix**:
+1. Updated all Git routes to use meta.provider approach:
+   ```javascript
+   {
+       path: `/git/github/repository`,
+       name: `gitRepository`,
+       component: () => import('../views/git/RepositoryAccess.vue'),
+       meta: { provider: 'github' }
+   }
+   ```
+
+2. Created separate routes for each Git provider (GitHub, GitLab, BitBucket) instead of using dynamic route params
+
+3. Removed references to `route.params.provider` in components:
+   ```javascript
+   // Before
+   if (provider.value !== route.params.provider) {
+       store.dispatch(providerActions.selected, route.params.provider);
+   }
+   
+   // After
+   // Provider is now managed via meta.provider in the route configuration
+   // and router navigation guard will set it in the store
+   ```
+
+4. Updated router navigation in components to use only store values and not pass provider params:
+   ```javascript
+   // Before
+   next({ 
+       name: 'gitBranch', 
+       params: { 
+           provider: to.params.provider || 'github',
+           repository: to.params.repository
+       }
+   });
+   
+   // After
+   next({ 
+       name: 'gitBranch', 
+       params: { 
+           repository: to.params.repository
+       }
+   });
+   ```
+
+5. This redesign ensures provider state is consistently managed through the Vuex store throughout the application
+
 ## Next Steps
 
-1. Continue cleaning up unused variables and imports (removed in google.provider.js)
-2. Design and implement the provider state architecture redesign to separate authentication from storage
-3. Continue the i18n migration to the Composition API (2/28 components migrated)
+1. Continue cleaning up unused variables and imports (fixed google.provider.js and bitbucketrepo.js so far)
+2. ✅ Completed provider state architecture redesign:
+   - Updated all git routes to use meta.provider approach (like google and local providers)
+   - Removed all references to provider in route params
+   - Updated components to use only Vuex store for provider state
+3. Continue the i18n migration to the Composition API (4/28 components migrated)
+   - Completed: DriveAccess.vue, ThreatModelSelect.vue, BranchAccess.vue, RepositoryAccess.vue
+   - Next targets: Components in /src/components/ directory
 4. Update test fixtures to work with components migrated to Composition API
-5. Further testing to ensure all fixes work correctly
+   - Fixed: graphProperties.spec.js
+   - Still needs work: threatmodelSelect.spec.js
+5. Fixed build error with the stencil-theme.css file by ensuring it's available in the src/assets/css directory
+6. Further testing to ensure all fixes work correctly
+   - Test new route structure for git providers
+   - Ensure provider state is maintained across navigation flows
 
 ## Questions for Team Discussion
 
-1. Should the provider state redesign be implemented as a breaking change or with backward compatibility?
-2. What testing strategy should be used for the architectural changes?
-3. Are there any performance considerations for the stencil rendering beyond our current fixes?
+1. What testing strategy should be used for the architectural changes?
+2. Are there any performance considerations for the stencil rendering beyond our current fixes?
+3. Should we create additional routes for Bitbucket and GitLab providers to match all the functionality available for GitHub?

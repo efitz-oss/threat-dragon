@@ -7,7 +7,7 @@
         :on-item-click="onBranchClick"
         :paginate="paginate"
     >
-        {{ $t('branch.select') }}
+        {{ t('branch.select') }}
         <!-- Fixme: The href should get the configured hostname from env -->
         <a
             id="repo_link"
@@ -16,13 +16,13 @@
             rel="noopener noreferrer"
         >{{ repoName }}</a
         >
-        {{ $t('branch.from') }}
+        {{ t('branch.from') }}
         <a id="return-to-repo" href="javascript:void(0)" @click="selectRepoClick">
-            {{ $t('branch.chooseRepo') }}
+            {{ t('branch.chooseRepo') }}
         </a>
-        {{ $t('branch.or') }}
+        {{ t('branch.or') }}
         <a id="new-branch" href="javascript:void(0)" @click="toggleNewBranchDialog()">{{
-            $t('branch.addNew')
+            t('branch.addNew')
         }}</a>
 
         <add-branch-modal
@@ -34,7 +34,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from '@/i18n';
 
 import branchActions from '@/store/actions/branch.js';
 import { getProviderType } from '@/service/provider/providers.js';
@@ -49,14 +52,17 @@ export default {
         AddBranchModal,
         TdSelectionPage
     },
-    data() {
-        return {
-            showNewBranchDialog: false
-        };
-    },
-    computed: mapState({
-        branches: (state) =>
-            state.branch.all.map((branch) => {
+    setup() {
+        const store = useStore();
+        const route = useRoute();
+        const router = useRouter();
+        const { t } = useI18n();
+        
+        const showNewBranchDialog = ref(false);
+        
+        // Computed properties
+        const branches = computed(() =>
+            store.state.branch.all.map((branch) => {
                 if (branch['protected']) {
                     return {
                         value: branch.name,
@@ -65,49 +71,71 @@ export default {
                     };
                 }
                 return branch.name;
-            }),
-        provider: (state) => state.provider.selected,
-        providerType: (state) => getProviderType(state.provider.selected),
-        providerUri: (state) => state.provider.providerUri,
-        repoName: (state) => state.repo.selected,
-        page: (state) => Number(state.branch.page),
-        pageNext: (state) => state.branch.pageNext,
-        pagePrev: (state) => state.branch.pagePrev
-    }),
-    mounted() {
-        if (this.provider !== this.$route.params.provider) {
-            this.$store.dispatch(providerActions.selected, this.$route.params.provider);
-        }
+            })
+        );
+        
+        const provider = computed(() => store.state.provider.selected);
+        const providerType = computed(() => getProviderType(store.state.provider.selected));
+        const providerUri = computed(() => store.state.provider.providerUri);
+        const repoName = computed(() => store.state.repo.selected);
+        const page = computed(() => Number(store.state.branch.page));
+        const pageNext = computed(() => store.state.branch.pageNext);
+        const pagePrev = computed(() => store.state.branch.pagePrev);
+        
+        onMounted(() => {
+            // Provider is now managed via meta.provider in the route configuration
+            // and router navigation guard will set it in the store
 
-        if (this.repoName !== this.$route.params.repository) {
-            this.$store.dispatch(repoActions.selected, this.$route.params.repository);
-        }
+            if (repoName.value !== route.params.repository) {
+                store.dispatch(repoActions.selected, route.params.repository);
+            }
 
-        this.$store.dispatch(branchActions.fetch, 1);
-    },
-    methods: {
-        selectRepoClick() {
-            this.$store.dispatch(repoActions.clear);
-            this.$router.push({ name: `${this.providerType}Repository` });
-        },
-        onBranchClick(branch) {
-            this.$store.dispatch(branchActions.selected, branch);
-            const params = Object.assign({}, this.$route.params, {
+            store.dispatch(branchActions.fetch, 1);
+        });
+        
+        // Methods
+        const selectRepoClick = () => {
+            store.dispatch(repoActions.clear);
+            router.push({ name: `${providerType.value}Repository` });
+        };
+        
+        const onBranchClick = (branch) => {
+            store.dispatch(branchActions.selected, branch);
+            const params = Object.assign({}, route.params, {
                 branch
             });
 
-            const routeName = `${this.providerType}${
-                this.$route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'
+            const routeName = `${providerType.value}${
+                route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'
             }`;
 
-            this.$router.push({ name: routeName, params });
-        },
-        paginate(page) {
-            this.$store.dispatch(branchActions.fetch, page);
-        },
-        toggleNewBranchDialog() {
-            this.showNewBranchDialog = !this.showNewBranchDialog;
-        }
+            router.push({ name: routeName, params });
+        };
+        
+        const paginate = (pg) => {
+            store.dispatch(branchActions.fetch, pg);
+        };
+        
+        const toggleNewBranchDialog = () => {
+            showNewBranchDialog.value = !showNewBranchDialog.value;
+        };
+        
+        return {
+            branches,
+            provider,
+            providerType,
+            providerUri,
+            repoName,
+            page,
+            pageNext,
+            pagePrev,
+            showNewBranchDialog,
+            selectRepoClick,
+            onBranchClick,
+            paginate,
+            toggleNewBranchDialog,
+            t
+        };
     }
 };
 </script>

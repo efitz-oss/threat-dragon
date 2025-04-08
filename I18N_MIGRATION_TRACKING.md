@@ -6,9 +6,9 @@ This document tracks the migration of internationalization (i18n) from Vue 2's O
 
 | Status | Description | Count |
 |--------|-------------|-------|
-| ✅ | Components migrated to Composition API | 2 |
+| ✅ | Components migrated to Composition API | 4 |
 | 🔄 | Components in progress | 0 |
-| 📝 | Components not yet migrated | 26 |
+| 📝 | Components not yet migrated | 24 |
 
 ## Current Approach
 
@@ -179,3 +179,5 @@ This tracking list will be updated as components are migrated.
 |-----------|--------|-------|
 | /views/google/DriveAccess.vue | ✅ | Migrated to Composition API |
 | /views/git/ThreatModelSelect.vue | ✅ | Migrated to Composition API, also converted to full Composition API |
+| /views/git/BranchAccess.vue | ✅ | Migrated to Composition API, also converted to full Composition API |
+| /views/git/RepositoryAccess.vue | ✅ | Migrated to Composition API, also converted to full Composition API |

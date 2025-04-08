@@ -116,8 +116,8 @@ router.beforeEach((to, from, next) => {
         // For Git routes: Ensure repository parameter exists
         if (!to.params.repository) {
             console.warn('Missing required repository parameter for Git route:', to.path);
-            // Redirect to repository selection
-            next({ name: 'gitRepository', params: { provider: to.params.provider || 'github' }});
+            // Redirect to repository selection - use github as default provider
+            next({ name: 'gitRepository' });
             return;
         } else if (to.path.includes('/branch/') && !to.params.branch) {
             console.warn('Missing required branch parameter for Git route:', to.path);
@@ -125,7 +125,6 @@ router.beforeEach((to, from, next) => {
             next({ 
                 name: 'gitBranch', 
                 params: { 
-                    provider: to.params.provider || 'github',
                     repository: to.params.repository
                 }
             });
