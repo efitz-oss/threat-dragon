@@ -19,7 +19,7 @@ export const localRoutes = [
     },
     {
         path: '/models/:threatmodel/edit/:diagram',
-        name: `${providerType}DiagramEdit`,
+        name: 'localDiagramEdit', // Use a consistent name for local routes
         component: () => import(/* webpackChunkName: "diagram-edit" */ '../views/DiagramEdit.vue'),
         meta: { provider: 'local' }
     },

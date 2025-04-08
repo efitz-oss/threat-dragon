@@ -87,3 +87,18 @@ This is configured in [vuex-persist](src/plugins/vuex-persist.js).
 Vue I18n v11 warns about using the Legacy API mode in the console. To fully fix this warning, the application components need to be migrated from Options API (`$t()`) to Composition API (`useI18n()`) style. This is a significant change that would require updating all Vue components.
 
 The i18n configuration has been updated to use `legacy: false`, but the components still need to be updated to use the Composition API pattern.
+
+### CSS MIME Type Configuration
+
+When deploying to remote servers, ensure your web server is correctly configured to serve CSS files with the appropriate MIME type to prevent "Refused to apply style" errors:
+
+- **Apache**: Add to `.htaccess`: `AddType text/css .css`
+- **Nginx**: Add to server config: `types { text/css css; }`
+- **Express**: Ensure proper static file serving: 
+  ```javascript
+  app.use(express.static('public', { 
+    setHeaders: (res, path) => { 
+      if (path.endsWith('.css')) res.setHeader('Content-Type', 'text/css'); 
+    } 
+  }));
+  ```

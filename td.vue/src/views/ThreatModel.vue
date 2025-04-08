@@ -153,12 +153,22 @@ export default {
 
             this.$store.dispatch(tmActions.diagramSelected, diagram);
             
-            // Use named route instead of path manipulation
-            // Ensure all required params are included
+            // When in local mode (demo models), use a simpler route structure
+            // This avoids provider param issues that can cause infinite redirects
+            if (this.providerType === 'local') {
+                this.$router.push({
+                    name: 'localDiagramEdit',
+                    params: {
+                        threatmodel: this.$route.params.threatmodel,
+                        diagram: encodeURIComponent(diagram.title)
+                    }
+                });
+                return;
+            }
+            
+            // For other provider types, include all necessary params
             const params = {
                 ...this.$route.params,
-                provider: this.$route.params.provider || 'local', // Default to local if no provider
-                folder: this.$route.params.folder || 'demo',      // Default to demo if no folder
                 diagram: encodeURIComponent(diagram.title)
             };
             this.$router.push({

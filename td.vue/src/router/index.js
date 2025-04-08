@@ -77,15 +77,18 @@ router.beforeEach((to, from, next) => {
         return;
     }
 
-    // Skip provider param injection for localThreatModel route
-    // This prevents infinite redirection when coming from SelectDemoModel
-    if (to.name === 'localThreatModel' || to.path.startsWith('/models/')) {
+    // Special handling for local provider routes to avoid provider param issues
+    // This prevents infinite redirection when using demo models
+    const localRouteNames = ['localThreatModel', 'localDiagramEdit', 'localThreatModelEdit', 'localReport'];
+    if (localRouteNames.includes(to.name) || to.path.startsWith('/models/')) {
+        // Don't try to inject provider for local routes
         next();
         return;
     }
 
     // If the route has provider metadata but no provider param, add it
     if (to.meta.provider && !to.params.provider) {
+        // For regular routes, add the provider param from the meta
         const newParams = { ...to.params, provider: to.meta.provider };
         next({
             ...to,
