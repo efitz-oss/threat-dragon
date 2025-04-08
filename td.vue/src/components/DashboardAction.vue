@@ -4,13 +4,15 @@
             <b-container class="text-center action-pane p-4 bg-light rounded shadow-sm">
                 <font-awesome-icon :icon="[iconPreface, icon]" size="4x" class="action-icon" />
                 <br />
-                {{ $t(`dashboard.actions.${description}`) }}
+                {{ t(`dashboard.actions.${description}`) }}
             </b-container>
         </router-link>
     </b-col>
 </template>
 
 <script>
+import { useI18n } from '@/i18n';
+
 export default {
     name: 'TdDashboardAction',
     props: {
@@ -31,6 +33,13 @@ export default {
             type: String,
             required: true
         }
+    },
+    setup() {
+        // Use the Composition API to access i18n
+        const { t } = useI18n();
+        
+        // Return the translation function to make it available in the template
+        return { t };
     }
 };
 </script>

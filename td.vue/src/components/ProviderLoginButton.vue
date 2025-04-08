@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { useI18nMigration } from '@/i18n';
 import { providerNames } from '@/service/provider/providers.js';
 import { AUTH_SET_LOCAL } from '@/store/actions/auth.js';
 import loginApi from '@/service/api/loginApi.js';
@@ -33,6 +34,12 @@ export default {
             default: () => ({})
         }
     },
+    // Add setup to gradually migrate to Composition API
+    setup() {
+        // Get composition API translations, but don't use them in template yet
+        return useI18nMigration();
+    },
+    // Keep Options API for test compatibility
     methods: {
         async onProviderClick() {
             console.debug('login with provider: ' + this.provider.key);
@@ -40,7 +47,7 @@ export default {
 
             if (
                 this.provider.key === providerNames.local ||
-                    this.provider.key === providerNames.desktop
+                this.provider.key === providerNames.desktop
             ) {
                 this.$store.dispatch(AUTH_SET_LOCAL);
                 return this.$router.push('/dashboard');

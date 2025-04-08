@@ -6,7 +6,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from '@/i18n';
 
 import TdKeyValueCard from '@/components/KeyValueCard.vue';
 
@@ -22,23 +24,30 @@ export default {
             default: ''
         }
     },
-    computed: {
-        ...mapState({
-            model: (state) => state.threatmodel.data
-        }),
-        overviewCardData: function () {
+    setup() {
+        const store = useStore();
+        const { t } = useI18n();
+        
+        const model = computed(() => store.state.threatmodel.data);
+        
+        const overviewCardData = computed(() => {
             const kvs = [];
-            kvs.push({ key: this.$t('threatmodel.owner'), value: this.model.summary.owner });
+            kvs.push({ key: t('threatmodel.owner'), value: model.value.summary.owner });
             kvs.push({
-                key: this.$t('threatmodel.reviewer'),
-                value: this.model.detail.reviewer
+                key: t('threatmodel.reviewer'),
+                value: model.value.detail.reviewer
             });
             kvs.push({
-                key: this.$t('threatmodel.contributors'),
-                value: this.model.detail.contributors.map((x) => x.name).join(', ')
+                key: t('threatmodel.contributors'),
+                value: model.value.detail.contributors.map((x) => x.name).join(', ')
             });
             return kvs;
-        }
+        });
+        
+        return {
+            model,
+            overviewCardData
+        };
     }
 };
 </script>

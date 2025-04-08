@@ -171,6 +171,20 @@ export default {
                 ...this.$route.params,
                 diagram: encodeURIComponent(diagram.title)
             };
+            
+            // Special handling for Google Drive provider to ensure folder param is present
+            if (this.providerType === 'google' && !params.folder) {
+                console.error('Missing folder parameter for Google Drive route');
+                // Use a default folder ID if available in the state
+                if (this.$store.state.folder && this.$store.state.folder.selected) {
+                    params.folder = this.$store.state.folder.selected;
+                } else {
+                    // Redirect to folder selection if we don't have a folder
+                    this.$router.push({ name: 'googleFolder' });
+                    return;
+                }
+            }
+            
             this.$router.push({
                 name: `${this.providerType}DiagramEdit`,
                 params: params

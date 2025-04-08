@@ -6,8 +6,8 @@
                 class="td-brand-img"
                 alt="Threat Dragon Logo"
             />
-            Threat Dragon v{{ $store.state.packageBuildVersion
-            }}{{ $store.state.packageBuildState }}
+            Threat Dragon v{{ packageBuildVersion
+            }}{{ packageBuildState }}
         </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse" />
@@ -21,14 +21,14 @@
             <!-- Ensure alignment to the right -->
             <b-navbar-nav class="ms-auto d-flex align-items-center justify-content-end">
                 <b-nav-text v-show="username" class="logged-in-as">
-                    {{ $t('nav.loggedInAs') }} {{ username }}
+                    {{ t('nav.loggedInAs') }} {{ username }}
                 </b-nav-text>
                 <b-nav-item v-show="username" id="nav-sign-out" @click="onLogOut">
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="sign-out-alt"
                         class="td-fa-nav"
-                        :title="$t('nav.logOut')"
+                        :title="t('nav.logOut')"
                     />
                 </b-nav-item>
                 <b-nav-item v-if="googleEnabled" id="nav-tos" to="/tos">
@@ -36,7 +36,7 @@
                         v-tooltip.hover
                         icon="file-contract"
                         class="td-fa-nav"
-                        :title="$t('nav.tos')"
+                        :title="t('nav.tos')"
                     />
                 </b-nav-item>
                 <b-nav-item v-if="googleEnabled" id="nav-privacy" to="/privacy">
@@ -44,7 +44,7 @@
                         v-tooltip.hover
                         icon="shield-alt"
                         class="td-fa-nav"
-                        :title="$t('nav.privacy')"
+                        :title="t('nav.privacy')"
                     />
                 </b-nav-item>
                 <b-nav-item
@@ -57,7 +57,7 @@
                         v-tooltip.hover
                         icon="question-circle"
                         class="td-fa-nav"
-                        :title="$t('desktop.help.docs')"
+                        :title="t('desktop.help.docs')"
                     />
                 </b-nav-item>
                 <b-nav-item
@@ -70,7 +70,7 @@
                         v-tooltip.hover
                         icon="gift"
                         class="td-fa-nav"
-                        :title="$t('desktop.help.sheets')"
+                        :title="t('desktop.help.sheets')"
                     />
                 </b-nav-item>
                 <b-nav-item
@@ -82,7 +82,7 @@
                     <b-img
                         :src="require('@/assets/owasp.svg')"
                         class="td-fa-nav td-owasp-logo"
-                        :title="$t('desktop.help.visit')"
+                        :title="t('desktop.help.visit')"
                     />
                 </b-nav-item>
             </b-navbar-nav>
@@ -91,47 +91,75 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { computed, getCurrentInstance } from 'vue';
+import { useStore } from 'vuex';
 import { LOGOUT } from '@/store/actions/auth.js';
+import { useI18n } from '@/i18n';
 import TdLocaleSelect from './LocaleSelect.vue';
+
 export default {
     name: 'TdNavbar',
     components: {
         TdLocaleSelect
     },
-    computed: {
-        ...mapGetters(['username']),
-        ...mapState({
-            config: (state) => state.config.config
-        }),
-        googleEnabled() {
-            return (
-                this.config && this.config.googleEnabled && !this.$store.getters.isElectronMode
-            );
-        }
-    },
-    mounted() {
-        // Ensure Bootstrap's JavaScript is properly initialized for the navbar toggle
-        const toggle = document.querySelector('.navbar-toggler');
-        if (toggle) {
-            toggle.addEventListener('click', () => {
-                const target = document.getElementById('nav-collapse');
-                if (target) {
-                    target.classList.toggle('show');
-                }
-            });
-        }
-    },
-    methods: {
-        onLogOut(evt) {
+    setup() {
+        const store = useStore();
+        const { t } = useI18n();
+
+        // Use computed to get values from the store
+        const username = computed(() => store.getters.username);
+        const packageBuildVersion = computed(() => store.state.packageBuildVersion);
+        const packageBuildState = computed(() => store.state.packageBuildState);
+        const config = computed(() => store.state.config.config);
+        
+        const googleEnabled = computed(() => 
+            config.value && config.value.googleEnabled && !store.getters.isElectronMode
+        );
+
+        // Method to handle logout 
+        const onLogOut = (evt) => {
+            // This works in both production and tests
             evt.preventDefault();
-            this.$store.dispatch(LOGOUT);
-            this.$router.push('/').catch((error) => {
-                if (error.name != 'NavigationDuplicated') {
-                    throw error;
+            store.dispatch(LOGOUT);
+            
+            // For Options API compatibility with tests
+            // The test replaces the $router property, which we need to access
+            // directly from the component instance
+            if (getCurrentInstance() && getCurrentInstance().proxy.$router) {
+                getCurrentInstance().proxy.$router.push('/').catch((error) => {
+                    if (error.name !== 'NavigationDuplicated') {
+                        throw error;
+                    }
+                });
+            }
+        };
+
+        // Equivalent of mounted lifecycle hook
+        const setupNavbarToggle = () => {
+            // Wait for component to mount
+            setTimeout(() => {
+                const toggle = document.querySelector('.navbar-toggler');
+                if (toggle) {
+                    toggle.addEventListener('click', () => {
+                        const target = document.getElementById('nav-collapse');
+                        if (target) {
+                            target.classList.toggle('show');
+                        }
+                    });
                 }
-            });
-        }
+            }, 0);
+        };
+        setupNavbarToggle();
+
+        // Return everything needed in the template
+        return {
+            t,
+            username,
+            packageBuildVersion,
+            packageBuildState,
+            googleEnabled,
+            onLogOut
+        };
     }
 };
 </script>

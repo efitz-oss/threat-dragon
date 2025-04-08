@@ -91,6 +91,28 @@ export const useI18n = () => {
 };
 
 /**
+ * This is a migration helper that adds Composition API support to Options API components.
+ * Use this function in the setup() method of your component to get both Options API ($t)
+ * and Composition API (t) working side by side during the migration process.
+ * 
+ * @example
+ * export default {
+ *   setup() {
+ *     return useI18nMigration();
+ *   }
+ * }
+ * 
+ * @returns {Object} Object with t function for use in templates
+ */
+export const useI18nMigration = () => {
+    // Get the composition API version
+    const { t } = useI18n();
+    
+    // Return only what's needed in templates  
+    return { t };
+};
+
+/**
  * Translates a string using the current locale - usable outside of components
  * @param {string} key - The translation key
  * @param {Object} options - Optional parameters for the translation
