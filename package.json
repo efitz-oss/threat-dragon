@@ -131,6 +131,8 @@
     "sass-loader": "^16.0.5"
   },
   "dependencies": {
+    "dmg-builder": "^25.0.0",
+    "dmg-license": "^1.0.11",
     "dotenv": "^16.4.7"
   },
   "overrides": {
