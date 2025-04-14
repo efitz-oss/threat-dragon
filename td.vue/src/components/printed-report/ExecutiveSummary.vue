@@ -14,48 +14,50 @@
         </div>
         <div class="mt-2">
             <table class="table td-summary-table">
-                <tr>
-                    <th>{{ $t('report.threatStats.total') }}</th>
-                    <td class="td-summary-total">
-                        {{ total }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ $t('report.threatStats.mitigated') }}</th>
-                    <td class="td-summary-mitigated">
-                        {{ mitigated }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ $t('report.threatStats.notMitigated') }}</th>
-                    <td class="td-summary-not-mitigated">
-                        {{ notMitigated }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ $t('report.threatStats.openHigh') }}</th>
-                    <td class="td-summary-open-high">
-                        {{ openHigh }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ $t('report.threatStats.openMedium') }}</th>
-                    <td class="td-summary-open-medium">
-                        {{ openMedium }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ $t('report.threatStats.openLow') }}</th>
-                    <td class="td-summary-open-low">
-                        {{ openLow }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ $t('report.threatStats.openUnknown') }}</th>
-                    <td class="td-summary-open-unknown">
-                        {{ openUnknown }}
-                    </td>
-                </tr>
+                <tbody>
+                    <tr>
+                        <th>{{ $t('report.threatStats.total') }}</th>
+                        <td class="td-summary-total">
+                            {{ total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('report.threatStats.mitigated') }}</th>
+                        <td class="td-summary-mitigated">
+                            {{ mitigated }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('report.threatStats.notMitigated') }}</th>
+                        <td class="td-summary-not-mitigated">
+                            {{ notMitigated }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('report.threatStats.openHigh') }}</th>
+                        <td class="td-summary-open-high">
+                            {{ openHigh }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('report.threatStats.openMedium') }}</th>
+                        <td class="td-summary-open-medium">
+                            {{ openMedium }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('report.threatStats.openLow') }}</th>
+                        <td class="td-summary-open-low">
+                            {{ openLow }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('report.threatStats.openUnknown') }}</th>
+                        <td class="td-summary-open-unknown">
+                            {{ openUnknown }}
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -117,9 +119,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .page {
-        display: flex;
-        flex-direction: column;
-        white-space: pre-wrap;
-    }
+.page {
+    display: flex;
+    flex-direction: column;
+    white-space: pre-wrap;
+}
 </style>
