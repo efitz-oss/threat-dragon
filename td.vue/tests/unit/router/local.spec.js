@@ -65,7 +65,7 @@ describe('routes/local.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/new');
+            expect(route.path).toEqual('/local/threatmodel/new');
         });
 
         it('uses the NewThreatModel view as a lazily loaded component', async () => {
@@ -83,7 +83,7 @@ describe('routes/local.js', () => {
         });
 
         it('uses the expected path', () => {
-            expect(route.path).toEqual('/import');
+            expect(route.path).toEqual('/local/threatmodel/import');
         });
 
         it('uses the ImportModel view as a lazily loaded component', async () => {
@@ -109,5 +109,5 @@ describe('routes/local.js', () => {
             expect(cmp.default.name).toEqual('ReportModel');
         });
     });
-    
+
 });

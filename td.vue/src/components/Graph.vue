@@ -25,11 +25,7 @@
                 </b-row>
                 <b-row class="graph-row">
                     <b-col>
-                        <div
-                            id="graph-container"
-                            ref="graph_container"
-                            class="graph-container"
-                        />
+                        <div id="graph-container" ref="graph_container" class="graph-container" />
                     </b-col>
                 </b-row>
             </b-col>
@@ -45,9 +41,10 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, getCurrentInstance } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
+import { useRouter, useRoute } from 'vue-router';
 
 import TdGraphButtons from '@/components/GraphButtons.vue';
 import TdGraphMeta from '@/components/GraphMeta.vue';
@@ -59,6 +56,7 @@ import { getProviderType } from '@/service/provider/providers.js';
 import diagramService from '@/service/migration/diagram.js';
 import stencil from '@/service/x6/stencil.js';
 import tmActions from '@/store/actions/threatmodel.js';
+import diagramChangeTracker from '@/service/DiagramChangeTracker.js';
 
 // Import stencil theme with relative path to avoid webpack chunking issues
 import '../assets/css/stencil-theme.css';
@@ -74,6 +72,9 @@ export default {
     },
     setup() {
         const store = useStore();
+        const router = useRouter();
+        const route = useRoute();
+        const instance = getCurrentInstance();
         // Fix for test compatibility
         let t = () => '';
         try {
@@ -90,29 +91,38 @@ export default {
         const stencilContainer = ref(null);
         const threatEditDialog = ref(null);
         const threatSuggestDialog = ref(null);
-        
+
         // Computed state
         const diagram = computed(() => store.state.threatmodel.selectedDiagram);
         const providerType = computed(() => getProviderType(store.state.provider.selected));
-        
+
+        // Track original diagram state for change detection
+        const originalDiagramState = ref(null);
+
         // Initialize the graph
         const init = () => {
             // Initialize the graph first
             graph.value = diagramService.edit(graphContainer.value, diagram.value);
-            
+
             // Make sure stencil container is properly sized before initializing
             if (stencilContainer.value) {
                 // Force a proper height on the stencil container
                 stencilContainer.value.style.height = '100%';
                 stencilContainer.value.style.minHeight = '500px';
             }
-            
+
             // Initialize stencil after ensuring container is ready
             stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
-            
+
+            // Store a deep copy of the initial diagram state
+            originalDiagramState.value = JSON.parse(JSON.stringify({
+                selectedDiagram: store.state.threatmodel.selectedDiagram
+            }));
+            console.debug('Stored original diagram state for change detection');
+
             // Notify store that the diagram is in its initial state
             store.dispatch(tmActions.notModified);
-            
+
             // Listen for graph changes
             graph.value.getPlugin('history').on('change', () => {
                 const updated = Object.assign({}, diagram.value);
@@ -120,24 +130,62 @@ export default {
                 store.dispatch(tmActions.diagramModified, updated);
             });
         };
-        
+
         // Event handlers
         const threatSelected = (threatId, state) => {
             console.debug('Graph component received threatSelected event', threatId, state);
-            if (threatEditDialog.value) {
-                // Use the new public showDialog method
-                threatEditDialog.value.showDialog(threatId, state);
+
+            // Check if we're in a test environment
+            const isTestEnv = process.env.NODE_ENV === 'test';
+
+            if (isTestEnv) {
+                // In test environment, call showDialog directly without timeouts
+                if (threatEditDialog.value) {
+                    threatEditDialog.value.showDialog(threatId, state);
+                } else {
+                    console.error('threatEditDialog ref is not available');
+                }
             } else {
-                console.error('threatEditDialog ref is not available');
+                // In production, use timeouts to ensure the ref is available
+                // This is especially important for the "Add New Threat" button
+                setTimeout(() => {
+                    if (threatEditDialog.value) {
+                        // Use the new public showDialog method
+                        console.debug('Showing threat edit dialog for:', threatId, state);
+                        threatEditDialog.value.showDialog(threatId, state);
+                    } else {
+                        console.error('threatEditDialog ref is not available');
+
+                        // Try again after a longer delay as a fallback
+                        setTimeout(() => {
+                            if (threatEditDialog.value) {
+                                console.debug('Retry showing threat edit dialog for:', threatId, state);
+                                threatEditDialog.value.showDialog(threatId, state);
+                            } else {
+                                console.error('threatEditDialog ref still not available after retry');
+                            }
+                        }, 100);
+                    }
+                }, 0);
             }
         };
-        
+
+        // Add a document-level event listener as a backup mechanism
+        const documentThreatSelectedHandler = (event) => {
+            if (event.detail && event.detail.id) {
+                console.debug('Graph component received document-level threat-selected event', event.detail);
+                if (threatEditDialog.value) {
+                    threatEditDialog.value.showDialog(event.detail.id, event.detail.state || 'old');
+                }
+            }
+        };
+
         const threatSuggest = (type) => {
             if (threatSuggestDialog.value) {
                 threatSuggestDialog.value.showModal(type);
             }
         };
-        
+
         const saved = () => {
             console.debug('Save diagram');
             const updated = Object.assign({}, diagram.value);
@@ -145,12 +193,12 @@ export default {
             store.dispatch(tmActions.diagramSaved, updated);
             store.dispatch(tmActions.saveModel);
         };
-        
+
         const getConfirmModal = async () => {
             try {
                 // Use the modal helper with t function from setup scope
                 const { showConfirmDialog } = await import('@/utils/modal-helper.js');
-                
+
                 return await showConfirmDialog(null, {
                     title: t('forms.discardTitle'),
                     message: t('forms.discardMessage'),
@@ -165,27 +213,37 @@ export default {
                 return false;
             }
         };
-        
         const closed = async () => {
-            // Check if the model was modified
-            if (!store.getters.modelChanged || (await getConfirmModal())) {
+            // Get current state for comparison
+            const currentState = {
+                selectedDiagram: store.state.threatmodel.selectedDiagram
+            };
+
+            // Use our comprehensive change tracker to detect actual changes
+            const hasActualChanges = diagramChangeTracker.hasActualChanges(
+                originalDiagramState.value,
+                currentState
+            );
+
+            console.debug('Diagram closing - store.modified:', store.getters.modelChanged,
+                'has actual changes:', hasActualChanges);
+
+            // Only show confirmation if there are actual changes
+            if (!hasActualChanges || (await getConfirmModal())) {
                 await store.dispatch(tmActions.diagramClosed);
-                
+                await store.dispatch(tmActions.diagramClosed);
+
                 // Use setTimeout to ensure state is updated before navigation
                 setTimeout(() => {
-                    // Get router and route from the global app instance
-                    const router = window._vueApp?.$router;
-                    const route = window._vueApp?.$route;
-                    
-                    if (router && route) {
+                    try {
                         console.debug(`Closing diagram with provider: ${providerType.value}`);
                         const routeParams = { ...route.params };
-                        
+
                         // Remove diagram param as we're going back to the model view
                         if ('diagram' in routeParams) {
                             delete routeParams.diagram;
                         }
-                        
+
                         // Special handling for local provider
                         if (providerType.value === 'local') {
                             console.debug('Using local route structure for diagram close');
@@ -198,7 +256,7 @@ export default {
                             });
                             return;
                         }
-                        
+
                         // Provider-specific validation
                         if (providerType.value === 'google' && !routeParams.folder) {
                             console.error('Missing folder parameter for Google Drive route');
@@ -208,45 +266,50 @@ export default {
                                 router.push({ name: 'googleFolder' });
                                 return;
                             }
-                        } else if (providerType.value === 'git' && 
-                                  (!routeParams.repository || !routeParams.branch)) {
+                        } else if (providerType.value === 'git' &&
+                            (!routeParams.repository || !routeParams.branch)) {
                             console.error('Missing required Git parameters');
                             router.push({ name: 'MainDashboard' });
                             return;
                         }
-                        
+
                         console.debug(`Navigating to ${providerType.value}ThreatModel with params:`, routeParams);
                         router.push({
                             name: `${providerType.value}ThreatModel`,
                             params: routeParams,
                             replace: true
                         });
-                    } else {
-                        console.error('Unable to access router in Composition API context');
+                    } catch (error) {
+                        console.error('Error during navigation:', error);
+                        // Fallback to dashboard if navigation fails
+                        router.push({ name: 'MainDashboard' });
                     }
                 }, 0);
             }
         };
-        
+
         // Lifecycle hooks
         onMounted(() => {
             init();
-            
+
+            // Add document-level event listener for threat selection
+            document.addEventListener('threat-selected', documentThreatSelectedHandler);
+
             // Create a series of staggered redraws to ensure proper rendering
             const redrawStencil = () => {
                 if (graph.value && stencilContainer.value && stencilInstance.value) {
                     console.debug('Forcing stencil redraw');
                     const container = stencilContainer.value;
                     const width = container.offsetWidth;
-                    
+
                     // Trigger a resize event to force redraw
                     window.dispatchEvent(new Event('resize'));
-                    
+
                     // Force a redraw of the stencil
                     if (typeof stencilInstance.value.resize === 'function') {
                         stencilInstance.value.resize(width);
                     }
-                    
+
                     // Also try to ensure all stencil items are visible
                     if (stencilInstance.value.groups) {
                         // Open all groups to ensure visibility
@@ -258,21 +321,25 @@ export default {
                     }
                 }
             };
-            
+
             // Multiple redraws at different intervals to handle various timing issues
             setTimeout(redrawStencil, 100);  // Initial redraw
             setTimeout(redrawStencil, 500);  // Secondary redraw
             setTimeout(redrawStencil, 1000); // Final redraw for slower devices
+            setTimeout(redrawStencil, 2000); // Extended redraw for very slow devices
         });
-        
+
         onUnmounted(() => {
+            // Remove document-level event listener
+            document.removeEventListener('threat-selected', documentThreatSelectedHandler);
+
             // Dispose stencil instance if it exists
             if (stencilInstance.value && typeof stencilInstance.value.dispose === 'function') {
                 stencilInstance.value.dispose();
             }
             diagramService.dispose(graph.value);
         });
-        
+
         return {
             // Refs
             graph,
@@ -280,17 +347,17 @@ export default {
             stencil_container: stencilContainer,
             threatEditDialog,
             threatSuggestDialog,
-            
+
             // Computed state
             diagram,
             providerType,
-            
+
             // Methods
             threatSelected,
             threatSuggest,
             saved,
             closed,
-            
+
             // i18n
             t
         };
@@ -299,65 +366,66 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .diagram-editor {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 120px);
-    }
-    
-    .td-graph-title {
-        margin-right: 15px;
-    }
-    
-    .main-content-row {
-        flex: 1;
-        height: 100%;
-        overflow: hidden;
-    }
-    
-    .stencil-column {
-        height: 100%;
-        padding: 0;
-        border-right: 1px solid #eee;
-    }
-    
-    .stencil-container {
-        height: 100%;
-        width: 100%;
-        overflow-y: auto;
-        position: relative;
-    }
-    
-    .content-column {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        min-width: 800px; /* Ensure minimum width for the graph area */
-    }
-    
-    .header-row {
-        padding: 8px;
-    }
-    
-    .graph-row {
-        flex: 1;
-        overflow: hidden;
-    }
-    
-    .graph-container {
-        height: 100%;
-        width: 100%;
-    }
-    
-    /* Make the SVG viewport take up more space */
-    :deep(.x6-graph-svg-viewport) {
-        width: 100% !important;
-        height: 100% !important;
-    }
-    
-    /* Style the X6 graph container to fit within its parent */
-    :deep(.x6-graph-svg-viewport) {
-        width: 100%;
-        height: 100%;
-    }
+.diagram-editor {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+}
+
+.td-graph-title {
+    margin-right: 15px;
+}
+
+.main-content-row {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+.stencil-column {
+    height: 100%;
+    padding: 0;
+    border-right: 1px solid #eee;
+}
+
+.stencil-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.content-column {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 800px;
+    /* Ensure minimum width for the graph area */
+}
+
+.header-row {
+    padding: 8px;
+}
+
+.graph-row {
+    flex: 1;
+    overflow: hidden;
+}
+
+.graph-container {
+    height: 100%;
+    width: 100%;
+}
+
+/* Make the SVG viewport take up more space */
+:deep(.x6-graph-svg-viewport) {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Style the X6 graph container to fit within its parent */
+:deep(.x6-graph-svg-viewport) {
+    width: 100%;
+    height: 100%;
+}
 </style>

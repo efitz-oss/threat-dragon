@@ -11,7 +11,7 @@ export function useThreatEditor() {
     const editingThreat = ref(null);  // Working copy for editing
     const isNewThreat = ref(false);   // Flag for new vs existing
     const originalThreat = ref(null); // Original for cancel operations
-    
+
     // Reset all state
     const resetState = () => {
         editingThreat.value = null;
@@ -19,10 +19,10 @@ export function useThreatEditor() {
         isEditing.value = false;
         isNewThreat.value = false;
     };
-    
+
     // Get the cell from the store
     const cell = computed(() => store.state.cell.ref);
-    
+
     // Create a new threat (in memory only, not persisted)
     const createNewThreat = (modelType, cellType, threatNumber) => {
         const newThreat = {
@@ -36,45 +36,45 @@ export function useThreatEditor() {
             score: '',
             number: threatNumber
         };
-        
+
         // Set up editing state
         editingThreat.value = newThreat;
         originalThreat.value = null; // No original for new threats
         isNewThreat.value = true;
         isEditing.value = true;
-        
+
         return newThreat;
     };
-    
+
     // Start editing an existing threat
     const editExistingThreat = (threatId) => {
         if (!cell.value || !cell.value.data.threats) return;
-        
+
         const threatToEdit = cell.value.data.threats.find(t => t.id === threatId);
         if (!threatToEdit) {
             console.warn(`Threat with ID ${threatId} not found`);
             return;
         }
-        
+
         // Store the original for potential cancel operations
         originalThreat.value = JSON.parse(JSON.stringify(threatToEdit));
-        
+
         // Create a working copy for editing
         editingThreat.value = JSON.parse(JSON.stringify(threatToEdit));
         isNewThreat.value = false;
         isEditing.value = true;
     };
-    
+
     // Save changes
     const saveThreat = () => {
         if (!editingThreat.value || !cell.value) return;
-        
+
         if (isNewThreat.value) {
             // For new threats: Add to the store for the first time
             if (!cell.value.data.threats) {
                 cell.value.data.threats = [];
             }
-            
+
             cell.value.data.threats.push(editingThreat.value);
             console.debug('Added new threat to store:', editingThreat.value.id);
         } else {
@@ -85,16 +85,16 @@ export function useThreatEditor() {
                 console.debug('Updated existing threat in store:', editingThreat.value.id);
             }
         }
-        
+
         // Update UI and store
         cell.value.data.hasOpenThreats = cell.value.data.threats.some(t => t.status === 'Open');
         store.dispatch(CELL_DATA_UPDATED, cell.value.data);
         store.dispatch(tmActions.modified);
         dataChanged.updateStyleAttrs(cell.value);
-        
+
         resetState();
     };
-    
+
     // Cancel editing
     const cancelEdit = () => {
         // For new threats: Nothing to clean up in the store
@@ -102,33 +102,34 @@ export function useThreatEditor() {
         console.debug('Canceling edit of threat:', editingThreat.value?.id, 'isNew:', isNewThreat.value);
         resetState();
     };
-    
+
     // Delete an existing threat
     const deleteThreat = () => {
         if (!editingThreat.value || !cell.value || isNewThreat.value) return;
-        
+
         // Remove the threat from the store
         cell.value.data.threats = cell.value.data.threats.filter(
             t => t.id !== editingThreat.value.id
         );
-        
+
         console.debug('Deleted threat from store:', editingThreat.value.id);
-        
+
         // Update UI and store
         cell.value.data.hasOpenThreats = cell.value.data.threats.some(t => t.status === 'Open');
         store.dispatch(CELL_DATA_UPDATED, cell.value.data);
         store.dispatch(tmActions.modified);
         dataChanged.updateStyleAttrs(cell.value);
-        
+
         resetState();
     };
-    
+
     return {
         // State
         isEditing,
         editingThreat,
         isNewThreat,
-        
+        originalThreat,
+
         // Methods
         createNewThreat,
         editExistingThreat,

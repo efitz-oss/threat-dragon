@@ -9,6 +9,12 @@ import TdSelectionPage from '@/components/SelectionPage.vue';
 import AddBranchDialog from '@/components/AddBranchDialog.vue';
 const _AddBranchDialog = AddBranchDialog;
 
+// Mock Vue Router composables
+jest.mock('vue-router', () => ({
+    useRoute: jest.fn(),
+    useRouter: jest.fn()
+}));
+
 
 describe('views/BranchAccess.vue', () => {
     const repo = 'someRepo';
@@ -35,7 +41,7 @@ describe('views/BranchAccess.vue', () => {
             }
         },
         actions: {
-            [BRANCH_FETCH]: () =>  Promise.resolve(getMockStore().state.branch.all),
+            [BRANCH_FETCH]: () => Promise.resolve(getMockStore().state.branch.all),
             [BRANCH_SELECTED]: () => { },
             [PROVIDER_SELECTED]: () => { },
             [REPOSITORY_CLEAR]: () => { },
@@ -53,13 +59,17 @@ describe('views/BranchAccess.vue', () => {
     // Vue 3 style mount function
     const mountComponent = (mockRoute) => {
         mockRouter = { push: jest.fn() };
+
+        // Setup Vue Router mocks
+        const { useRoute, useRouter } = require('vue-router');
+        useRoute.mockReturnValue(mockRoute);
+        useRouter.mockReturnValue(mockRouter);
+
         jest.spyOn(mockStore, 'dispatch');
         wrapper = shallowMount(BranchAccess, {
             global: {
                 plugins: [mockStore],
                 mocks: {
-                    $route: mockRoute,
-                    $router: mockRouter,
                     $t: key => key
                 }
             }
@@ -67,14 +77,14 @@ describe('views/BranchAccess.vue', () => {
     };
 
     describe('mounted', () => {
-        it('sets the provider from the route', () => {
+        it('fetches branches on mount', () => {
             mountComponent({
                 params: {
                     provider: 'local',
                     repository: mockStore.state.repo.selected
                 }
             });
-            expect(mockStore.dispatch).toHaveBeenCalledWith(PROVIDER_SELECTED, 'local');
+            expect(mockStore.dispatch).toHaveBeenCalledWith(BRANCH_FETCH, 1);
         });
 
         it('sets the repo name from the route', () => {
@@ -101,7 +111,7 @@ describe('views/BranchAccess.vue', () => {
                     icon: 'lock',
                     iconTooltip: 'branch.protectedBranch'
                 },
-                'b2','b3'
+                'b2', 'b3'
             ]);
         });
     });

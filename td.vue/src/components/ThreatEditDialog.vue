@@ -9,16 +9,11 @@
             header-bg-variant="primary"
             header-text-variant="light"
             :title="modalTitle"
-            @hidden="onModalHidden"
-        >
+            @hidden="onModalHidden">
             <b-form>
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="title-group"
-                            :label="t('threats.properties.title')"
-                            label-for="title"
-                        >
+                        <b-form-group id="title-group" :label="t('threats.properties.title')" label-for="title">
                             <b-form-input
                                 id="title"
                                 v-model="editingThreat.title"
@@ -33,13 +28,8 @@
                         <b-form-group
                             id="threat-type-group"
                             :label="t('threats.properties.type')"
-                            label-for="threat-type"
-                        >
-                            <b-form-select
-                                id="threat-type"
-                                v-model="editingThreat.type"
-                                :options="threatTypes"
-                            />
+                            label-for="threat-type">
+                            <b-form-select id="threat-type" v-model="editingThreat.type" :options="threatTypes" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -50,8 +40,7 @@
                             id="status-group"
                             :label="t('threats.properties.status')"
                             label-for="status"
-                            class="text-left"
-                        >
+                            class="text-left">
                             <b-form-radio-group
                                 id="status"
                                 v-model="editingThreat.status"
@@ -59,8 +48,7 @@
                                 buttons
                                 size="sm"
                                 button-variant="outline-secondary"
-                                class="status-radio-group"
-                            />
+                                class="status-radio-group" />
                         </b-form-group>
                     </b-col>
 
@@ -69,14 +57,12 @@
                             id="score-group"
                             :label="t('threats.properties.score')"
                             label-for="score"
-                            class="text-center"
-                        >
-                            <b-form-input 
-                                id="score" 
-                                v-model="editingThreat.score" 
-                                type="text" 
-                                class="text-center" 
-                            />
+                            class="text-center">
+                            <b-form-input
+                                id="score"
+                                v-model="editingThreat.score"
+                                type="text"
+                                class="text-center" />
                         </b-form-group>
                     </b-col>
 
@@ -85,8 +71,7 @@
                             id="priority-group"
                             :label="t('threats.properties.priority')"
                             label-for="priority"
-                            class="text-right"
-                        >
+                            class="text-right">
                             <b-form-radio-group
                                 id="priority"
                                 v-model="editingThreat.severity"
@@ -94,8 +79,7 @@
                                 buttons
                                 size="sm"
                                 button-variant="outline-secondary"
-                                class="priority-radio-group"
-                            />
+                                class="priority-radio-group" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -105,13 +89,8 @@
                         <b-form-group
                             id="description-group"
                             :label="t('threats.properties.description')"
-                            label-for="description"
-                        >
-                            <td-safe-form-textarea
-                                id="description"
-                                v-model="editingThreat.description"
-                                rows="5"
-                            />
+                            label-for="description">
+                            <td-safe-form-textarea id="description" v-model="editingThreat.description" rows="5" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -121,13 +100,8 @@
                         <b-form-group
                             id="mitigation-group"
                             :label="t('threats.properties.mitigation')"
-                            label-for="mitigation"
-                        >
-                            <td-safe-form-textarea 
-                                id="mitigation" 
-                                v-model="editingThreat.mitigation" 
-                                rows="5"
-                            />
+                            label-for="mitigation">
+                            <td-safe-form-textarea id="mitigation" v-model="editingThreat.mitigation" rows="5" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -137,27 +111,16 @@
                 <div class="w-100 d-flex justify-content-between">
                     <div class="left-buttons">
                         <!-- Only show Delete button for existing threats -->
-                        <b-button
-                            v-if="editingThreat && !isNewThreat"
-                            variant="danger"
-                            @click="onDelete"
-                        >
+                        <b-button v-if="editingThreat && !isNewThreat" variant="danger" @click="onDelete">
                             {{ t('forms.delete') }}
                         </b-button>
                     </div>
                     <div class="right-buttons">
-                        <b-button
-                            variant="secondary"
-                            class="mr-2"
-                            @click="onCancel"
-                        >
+                        <b-button variant="secondary" class="mr-2" @click="onCancel">
                             {{ t('forms.cancel') }}
                         </b-button>
-                        <b-button 
-                            variant="primary" 
-                            @click="onSave"
-                        >
-                            {{ isNewThreat ? t('forms.create') : t('forms.apply') }}
+                        <b-button variant="primary" :disabled="!hasChanges" @click="onSave">
+                            {{ isNewThreat ? t('forms.create') : t('forms.save') }}
                         </b-button>
                     </div>
                 </div>
@@ -184,35 +147,37 @@ export default {
         TdSafeFormTextarea
     },
     setup() {
-        const { 
+        const {
             editingThreat,
             isEditing,
             isNewThreat,
             saveThreat,
             cancelEdit,
             deleteThreat,
-            editExistingThreat
+            editExistingThreat,
+            originalThreat
             // createNewThreat - Not used in this component
         } = useThreatEditor();
-        
+
         const editModal = ref(null);
-        
+        const hasChanges = ref(false);
+
         // Use Vue 3's Composition API for i18n
         const { t } = useI18n();
-        
+
         // Computed properties for form data
         const modalTitle = computed(() => {
             if (!editingThreat.value) return '';
-            return isNewThreat.value 
-                ? `${t('threats.new')} #${editingThreat.value.number}` 
+            return isNewThreat.value
+                ? `${t('threats.new')} #${editingThreat.value.number}`
                 : `${t('threats.edit')} #${editingThreat.value.number}`;
         });
-        
+
         const threatTypes = computed(() => {
             if (!editingThreat.value?.modelType) {
                 return [];
             }
-            
+
             const store = useStore();
             const cell = store.state.cell.ref;
             if (!cell || !cell.data) {
@@ -232,13 +197,13 @@ export default {
             }
             return res;
         });
-        
+
         const statuses = computed(() => [
             { value: 'NotApplicable', text: t('threats.status.notApplicable') },
             { value: 'Open', text: t('threats.status.open') },
             { value: 'Mitigated', text: t('threats.status.mitigated') }
         ]);
-        
+
         const priorities = computed(() => [
             { value: 'TBD', text: t('threats.priority.tbd') },
             { value: 'Low', text: t('threats.priority.low') },
@@ -246,37 +211,96 @@ export default {
             { value: 'High', text: t('threats.priority.high') },
             { value: 'Critical', text: t('threats.priority.critical') }
         ]);
-        
+
         // Methods
         const showDialog = (threatId, mode) => {
-            if (mode === 'new') {
-                // For new threats, the threatId is already for the in-memory threat
-                // The threat has already been created by createNewThreat in GraphMeta
-                // So we don't need to do anything here
-            } else {
-                // For existing threats, load from store
-                editExistingThreat(threatId);
-            }
-            
-            if (editModal.value) {
-                editModal.value.show();
+            console.debug('ThreatEditDialog showDialog called with:', threatId, mode);
+
+            try {
+                // Validate inputs
+                if (!threatId) {
+                    console.error('Invalid threatId provided to showDialog:', threatId);
+                    return;
+                }
+
+                if (mode === 'new') {
+                    // For new threats, the threatId is already for the in-memory threat
+                    // The threat has already been created by createNewThreat in GraphMeta
+                    console.debug('Processing new threat with ID:', threatId);
+
+                    // Ensure the threat is properly initialized
+                    if (!editingThreat.value || editingThreat.value.id !== threatId) {
+                        console.debug('Threat not properly initialized, attempting to recover');
+                        // Try to recover by forcing isNewThreat flag
+                        isNewThreat.value = true;
+                    }
+
+                    // New threats are always considered changed
+                    hasChanges.value = true;
+                    console.debug('New threat dialog opened, hasChanges set to true');
+                } else {
+                    // For existing threats, load from store
+                    console.debug('Loading existing threat with ID:', threatId);
+                    editExistingThreat(threatId);
+                    hasChanges.value = false; // Initially no changes for existing threats
+                }
+
+                // Use multiple timeouts to ensure the threat data is loaded before showing the modal
+                // This helps with timing issues and ensures the dialog appears reliably
+                const showModalWithRetry = (attempts = 0) => {
+                    if (!editModal.value) {
+                        if (attempts < 5) {
+                            console.debug(`Modal ref not available, retrying (attempt ${attempts + 1})`);
+                            setTimeout(() => showModalWithRetry(attempts + 1), 50 * (attempts + 1));
+                        } else {
+                            console.error('Failed to show modal after multiple attempts');
+                        }
+                        return;
+                    }
+
+                    console.debug('Showing threat edit modal');
+                    editModal.value.show();
+                };
+
+                // Start the show process with retries
+                showModalWithRetry();
+            } catch (error) {
+                console.error('Error showing threat edit dialog:', error);
             }
         };
-        
+
+        // Watch for changes in the editing threat
+        watch(() => editingThreat.value, (newValue, oldValue) => {
+            if (newValue && originalThreat.value) {
+                // Compare the current threat with the original to detect changes
+                const currentJson = JSON.stringify(newValue);
+                const originalJson = JSON.stringify(originalThreat.value);
+                hasChanges.value = currentJson !== originalJson || isNewThreat.value;
+                console.debug('Threat changed:', hasChanges.value);
+            }
+        }, { deep: true });
+
         // Event handlers
         const onSave = () => {
-            saveThreat();
+            // For new threats, always save regardless of hasChanges
+            // For existing threats, only save if changes were made
+            if (isNewThreat.value || hasChanges.value) {
+                console.debug('Saving threat, isNew:', isNewThreat.value, 'hasChanges:', hasChanges.value);
+                saveThreat();
+                hasChanges.value = false;
+            }
         };
-        
+
         const onCancel = () => {
             cancelEdit();
+            hasChanges.value = false;
             hideDialog();
         };
-        
+
         const onDelete = async () => {
             // Import the modal helper to access the confirmation dialog
             const { showConfirmDialog } = await import('@/utils/modal-helper.js');
-            
+
             // Use the confirmation dialog that doesn't depend on this.$bvModal
             const confirmed = await showConfirmDialog(null, {
                 title: t('threats.confirmDeleteTitle'),
@@ -285,33 +309,33 @@ export default {
                 cancelTitle: t('forms.cancel'),
                 okVariant: 'danger'
             });
-            
+
             if (confirmed) {
                 deleteThreat();
                 hideDialog();
             }
         };
-        
+
         const hideDialog = () => {
             if (editModal.value) {
                 editModal.value.hide();
             }
         };
-        
+
         const onModalHidden = () => {
             // If modal is closed via escape key or clicking outside
             if (isEditing.value) {
                 cancelEdit();
             }
         };
-        
+
         // Watch for isEditing changes
         watch(isEditing, (newValue) => {
             if (!newValue && editModal.value) {
                 hideDialog();
             }
         });
-        
+
         return {
             editModal,
             editingThreat,
@@ -320,6 +344,7 @@ export default {
             threatTypes,
             statuses,
             priorities,
+            hasChanges,
             t, // Expose the translation function to the template
             showDialog,
             onSave,
@@ -332,176 +357,177 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    /* --- Modal Form Styling --- */
-    
-    /* Consistent spacing between form rows */
-    :deep(.form-row) {
-        margin-bottom: 1.25rem;
-    }
-    
-    /* Form group styling */
-    :deep(.form-group) {
-        margin-bottom: 0.75rem;
-    }
-    
-    /* Label styling */
-    :deep(label) {
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-    
-    /* Input controls */
-    :deep(.form-control) {
-        padding: 0.5rem 0.75rem;
-        line-height: 1.5;
-    }
-    
-    /* Textarea styling - consistent with the GraphProperties component */
-    :deep(textarea.form-control) {
-        height: auto !important;
-        resize: none !important;
-        min-height: 100px;
-    }
-    
-    /* Status, Score, Priority row styling */
-    .threat-controls-row {
+/* --- Modal Form Styling --- */
+
+/* Consistent spacing between form rows */
+:deep(.form-row) {
+    margin-bottom: 1.25rem;
+}
+
+/* Form group styling */
+:deep(.form-group) {
+    margin-bottom: 0.75rem;
+}
+
+/* Label styling */
+:deep(label) {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Input controls */
+:deep(.form-control) {
+    padding: 0.5rem 0.75rem;
+    line-height: 1.5;
+}
+
+/* Textarea styling - consistent with the GraphProperties component */
+:deep(textarea.form-control) {
+    height: auto !important;
+    resize: none !important;
+    min-height: 100px;
+}
+
+/* Status, Score, Priority row styling */
+.threat-controls-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+
+    .status-col {
         display: flex;
-        flex-wrap: nowrap;
-        align-items: flex-start;
-        
-        .status-col {
+        justify-content: flex-start;
+
+        :deep(.form-group) {
+            width: 100%;
+        }
+
+        :deep(.status-radio-group) {
             display: flex;
             justify-content: flex-start;
-            
-            :deep(.form-group) {
-                width: 100%;
-            }
-            
-            :deep(.status-radio-group) {
-                display: flex;
-                justify-content: flex-start;
-                max-width: 100%;
-                
-                .btn {
-                    padding: 0.375rem 0.5rem;
-                    font-size: 0.8rem;
-                }
+            max-width: 100%;
+
+            .btn {
+                padding: 0.375rem 0.5rem;
+                font-size: 0.8rem;
             }
         }
-        
-        .score-col {
-            display: flex;
-            justify-content: center;
-            
-            :deep(.form-group) {
-                width: 100%;
-                text-align: center;
-            }
+    }
+
+    .score-col {
+        display: flex;
+        justify-content: center;
+
+        :deep(.form-group) {
+            width: 100%;
+            text-align: center;
         }
-        
-        .priority-col {
+    }
+
+    .priority-col {
+        display: flex;
+        justify-content: flex-end;
+
+        :deep(.form-group) {
+            width: 100%;
+            text-align: right;
+        }
+
+        :deep(.priority-radio-group) {
             display: flex;
             justify-content: flex-end;
-            
+            max-width: 100%;
+
+            .btn {
+                padding: 0.375rem 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+/* Radio/button group styling */
+:deep(.btn-group) {
+    margin-top: 0.25rem;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+/* Style the radio buttons to fit within width */
+:deep(.btn-group .btn) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.8rem;
+    padding: 0.375rem 0.4rem;
+    flex: 0 1 auto;
+    min-width: auto;
+}
+
+/* Make buttons in priority and status group more compact */
+:deep(.status-radio-group .btn),
+:deep(.priority-radio-group .btn) {
+    max-width: 90px;
+    /* Prevent buttons from growing too wide */
+}
+
+/* Make small screens stack properly */
+@media (max-width: 767.98px) {
+    .threat-controls-row {
+        flex-direction: column;
+
+        .status-col,
+        .score-col,
+        .priority-col {
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+
             :deep(.form-group) {
-                width: 100%;
-                text-align: right;
+                text-align: left;
             }
-            
+
+            :deep(.status-radio-group),
             :deep(.priority-radio-group) {
-                display: flex;
-                justify-content: flex-end;
-                max-width: 100%;
-                
-                .btn {
-                    padding: 0.375rem 0.5rem;
-                    font-size: 0.8rem;
-                }
+                justify-content: flex-start;
             }
         }
     }
-    
-    /* Radio/button group styling */
-    :deep(.btn-group) {
-        margin-top: 0.25rem;
-        display: flex;
-        flex-wrap: nowrap;
+}
+
+/* --- Modal Footer Styling --- */
+
+/* Footer button layout */
+:deep(.modal-footer) {
+    padding: 1rem;
+}
+
+/* Button groups */
+.left-buttons,
+.right-buttons {
+    display: flex;
+    align-items: center;
+}
+
+/* Button styling */
+:deep(.btn) {
+    padding: 0.5rem 1rem;
+    min-width: 90px;
+}
+
+/* Responsive button layout for small screens */
+@media (max-width: 575.98px) {
+    .w-100.d-flex {
+        flex-direction: column;
+        gap: 1rem;
     }
-    
-    /* Style the radio buttons to fit within width */
-    :deep(.btn-group .btn) {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 0.8rem;
-        padding: 0.375rem 0.4rem;
-        flex: 0 1 auto;
-        min-width: auto;
-    }
-    
-    /* Make buttons in priority and status group more compact */
-    :deep(.status-radio-group .btn),
-    :deep(.priority-radio-group .btn) {
-        max-width: 90px; /* Prevent buttons from growing too wide */
-    }
-    
-    /* Make small screens stack properly */
-    @media (max-width: 767.98px) {
-        .threat-controls-row {
-            flex-direction: column;
-            
-            .status-col,
-            .score-col,
-            .priority-col {
-                margin-bottom: 1rem;
-                width: 100%;
-                max-width: 100%;
-                flex: 0 0 100%;
-                
-                :deep(.form-group) {
-                    text-align: left;
-                }
-                
-                :deep(.status-radio-group),
-                :deep(.priority-radio-group) {
-                    justify-content: flex-start;
-                }
-            }
-        }
-    }
-    
-    /* --- Modal Footer Styling --- */
-    
-    /* Footer button layout */
-    :deep(.modal-footer) {
-        padding: 1rem;
-    }
-    
-    /* Button groups */
+
     .left-buttons,
     .right-buttons {
-        display: flex;
-        align-items: center;
+        width: 100%;
+        justify-content: center;
     }
-    
-    /* Button styling */
-    :deep(.btn) {
-        padding: 0.5rem 1rem;
-        min-width: 90px;
-    }
-    
-    /* Responsive button layout for small screens */
-    @media (max-width: 575.98px) {
-        .w-100.d-flex {
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .left-buttons,
-        .right-buttons {
-            width: 100%;
-            justify-content: center;
-        }
-    }
+}
 </style>

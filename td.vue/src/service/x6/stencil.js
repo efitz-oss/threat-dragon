@@ -77,34 +77,34 @@ const get = (graph, container, StencilConstructor) => {
 
     // Calculate component size based on container width
     const shapeWidth = stencilGraphWidth * 0.9; // 90% of stencil width
-    
+
     // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({
         width: shapeWidth,
         height: shapeWidth * 0.6, // Maintain aspect ratio
         visible: true,
-        zIndex: 10, // Higher z-index to ensure visibility
+        zIndex: 100, // Much higher z-index to ensure visibility
         opacity: 1  // Full opacity
     });
     const process = new shapes.ProcessShape({
         width: shapeWidth,
         height: shapeWidth * 0.6, // Maintain aspect ratio
         visible: true,
-        zIndex: 10, 
+        zIndex: 100,
         opacity: 1
     });
     const store = new shapes.StoreShape({
         width: shapeWidth,
         height: shapeWidth * 0.6, // Maintain aspect ratio
         visible: true,
-        zIndex: 10,
+        zIndex: 100,
         opacity: 1
     });
     const text = new shapes.TextBlock({
         width: shapeWidth,
         height: shapeWidth * 0.45, // Maintain aspect ratio
         visible: true,
-        zIndex: 10,
+        zIndex: 100,
         opacity: 1
     });
 
@@ -113,14 +113,14 @@ const get = (graph, container, StencilConstructor) => {
         width: shapeWidth,
         height: shapeWidth * 0.65, // Maintain aspect ratio
         visible: true,
-        zIndex: 10,
+        zIndex: 100,
         opacity: 1
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
         width: shapeWidth,
         height: shapeWidth * 0.2, // Maintain aspect ratio
         visible: true,
-        zIndex: 10,
+        zIndex: 100,
         opacity: 1
     });
 
@@ -129,7 +129,7 @@ const get = (graph, container, StencilConstructor) => {
         width: shapeWidth,
         height: shapeWidth * 0.2, // Maintain aspect ratio
         visible: true,
-        zIndex: 10,
+        zIndex: 100,
         opacity: 1
     });
 
@@ -137,7 +137,7 @@ const get = (graph, container, StencilConstructor) => {
     stencilInstance.load([actor, process, store, text], 'components');
     stencilInstance.load([boundaryBox, boundaryCurve], 'boundaries');
     stencilInstance.load([flow], 'metadata');
-    
+
     // Force resize after loading if the method is available (not in tests)
     if (stencilInstance && typeof stencilInstance.resize === 'function') {
         stencilInstance.resize(stencilGraphWidth);
@@ -146,18 +146,95 @@ const get = (graph, container, StencilConstructor) => {
     // Add to DOM
     container.appendChild(stencilInstance.container);
 
+    // Force visibility on all stencil elements
+    setTimeout(() => {
+        const stencilEl = container.querySelector('.x6-widget-stencil');
+        if (stencilEl) {
+            stencilEl.style.visibility = 'visible';
+            stencilEl.style.display = 'block';
+
+            // Force all groups to be visible and expanded
+            const groups = stencilEl.querySelectorAll('.x6-widget-stencil-group');
+            groups.forEach(group => {
+                group.style.visibility = 'visible';
+                group.style.display = 'block';
+                group.classList.remove('collapsed');
+
+                // Force content to be visible
+                const content = group.querySelector('.x6-widget-stencil-group-content');
+                if (content) {
+                    content.style.visibility = 'visible';
+                    content.style.display = 'block';
+                }
+            });
+
+            // Force all stencil items to be visible
+            const items = stencilEl.querySelectorAll('.x6-widget-stencil-item');
+            items.forEach(item => {
+                item.style.visibility = 'visible';
+                item.style.display = 'block';
+            });
+
+            // Resize the stencil
+            if (stencilInstance && typeof stencilInstance.resize === 'function') {
+                stencilInstance.resize(stencilGraphWidth);
+            }
+        }
+
+        // Specifically target SVG elements within the stencil
+        const svgElements = container.querySelectorAll('svg, svg *');
+        svgElements.forEach(el => {
+            el.style.visibility = 'visible';
+            el.style.display = 'block';
+            el.style.opacity = '1';
+            el.style.pointerEvents = 'auto';
+        });
+
+        // Force display of stencil items
+        const stencilItems = container.querySelectorAll('.x6-stencil-item');
+        stencilItems.forEach(item => {
+            item.style.visibility = 'visible';
+            item.style.display = 'block';
+            item.style.opacity = '1';
+        });
+    }, 1500);
+
+    // Add another delayed attempt for very slow rendering
+    setTimeout(() => {
+        if (stencilInstance && typeof stencilInstance.resize === 'function') {
+            stencilInstance.resize(stencilGraphWidth);
+
+            // Force all groups to be open
+            if (stencilInstance.groups) {
+                Object.values(stencilInstance.groups).forEach(group => {
+                    if (group && typeof group.open === 'function') {
+                        group.open();
+                    }
+                });
+            }
+
+            // Force redraw of all SVG elements
+            const svgElements = container.querySelectorAll('svg, svg *');
+            svgElements.forEach(el => {
+                el.style.visibility = 'visible';
+                el.style.display = 'block';
+                el.style.opacity = '1';
+            });
+        }
+    }, 3000);
+
     // Setup resize observer to handle responsive behavior
     if (window.ResizeObserver) {
         resizeObserver = new ResizeObserver((_entries) => {
             // We only have one container, so we can just use the first entry
             const { stencilGraphWidth } = calculateDimensions();
-            
+
             // Update stencil dimensions
             if (stencilInstance && stencilInstance.resize) {
                 stencilInstance.resize(stencilGraphWidth);
             }
         });
-        
+
         // Start observing the container
         resizeObserver.observe(container);
     }
@@ -170,6 +247,12 @@ const get = (graph, container, StencilConstructor) => {
             if (resizeObserver) {
                 resizeObserver.disconnect();
                 resizeObserver = null;
+            }
+
+            // Clean up any event listeners or DOM elements
+            const stencilEl = container.querySelector('.x6-widget-stencil');
+            if (stencilEl) {
+                // Remove any event listeners if needed
             }
         }
     };

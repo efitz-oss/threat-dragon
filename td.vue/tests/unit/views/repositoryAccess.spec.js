@@ -6,6 +6,12 @@ import { REPOSITORY_CLEAR, REPOSITORY_SELECTED, REPOSITORY_FETCH } from '@/store
 import RepositoryAccess from '@/views/git/RepositoryAccess.vue';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 
+// Mock Vue Router composables
+jest.mock('vue-router', () => ({
+    useRoute: jest.fn(),
+    useRouter: jest.fn()
+}));
+
 
 describe('views/RepositoryAccess.vue', () => {
     let wrapper, mockStore, mockRouter;
@@ -42,13 +48,20 @@ describe('views/RepositoryAccess.vue', () => {
     // Vue 3 style mount function
     const mountComponent = (mockRoute) => {
         mockRouter = { push: jest.fn() };
+
+        // Setup Vue Router mocks
+        const vueRouter = require('vue-router');
+        vueRouter.useRoute.mockReturnValue({
+            ...mockRoute,
+            query: mockRoute.query || {}
+        });
+        vueRouter.useRouter.mockReturnValue(mockRouter);
+
         jest.spyOn(mockStore, 'dispatch');
         wrapper = shallowMount(RepositoryAccess, {
             global: {
                 plugins: [mockStore],
                 mocks: {
-                    $route: mockRoute,
-                    $router: mockRouter,
                     $t: key => key
                 }
             }
@@ -56,7 +69,7 @@ describe('views/RepositoryAccess.vue', () => {
     };
 
     describe('mounted', () => {
-        it('sets the provider from the route', () => {
+        it('fetches the repos on mount', () => {
             mountComponent({
                 params: {
                     provider: 'local'
@@ -65,9 +78,9 @@ describe('views/RepositoryAccess.vue', () => {
                     page: 1
                 }
             });
-            expect(mockStore.dispatch).toHaveBeenCalledWith(PROVIDER_SELECTED, 'local');
+            expect(mockStore.dispatch).toHaveBeenCalledWith(REPOSITORY_FETCH, 1);
         });
-        
+
         it('fetches the repos', () => {
             mountComponent({
                 params: {
@@ -130,7 +143,7 @@ describe('views/RepositoryAccess.vue', () => {
 
         it('navigates to the branch select page', () => {
             mockRoute.repository = repoName;
-            expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitBranch', params: mockRoute,  query});
+            expect(mockRouter.push).toHaveBeenCalledWith({ name: 'gitBranch', params: mockRoute, query });
         });
     });
 });

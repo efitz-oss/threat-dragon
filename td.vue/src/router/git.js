@@ -67,7 +67,7 @@ export const gitRoutes = [
         component: () => import(/* webpackChunkName: "report-model" */ '../views/ReportModel.vue'),
         meta: { provider: 'github' }
     },
-    
+
     // Add similar routes for other Git providers
     // For GitLab
     {
@@ -93,7 +93,7 @@ export const gitRoutes = [
             ),
         meta: { provider: 'gitlab' }
     },
-    
+
     // For BitBucket (add other routes as needed)
     {
         path: `/${providerType}/bitbucket/repository`,

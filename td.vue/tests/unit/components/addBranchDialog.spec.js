@@ -15,7 +15,7 @@ describe('components/AddBranchDialog.vue', () => {
 
         beforeEach(() => {
             closeDialog = jest.fn();
-            
+
             // Vue 3 Migration: Testing component structure is best done
             // through inspecting the rendered template and props
             wrapper = createWrapper(AddBranchDialog, {
@@ -24,7 +24,7 @@ describe('components/AddBranchDialog.vue', () => {
                 },
                 shallow: true
             });
-            
+
             // Mock the closeDialog method
             jest.spyOn(wrapper.vm, 'closeDialog').mockImplementation(closeDialog);
         });
@@ -54,11 +54,11 @@ describe('components/AddBranchDialog.vue', () => {
             // Vue 3 Migration: Testing component mounted behavior directly
             expect(wrapper.vm.refBranch).toBe('feature');
         });
-        
+
         it('emits close-dialog event when closeDialog is called', () => {
             // Call the method directly - more reliable in Vue 3 testing
             wrapper.vm.closeDialog();
-            
+
             // Check that the event was emitted
             expect(closeDialog).toHaveBeenCalled();
         });
@@ -98,13 +98,13 @@ describe('components/AddBranchDialog.vue', () => {
             expect(wrapper.vm.branchNameError).toBe('');
             expect(wrapper.vm.isError).toBe(true);
         });
-        
+
         // Vue 3 Migration: Added test for computed property
         // This is a more Vue 3 approach to testing component logic
         it('computes branchNames correctly', async () => {
             // Test with string values
             expect(wrapper.vm.branchNames).toEqual(['develop', 'feature', 'main']);
-            
+
             // Test with object values
             await wrapper.setProps({
                 branches: [
@@ -124,14 +124,14 @@ describe('components/AddBranchDialog.vue', () => {
         beforeEach(() => {
             closeDialog = jest.fn();
             dispatch = jest.fn((action, payload) => {
-                if(action === branchActions.create) {
+                if (action === branchActions.create) {
                     branches.push(payload.branchName);
                 }
-                if(action === branchActions.fetch) {
+                if (action === branchActions.fetch) {
                     return Promise.resolve();
                 }
             });
-            
+
             // Vue 3 Migration: Using createWrapper with store mocking
             wrapper = createWrapper(AddBranchDialog, {
                 props: {
@@ -144,9 +144,9 @@ describe('components/AddBranchDialog.vue', () => {
                     }
                 }
             });
-            
+
             jest.spyOn(wrapper.vm, 'closeDialog').mockImplementation(closeDialog);
-            
+
             // Set data directly
             wrapper.vm.newBranchName = 'new-branch';
             wrapper.vm.refBranch = 'main';
@@ -157,46 +157,34 @@ describe('components/AddBranchDialog.vue', () => {
             jest.spyOn(wrapper.vm, 'validate').mockImplementation(() => {
                 wrapper.vm.isError = true;
             });
-            
-            // Skip the polling by mocking the method
-            // Vue 3 Migration: We completely replace the addBranch method
-            // instead of letting it run, which makes the test more stable
-            const originalMethod = wrapper.vm.addBranch;
-            wrapper.vm.addBranch = jest.fn().mockImplementation(() => {
-                // Just dispatch immediately without polling
-                wrapper.vm.$store.dispatch(branchActions.create, {
-                    branchName: 'new-branch',
-                    refBranch: 'main'
-                });
-                
-                // Call closeDialog to finish
-                wrapper.vm.closeDialog();
-            });
-            
-            // Call the mocked method
-            wrapper.vm.addBranch();
-            await nextTick();
-            
+
+            // Force NODE_ENV to be 'test' for this test
+            const originalNodeEnv = process.env.NODE_ENV;
+            process.env.NODE_ENV = 'test';
+
+            // Call the method directly
+            await wrapper.vm.addBranch();
+
             // Verify the store was called correctly
             expect(dispatch).toHaveBeenCalledWith(branchActions.create, {
                 branchName: 'new-branch',
                 refBranch: 'main'
             });
-            
+
             // Verify closeDialog was called
             expect(closeDialog).toHaveBeenCalled();
-            
-            // Restore original method
-            wrapper.vm.addBranch = originalMethod;
+
+            // Restore original NODE_ENV
+            process.env.NODE_ENV = originalNodeEnv;
         });
-        
+
         // Vue 3 Migration: Added test for wait state
         // In Vue 3, we can more directly test component reactive state
         it('sets wait state during branch creation', async () => {
             jest.spyOn(wrapper.vm, 'validate').mockImplementation(() => {
                 wrapper.vm.isError = true;
             });
-            
+
             // Mock the fetch action to delay
             const originalDispatch = wrapper.vm.$store.dispatch;
             wrapper.vm.$store.dispatch = jest.fn(async (action, payload) => {
@@ -207,16 +195,16 @@ describe('components/AddBranchDialog.vue', () => {
                 }
                 return originalDispatch(action, payload);
             });
-            
+
             // Start the addBranch process but don't wait for it
             const addBranchPromise = wrapper.vm.addBranch();
-            
+
             // Check that wait is true while processing
             expect(wrapper.vm.wait).toBe(true);
-            
+
             // Let the operation complete
             await addBranchPromise;
-            
+
             // After completion, wait should be false
             expect(wrapper.vm.wait).toBe(false);
         });

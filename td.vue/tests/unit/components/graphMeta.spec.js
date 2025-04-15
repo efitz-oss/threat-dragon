@@ -25,7 +25,7 @@ jest.mock('@/composables/useThreatEditor', () => {
         editingThreat: { value: null },
         isNewThreat: { value: false }
     });
-    
+
     return {
         __esModule: true,
         useThreatEditor: mockImplementation
@@ -33,13 +33,20 @@ jest.mock('@/composables/useThreatEditor', () => {
 });
 
 // Mock the i18n module for testing
-jest.mock('@/i18n', () => ({
-    useI18n: jest.fn(() => ({
+jest.mock('@/i18n', () => {
+    // Create a mock function that returns the expected object
+    const mockUseI18n = jest.fn(() => ({
         t: jest.fn(key => key),
         locale: { value: 'eng' },
         availableLocales: ['eng', 'deu', 'fra']
-    }))
-}));
+    }));
+
+    return {
+        __esModule: true,
+        useI18n: mockUseI18n,
+        default: { get: jest.fn() }
+    };
+});
 
 // Import individual components from bootstrap-vue-next for better testing
 import {
@@ -121,7 +128,7 @@ describe('components/GraphMeta.vue', () => {
                     mitigation: 'Unmitigated'
                 }]
             };
-            
+
             const store = createStore({
                 state: {
                     cell: {
@@ -135,7 +142,7 @@ describe('components/GraphMeta.vue', () => {
                     [CELL_UNSELECTED]: jest.fn()
                 }
             });
-            
+
             // VUE3 MIGRATION: Using bootstrap-vue-next components directly
             wrapper = mount(TdGraphMeta, {
                 global: {
@@ -173,7 +180,7 @@ describe('components/GraphMeta.vue', () => {
             expect(wrapper.vm.cellRef).not.toBeNull();
             expect(wrapper.vm.threats).toEqual(entityData.threats);
         });
-        
+
         // VUE3 MIGRATION: Added test for computed properties directly
         it('has access to the threats from the store', () => {
             // Test computed property directly instead of just checking DOM structure
@@ -183,7 +190,7 @@ describe('components/GraphMeta.vue', () => {
 
     describe('methods', () => {
         let wrapper, store;
-        
+
         beforeEach(() => {
             const entityData = {
                 threats: [{
@@ -195,7 +202,7 @@ describe('components/GraphMeta.vue', () => {
                     mitigation: 'Unmitigated'
                 }]
             };
-            
+
             store = createStore({
                 state: {
                     cell: {
@@ -221,9 +228,9 @@ describe('components/GraphMeta.vue', () => {
                     [CELL_DATA_UPDATED]: jest.fn()
                 }
             });
-            
+
             store.dispatch = jest.fn();
-            
+
             // VUE3 MIGRATION: Using shallowMount with bootstrap-vue-next components
             wrapper = shallowMount(TdGraphMeta, {
                 global: {
@@ -252,30 +259,30 @@ describe('components/GraphMeta.vue', () => {
         it('has the onThreatSelected method', () => {
             expect(typeof wrapper.vm.onThreatSelected).toBe('function');
         });
-        
+
         it('emits events when calling onThreatSelected', async () => {
             // VUE3 MIGRATION: Testing method behavior directly
             await wrapper.vm.onThreatSelected('test-id', 'edit');
             expect(wrapper.emitted()).toHaveProperty('threatSelected');
-            
+
             const emitted = wrapper.emitted('threatSelected');
             expect(emitted[0]).toEqual(['test-id', 'edit']);
         });
-        
+
         // VUE3 MIGRATION: Testing the component's ability to emit events
         it('emits threatSuggest events when calling onAddThreatByType', async () => {
             await wrapper.vm.onAddThreatByType();
             expect(wrapper.emitted()).toHaveProperty('threatSuggest');
-            
+
             const emitted = wrapper.emitted('threatSuggest');
             expect(emitted[0]).toEqual(['type']);
         });
     });
-    
+
     // VUE3 MIGRATION: Added tests for computed properties
     describe('computed properties', () => {
         let wrapper, store;
-        
+
         beforeEach(() => {
             // Create a store with both diagram and cell data
             store = createStore({
@@ -306,7 +313,7 @@ describe('components/GraphMeta.vue', () => {
                     [CELL_DATA_UPDATED]: jest.fn()
                 }
             });
-            
+
             // Mount with shallow to focus on computed properties
             wrapper = shallowMount(TdGraphMeta, {
                 global: {
@@ -326,32 +333,32 @@ describe('components/GraphMeta.vue', () => {
                 }
             });
         });
-        
+
         // VUE3 MIGRATION: Testing computed properties directly
         it('has a cellRef computed property from store state', () => {
             expect(wrapper.vm.cellRef).toEqual(store.state.cell.ref);
         });
-        
+
         it('has a threats computed property from store state', () => {
             expect(wrapper.vm.threats).toEqual(store.state.cell.threats);
         });
-        
+
         it('has a diagram computed property from store state', () => {
             expect(wrapper.vm.diagram).toEqual(store.state.threatmodel.selectedDiagram);
         });
-        
+
         it('has a threatTop computed property from store state', () => {
             expect(wrapper.vm.threatTop).toBe(5);
         });
-        
+
         it('computes disableNewThreat based on cell properties', () => {
             // Default is false because process entity is in scope
             expect(wrapper.vm.disableNewThreat).toBe(false);
-            
+
             // Set outOfScope to true and verify it's disabled
             store.state.cell.ref.data.outOfScope = true;
             expect(wrapper.vm.disableNewThreat).toBe(true);
-            
+
             // Reset and change to trust boundary type
             store.state.cell.ref.data.outOfScope = false;
             store.state.cell.ref.data.isTrustBoundary = true;

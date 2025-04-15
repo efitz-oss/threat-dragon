@@ -18,19 +18,21 @@
   --td-stencil-group-min-height: 100px;
   --td-stencil-padding: 8px;
   --td-stencil-font-size: 14px;
-  --td-stencil-z-index: 10;
+  --td-stencil-z-index: 100; /* Increased from 10 to 100 to match the z-index in stencil.js */
   --td-stencil-collapsed-height: 32px;
 }
 
 /* ================= MAIN STENCIL CONTAINER ================= */
 .td-stencil-theme .x6-widget-stencil {
-  width: 100%;
-  max-width: 100%;
-  visibility: visible;
-  display: block;
-  overflow: visible;
-  background-color: var(--td-stencil-bg-color);
-  color: var(--td-stencil-title-color);
+    width: 100%;
+    max-width: 100%;
+    visibility: visible !important;
+    display: block !important;
+    overflow: visible !important; /* Ensure content is not clipped */
+    background-color: var(--td-stencil-bg-color);
+    color: var(--td-stencil-title-color);
+    position: relative !important; /* Ensure proper positioning */
+    min-height: 500px !important; /* Ensure enough height */
 }
 
 /* ================= STENCIL GROUPS ================= */
@@ -123,9 +125,11 @@
 
 /* ================= STENCIL CONTENT CONTAINER ================= */
 .td-stencil-theme .x6-widget-stencil-content {
-  width: 100%;
-  overflow: visible;
-  position: absolute;
+    width: 100%;
+    overflow: visible !important;
+    position: relative !important; /* Changed from absolute to relative */
+    min-height: 400px !important; /* Ensure enough height */
+    background-color: rgba(240, 240, 240, 0.2) !important; /* Slight background for debugging */
 }
 
 /* ================= STENCIL ITEMS ================= */
@@ -150,24 +154,50 @@
   background: transparent;
   box-shadow: none;
 }
-
 /* SVG elements */
 .td-stencil-theme .x6-graph svg {
-  visibility: visible;
-  opacity: 1;
-  z-index: var(--td-stencil-z-index);
-  pointer-events: auto;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: var(--td-stencil-z-index) !important;
+    pointer-events: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: visible !important;
+    display: block !important;
+    position: relative !important;
+    min-height: 80px !important;
+    background-color: rgba(200, 200, 200, 0.1) !important; /* Slight background for debugging */
+}
+
+/* Ensure the graph container is visible */
+.td-stencil-theme .x6-graph {
+    visibility: visible !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    min-height: 80px !important;
+    position: relative !important;
+    background-color: rgba(220, 220, 220, 0.1) !important; /* Slight background for debugging */
 }
 
 /* Shape elements */
 .td-stencil-theme .x6-node {
-  visibility: visible;
-  display: block;
-  opacity: 1;
-  transform-origin: center center;
+    visibility: visible !important;
+    display: block !important;
+    opacity: 1 !important;
+    transform-origin: center center;
+    z-index: var(--td-stencil-z-index) !important;
+    position: relative !important; /* Ensure proper positioning */
+    max-width: none !important; /* Prevent width constraints */
+    max-height: none !important; /* Prevent height constraints */
+    overflow: visible !important; /* Ensure content is not clipped */
+}
+
+/* Force stencil items to be visible and properly sized */
+.td-stencil-theme .x6-widget-stencil-item {
+    min-height: 80px !important;
+    position: relative !important;
+    overflow: visible !important;
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Slight background for debugging */
 }
 
 /* SVG child elements */
@@ -175,9 +205,10 @@
 .td-stencil-theme svg rect,
 .td-stencil-theme svg circle,
 .td-stencil-theme svg text {
-  visibility: visible;
-  display: block;
-  opacity: 1;
+    visibility: visible !important;
+    display: block !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
 }
 
 /* ================= STENCIL SEARCH ================= */

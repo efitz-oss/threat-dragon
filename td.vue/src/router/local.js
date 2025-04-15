@@ -6,7 +6,7 @@ export const localRoutes = [
     {
         path: '/models/:threatmodel',
         // Use both the standard name format and the direct 'localThreatModel' name for compatibility with SelectDemoModel
-        name: 'localThreatModel', 
+        name: 'localThreatModel',
         component: () => import(/* webpackChunkName: "threatmodel" */ '../views/ThreatModel.vue'),
         meta: { provider: 'local' }
     },
@@ -24,14 +24,14 @@ export const localRoutes = [
         meta: { provider: 'local' }
     },
     {
-        path: '/import',
+        path: '/local/threatmodel/import',
         name: `${providerType}ThreatModelImport`,
         component: () =>
             import(/* webpackChunkName: "threatmodel-import" */ '../views/ImportModel.vue'),
         meta: { provider: 'local' }
     },
     {
-        path: '/new',
+        path: '/local/threatmodel/new',
         name: `${providerType}NewThreatModel`,
         component: () =>
             import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue'),

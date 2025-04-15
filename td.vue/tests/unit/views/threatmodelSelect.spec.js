@@ -10,9 +10,10 @@ import ThreatModelSelect from '@/views/git/ThreatModelSelect.vue';
 import { THREATMODEL_CLEAR, THREATMODEL_CREATE, THREATMODEL_FETCH, THREATMODEL_SELECTED, THREATMODEL_UPDATE, THREATMODEL_NOT_MODIFIED } from '../../../src/store/actions/threatmodel';
 
 // Mock Vue Router composables
-import * as vueRouter from 'vue-router';
-vueRouter.useRoute = jest.fn();
-vueRouter.useRouter = jest.fn();
+jest.mock('vue-router', () => ({
+    useRoute: jest.fn(),
+    useRouter: jest.fn()
+}));
 
 // Mock i18n composable
 jest.mock('@/i18n', () => ({
@@ -36,12 +37,14 @@ describe('views/ThreatModelSelect.vue', () => {
             params: routeParams.params || {},
             query: routeParams.query || {}
         };
-        vueRouter.useRoute.mockReturnValue(mockRoute);
-        
+        const { useRoute } = require('vue-router');
+        useRoute.mockReturnValue(mockRoute);
+
         // Set up mock router
         mockRouter = { push: jest.fn() };
-        vueRouter.useRouter.mockReturnValue(mockRouter);
-        
+        const { useRouter } = require('vue-router');
+        useRouter.mockReturnValue(mockRouter);
+
         jest.spyOn(mockStore, 'dispatch');
         wrapper = shallowMount(ThreatModelSelect, {
             global: {
@@ -87,7 +90,7 @@ describe('views/ThreatModelSelect.vue', () => {
     });
 
     describe('mounted', () => {
-        it('sets the provider from the route', () => {
+        it('fetches all threat models', () => {
             mountComponent({
                 params: {
                     branch,
@@ -95,7 +98,7 @@ describe('views/ThreatModelSelect.vue', () => {
                     repository: mockStore.state.repo.selected
                 }
             });
-            expect(mockStore.dispatch).toHaveBeenCalledWith(PROVIDER_SELECTED, 'local');
+            expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_FETCH_ALL);
         });
 
         it('sets the repo name from the route', () => {
@@ -119,7 +122,7 @@ describe('views/ThreatModelSelect.vue', () => {
             });
             expect(mockStore.dispatch).toHaveBeenCalledWith(BRANCH_SELECTED, 'notTheRightOne');
         });
-        
+
         it('fetches the threat models', () => {
             mountComponent({
                 params: {
@@ -245,7 +248,7 @@ describe('views/ThreatModelSelect.vue', () => {
         });
 
         it('creates the threat model', () => {
-            expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_CREATE, expect.anything()); 
+            expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_CREATE, expect.anything());
         });
 
         it('navigates to the edit page', () => {

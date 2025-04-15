@@ -21,10 +21,10 @@ describe('App.vue', () => {
 
     beforeEach(() => {
         console.log = jest.fn();
-        
+
         // Create mock dispatch function to track calls
         mockDispatch = jest.fn();
-        
+
         // Create mock store
         mockStore = createStore({
             state: {
@@ -37,16 +37,15 @@ describe('App.vue', () => {
                 'THREATMODEL_UPDATE': jest.fn(),
                 'THREATMODEL_NOT_MODIFIED': jest.fn(),
                 'THREATMODEL_CLEAR': jest.fn()
-            },
-            dispatch: mockDispatch
+            }
         });
-        
+
         // Create wrapper with bootstrap components registered
         // Using bootstrap-vue-next plugin with proper component stubs
         wrapper = mount(App, {
             global: {
                 plugins: [
-                    mockStore, 
+                    mockStore,
                     i18nFactory.get(),
                     bootstrapVueNext
                 ],
@@ -99,17 +98,39 @@ describe('App.vue', () => {
         expect(wrapper.find('.container').exists()).toBe(true);
     });
 
-    it('dispatches LOADER_FINISHED on mount', () => {
-        // Vue 3 Migration: Testing store dispatch via the mock function
-        // This is a more direct way to test component behavior with Vuex
-        expect(mockDispatch).toHaveBeenCalledWith(LOADER_FINISHED);
+    it('dispatches LOADER_FINISHED on mount', async () => {
+        // In Vue 3 with Vuex 4, we need to spy on the store's dispatch method
+        const dispatchSpy = jest.spyOn(mockStore, 'dispatch');
+
+        // Create a new wrapper to ensure the onMounted hook is triggered
+        const newWrapper = mount(App, {
+            global: {
+                plugins: [
+                    mockStore,
+                    i18nFactory.get(),
+                    bootstrapVueNext
+                ],
+                stubs: {
+                    'router-view': true,
+                    'TdNavbar': true,
+                    'BContainer': true,
+                    'BOverlay': {
+                        template: '<div><slot></slot></div>',
+                        props: ['show']
+                    }
+                }
+            }
+        });
+
+        // Verify the dispatch was called with LOADER_FINISHED
+        expect(dispatchSpy).toHaveBeenCalledWith(LOADER_FINISHED);
     });
 
     it('has the isLoading computed property for loading state', () => {
         // Vue 3 Migration: In Vue 3, we can focus on testing the component's API
         // rather than the internal structure when appropriate
         // This is more resilient to changes in the component's implementation
-        
+
         // Test the computed property directly
         expect(wrapper.vm.isLoading).toBeDefined();
         expect(typeof wrapper.vm.isLoading).toBe('boolean');
