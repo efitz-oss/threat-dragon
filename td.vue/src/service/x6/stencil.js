@@ -31,7 +31,7 @@ const get = (graph, container, StencilConstructor) => {
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
-        stencilGraphWidth: stencilGraphWidth,
+        /* stencilGraphWidth: '100%', /* Remove this property */
         stencilGraphHeight: 'auto',
         width: '100%',
         height: '100%',
@@ -75,34 +75,33 @@ const get = (graph, container, StencilConstructor) => {
     // Create the stencil instance
     const stencilInstance = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
-    // Calculate component size based on container width
-    const shapeWidth = stencilGraphWidth * 0.9; // 90% of stencil width
+    // Removed shapeWidth calculation - let CSS handle width
 
     // Create component nodes with explicit sizing and forced visibility
     const actor = new shapes.ActorShape({
-        width: shapeWidth,
-        height: shapeWidth * 0.6, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.6, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100, // Much higher z-index to ensure visibility
         opacity: 1  // Full opacity
     });
     const process = new shapes.ProcessShape({
-        width: shapeWidth,
-        height: shapeWidth * 0.6, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.6, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100,
         opacity: 1
     });
     const store = new shapes.StoreShape({
-        width: shapeWidth,
-        height: shapeWidth * 0.6, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.6, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100,
         opacity: 1
     });
     const text = new shapes.TextBlock({
-        width: shapeWidth,
-        height: shapeWidth * 0.45, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.45, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100,
         opacity: 1
@@ -110,15 +109,15 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create boundary nodes
     const boundaryBox = new shapes.TrustBoundaryBox({
-        width: shapeWidth,
-        height: shapeWidth * 0.65, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.65, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100,
         opacity: 1
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
-        width: shapeWidth,
-        height: shapeWidth * 0.2, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.2, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100,
         opacity: 1
@@ -126,8 +125,8 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create flow
     const flow = new shapes.FlowStencil({
-        width: shapeWidth,
-        height: shapeWidth * 0.2, // Maintain aspect ratio
+        /* width: shapeWidth, */ // Let CSS handle width
+        /* height: shapeWidth * 0.2, */ // Remove height dependent on shapeWidth
         visible: true,
         zIndex: 100,
         opacity: 1

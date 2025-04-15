@@ -28,7 +28,7 @@
     max-width: 100%;
     visibility: visible; /* Removed !important */
     display: block; /* Removed !important */
-    overflow: visible; /* Removed !important */ /* Ensure content is not clipped */
+    overflow: visible; /* Revert to visible */ /* Ensure content is not clipped */
     background-color: var(--td-stencil-bg-color); /* Keep basic theme */
     color: var(--td-stencil-title-color); /* Keep basic theme */
     position: relative; /* Removed !important */ /* Ensure proper positioning */
@@ -38,7 +38,7 @@
 /* ================= STENCIL GROUPS ================= */
 .td-stencil-theme .x6-widget-stencil-group {
   visibility: visible;
-  display: block;
+  display: block; /* Revert to block */
   height: auto; /* Keep auto height */
   /* min-height: var(--td-stencil-group-min-height); /* Let content determine height */
   width: 100%; /* Keep width */
@@ -59,14 +59,13 @@
 /* Group content container */
 .td-stencil-theme .x6-widget-stencil-group-content {
   visibility: visible;
-  display: flex; /* Use flexbox for better item stacking */
-  flex-direction: column;
-  align-items: center; /* Center items horizontally */
+  display: block; /* Revert to block */
+  /* align-items: center; /* Remove flex alignment */
   opacity: 1;
   /* min-height: var(--td-stencil-group-min-height); /* Let content determine height */
-  /* min-height: fit-content; /* Ensure this rule is removed */
+  /* min-height: 100%; /* Remove this rule */
   height: auto; /* Keep auto height */
-  overflow: visible;
+  overflow: visible; /* Revert to visible */
   width: 100%;
 }
 
@@ -91,7 +90,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  position: relative;
+  /* position: relative; /* Removed */
 }
 
 /* Collapsible title styling */
@@ -138,12 +137,12 @@
 /* ================= STENCIL ITEMS ================= */
 .td-stencil-theme .x6-widget-stencil-item {
   width: 100%;
-  height: auto; /* Keep auto height */
+  height: auto; /* Remove !important */
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 5px 0; /* Restore vertical padding */
-  margin: 0 auto; /* Keep horizontal centering, remove vertical margin */
+  margin: 5px auto; /* Add 5px top/bottom margin for spacing */
   position: relative;
   overflow: visible;
 }
@@ -164,7 +163,7 @@
     z-index: var(--td-stencil-z-index); /* Removed !important */
     pointer-events: auto; /* Removed !important */
     width: 100%; /* Removed !important */
-    height: auto; /* Change height to auto */
+    /* height: auto; /* Remove auto height */
     /* overflow: visible !important; /* Let library handle overflow */
     display: block; /* Keep block, but removed !important */
     position: relative; /* Removed !important */
@@ -176,7 +175,8 @@
 .td-stencil-theme .x6-graph {
     visibility: visible; /* Removed !important */
     opacity: 1; /* Removed !important */
-    height: auto; /* Add height auto */
+    /* width: 100%; /* Remove width override */
+    /* height: auto; /* Remove height override */
     /* overflow: visible; /* Removed !important */ /* Let library handle overflow */
     /* min-height: 80px; /* Removed min-height */ /* Let content determine height */
     position: relative; /* Removed !important */
@@ -185,6 +185,8 @@
 
 /* Shape elements */
 .td-stencil-theme .x6-node {
+    /* width: 90%; /* Remove CSS width */
+    /* max-width: 90%; /* Remove CSS width */
     /* background-color: transparent !important; /* Removed override */
     /* fill: transparent !important; /* Let library handle */
     /* stroke: none; /* Let library handle */
@@ -244,6 +246,8 @@
   /* ================= STENCIL SEARCH ================= */
 .td-stencil-theme .x6-widget-stencil-search {
   width: 90%;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto 0 auto; /* Explicitly set bottom margin to 0 */
   visibility: visible;
   display: block;
