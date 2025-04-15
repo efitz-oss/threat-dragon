@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 
 export default {
     name: 'TdFormTextareaWrapper',
@@ -86,23 +86,21 @@ export default {
             // Store reference to the textarea element
             textareaRef.value = safeTextarea.value;
 
-            // Use multiple staggered attempts with increasing delays
-            // This ensures we catch the component at different stages of rendering
-            const delays = [0, 50, 100, 250, 500, 1000];
-
-            // Schedule multiple adjustment attempts
-            delays.forEach(delay => {
-                setTimeout(() => {
-                    console.debug(`Attempting height adjustment after ${delay}ms`);
-                    handleHeightChange();
-                }, delay);
+            // Call height change after initial mount and DOM update
+            nextTick(() => {
+                handleHeightChange();
             });
 
             // Add a mutation observer to detect DOM changes that might affect the textarea
             try {
                 const observer = new MutationObserver(() => {
-                    console.debug('DOM mutation detected, adjusting textarea height');
-                    handleHeightChange();
+                    // Ensure ref is still valid in observer callback
+                    if (textareaRef.value) {
+                        console.debug('DOM mutation detected, adjusting textarea height');
+                        handleHeightChange();
+                    } else {
+                        console.debug('DOM mutation detected, but textareaRef is null');
+                    }
                 });
 
                 // Start observing once the textarea is available
@@ -128,13 +126,11 @@ export default {
 
         // Watch for content changes to adjust height
         watch(() => props.modelValue, () => {
-            // Use multiple timeouts with different delays
-            // This creates a more robust approach to catch the component
-            // at different stages of the update cycle
-            [0, 50, 100, 200].forEach(delay => {
-                setTimeout(handleHeightChange, delay);
+            // Use nextTick to ensure DOM is updated after modelValue changes
+            nextTick(() => {
+                handleHeightChange();
             });
-        }, { immediate: true }); // Also run on initial setup
+        }); // Removed immediate: true, rely on onMounted + nextTick for initial call
 
         onBeforeUnmount(() => {
             // For Vue 2 compatibility

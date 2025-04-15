@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { ref, computed, onMounted, onUnmounted, getCurrentInstance, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import { useRouter, useRoute } from 'vue-router';
@@ -74,7 +74,7 @@ export default {
         const store = useStore();
         const router = useRouter();
         const route = useRoute();
-        const instance = getCurrentInstance();
+        const _instance = getCurrentInstance();
         // Fix for test compatibility
         let t = () => '';
         try {
@@ -106,13 +106,10 @@ export default {
 
             // Make sure stencil container is properly sized before initializing
             if (stencilContainer.value) {
-                // Force a proper height on the stencil container
-                stencilContainer.value.style.height = '100%';
-                stencilContainer.value.style.minHeight = '500px';
+                // Stencil container height should be handled by CSS
             }
 
-            // Initialize stencil after ensuring container is ready
-            stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+            // Stencil initialization moved to onMounted -> nextTick
 
             // Store a deep copy of the initial diagram state
             originalDiagramState.value = JSON.parse(JSON.stringify({
@@ -290,43 +287,20 @@ export default {
 
         // Lifecycle hooks
         onMounted(() => {
-            init();
+            init(); // Initializes graph, state, listeners
 
             // Add document-level event listener for threat selection
             document.addEventListener('threat-selected', documentThreatSelectedHandler);
 
-            // Create a series of staggered redraws to ensure proper rendering
-            const redrawStencil = () => {
-                if (graph.value && stencilContainer.value && stencilInstance.value) {
-                    console.debug('Forcing stencil redraw');
-                    const container = stencilContainer.value;
-                    const width = container.offsetWidth;
-
-                    // Trigger a resize event to force redraw
-                    window.dispatchEvent(new Event('resize'));
-
-                    // Force a redraw of the stencil
-                    if (typeof stencilInstance.value.resize === 'function') {
-                        stencilInstance.value.resize(width);
-                    }
-
-                    // Also try to ensure all stencil items are visible
-                    if (stencilInstance.value.groups) {
-                        // Open all groups to ensure visibility
-                        Object.values(stencilInstance.value.groups).forEach(group => {
-                            if (group && typeof group.open === 'function') {
-                                group.open();
-                            }
-                        });
-                    }
+            // Initialize stencil after DOM updates and graph is ready
+            nextTick(() => {
+                if (graph.value && stencilContainer.value) {
+                    console.debug('Initializing stencil within nextTick');
+                    stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+                } else {
+                    console.error('Graph or stencil container not ready for stencil initialization in nextTick');
                 }
-            };
-
-            // Multiple redraws at different intervals to handle various timing issues
-            setTimeout(redrawStencil, 100);  // Initial redraw
-            setTimeout(redrawStencil, 500);  // Secondary redraw
-            setTimeout(redrawStencil, 1000); // Final redraw for slower devices
-            setTimeout(redrawStencil, 2000); // Extended redraw for very slow devices
+            });
         });
 
         onUnmounted(() => {

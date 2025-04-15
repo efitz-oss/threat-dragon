@@ -123,7 +123,7 @@ export default {
         });
 
         // Methods
-        const closeDialog = () => {
+        const _closeDialog = () => {
             emit('close-dialog');
         };
 

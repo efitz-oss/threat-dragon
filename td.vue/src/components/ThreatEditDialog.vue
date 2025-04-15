@@ -270,7 +270,7 @@ export default {
         };
 
         // Watch for changes in the editing threat
-        watch(() => editingThreat.value, (newValue, oldValue) => {
+        watch(() => editingThreat.value, (newValue, _oldValue) => {
             if (newValue && originalThreat.value) {
                 // Compare the current threat with the original to detect changes
                 const currentJson = JSON.stringify(newValue);

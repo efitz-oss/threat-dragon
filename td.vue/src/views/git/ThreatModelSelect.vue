@@ -3,8 +3,7 @@
         :items="threatModels"
         :on-item-click="onThreatmodelClick"
         :empty-state-text="t('threatmodelSelect.newThreatModel')"
-        :on-empty-state-click="newThreatModel"
-    >
+        :on-empty-state-click="newThreatModel">
         {{ t('threatmodelSelect.select') }}
         <!-- Fixme: The href should get the configured hostname from env -->
         <a :href="`${providerUri}/${repoName}`" target="_blank" rel="noopener noreferrer">{{
@@ -33,7 +32,7 @@ import { useI18n } from '@/i18n';
 
 import branchActions from '@/store/actions/branch.js';
 import { getProviderType } from '@/service/provider/providers.js';
-import providerActions from '@/store/actions/provider.js';
+import _providerActions from '@/store/actions/provider.js';
 import repoActions from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 import tmActions from '@/store/actions/threatmodel.js';

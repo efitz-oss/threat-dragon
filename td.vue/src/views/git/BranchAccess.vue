@@ -5,17 +5,15 @@
         :page-next="pageNext"
         :page-prev="pagePrev"
         :on-item-click="onBranchClick"
-        :paginate="paginate"
-    >
+        :paginate="paginate">
         {{ t('branch.select') }}
         <!-- Fixme: The href should get the configured hostname from env -->
         <a
             id="repo_link"
             :href="`${providerUri}/${repoName}`"
             target="_blank"
-            rel="noopener noreferrer"
-        >{{ repoName }}</a
-        >
+            rel="noopener noreferrer">{{ repoName
+            }}</a>
         {{ t('branch.from') }}
         <a id="return-to-repo" href="javascript:void(0)" @click="selectRepoClick">
             {{ t('branch.chooseRepo') }}
@@ -25,11 +23,7 @@
             t('branch.addNew')
         }}</a>
 
-        <add-branch-modal
-            v-if="showNewBranchDialog"
-            :branches="branches"
-            @close-dialog="toggleNewBranchDialog()"
-        />
+        <add-branch-modal v-if="showNewBranchDialog" :branches="branches" @close-dialog="toggleNewBranchDialog()" />
     </td-selection-page>
 </template>
 
@@ -41,7 +35,7 @@ import { useI18n } from '@/i18n';
 
 import branchActions from '@/store/actions/branch.js';
 import { getProviderType } from '@/service/provider/providers.js';
-import providerActions from '@/store/actions/provider.js';
+import _providerActions from '@/store/actions/provider.js';
 import repoActions from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 import AddBranchModal from '@/components/AddBranchDialog.vue';
@@ -57,9 +51,9 @@ export default {
         const route = useRoute();
         const router = useRouter();
         const { t } = useI18n();
-        
+
         const showNewBranchDialog = ref(false);
-        
+
         // Computed properties
         const branches = computed(() =>
             store.state.branch.all.map((branch) => {
@@ -73,7 +67,7 @@ export default {
                 return branch.name;
             })
         );
-        
+
         const provider = computed(() => store.state.provider.selected);
         const providerType = computed(() => getProviderType(store.state.provider.selected));
         const providerUri = computed(() => store.state.provider.providerUri);
@@ -81,7 +75,7 @@ export default {
         const page = computed(() => Number(store.state.branch.page));
         const pageNext = computed(() => store.state.branch.pageNext);
         const pagePrev = computed(() => store.state.branch.pagePrev);
-        
+
         onMounted(() => {
             // Provider is now managed via meta.provider in the route configuration
             // and router navigation guard will set it in the store
@@ -92,34 +86,33 @@ export default {
 
             store.dispatch(branchActions.fetch, 1);
         });
-        
+
         // Methods
         const selectRepoClick = () => {
             store.dispatch(repoActions.clear);
             router.push({ name: `${providerType.value}Repository` });
         };
-        
+
         const onBranchClick = (branch) => {
             store.dispatch(branchActions.selected, branch);
             const params = Object.assign({}, route.params, {
                 branch
             });
 
-            const routeName = `${providerType.value}${
-                route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'
+            const routeName = `${providerType.value}${route.query.action === 'create' ? 'NewThreatModel' : 'ThreatModelSelect'
             }`;
 
             router.push({ name: routeName, params });
         };
-        
+
         const paginate = (pg) => {
             store.dispatch(branchActions.fetch, pg);
         };
-        
+
         const toggleNewBranchDialog = () => {
             showNewBranchDialog.value = !showNewBranchDialog.value;
         };
-        
+
         return {
             branches,
             provider,

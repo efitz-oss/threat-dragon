@@ -9,8 +9,7 @@
         :paginate="paginate"
         :empty-state-text="`${t('repository.noneFound')} ${t(
             'providers.' + provider + '.displayName'
-        )}`"
-    >
+        )}`">
         {{ t('repository.select') }} {{ t(`providers.${provider}.displayName`) }}
         {{ t('repository.from') }}
     </td-selection-page>
@@ -23,7 +22,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from '@/i18n';
 
 import { getProviderType } from '@/service/provider/providers.js';
-import providerActions from '@/store/actions/provider.js';
+import _providerActions from '@/store/actions/provider.js';
 import repoActions from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 
@@ -37,11 +36,11 @@ export default {
         const route = useRoute();
         const router = useRouter();
         const { t } = useI18n();
-        
+
         // Reactive data
         const searchQuery = ref('');
         const searchTimeout = ref(null);
-        
+
         // Computed properties
         const provider = computed(() => store.state.provider.selected);
         const providerType = computed(() => getProviderType(store.state.provider.selected));
@@ -49,7 +48,7 @@ export default {
         const page = computed(() => Number(store.state.repo.page));
         const pageNext = computed(() => store.state.repo.pageNext);
         const pagePrev = computed(() => store.state.repo.pagePrev);
-        
+
         // Watch for search query changes
         watch(searchQuery, (newQuery) => {
             clearTimeout(searchTimeout.value);
@@ -61,7 +60,7 @@ export default {
                 });
             }, 500);
         });
-        
+
         onMounted(() => {
             // Provider is now managed via meta.provider in the route configuration
             // and router navigation guard will set it in the store
@@ -72,7 +71,7 @@ export default {
 
             store.dispatch(repoActions.fetch, initialPage);
         });
-        
+
         // Methods
         const onRepoClick = (repoName) => {
             store.dispatch(repoActions.selected, repoName);
@@ -85,11 +84,11 @@ export default {
                 query: route.query
             });
         };
-        
+
         const paginate = (newPage) => {
             store.dispatch(repoActions.fetch, newPage, searchQuery.value);
         };
-        
+
         return {
             searchQuery,
             provider,
