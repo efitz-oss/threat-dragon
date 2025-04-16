@@ -100,11 +100,13 @@ const get = (graph, container, StencilConstructor) => {
     const stencilInstance = StencilConstructor ? new StencilConstructor(stencilConfig) : factory.stencil(stencilConfig);
 
     // Create component nodes with explicit sizing and forced visibility
+    // Force fresh translations for all shape labels
     const actor = new shapes.ActorShape({
         width: 100,
         height: 50,
         visible: true,
         opacity: 1,  // Full opacity
+        label: tc('threatmodel.shapes.actor'),
         attrs: {
             body: {
                 refWidth: '100%',
@@ -117,6 +119,7 @@ const get = (graph, container, StencilConstructor) => {
         height: 75,
         visible: true,
         opacity: 1,
+        label: tc('threatmodel.shapes.process'),
         attrs: {
             body: {
                 refWidth: '100%',
@@ -129,6 +132,7 @@ const get = (graph, container, StencilConstructor) => {
         height: 50,
         visible: true,
         opacity: 1,
+        label: tc('threatmodel.shapes.store'),
         attrs: {
             body: {
                 refWidth: '100%',
@@ -141,6 +145,7 @@ const get = (graph, container, StencilConstructor) => {
         height: 25,
         visible: true,
         opacity: 1,
+        label: tc('threatmodel.shapes.text'),
         attrs: {
             body: {
                 refWidth: '100%',
@@ -159,6 +164,9 @@ const get = (graph, container, StencilConstructor) => {
             body: {
                 refWidth: '100%',
                 refHeight: '100%'
+            },
+            label: {
+                text: tc('threatmodel.shapes.trustBoundary')
             }
         }
     });
@@ -171,6 +179,9 @@ const get = (graph, container, StencilConstructor) => {
             body: {
                 refWidth: '100%',
                 refHeight: '100%'
+            },
+            label: {
+                text: tc('threatmodel.shapes.trustBoundary')
             }
         }
     });
@@ -185,6 +196,9 @@ const get = (graph, container, StencilConstructor) => {
             body: {
                 refWidth: '100%',
                 refHeight: '100%'
+            },
+            label: {
+                text: tc('threatmodel.shapes.flowStencil')
             }
         }
     });

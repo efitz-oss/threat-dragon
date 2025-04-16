@@ -346,13 +346,13 @@ const deu = {
             notFound: 'Noch nicht vorhanden. Wollen Sie einen Issue öffnen? :)'
         },
         shapes: {
-            actor: 'Actor',
-            flow: 'Data Flow',
-            flowStencil: 'Data Flow',
-            process: 'Process',
-            store: 'Store',
-            text: 'Descriptive text',
-            trustBoundary: 'Trust Boundary'
+            actor: 'Akteur',
+            flow: 'Datenfluss',
+            flowStencil: 'Datenfluss',
+            process: 'Prozess',
+            store: 'Datenspeicher',
+            text: 'Beschreibender Text',
+            trustBoundary: 'Vertrauensgrenze'
         }
     },
     forms: {
