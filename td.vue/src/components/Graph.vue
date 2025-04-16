@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted, getCurrentInstance, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, getCurrentInstance, nextTick, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import { useRouter, useRoute } from 'vue-router';
@@ -69,10 +69,15 @@ export default {
         const _instance = getCurrentInstance();
         // Fix for test compatibility
         let t = () => '';
+        // Initialize i18n in setup function
+        let i18nInstance;
+        let locale = ref('eng');
+
         try {
-            const i18n = useI18n(); // Initialize i18n in setup function
-            if (i18n && i18n.t) {
-                t = i18n.t;
+            i18nInstance = useI18n();
+            if (i18nInstance && i18nInstance.t) {
+                t = i18nInstance.t;
+                // Don't reassign the ref, just use it directly
             }
         } catch (error) {
             console.warn('i18n not available in setup, using default:', error);
@@ -291,6 +296,26 @@ export default {
                     stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
                 } else {
                     console.error('Graph or stencil container not ready for stencil initialization in nextTick');
+                }
+            });
+
+            // Watch for locale changes and re-initialize stencil
+            // Use i18nInstance.locale directly in the watch
+            watch(i18nInstance.locale, (newLocale, oldLocale) => {
+                console.debug(`Locale changed from ${oldLocale} to ${newLocale}, reinitializing stencil`);
+
+                // Dispose existing stencil instance if it exists
+                if (stencilInstance.value && typeof stencilInstance.value.dispose === 'function') {
+                    stencilInstance.value.dispose();
+                    stencilInstance.value = null;
+                }
+
+                // Re-initialize stencil with new localized strings
+                if (graph.value && stencilContainer.value) {
+                    console.debug('Reinitializing stencil with new locale');
+                    stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+                } else {
+                    console.error('Graph or stencil container not ready for stencil reinitialization');
                 }
             });
         });
