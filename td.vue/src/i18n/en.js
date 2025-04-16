@@ -13,7 +13,7 @@ const eng = {
     operator: {
         operatedby: 'This web site and instance of OWASP Threat Dragon is operated by:',
         name: `${process.env.VUE_APP_OPERATOR_NAME || 'the operator of this web site'}`,
-        contact: 'the support team',
+        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(contact information not provided)'}`,
     },
     tos: {
         title: 'Terms of Service',
@@ -53,7 +53,7 @@ const eng = {
                 content: 'These Terms are governed by the laws of the jurisdiction in which The Operator is headquartered (in the case of an organization) or resides (in the case of an individual), without regard to conflict of law principles.'
             }
         ],
-        contact: 'If you have any questions about these Terms, please feel free to contact the support team.'
+        contact: 'If you have any questions about these Terms, please contact the operator.'
     },
     privacy: {
         title: 'Privacy Policy',
@@ -74,7 +74,7 @@ const eng = {
             },
             {
                 heading: 'Contact Us',
-                content: 'If you have any questions about this Privacy Policy, please feel free to contact the support team.'
+                content: 'If you have any questions about this Privacy Policy, please contact the operator.'
             }
         ]
     },
