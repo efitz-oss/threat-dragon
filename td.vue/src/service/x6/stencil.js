@@ -31,13 +31,15 @@ const get = (graph, container, StencilConstructor) => {
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
-        // stencilGraphHeight: 'auto',
+        stencilGraphHeight: 'auto', // Enable auto height
         title: 'Shapes',
         collapsable: false,
 
         // Explicitly ensure we can see stencil content
         snapline: true,
         resizing: true,
+        autoResize: true, // Enable auto resize
+        height: 'auto', // Set height to auto
         groups: [
             {
                 name: 'components',
@@ -63,7 +65,7 @@ const get = (graph, container, StencilConstructor) => {
             center: true,
             resizeToFit: false, /* true causes shapes to be invisible */
             dx: 50, // Add horizontal spacing
-            dy: 20  // Add vertical spacing between items
+            dy: 5   // Keep reduced vertical spacing between items
         },
         search: {
             placeholder: 'Search shapes'
@@ -78,25 +80,49 @@ const get = (graph, container, StencilConstructor) => {
         width: 100,
         height: 50,
         visible: true,
-        opacity: 1  // Full opacity
+        opacity: 1,  // Full opacity
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
     const process = new shapes.ProcessShape({
         width: 75,
         height: 75,
         visible: true,
-        opacity: 1
+        opacity: 1,
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
     const store = new shapes.StoreShape({
         width: 100,
         height: 50,
         visible: true,
-        opacity: 1
+        opacity: 1,
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
     const text = new shapes.TextBlock({
         width: 100,
         height: 25,
         visible: true,
-        opacity: 1
+        opacity: 1,
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
 
     // Create boundary nodes
@@ -104,13 +130,25 @@ const get = (graph, container, StencilConstructor) => {
         width: 100,
         height: 50,
         visible: true,
-        opacity: 1
+        opacity: 1,
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
         width: 50,
         height: 50,
         visible: true,
-        opacity: 1
+        opacity: 1,
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
 
     // Create flow
@@ -118,7 +156,13 @@ const get = (graph, container, StencilConstructor) => {
         width: 50,
         height: 50,
         visible: true,
-        opacity: 1
+        opacity: 1,
+        attrs: {
+            body: {
+                refWidth: '100%',
+                refHeight: '100%'
+            }
+        }
     });
 
     // Add shapes to the stencil with explicit layout options
@@ -128,8 +172,37 @@ const get = (graph, container, StencilConstructor) => {
 
     // Force resize after loading if the method is available (not in tests)
     if (stencilInstance && typeof stencilInstance.resize === 'function') {
-        stencilInstance.resize(stencilGraphWidth);
+        stencilInstance.resize(stencilGraphWidth, 'auto');
     }
+
+    // Force compact layout
+    if (stencilInstance && typeof stencilInstance.layout === 'function') {
+        stencilInstance.layout();
+    }
+
+    // Add custom class to help with styling
+    if (stencilInstance && stencilInstance.container) {
+        stencilInstance.container.classList.add('td-stencil-container');
+    }
+
+    // Force a redraw of all groups to ensure proper sizing
+    setTimeout(() => {
+        if (stencilInstance && typeof stencilInstance.layout === 'function') {
+            stencilInstance.layout();
+        }
+
+        // Ensure all groups are properly sized
+        const groups = container.querySelectorAll('.x6-widget-stencil-group');
+        groups.forEach(group => {
+            const content = group.querySelector('.x6-widget-stencil-group-content');
+
+            if (content && !group.classList.contains('collapsed')) {
+                content.style.minHeight = '200px';
+                content.style.maxHeight = '300px';
+                content.style.overflowY = 'auto';
+            }
+        });
+    }, 100);
 
     // Add to DOM
     container.appendChild(stencilInstance.container);
@@ -145,7 +218,12 @@ const get = (graph, container, StencilConstructor) => {
 
             // Update stencil dimensions
             if (stencilInstance && stencilInstance.resize) {
-                stencilInstance.resize(stencilGraphWidth);
+                stencilInstance.resize(stencilGraphWidth, 'auto');
+            }
+
+            // Force compact layout on resize
+            if (stencilInstance && typeof stencilInstance.layout === 'function') {
+                stencilInstance.layout();
             }
         });
 
