@@ -31,12 +31,10 @@ const get = (graph, container, StencilConstructor) => {
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
-        /* stencilGraphWidth: '100%', /* Remove this property */
-        stencilGraphHeight: 'auto',
-        /* width: '100%', */
-        /* height: '100%', */
+        // stencilGraphHeight: 'auto',
         title: 'Shapes',
         collapsable: false,
+
         // Explicitly ensure we can see stencil content
         snapline: true,
         resizing: true,
@@ -63,7 +61,7 @@ const get = (graph, container, StencilConstructor) => {
         layoutOptions: {
             columns: 1,
             center: true,
-            resizeToFit: false, /* Change to false */
+            resizeToFit: false, /* true causes shapes to be invisible */
             dx: 50, // Add horizontal spacing
             dy: 20  // Add vertical spacing between items
         },
@@ -80,28 +78,24 @@ const get = (graph, container, StencilConstructor) => {
         width: 100,
         height: 50,
         visible: true,
-        zIndex: 100, // Much higher z-index to ensure visibility
         opacity: 1  // Full opacity
     });
     const process = new shapes.ProcessShape({
         width: 75,
         height: 75,
         visible: true,
-        zIndex: 100,
         opacity: 1
     });
     const store = new shapes.StoreShape({
         width: 100,
         height: 50,
         visible: true,
-        zIndex: 100,
         opacity: 1
     });
     const text = new shapes.TextBlock({
         width: 100,
         height: 25,
         visible: true,
-        zIndex: 100,
         opacity: 1
     });
 
@@ -110,14 +104,12 @@ const get = (graph, container, StencilConstructor) => {
         width: 100,
         height: 50,
         visible: true,
-        zIndex: 100,
         opacity: 1
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
         width: 50,
         height: 50,
         visible: true,
-        zIndex: 100,
         opacity: 1
     });
 
@@ -126,7 +118,6 @@ const get = (graph, container, StencilConstructor) => {
         width: 50,
         height: 50,
         visible: true,
-        zIndex: 100,
         opacity: 1
     });
 

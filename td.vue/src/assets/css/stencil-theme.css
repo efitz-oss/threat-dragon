@@ -38,8 +38,8 @@
 /* ================= STENCIL GROUPS ================= */
 .td-stencil-theme .x6-widget-stencil-group {
   visibility: visible;
-  display: block; /* Revert to block */
-  height: auto; /* Keep auto height */
+  /* display: block; /* Revert to block */
+  /* height: auto; /* Keep auto height */
   /* min-height: var(--td-stencil-group-min-height); /* Let content determine height */
   width: 100%; /* Keep width */
   padding: 0; /* Keep padding */
@@ -145,6 +145,7 @@
 .td-stencil-theme .x6-widget-stencil-content {
   order: 2; /* Content comes second */
   flex-grow: 1; /* Allow content to take remaining space */
+  flex-shrink: 1;
   overflow-y: auto; /* Allow scrolling if content overflows */
   }
 
@@ -224,13 +225,6 @@
     display: block;
     opacity: 1;
     pointer-events: auto; /* Keep pointer-events override */
-  }
-  
-  /* Explicitly set fill for common shapes to avoid black boxes */
-  .td-stencil-theme svg path,
-  .td-stencil-theme svg rect,
-  .td-stencil-theme svg circle {
-      /* fill: transparent; /* Let library handle */
   }
   
   /* Explicitly set fill for common shapes within nodes to avoid black boxes */
