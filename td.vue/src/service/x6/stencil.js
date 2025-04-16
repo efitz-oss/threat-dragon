@@ -1,6 +1,7 @@
 // Stencil implementation for diagram editing
 import shapes from './shapes/index.js';
 import factory from './factory.js';
+import { tc } from '@/i18n/index.js';
 
 /**
  * Gets or creates a stencil for the graph
@@ -45,7 +46,7 @@ const get = (graph, container, StencilConstructor) => {
     const stencilConfig = {
         target: graph,
         stencilGraphHeight: 'auto', // Enable auto height
-        title: 'Shapes',
+        title: tc('threatmodel.stencil.title', 'Shapes'),
         collapsable: false,
 
         // Explicitly ensure we can see stencil content
@@ -56,7 +57,7 @@ const get = (graph, container, StencilConstructor) => {
         groups: [
             {
                 name: 'components',
-                title: 'Components',
+                title: tc('threatmodel.stencil.components', 'Components'),
                 collapsable: true,
                 collapsed: false,
                 graphHeight: getGroupHeight('components'), // Set explicit height
@@ -64,7 +65,7 @@ const get = (graph, container, StencilConstructor) => {
             },
             {
                 name: 'boundaries',
-                title: 'Boundaries',
+                title: tc('threatmodel.stencil.boundaries', 'Boundaries'),
                 collapsable: true,
                 collapsed: false,
                 graphHeight: getGroupHeight('boundaries'), // Set explicit height
@@ -72,7 +73,7 @@ const get = (graph, container, StencilConstructor) => {
             },
             {
                 name: 'metadata',
-                title: 'Metadata',
+                title: tc('threatmodel.stencil.metadata', 'Metadata'),
                 collapsable: true,
                 collapsed: false,
                 graphHeight: getGroupHeight('metadata'), // Set explicit height
@@ -87,7 +88,7 @@ const get = (graph, container, StencilConstructor) => {
             dy: 5   // Keep reduced vertical spacing between items
         },
         search: {
-            placeholder: 'Search shapes'
+            placeholder: tc('threatmodel.stencil.search', 'Search shapes')
         }
     };
 
@@ -233,9 +234,9 @@ const get = (graph, container, StencilConstructor) => {
 
         // Create a mapping from display titles to internal group names
         const titleToName = {
-            'Components': 'components',
-            'Boundaries': 'boundaries',
-            'Metadata': 'metadata'
+            [tc('threatmodel.stencil.components', 'Components')]: 'components',
+            [tc('threatmodel.stencil.boundaries', 'Boundaries')]: 'boundaries',
+            [tc('threatmodel.stencil.metadata', 'Metadata')]: 'metadata'
         };
 
         groups.forEach(group => {

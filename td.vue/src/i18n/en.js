@@ -339,11 +339,12 @@ const eng = {
             }
         },
         stencil: {
+            title: 'Shapes',
             boundaries: 'Boundaries',
             components: 'Components',
             entities: 'Entities',
             metadata: 'Metadata',
-            search: 'Search',
+            search: 'Search shapes',
             notFound: "We don't have that yet, want to open an issue? :)"
         },
         shapes: {
@@ -371,6 +372,11 @@ const eng = {
         exportPdf: 'PDF Report',
         exportTd: 'Original (Threat Dragon)',
         exportOtm: 'Open Threat Model (OTM)',
+        exportFormats: {
+            png: 'PNG',
+            jpeg: 'JPEG',
+            svg: 'SVG'
+        },
         import: 'Import',
         ok: 'OK',
         open: 'Open',
