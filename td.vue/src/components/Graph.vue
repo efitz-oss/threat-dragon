@@ -71,7 +71,7 @@ export default {
         let t = () => '';
         // Initialize i18n in setup function
         let i18nInstance;
-        let locale = ref('eng');
+        const locale = ref('eng');
 
         try {
             i18nInstance = useI18n();

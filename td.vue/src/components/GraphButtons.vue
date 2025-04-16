@@ -1,23 +1,46 @@
 <template>
     <div class="graph-buttons-wrapper">
         <BButtonGroup class="graph-button-group">
-            <td-form-button :on-btn-click="deleteSelected" icon="trash" :title="t('threatmodel.controlButtons.delete')"
+            <td-form-button
+                :on-btn-click="deleteSelected"
+                icon="trash"
+                :title="t('threatmodel.controlButtons.delete')"
                 text="" />
 
-            <td-form-button :on-btn-click="showShortcuts" icon="keyboard"
-                :title="t('threatmodel.controlButtons.shortcuts')" text="" />
-
-            <td-form-button :on-btn-click="undo" icon="undo" :title="t('threatmodel.controlButtons.undo')" text="" />
-
-            <td-form-button :on-btn-click="redo" icon="redo" :title="t('threatmodel.controlButtons.redo')" text="" />
-
-            <td-form-button :on-btn-click="zoomIn" icon="search-plus" :title="t('threatmodel.controlButtons.zoomIn')"
+            <td-form-button
+                :on-btn-click="showShortcuts"
+                icon="keyboard"
+                :title="t('threatmodel.controlButtons.shortcuts')"
                 text="" />
 
-            <td-form-button :on-btn-click="zoomOut" icon="search-minus" :title="t('threatmodel.controlButtons.zoomOut')"
+            <td-form-button
+                :on-btn-click="undo"
+                icon="undo"
+                :title="t('threatmodel.controlButtons.undo')"
                 text="" />
 
-            <td-form-button :on-btn-click="toggleGrid" icon="th" :title="t('threatmodel.controlButtons.toggleGrid')"
+            <td-form-button
+                :on-btn-click="redo"
+                icon="redo"
+                :title="t('threatmodel.controlButtons.redo')"
+                text="" />
+
+            <td-form-button
+                :on-btn-click="zoomIn"
+                icon="search-plus"
+                :title="t('threatmodel.controlButtons.zoomIn')"
+                text="" />
+
+            <td-form-button
+                :on-btn-click="zoomOut"
+                icon="search-minus"
+                :title="t('threatmodel.controlButtons.zoomOut')"
+                text="" />
+
+            <td-form-button
+                :on-btn-click="toggleGrid"
+                icon="th"
+                :title="t('threatmodel.controlButtons.toggleGrid')"
                 text="" />
 
             <b-dropdown id="export-graph-btn" right :text="t('forms.export')">
@@ -34,7 +57,11 @@
 
             <td-form-button :on-btn-click="closeDiagram" icon="times" :text="t('forms.close')" />
 
-            <td-form-button :is-primary="true" :on-btn-click="save" icon="save" :text="t('forms.save')" />
+            <td-form-button
+                :is-primary="true"
+                :on-btn-click="save"
+                icon="save"
+                :text="t('forms.save')" />
         </BButtonGroup>
     </div>
 </template>

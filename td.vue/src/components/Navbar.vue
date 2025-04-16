@@ -1,7 +1,9 @@
 <template>
     <b-navbar id="navbar" toggleable="lg" fixed="top">
         <b-navbar-brand :to="username ? '/dashboard' : '/'" class="td-brand">
-            <b-img :src="require('@/assets/threatdragon_logo_image.svg')" class="td-brand-img"
+            <b-img
+                :src="require('@/assets/threatdragon_logo_image.svg')"
+                class="td-brand-img"
                 alt="Threat Dragon Logo" />
             Threat Dragon v{{ packageBuildVersion
             }}{{ packageBuildState }}
@@ -21,28 +23,56 @@
                     ({{ providerDisplayName }}) {{ username }}
                 </b-nav-text>
                 <b-nav-item v-show="username" id="nav-sign-out" @click="onLogOut">
-                    <font-awesome-icon v-tooltip.hover icon="sign-out-alt" class="td-fa-nav" :title="t('nav.logOut')" />
+                    <font-awesome-icon
+                        v-tooltip.hover
+                        icon="sign-out-alt"
+                        class="td-fa-nav"
+                        :title="t('nav.logOut')" />
                 </b-nav-item>
                 <b-nav-item v-if="googleEnabled" id="nav-tos" to="/tos">
-                    <font-awesome-icon v-tooltip.hover icon="file-contract" class="td-fa-nav" :title="t('nav.tos')" />
+                    <font-awesome-icon
+                        v-tooltip.hover
+                        icon="file-contract"
+                        class="td-fa-nav"
+                        :title="t('nav.tos')" />
                 </b-nav-item>
                 <b-nav-item v-if="googleEnabled" id="nav-privacy" to="/privacy">
-                    <font-awesome-icon v-tooltip.hover icon="shield-alt" class="td-fa-nav" :title="t('nav.privacy')" />
+                    <font-awesome-icon
+                        v-tooltip.hover
+                        icon="shield-alt"
+                        class="td-fa-nav"
+                        :title="t('nav.privacy')" />
                 </b-nav-item>
-                <b-nav-item id="nav-docs" href="https://owasp.org/www-project-threat-dragon/docs-2/" target="_blank"
+                <b-nav-item
+                    id="nav-docs"
+                    href="https://owasp.org/www-project-threat-dragon/docs-2/"
+                    target="_blank"
                     rel="noopener noreferrer">
-                    <font-awesome-icon v-tooltip.hover icon="question-circle" class="td-fa-nav"
+                    <font-awesome-icon
+                        v-tooltip.hover
+                        icon="question-circle"
+                        class="td-fa-nav"
                         :title="t('desktop.help.docs')" />
                 </b-nav-item>
-                <b-nav-item id="nav-tm-cheat-sheet"
+                <b-nav-item
+                    id="nav-tm-cheat-sheet"
                     href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
-                    target="_blank" rel="noopener noreferrer">
-                    <font-awesome-icon v-tooltip.hover icon="gift" class="td-fa-nav"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <font-awesome-icon
+                        v-tooltip.hover
+                        icon="gift"
+                        class="td-fa-nav"
                         :title="t('desktop.help.sheets')" />
                 </b-nav-item>
-                <b-nav-item id="nav-owasp-td" href="https://owasp.org/www-project-threat-dragon/" target="_blank"
+                <b-nav-item
+                    id="nav-owasp-td"
+                    href="https://owasp.org/www-project-threat-dragon/"
+                    target="_blank"
                     rel="noopener noreferrer">
-                    <b-img :src="require('@/assets/owasp.svg')" class="td-fa-nav td-owasp-logo"
+                    <b-img
+                        :src="require('@/assets/owasp.svg')"
+                        class="td-fa-nav td-owasp-logo"
                         :title="t('desktop.help.visit')" />
                 </b-nav-item>
             </b-navbar-nav>

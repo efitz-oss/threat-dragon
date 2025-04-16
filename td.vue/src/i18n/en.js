@@ -206,6 +206,10 @@ const eng = {
             title: 'Create New Threat Model',
             description: 'Enter information about your new threat model'
         },
+        edit: {
+            title: 'Edit Threat Model',
+            description: 'Modify information about your threat model'
+        },
         placeholder: {
             title: 'Threat Model Title',
             owner: 'Owner Name or Team',

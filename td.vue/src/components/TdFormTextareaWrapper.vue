@@ -1,5 +1,12 @@
+// The TdFormTextareaWrapper component is an enhanced wrapper around
+// Bootstrap Vue's standard textarea that provides auto-resizing
+// functionality, ensuring the textarea automatically adjusts its height
+// based on content. It includes error handling, reactive height
+// adjustments using a MutationObserver, and full Vue 3 compatibility.
+
 <template>
-    <b-form-textarea v-bind="$attrs" ref="safeTextarea" no-resize />
+    <b-form-textarea v-bind="$attrs" ref="safeTextarea" :value="modelValue" no-resize
+        @input="$emit('update:modelValue', $event.target.value)" @change="$emit('change', $event.target.value)" />
 </template>
 
 <script>
