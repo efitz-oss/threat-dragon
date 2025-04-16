@@ -5,7 +5,7 @@ const deu = {
     operator: {
         operatedby: 'Diese Website und Instanz von OWASP Threat Dragon wird betrieben von:',
         name: `${process.env.VUE_APP_OPERATOR_NAME || 'dem Betreiber dieser Website'}`,
-        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(Kontaktinformationen nicht angegeben)'}`,
+        contact: 'Kontakt: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(Kontaktinformationen nicht angegeben)'),
     },
     tos: {
         title: 'Nutzungsbedingungen',

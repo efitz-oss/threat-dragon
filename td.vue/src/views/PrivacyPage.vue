@@ -11,7 +11,8 @@
             <b-row>
                 <b-col md="12">
                     <div class="td-operator mt-5 text-left"> {{ t('operator.operatedby') }} </div>
-                    <div class="td-operator mt-5 text-left"> {{ t('operator.name') }} </div>
+                    <div class="td-operator mt-2 text-left"> {{ t('operator.name') }} </div>
+                    <div class="td-operator mt-2 text-left"> {{ t('operator.contact') }} </div>
                 </b-col>
             </b-row>
             <b-row>
@@ -26,11 +27,6 @@
                             </div>
                         </template>
                     </div>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col md="12">
-                    <div class="td-contact mt-5 text-left"> {{ t('operator.contact') }} </div>
                 </b-col>
             </b-row>
         </div>

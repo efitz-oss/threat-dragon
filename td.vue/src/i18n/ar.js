@@ -5,7 +5,7 @@ const ara = {
     operator: {
         operatedby: 'يتم تشغيل هذا الموقع ونسخة OWASP Threat Dragon بواسطة:',
         name: `${process.env.VUE_APP_OPERATOR_NAME || 'مشغل هذا الموقع'}`,
-        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(لم يتم تقديم معلومات الاتصال)'}`,
+        contact: 'للاتصال: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(لم يتم تقديم معلومات الاتصال)'),
     },
     tos: {
         title: 'شروط الخدمة',

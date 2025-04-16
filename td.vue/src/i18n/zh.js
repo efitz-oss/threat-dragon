@@ -5,7 +5,7 @@ const zho = {
     operator: {
         operatedby: '本网站和OWASP Threat Dragon实例由以下机构运营：',
         name: `${process.env.VUE_APP_OPERATOR_NAME || '本网站的运营者'}`,
-        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(未提供联系信息)'}`,
+        contact: '联系方式: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(未提供联系信息)'),
     },
     tos: {
         title: '服务条款',

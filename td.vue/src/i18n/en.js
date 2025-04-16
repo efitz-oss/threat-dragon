@@ -13,7 +13,7 @@ const eng = {
     operator: {
         operatedby: 'This web site and instance of OWASP Threat Dragon is operated by:',
         name: `${process.env.VUE_APP_OPERATOR_NAME || 'the operator of this web site'}`,
-        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(contact information not provided)'}`,
+        contact: 'Contact: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(contact information not provided)'),
     },
     tos: {
         title: 'Terms of Service',
