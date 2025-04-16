@@ -66,24 +66,53 @@
 /* Group content container */
 .td-stencil-theme .x6-widget-stencil-group-content {
   visibility: visible;
-  display: block; /* Revert to block */
+  display: block; /* Use block display */
   opacity: 1;
-  height: auto; /* Force auto height */
-  max-height: none; /* Remove max-height constraint */
-  overflow-y: auto; /* Enable vertical scrolling */
+  height: auto; /* Allow auto height */
   width: 100%;
-  padding: 0; /* Force no padding */
-  margin: 0; /* Force no margin */
-  box-sizing: content-box; /* Ensure padding doesn't add to height */
+  padding: 0; /* No padding */
+  margin: 0; /* No margin */
+  box-sizing: border-box; /* Include padding in dimensions */
+  position: relative; /* Ensure proper positioning context */
+  /* overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Override any max-height set by JavaScript */
+.td-stencil-theme .x6-widget-stencil-group[data-name="components"] .x6-widget-stencil-group-content {
+  max-height: 350px !important; /* Force max-height for components group: 4 * 100px */
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="boundaries"] .x6-widget-stencil-group-content {
+  max-height: 200px !important; /* Force max-height for boundaries group: 2 * 100px */
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="metadata"] .x6-widget-stencil-group-content {
+  max-height: 100px !important; /* Force max-height for metadata group */
 }
 
 /* Add a new rule for the td-stencil-container class */
 .td-stencil-container .x6-widget-stencil-group-content {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto; /* Don't grow or shrink */
-  min-height: 200px; /* Ensure minimum height for content */
+  display: block; /* Use block instead of flex */
+  position: relative; /* Ensure proper positioning context */
+  min-height: 200px; /* Minimum height */
   /* max-height is now set dynamically in JavaScript based on shape count */
+  /* overflow-y: auto; /* Enable scrolling if needed */
+}
+
+/* Specific heights for different group contents */
+.td-stencil-container .x6-widget-stencil-group[data-name="components"] .x6-widget-stencil-group-content {
+  min-height: 350px; /* Match the graph height: 4 * 100px */
+  height: auto; /* Allow auto height */
+}
+
+.td-stencil-container .x6-widget-stencil-group[data-name="boundaries"] .x6-widget-stencil-group-content {
+  min-height: 200px; /* Match the graph height: 2 * 100px */
+  height: auto; /* Allow auto height */
+}
+
+.td-stencil-container .x6-widget-stencil-group[data-name="metadata"] .x6-widget-stencil-group-content {
+  min-height: 100px; /* Match the graph height */
+  height: auto; /* Allow auto height */
 }
 
 /* Hide content in collapsed groups */
@@ -163,7 +192,7 @@
   order: 2; /* Content comes second */
   flex-grow: 1; /* Allow content to take remaining space */
   flex-shrink: 1;
-  overflow-y: auto /*; /* Force scrolling if content overflows */
+  /* overflow-y: auto /*; /* Force scrolling if content overflows */
   /* max-height: none; /* Remove max-height constraint */
   }
 
@@ -193,31 +222,95 @@
 /* ================= GRAPH ELEMENTS IN STENCIL ================= */
 .td-stencil-theme .x6-graph {
   width: 100%;
-  height: auto; /* Use auto height instead of fit-content */
+  /* Calculate height based on components: 4 components * 100px */
+  height: 350px; /* Fixed height for components group: 4*100px */
   margin: 0 auto;
   position: relative;
   z-index: 10; /* Fixed z-index to avoid interfering with other UI elements */
   background: transparent; /* Keep transparent background */
   visibility: visible;
   opacity: 1;
-  min-height: unset; /* Reset min-height without setting to 0 */
+  min-height: 350px; /* Ensure minimum height matches calculated height */
   max-height: none; /* Remove any max-height constraints */
   display: block; /* Use block display instead of flex */
   overflow: visible; /* Ensure content is not clipped */
 }
+
+/* Specific heights for different groups based on component count */
+.td-stencil-theme .x6-widget-stencil-group[data-name="components"] .x6-graph {
+  height: 350px; /* 4 components * 100px */
+  min-height: 350px;
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="boundaries"] .x6-graph {
+  height: 200px; /* 2 components * 100px */
+  min-height: 200px;
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="metadata"] .x6-graph {
+  height: 100px; /* 1 component * 100px */
+  min-height: 100px;
+}
 /* SVG elements */
-.td-stencil-theme .x6-graph svg {
+.td-stencil-theme .x6-graph svg.x6-graph-svg {
     visibility: visible;
     opacity: 1;
     z-index: 10; /* Fixed z-index to avoid interfering with other UI elements */
     pointer-events: auto;
     width: 100%;
-    height: fit-content; /* Force height to fit content */
+    height: 100%; /* Match parent height exactly */
     display: block; /* Keep block */
     position: relative;
-    min-height: unset; /* Reset min-height without setting to 0 */
+    min-height: inherit; /* Inherit min-height from parent */
     max-height: none; /* Remove any max-height constraints */
   }
+
+/* Ensure the SVG viewport matches the SVG size */
+.td-stencil-theme .x6-graph-svg-viewport {
+    width: 100%;
+    height: 100%;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Specific heights for SVG viewport in different groups */
+.td-stencil-theme .x6-widget-stencil-group[data-name="components"] .x6-graph-svg-viewport {
+    height: 350px; /* Match the graph height: 4 * 100px */
+    min-height: 350px;
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="boundaries"] .x6-graph-svg-viewport {
+    height: 200px; /* Match the graph height: 2 * 100px */
+    min-height: 200px;
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="metadata"] .x6-graph-svg-viewport {
+    height: 100px; /* Match the graph height */
+    min-height: 100px;
+}
+
+/* Ensure grid has the same height as the graph */
+.td-stencil-theme .x6-graph-grid {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+}
+
+/* Specific heights for SVG in different groups */
+.td-stencil-theme .x6-widget-stencil-group[data-name="components"] .x6-graph svg.x6-graph-svg {
+    height: 350px; /* Match the graph height: 4 * 100px */
+    min-height: 350px;
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="boundaries"] .x6-graph svg.x6-graph-svg {
+    height: 200px; /* Match the graph height: 2 * 100px */
+    min-height: 200px;
+}
+
+.td-stencil-theme .x6-widget-stencil-group[data-name="metadata"] .x6-graph svg.x6-graph-svg {
+    height: 100px; /* Match the graph height */
+    min-height: 100px;
+}
 
 
 /* Shape elements */
