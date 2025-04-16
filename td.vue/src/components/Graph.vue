@@ -304,18 +304,28 @@ export default {
             watch(i18nInstance.locale, (newLocale, oldLocale) => {
                 console.debug(`Locale changed from ${oldLocale} to ${newLocale}, reinitializing stencil`);
 
-                // Dispose existing stencil instance if it exists
-                if (stencilInstance.value && typeof stencilInstance.value.dispose === 'function') {
-                    stencilInstance.value.dispose();
-                    stencilInstance.value = null;
-                }
+                // Completely clean up the stencil container
+                if (stencilContainer.value) {
+                    // First dispose the stencil instance properly
+                    if (stencilInstance.value && typeof stencilInstance.value.dispose === 'function') {
+                        stencilInstance.value.dispose();
+                        stencilInstance.value = null;
+                    }
 
-                // Re-initialize stencil with new localized strings
-                if (graph.value && stencilContainer.value) {
-                    console.debug('Reinitializing stencil with new locale');
-                    stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+                    // Then clear the container's HTML content
+                    stencilContainer.value.innerHTML = '';
+
+                    // Re-initialize stencil with new localized strings
+                    if (graph.value) {
+                        console.debug('Reinitializing stencil with new locale');
+                        nextTick(() => {
+                            stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
+                        });
+                    } else {
+                        console.error('Graph not ready for stencil reinitialization');
+                    }
                 } else {
-                    console.error('Graph or stencil container not ready for stencil reinitialization');
+                    console.error('Stencil container not available for reinitialization');
                 }
             });
         });

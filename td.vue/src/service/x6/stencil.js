@@ -42,6 +42,10 @@ const get = (graph, container, StencilConstructor) => {
         return (count * 100) + 50; // 100px per shape + 50px padding
     };
 
+    // Force a fresh translation lookup each time the stencil is created
+    // This ensures we get the current locale's translations
+    console.debug('Getting translations for stencil with current locale');
+
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
@@ -233,11 +237,11 @@ const get = (graph, container, StencilConstructor) => {
         console.debug(`Found ${groups.length} stencil groups`);
 
         // Create a mapping from display titles to internal group names
-        const titleToName = {
-            [tc('threatmodel.stencil.components', 'Components')]: 'components',
-            [tc('threatmodel.stencil.boundaries', 'Boundaries')]: 'boundaries',
-            [tc('threatmodel.stencil.metadata', 'Metadata')]: 'metadata'
-        };
+        // Force a fresh translation lookup for the mapping
+        const titleToName = {};
+        titleToName[tc('threatmodel.stencil.components', 'Components')] = 'components';
+        titleToName[tc('threatmodel.stencil.boundaries', 'Boundaries')] = 'boundaries';
+        titleToName[tc('threatmodel.stencil.metadata', 'Metadata')] = 'metadata';
 
         groups.forEach(group => {
             // Get the title element and extract the text
