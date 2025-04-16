@@ -39,17 +39,24 @@
 
 <script>
 import { useI18n } from '@/i18n';
+import i18n from '@/i18n';
 
 export default {
     name: 'PrivacyPage',
     setup() {
-        const { t } = useI18n();
-        
-        // Get all Privacy sections directly as an object from translations
+        const { t, locale } = useI18n();
+
+        // Get the current locale
+        const currentLocale = locale.value;
+
+        // Access the raw messages to get the sections array directly
+        const messages = i18n.get().global.messages.value;
+        const privacySections = messages[currentLocale]?.privacy?.sections || [];
+
         const privacy = {
-            sections: t('privacy.sections')
+            sections: privacySections
         };
-        
+
         return {
             t,
             privacy

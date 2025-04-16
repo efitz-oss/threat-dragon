@@ -1,92 +1,47 @@
 <template>
     <b-row>
         <b-col v-if="model && model.summary">
-            <b-card
-                id="parent-card"
-                :header="`${$t('threatmodel.editing')}: ${model.summary.title}`"
-            >
+            <b-card id="parent-card" :header="`${$t('threatmodel.editing')}: ${model.summary.title}`">
                 <b-form @submit="onSubmit">
                     <b-form-row>
                         <b-col>
-                            <b-form-group
-                                id="title-group"
-                                :label="$t('threatmodel.title') + ' *'"
-                                label-for="title"
-                                class="required-field"
-                            >
-                                <b-form-input
-                                    id="title"
-                                    v-model="model.summary.title"
-                                    type="text"
-                                    required
-                                    @input="onModifyModel()"
-                                />
+                            <b-form-group id="title-group" :label="$t('threatmodel.title') + ' *'" label-for="title"
+                                class="required-field">
+                                <b-form-input id="title" v-model="model.summary.title" type="text" required
+                                    @input="onModifyModel()" />
                             </b-form-group>
                         </b-col>
                     </b-form-row>
                     <b-form-row>
                         <b-col md="6">
-                            <b-form-group
-                                id="owner-group"
-                                :label="$t('threatmodel.owner')"
-                                label-for="owner"
-                            >
-                                <b-form-input
-                                    id="owner"
-                                    v-model="model.summary.owner"
-                                    type="text"
-                                    @input="onModifyModel()"
-                                />
+                            <b-form-group id="owner-group" :label="$t('threatmodel.owner')" label-for="owner">
+                                <b-form-input id="owner" v-model="model.summary.owner" type="text"
+                                    @input="onModifyModel()" />
                             </b-form-group>
                         </b-col>
                         <b-col md="6">
-                            <b-form-group
-                                id="reviewer-group"
-                                :label="$t('threatmodel.reviewer')"
-                                label-for="reviewer"
-                            >
-                                <b-form-input
-                                    id="reviewer"
-                                    v-model="model.detail.reviewer"
-                                    type="text"
-                                    @input="onModifyModel()"
-                                />
+                            <b-form-group id="reviewer-group" :label="$t('threatmodel.reviewer')" label-for="reviewer">
+                                <b-form-input id="reviewer" v-model="model.detail.reviewer" type="text"
+                                    @input="onModifyModel()" />
                             </b-form-group>
                         </b-col>
                     </b-form-row>
                     <b-form-row>
                         <b-col>
-                            <b-form-group
-                                id="description-group"
-                                :label="$t('threatmodel.description')"
-                                label-for="description"
-                            >
-                                <td-safe-form-textarea
-                                    id="description"
-                                    v-model="model.summary.description"
-                                    type="text"
-                                    rows="3"
-                                    @input="onModifyModel()"
-                                />
+                            <b-form-group id="description-group" :label="$t('threatmodel.description')"
+                                label-for="description">
+                                <td-safe-form-textarea id="description" v-model="model.summary.description" type="text"
+                                    rows="3" @input="onModifyModel()" />
                             </b-form-group>
                         </b-col>
                     </b-form-row>
                     <b-form-row>
                         <b-col>
-                            <b-form-group
-                                id="contributors-group"
-                                :label="$t('threatmodel.contributors')"
-                                label-for="contributors"
-                            >
-                                <b-form-tags
-                                    id="contributors"
-                                    v-model="contributors"
-                                    :placeholder="$t('threatmodel.contributorsPlaceholder')"
-                                    variant="primary"
-                                    separator=",;"
-                                    tag-class="mx-2"
-                                    @input="onModifyModel()"
-                                />
+                            <b-form-group id="contributors-group" :label="$t('threatmodel.contributors')"
+                                label-for="contributors">
+                                <b-form-tags id="contributors" v-model="contributors"
+                                    :placeholder="$t('threatmodel.contributorsPlaceholder')" variant="primary"
+                                    separator=",;" tag-class="mx-2" @input="onModifyModel()" />
                             </b-form-group>
                         </b-col>
                     </b-form-row>
@@ -98,59 +53,34 @@
                     <b-form-row>
                         <b-col v-for="(diagram, idx) in model.detail.diagrams" :key="idx" md="8">
                             <div class="diagram-inputs">
-                                <b-dropdown
-                                    variant="secondary"
-                                    class="select-diagram-type"
-                                    :text="model.detail.diagrams[idx].diagramType"
-                                >
-                                    <b-dropdown-item-button
-                                        @click="onDiagramTypeClick(idx, 'CIA')"
-                                    >
+                                <b-dropdown variant="secondary" class="select-diagram-type"
+                                    :text="model.detail.diagrams[idx].diagramType">
+                                    <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'CIA')">
                                         {{ $t('threatmodel.diagram.cia.select') }}
                                     </b-dropdown-item-button>
-                                    <b-dropdown-item-button
-                                        @click="onDiagramTypeClick(idx, 'DIE')"
-                                    >
+                                    <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'DIE')">
                                         {{ $t('threatmodel.diagram.die.select') }}
                                     </b-dropdown-item-button>
-                                    <b-dropdown-item-button
-                                        @click="onDiagramTypeClick(idx, 'LINDDUN')"
-                                    >
+                                    <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'LINDDUN')">
                                         {{ $t('threatmodel.diagram.linddun.select') }}
                                     </b-dropdown-item-button>
-                                    <b-dropdown-item-button
-                                        @click="onDiagramTypeClick(idx, 'PLOT4ai')"
-                                    >
+                                    <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'PLOT4ai')">
                                         {{ $t('threatmodel.diagram.plot4ai.select') }}
                                     </b-dropdown-item-button>
-                                    <b-dropdown-item-button
-                                        @click="onDiagramTypeClick(idx, 'STRIDE')"
-                                    >
+                                    <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'STRIDE')">
                                         {{ $t('threatmodel.diagram.stride.select') }}
                                     </b-dropdown-item-button>
-                                    <b-dropdown-item-button
-                                        @click="onDiagramTypeClick(idx, 'Generic')"
-                                    >
+                                    <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'Generic')">
                                         {{ $t('threatmodel.diagram.generic.select') }}
                                     </b-dropdown-item-button>
                                 </b-dropdown>
-                                <b-form-input
-                                    v-model="model.detail.diagrams[idx].title"
-                                    type="text"
-                                    class="diagram-title"
-                                    placeholder="Diagram title"
-                                />
-                                <b-form-input
-                                    v-model="model.detail.diagrams[idx].description"
-                                    :placeholder="model.detail.diagrams[idx].placeholder"
-                                    type="text"
-                                    class="diagram-description"
-                                />
-                                <b-button
-                                    variant="secondary"
-                                    class="remove-diagram-btn"
-                                    @click="onRemoveDiagramClick(idx)"
-                                >
+                                <b-form-input v-model="model.detail.diagrams[idx].title" type="text"
+                                    class="diagram-title" placeholder="Diagram title" />
+                                <b-form-input v-model="model.detail.diagrams[idx].description"
+                                    :placeholder="model.detail.diagrams[idx].placeholder" type="text"
+                                    class="diagram-description" />
+                                <b-button variant="secondary" class="remove-diagram-btn"
+                                    @click="onRemoveDiagramClick(idx)">
                                     <font-awesome-icon icon="times" />
                                     {{ $t('forms.remove') }}
                                 </b-button>
@@ -159,11 +89,7 @@
                     </b-form-row>
                     <b-form-row>
                         <b-col md="6">
-                            <a
-                                href="javascript:void(0)"
-                                class="add-diagram-link m-2"
-                                @click="onAddDiagramClick"
-                            >
+                            <a href="javascript:void(0)" class="add-diagram-link m-2" @click="onAddDiagramClick">
                                 <font-awesome-icon icon="plus" />
                                 {{ $t('threatmodel.diagram.addNewDiagram') }}
                             </a>
@@ -173,25 +99,12 @@
                     <b-form-row>
                         <b-col class="text-right mt-5">
                             <BButtonGroup>
-                                <td-form-button
-                                    id="td-save-btn"
-                                    :is-primary="true"
-                                    :on-btn-click="onSaveClick"
-                                    icon="save"
-                                    :text="$t('forms.save')"
-                                />
-                                <td-form-button
-                                    id="td-reload-btn"
-                                    :on-btn-click="onReloadClick"
-                                    icon="undo"
-                                    :text="$t('forms.reload')"
-                                />
-                                <td-form-button
-                                    id="td-close-btn"
-                                    :on-btn-click="onCloseClick"
-                                    icon="times"
-                                    :text="$t('forms.close')"
-                                />
+                                <td-form-button id="td-save-btn" :is-primary="true" :on-btn-click="onSaveClick"
+                                    icon="save" :text="$t('forms.save')" />
+                                <td-form-button id="td-reload-btn" :on-btn-click="onReloadClick" icon="undo"
+                                    :text="$t('forms.reload')" />
+                                <td-form-button id="td-close-btn" :on-btn-click="onCloseClick" icon="times"
+                                    :text="$t('forms.close')" />
                             </BButtonGroup>
                         </b-col>
                     </b-form-row>
@@ -240,11 +153,11 @@ export default {
             this.$store.dispatch(tmActions.update, { fileId: this.$route.params.fileId });
             console.debug('File ID stored from route params:', this.$route.params.fileId);
         }
-        
+
         // For Google Drive provider, check that we have model data
         if (this.providerType === 'google' && (!this.model || !this.model.summary)) {
             console.debug('Google provider detected but missing model data, attempting to load from fileId:', this.fileId);
-            
+
             // If we have a fileId but no model data, try to fetch the model data
             if (this.fileId) {
                 try {
@@ -269,7 +182,7 @@ export default {
             evt.preventDefault();
             if (
                 this.$route.name === 'gitThreatModelCreate' ||
-                    this.$route.name === 'googleThreatModelCreate'
+                this.$route.name === 'googleThreatModelCreate'
             ) {
                 await this.$store.dispatch(tmActions.create);
             } else {
@@ -283,12 +196,14 @@ export default {
         async onCloseClick(evt) {
             evt.preventDefault();
             if (await this.restoreAsync()) {
-                // Ensure all required params are included
+                // Ensure all required params are included, but exclude 'provider' as it's handled via meta
                 const params = {
                     ...this.$route.params,
-                    provider: this.$route.params.provider || 'local', // Default to local if no provider
-                    folder: this.$route.params.folder || 'demo'       // Default to demo if no folder
+                    folder: this.$route.params.folder || 'demo'  // Default to demo if no folder
                 };
+                // Remove provider from params as it's not part of the route definition
+                delete params.provider;
+
                 this.$router.push({
                     name: `${this.providerType}ThreatModel`,
                     params: params
@@ -315,53 +230,53 @@ export default {
             let placeholder;
             let thumbnail;
             switch (type) {
-            case 'CIA':
-                thumbnail = './public/content/images/thumbnail.cia.jpg';
-                defaultTitle = this.$t('threatmodel.diagram.cia.defaultTitle');
-                placeholder = this.$t('threatmodel.diagram.cia.defaultDescription');
-                break;
-            case 'DIE':
-                thumbnail = './public/content/images/thumbnail.die.jpg';
-                defaultTitle = this.$t('threatmodel.diagram.die.defaultTitle');
-                placeholder = this.$t('threatmodel.diagram.die.defaultDescription');
-                break;
-            case 'LINDDUN':
-                thumbnail = './public/content/images/thumbnail.linddun.jpg';
-                defaultTitle = this.$t('threatmodel.diagram.linddun.defaultTitle');
-                placeholder = this.$t('threatmodel.diagram.linddun.defaultDescription');
-                break;
-            case 'PLOT4ai':
-                thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
-                defaultTitle = this.$t('threatmodel.diagram.plot4ai.defaultTitle');
-                placeholder = this.$t('threatmodel.diagram.plot4ai.defaultDescription');
-                break;
-            case 'STRIDE':
-                thumbnail = './public/content/images/thumbnail.stride.jpg';
-                defaultTitle = this.$t('threatmodel.diagram.stride.defaultTitle');
-                placeholder = this.$t('threatmodel.diagram.stride.defaultDescription');
-                break;
-            default:
-                thumbnail = './public/content/images/thumbnail.jpg';
-                defaultTitle = this.$t('threatmodel.diagram.generic.defaultTitle');
-                placeholder = this.$t('threatmodel.diagram.generic.defaultDescription');
-                type = this.$t('threatmodel.diagram.generic.select');
+                case 'CIA':
+                    thumbnail = './public/content/images/thumbnail.cia.jpg';
+                    defaultTitle = this.$t('threatmodel.diagram.cia.defaultTitle');
+                    placeholder = this.$t('threatmodel.diagram.cia.defaultDescription');
+                    break;
+                case 'DIE':
+                    thumbnail = './public/content/images/thumbnail.die.jpg';
+                    defaultTitle = this.$t('threatmodel.diagram.die.defaultTitle');
+                    placeholder = this.$t('threatmodel.diagram.die.defaultDescription');
+                    break;
+                case 'LINDDUN':
+                    thumbnail = './public/content/images/thumbnail.linddun.jpg';
+                    defaultTitle = this.$t('threatmodel.diagram.linddun.defaultTitle');
+                    placeholder = this.$t('threatmodel.diagram.linddun.defaultDescription');
+                    break;
+                case 'PLOT4ai':
+                    thumbnail = './public/content/images/thumbnail.plot4ai.jpg';
+                    defaultTitle = this.$t('threatmodel.diagram.plot4ai.defaultTitle');
+                    placeholder = this.$t('threatmodel.diagram.plot4ai.defaultDescription');
+                    break;
+                case 'STRIDE':
+                    thumbnail = './public/content/images/thumbnail.stride.jpg';
+                    defaultTitle = this.$t('threatmodel.diagram.stride.defaultTitle');
+                    placeholder = this.$t('threatmodel.diagram.stride.defaultDescription');
+                    break;
+                default:
+                    thumbnail = './public/content/images/thumbnail.jpg';
+                    defaultTitle = this.$t('threatmodel.diagram.generic.defaultTitle');
+                    placeholder = this.$t('threatmodel.diagram.generic.defaultDescription');
+                    type = this.$t('threatmodel.diagram.generic.select');
             }
             this.model.detail.diagrams[idx].diagramType = type;
             this.model.detail.diagrams[idx].placeholder = placeholder;
             this.model.detail.diagrams[idx].thumbnail = thumbnail;
             if (
                 this.model.detail.diagrams[idx].title ===
-                        this.$t('threatmodel.diagram.cia.defaultTitle') ||
-                    this.model.detail.diagrams[idx].title ===
-                        this.$t('threatmodel.diagram.die.defaultTitle') ||
-                    this.model.detail.diagrams[idx].title ===
-                        this.$t('threatmodel.diagram.linddun.defaultTitle') ||
-                    this.model.detail.diagrams[idx].title ===
-                        this.$t('threatmodel.diagram.plot4ai.defaultTitle') ||
-                    this.model.detail.diagrams[idx].title ===
-                        this.$t('threatmodel.diagram.stride.defaultTitle') ||
-                    this.model.detail.diagrams[idx].title ===
-                        this.$t('threatmodel.diagram.generic.defaultTitle')
+                this.$t('threatmodel.diagram.cia.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                this.$t('threatmodel.diagram.die.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                this.$t('threatmodel.diagram.linddun.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                this.$t('threatmodel.diagram.plot4ai.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                this.$t('threatmodel.diagram.stride.defaultTitle') ||
+                this.model.detail.diagrams[idx].title ===
+                this.$t('threatmodel.diagram.generic.defaultTitle')
             ) {
                 this.model.detail.diagrams[idx].title = defaultTitle;
             }
@@ -401,55 +316,62 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    .add-diagram-link {
-        color: var(--orange);
-        font-size: 14px;
-    }
-    .remove-diagram-btn {
-        font-size: 12px;
-    }
-    .select-diagram-type {
-        font-size: 12px;
-    }
-    .required-field label {
-        font-weight: 600;
-    }
-    .form-group {
-        margin-bottom: 2.5rem;  /* Increased from 1.5rem to 2.5rem */
-    }
-    
-    .form-group label {
-        margin-top: 1rem;
-    }
-    .diagram-inputs {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 1rem;
-    }
-    
-    .diagram-inputs > * {
-        margin-right: 5px;
-        height: 38px; /* Standardize height of all elements */
-    }
-    
-    .diagram-inputs > *:last-child {
-        margin-right: 0;
-    }
-    
-    .select-diagram-type {
-        flex: 0 0 auto;
-        min-width: 110px;
-    }
-    
-    .diagram-title {
-        flex: 1 1 auto;
-    }
-    
-    .diagram-description {
-        flex: 2 1 auto;
-    }
-    
-    .remove-diagram-btn {
-        flex: 0 0 auto;
-    }
+.add-diagram-link {
+    color: var(--orange);
+    font-size: 14px;
+}
+
+.remove-diagram-btn {
+    font-size: 12px;
+}
+
+.select-diagram-type {
+    font-size: 12px;
+}
+
+.required-field label {
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 2.5rem;
+    /* Increased from 1.5rem to 2.5rem */
+}
+
+.form-group label {
+    margin-top: 1rem;
+}
+
+.diagram-inputs {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.diagram-inputs>* {
+    margin-right: 5px;
+    height: 38px;
+    /* Standardize height of all elements */
+}
+
+.diagram-inputs>*:last-child {
+    margin-right: 0;
+}
+
+.select-diagram-type {
+    flex: 0 0 auto;
+    min-width: 110px;
+}
+
+.diagram-title {
+    flex: 1 1 auto;
+}
+
+.diagram-description {
+    flex: 2 1 auto;
+}
+
+.remove-diagram-btn {
+    flex: 0 0 auto;
+}
 </style>

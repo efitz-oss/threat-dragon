@@ -41,17 +41,24 @@
 
 <script>
 import { useI18n } from '@/i18n';
+import i18n from '@/i18n';
 
 export default {
     name: 'ToSPage',
     setup() {
-        const { t } = useI18n();
-        
-        // Get all ToS sections directly as an object from translations
+        const { t, locale } = useI18n();
+
+        // Get the current locale
+        const currentLocale = locale.value;
+
+        // Access the raw messages to get the sections array directly
+        const messages = i18n.get().global.messages.value;
+        const tosSections = messages[currentLocale]?.tos?.sections || [];
+
         const tos = {
-            sections: t('tos.sections')
+            sections: tosSections
         };
-        
+
         return {
             t,
             tos

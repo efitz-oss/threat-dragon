@@ -2,11 +2,73 @@ const deu = {
     auth: {
         sessionExpired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.'
     },
+    operator: {
+        operatedby: 'Diese Website und Instanz von OWASP Threat Dragon wird betrieben von:',
+        name: `${process.env.VUE_APP_OPERATOR_NAME || 'dem Betreiber dieser Website'}`,
+        contact: 'dem Support-Team',
+    },
     tos: {
-        title: 'Nutzungsbedingungen'
+        title: 'Nutzungsbedingungen',
+        lastUpdated: '4. April 2025',
+        introduction: 'Willkommen bei unserer Instanz von OWASP Threat Dragon. Diese Nutzungsbedingungen ("Bedingungen") regeln Ihren Zugriff auf und die Nutzung dieser Website, die eine Instanz einer Open-Source-Webanwendung ist, die vom oben aufgeführten Betreiber ("Der Betreiber") zur Verfügung gestellt wird.',
+        sections: [
+            {
+                heading: '1. Annahme der Bedingungen',
+                content: 'Durch den Zugriff auf und die Nutzung dieser Website akzeptieren Sie diese Bedingungen und stimmen zu, an die Bestimmungen dieser Vereinbarung gebunden zu sein. Wenn Sie diesen Bedingungen nicht zustimmen, nutzen Sie diese Website bitte nicht.'
+            },
+            {
+                heading: '2. Nutzung der Website',
+                content: 'Sie dürfen die Website nur für rechtmäßige Zwecke nutzen. Sie stimmen zu, die Website nicht zu missbrauchen, zu stören oder unbefugten Zugriff auf die Website oder ihre zugrunde liegenden Systeme zu versuchen.'
+            },
+            {
+                heading: '3. Keine Garantie',
+                content: 'Die Website wird "wie sie ist" ohne jegliche Garantien, ausdrücklich oder stillschweigend, einschließlich, aber nicht beschränkt auf die Eignung für einen bestimmten Zweck, Verfügbarkeit oder Genauigkeit, bereitgestellt. Wir garantieren keinen ununterbrochenen oder fehlerfreien Betrieb.'
+            },
+            {
+                heading: '4. Haftungsbeschränkung',
+                content: 'Im größtmöglichen gesetzlich zulässigen Umfang haftet der Betreiber nicht für direkte, indirekte, zufällige oder Folgeschäden, die aus Ihrer Nutzung oder Unfähigkeit zur Nutzung der Website entstehen.'
+            },
+            {
+                heading: '5. Open-Source-Software',
+                content: 'Diese Website läuft mit der OWASP Threat Dragon Software, deren Quellcode unter https://www.github.com/OWASP/threat-dragon verfügbar ist. Ihre Nutzung der Software unterliegt den Open-Source-Lizenzbedingungen. Wir sind nicht für die Software selbst verantwortlich, sondern nur für den Betrieb dieser Instanz. Der Betreiber dieser Website ist nicht mit OWASP verbunden.'
+            },
+            {
+                heading: '6. Änderungen der Bedingungen',
+                content: 'Der Betreiber kann diese Bedingungen jederzeit aktualisieren. Die fortgesetzte Nutzung der Website nach Änderungen stellt die Annahme der aktualisierten Bedingungen dar.'
+            },
+            {
+                heading: '7. Kündigung',
+                content: 'Der Betreiber behält sich das Recht vor, den Zugriff auf die Website nach eigenem Ermessen, ohne Vorankündigung und aus beliebigem Grund auszusetzen oder zu beenden.'
+            },
+            {
+                heading: '8. Geltendes Recht',
+                content: 'Diese Bedingungen unterliegen den Gesetzen der Gerichtsbarkeit, in der der Betreiber seinen Hauptsitz hat (im Falle einer Organisation) oder wohnt (im Falle einer Einzelperson), ohne Rücksicht auf Kollisionsnormen.'
+            }
+        ],
+        contact: 'Wenn Sie Fragen zu diesen Bedingungen haben, wenden Sie sich bitte an das Support-Team.'
     },
     privacy: {
-        title: 'Datenschutzrichtlinie'
+        title: 'Datenschutzrichtlinie',
+        lastUpdated: '4. April 2025',
+        introduction: 'Der Betreiber dieser Website ist bestrebt, Ihre Privatsphäre zu schützen. Diese Datenschutzrichtlinie erklärt, wie Ihre Informationen behandelt werden.',
+        sections: [
+            {
+                heading: 'Minimale Datennutzung für den Betrieb',
+                content: 'Der Betreiber sammelt, speichert oder verarbeitet keine personenbezogenen Daten von Benutzern für Tracking, Profiling oder die Weitergabe an Dritte. Temporäre Protokolle, die IP-Adressen oder Benutzernamen enthalten können, werden ausschließlich für Betriebs- und Debugging-Zwecke erstellt. Diese Protokolle werden innerhalb kurzer Zeit verworfen und nicht über diese begrenzten Zwecke hinaus aufbewahrt oder verwendet.'
+            },
+            {
+                heading: 'Rechtliche Compliance',
+                content: 'Der Betreiber gibt Informationen nur dann weiter, wenn dies gesetzlich vorgeschrieben ist, beispielsweise als Reaktion auf eine gültige behördliche Anordnung oder Vorladung. In solchen Fällen wird der Betreiber die geltenden gesetzlichen Verpflichtungen einhalten.'
+            },
+            {
+                heading: 'Änderungen dieser Richtlinie',
+                content: 'Der Betreiber kann diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Alle Änderungen werden auf dieser Seite mit einem aktualisierten "Zuletzt aktualisiert"-Datum veröffentlicht.'
+            },
+            {
+                heading: 'Kontaktieren Sie uns',
+                content: 'Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, wenden Sie sich bitte an das Support-Team.'
+            }
+        ]
     },
     nav: {
         v2Warning:
@@ -138,8 +200,18 @@ const deu = {
         owner: 'Eigentümer',
         reviewer: 'Prüfer',
         title: 'Titel',
+        new: {
+            title: 'Neues Bedrohungsmodell erstellen',
+            description: 'Geben Sie Informationen über Ihr neues Bedrohungsmodell ein'
+        },
+        placeholder: {
+            title: 'Titel des Bedrohungsmodells',
+            owner: 'Name des Eigentümers oder Teams',
+            description: 'Geben Sie eine allgemeine Beschreibung des modellierten Systems ein',
+            reviewer: 'Name des Prüfers'
+        },
         diagram: {
-            diagrams: 'Diagramm',
+            diagrams: 'Diagramme',
             addNewDiagram: 'Ein neues Diagramm hinzufügen...',
             generic: {
                 defaultTitle: 'Neues generisches Diagramm',
@@ -265,6 +337,7 @@ const deu = {
             }
         },
         stencil: {
+            title: 'Formen',
             boundaries: 'Grenzen',
             components: 'Komponenten',
             entities: 'Einheiten',
@@ -291,11 +364,17 @@ const deu = {
         discardTitle: 'Änderung verwerfen?',
         discardMessage: 'Sind Sie sicher, dass Sie Ihre Änderungen verwerfen wollen?',
         edit: 'Editieren',
-        exportAs: 'Export Model As',
-        exportHtml: 'Speichern als HTML',
-        exportPdf: 'Speichern als PDF',
+        export: 'Exportieren',
+        exportAs: 'Modell exportieren als',
+        exportHtml: 'HTML-Bericht',
+        exportPdf: 'PDF-Bericht',
         exportTd: 'Original (Threat Dragon)',
         exportOtm: 'Open Threat Model (OTM)',
+        exportFormats: {
+            png: 'PNG',
+            jpeg: 'JPEG',
+            svg: 'SVG'
+        },
         import: 'Importieren',
         ok: 'OK',
         open: 'Öffnen',
