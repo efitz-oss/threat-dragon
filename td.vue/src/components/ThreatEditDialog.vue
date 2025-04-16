@@ -1,33 +1,19 @@
 <template>
     <div>
-        <b-modal
-            v-if="editingThreat"
-            id="threat-edit"
-            ref="editModal"
-            size="lg"
-            ok-variant="primary"
-            header-bg-variant="primary"
-            header-text-variant="light"
-            :title="modalTitle"
-            @hidden="onModalHidden">
+        <b-modal v-if="editingThreat" id="threat-edit" ref="editModal" size="lg" ok-variant="primary"
+            header-bg-variant="primary" header-text-variant="light" :title="modalTitle" @hidden="onModalHidden">
             <b-form>
                 <b-form-row>
                     <b-col>
                         <b-form-group id="title-group" :label="t('threats.properties.title')" label-for="title">
-                            <b-form-input
-                                id="title"
-                                v-model="editingThreat.title"
-                                type="text"
-                                required />
+                            <b-form-input id="title" v-model="editingThreat.title" type="text" required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="threat-type-group"
-                            :label="t('threats.properties.type')"
+                        <b-form-group id="threat-type-group" :label="t('threats.properties.type')"
                             label-for="threat-type">
                             <b-form-select id="threat-type" v-model="editingThreat.type" :options="threatTypes" />
                         </b-form-group>
@@ -36,59 +22,32 @@
 
                 <b-form-row class="threat-controls-row">
                     <b-col md="4" class="status-col">
-                        <b-form-group
-                            id="status-group"
-                            :label="t('threats.properties.status')"
-                            label-for="status"
+                        <b-form-group id="status-group" :label="t('threats.properties.status')" label-for="status"
                             class="text-left">
-                            <b-form-radio-group
-                                id="status"
-                                v-model="editingThreat.status"
-                                :options="statuses"
-                                buttons
-                                size="sm"
-                                button-variant="outline-secondary"
-                                class="status-radio-group" />
+                            <b-form-radio-group id="status" v-model="editingThreat.status" :options="statuses" buttons
+                                size="sm" button-variant="outline-secondary" class="status-radio-group" />
                         </b-form-group>
                     </b-col>
 
                     <b-col md="2" class="score-col">
-                        <b-form-group
-                            id="score-group"
-                            :label="t('threats.properties.score')"
-                            label-for="score"
+                        <b-form-group id="score-group" :label="t('threats.properties.score')" label-for="score"
                             class="text-center">
-                            <b-form-input
-                                id="score"
-                                v-model="editingThreat.score"
-                                type="text"
-                                class="text-center" />
+                            <b-form-input id="score" v-model="editingThreat.score" type="text" class="text-center" />
                         </b-form-group>
                     </b-col>
 
                     <b-col md="6" class="priority-col">
-                        <b-form-group
-                            id="priority-group"
-                            :label="t('threats.properties.priority')"
-                            label-for="priority"
+                        <b-form-group id="priority-group" :label="t('threats.properties.priority')" label-for="priority"
                             class="text-right">
-                            <b-form-radio-group
-                                id="priority"
-                                v-model="editingThreat.severity"
-                                :options="priorities"
-                                buttons
-                                size="sm"
-                                button-variant="outline-secondary"
-                                class="priority-radio-group" />
+                            <b-form-radio-group id="priority" v-model="editingThreat.severity" :options="priorities"
+                                buttons size="sm" button-variant="outline-secondary" class="priority-radio-group" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="description-group"
-                            :label="t('threats.properties.description')"
+                        <b-form-group id="description-group" :label="t('threats.properties.description')"
                             label-for="description">
                             <td-safe-form-textarea id="description" v-model="editingThreat.description" rows="5" />
                         </b-form-group>
@@ -97,9 +56,7 @@
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group
-                            id="mitigation-group"
-                            :label="t('threats.properties.mitigation')"
+                        <b-form-group id="mitigation-group" :label="t('threats.properties.mitigation')"
                             label-for="mitigation">
                             <td-safe-form-textarea id="mitigation" v-model="editingThreat.mitigation" rows="5" />
                         </b-form-group>
@@ -155,12 +112,15 @@ export default {
             cancelEdit,
             deleteThreat,
             editExistingThreat,
-            originalThreat
-            // createNewThreat - Not used in this component
+            originalThreat,
+            createNewThreat // Now we need this in this component
         } = useThreatEditor();
 
         const editModal = ref(null);
         const hasChanges = ref(false);
+
+        // Store reference to the store for use in methods
+        const store = useStore();
 
         // Use Vue 3's Composition API for i18n
         const { t } = useI18n();
@@ -231,7 +191,31 @@ export default {
                     // Ensure the threat is properly initialized
                     if (!editingThreat.value || editingThreat.value.id !== threatId) {
                         console.debug('Threat not properly initialized, attempting to recover');
-                        // Try to recover by forcing isNewThreat flag
+
+                        // Access the cell from the store reference we created in setup()
+                        const cell = store?.state?.cell?.ref;
+
+                        if (cell && cell.data) {
+                            // Get the diagram and threatTop from store
+                            const diagram = store?.state?.threatmodel?.selectedDiagram;
+                            const threatTop = store?.state?.threatmodel?.data?.detail?.threatTop;
+
+                            if (diagram && typeof threatTop !== 'undefined') {
+                                // Create a new threat using the createNewThreat from setup()
+                                createNewThreat(
+                                    diagram.diagramType,
+                                    cell.data.type,
+                                    threatTop
+                                );
+                                console.debug('Successfully re-created threat with ID:', threatId);
+                            } else {
+                                console.error('Cannot recover threat: Missing diagram or threatTop');
+                            }
+                        } else {
+                            console.error('Cannot recover threat: No cell selected');
+                        }
+
+                        // Set the new threat flag
                         isNewThreat.value = true;
                     }
 

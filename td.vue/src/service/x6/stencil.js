@@ -28,6 +28,19 @@ const get = (graph, container, StencilConstructor) => {
     // Initial dimensions
     const { stencilGraphWidth } = calculateDimensions();
 
+    // Define shape counts for each group
+    const shapeCounts = {
+        'components': 4,  // actor, process, store, text
+        'boundaries': 2,  // boundaryBox, boundaryCurve
+        'metadata': 1     // flow
+    };
+
+    // Calculate group heights (100px per shape + padding)
+    const getGroupHeight = (groupName) => {
+        const count = shapeCounts[groupName] || 2;
+        return (count * 100) + 50; // 100px per shape + 50px padding
+    };
+
     // Create stencil configuration
     const stencilConfig = {
         target: graph,
@@ -45,19 +58,25 @@ const get = (graph, container, StencilConstructor) => {
                 name: 'components',
                 title: 'Components',
                 collapsable: true,
-                collapsed: false
+                collapsed: false,
+                graphHeight: getGroupHeight('components'), // Set explicit height
+                graphWidth: stencilGraphWidth
             },
             {
                 name: 'boundaries',
                 title: 'Boundaries',
                 collapsable: true,
-                collapsed: false
+                collapsed: false,
+                graphHeight: getGroupHeight('boundaries'), // Set explicit height
+                graphWidth: stencilGraphWidth
             },
             {
                 name: 'metadata',
                 title: 'Metadata',
                 collapsable: true,
-                collapsed: false
+                collapsed: false,
+                graphHeight: getGroupHeight('metadata'), // Set explicit height
+                graphWidth: stencilGraphWidth
             }
         ],
         layoutOptions: {
@@ -172,7 +191,19 @@ const get = (graph, container, StencilConstructor) => {
 
     // Force resize after loading if the method is available (not in tests)
     if (stencilInstance && typeof stencilInstance.resize === 'function') {
+        // Resize the main stencil
         stencilInstance.resize(stencilGraphWidth, 'auto');
+
+        // Resize each group individually
+        Object.keys(shapeCounts).forEach(groupName => {
+            if (stencilInstance.resizeGroup) {
+                stencilInstance.resizeGroup(
+                    groupName,
+                    stencilGraphWidth,
+                    getGroupHeight(groupName)
+                );
+            }
+        });
     }
 
     // Force compact layout
@@ -185,27 +216,68 @@ const get = (graph, container, StencilConstructor) => {
         stencilInstance.container.classList.add('td-stencil-container');
     }
 
+    // Add to DOM first so we can access the elements
+    container.appendChild(stencilInstance.container);
+
     // Force a redraw of all groups to ensure proper sizing
     setTimeout(() => {
         if (stencilInstance && typeof stencilInstance.layout === 'function') {
             stencilInstance.layout();
         }
 
-        // Ensure all groups are properly sized
-        const groups = container.querySelectorAll('.x6-widget-stencil-group');
-        groups.forEach(group => {
-            const content = group.querySelector('.x6-widget-stencil-group-content');
+        console.debug('Setting stencil group heights based on shape counts');
 
-            if (content && !group.classList.contains('collapsed')) {
+        // Get all groups after they've been added to the DOM
+        const groups = container.querySelectorAll('.x6-widget-stencil-group');
+        console.debug(`Found ${groups.length} stencil groups`);
+
+        // Create a mapping from display titles to internal group names
+        const titleToName = {
+            'Components': 'components',
+            'Boundaries': 'boundaries',
+            'Metadata': 'metadata'
+        };
+
+        groups.forEach(group => {
+            // Get the title element and extract the text
+            const titleEl = group.querySelector('.x6-widget-stencil-group-title');
+            const displayTitle = titleEl ? titleEl.textContent.trim() : '';
+            console.debug(`Processing group: "${displayTitle}"`);
+
+            // Map display title to internal name
+            const groupName = titleToName[displayTitle] || displayTitle.toLowerCase();
+
+            // Get the content element
+            const content = group.querySelector('.x6-widget-stencil-group-content');
+            if (!content) {
+                console.debug(`No content element found for group: ${displayTitle}`);
+                return;
+            }
+
+            // Calculate height using our consistent function
+            const calculatedHeight = getGroupHeight(groupName);
+            console.debug(`Setting height to ${calculatedHeight}px for group "${displayTitle}" (${groupName})`);
+
+            // Apply the height if the group is not collapsed
+            if (!group.classList.contains('collapsed')) {
                 content.style.minHeight = '200px';
-                content.style.maxHeight = '300px';
+                content.style.maxHeight = `${calculatedHeight}px`;
                 content.style.overflowY = 'auto';
+
+                // Force the style to be applied
+                setTimeout(() => {
+                    content.style.maxHeight = `${calculatedHeight}px`;
+                }, 0);
+
+                // Try to resize the group through the API as well
+                if (stencilInstance.resizeGroup) {
+                    stencilInstance.resizeGroup(groupName, stencilGraphWidth, calculatedHeight);
+                }
             }
         });
-    }, 100);
+    }, 200); // Increased timeout to ensure DOM is ready
 
-    // Add to DOM
-    container.appendChild(stencilInstance.container);
+    // Note: container.appendChild(stencilInstance.container) moved above
 
     // Removed setTimeout blocks previously used to force visibility/redraw.
     // Relying on initial render and ResizeObserver.
@@ -218,7 +290,19 @@ const get = (graph, container, StencilConstructor) => {
 
             // Update stencil dimensions
             if (stencilInstance && stencilInstance.resize) {
+                // Resize the main stencil
                 stencilInstance.resize(stencilGraphWidth, 'auto');
+
+                // Resize each group individually
+                Object.keys(shapeCounts).forEach(groupName => {
+                    if (stencilInstance.resizeGroup) {
+                        stencilInstance.resizeGroup(
+                            groupName,
+                            stencilGraphWidth,
+                            getGroupHeight(groupName)
+                        );
+                    }
+                });
             }
 
             // Force compact layout on resize

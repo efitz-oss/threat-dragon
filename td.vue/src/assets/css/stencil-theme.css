@@ -18,7 +18,7 @@
   --td-stencil-group-min-height: 100px;
   --td-stencil-padding: 8px;
   --td-stencil-font-size: 14px;
-  --td-stencil-z-index: 100; /* Increased from 10 to 100 to match the z-index in stencil.js */
+  --td-stencil-z-index: 10; /* Reduced back to 10 to avoid interfering with other UI elements */
   --td-stencil-collapsed-height: 32px;
 }
 
@@ -32,35 +32,35 @@
     background-color: var(--td-stencil-bg-color); /* Keep basic theme */
     color: var(--td-stencil-title-color); /* Keep basic theme */
     position: relative; /* Ensure proper positioning */
-    /* min-height: 500px !important; /* Removed: Let parent container height dictate size */
+    /* min-height: 500px; /* Removed: Let parent container height dictate size */
 }
 
 /* ================= STENCIL GROUPS ================= */
 .td-stencil-theme .x6-widget-stencil-group {
   visibility: visible;
   display: block;
-  height: auto !important; /* Force auto height with !important */
-  max-height: fit-content !important; /* Force height to fit content */
+  height: auto; /* Force auto height with */
+  max-height: fit-content; /* Force height to fit content */
   width: 100%; /* Keep width */
-  padding: 0 !important; /* Force no padding */
+  padding: 0; /* Force no padding */
   overflow: visible; /* Revert to visible */
-  margin: 0 !important; /* Force no margin */
-  box-sizing: content-box !important; /* Ensure padding doesn't add to height */
+  margin: 0; /* Force no margin */
+  box-sizing: content-box; /* Ensure padding doesn't add to height */
 }
 
 /* Add a new rule for the td-stencil-container class */
 .td-stencil-container .x6-widget-stencil-group {
-  display: flex !important;
-  flex-direction: column !important;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Collapsed groups */
 .td-stencil-theme .x6-widget-stencil-group.collapsed {
-  min-height: unset !important;
-  max-height: var(--td-stencil-collapsed-height) !important;
-  padding-bottom: 0 !important;
-  height: var(--td-stencil-collapsed-height) !important;
-  overflow: hidden !important;
+  min-height: unset;
+  max-height: var(--td-stencil-collapsed-height);
+  padding-bottom: 0;
+  height: var(--td-stencil-collapsed-height);
+  overflow: hidden;
 }
 
 /* Group content container */
@@ -68,27 +68,27 @@
   visibility: visible;
   display: block; /* Revert to block */
   opacity: 1;
-  height: auto !important; /* Force auto height */
-  max-height: none !important; /* Remove max-height constraint */
-  overflow-y: auto !important; /* Enable vertical scrolling */
+  height: auto; /* Force auto height */
+  max-height: none; /* Remove max-height constraint */
+  overflow-y: auto; /* Enable vertical scrolling */
   width: 100%;
-  padding: 0 !important; /* Force no padding */
-  margin: 0 !important; /* Force no margin */
-  box-sizing: content-box !important; /* Ensure padding doesn't add to height */
+  padding: 0; /* Force no padding */
+  margin: 0; /* Force no margin */
+  box-sizing: content-box; /* Ensure padding doesn't add to height */
 }
 
 /* Add a new rule for the td-stencil-container class */
 .td-stencil-container .x6-widget-stencil-group-content {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 0 0 auto !important; /* Don't grow or shrink */
-  min-height: 200px !important; /* Ensure minimum height for content */
-  max-height: 300px !important; /* Set maximum height and enable scrolling */
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto; /* Don't grow or shrink */
+  min-height: 200px; /* Ensure minimum height for content */
+  /* max-height is now set dynamically in JavaScript based on shape count */
 }
 
 /* Hide content in collapsed groups */
 .td-stencil-theme .x6-widget-stencil-group.collapsed .x6-widget-stencil-group-content {
-  display: none !important;
+  display: none;
 }
 
 /* ================= GROUP TITLES ================= */
@@ -163,60 +163,60 @@
   order: 2; /* Content comes second */
   flex-grow: 1; /* Allow content to take remaining space */
   flex-shrink: 1;
-  overflow-y: auto !important; /* Force scrolling if content overflows */
-  max-height: none !important; /* Remove max-height constraint */
+  overflow-y: auto /*; /* Force scrolling if content overflows */
+  /* max-height: none; /* Remove max-height constraint */
   }
 
 /* Ensure each group's content is scrollable independently */
 .td-stencil-theme .x6-widget-stencil-group:not(.collapsed) .x6-widget-stencil-group-content {
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 200px !important;
-  max-height: 300px !important;
+  overflow-y: auto;
+  height: auto;
+  min-height: 150px;
+  /* max-height: 300px; */
 }
 
 /* ================= STENCIL ITEMS ================= */
 .td-stencil-theme .x6-widget-stencil-item {
   width: 100%;
-  height: auto !important; /* Force auto height */
-  min-height: unset !important; /* Reset min-height without setting to 0 */
+  height: auto; /* Force auto height */
+  min-height: unset; /* Reset min-height without setting to 0 */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2px 0 !important; /* Add minimal vertical padding */
-  margin: 2px auto !important; /* Add minimal vertical margin */
+  padding: 2px 0; /* Add minimal vertical padding */
+  margin: 2px auto; /* Add minimal vertical margin */
   position: relative;
   overflow: visible;
-  box-sizing: content-box !important; /* Ensure padding doesn't add to height */
+  box-sizing: content-box; /* Ensure padding doesn't add to height */
 }
 
 /* ================= GRAPH ELEMENTS IN STENCIL ================= */
 .td-stencil-theme .x6-graph {
   width: 100%;
-  height: auto !important; /* Use auto height instead of fit-content */
+  height: auto; /* Use auto height instead of fit-content */
   margin: 0 auto;
   position: relative;
-  z-index: var(--td-stencil-z-index);
+  z-index: 10; /* Fixed z-index to avoid interfering with other UI elements */
   background: transparent; /* Keep transparent background */
   visibility: visible;
   opacity: 1;
-  min-height: unset !important; /* Reset min-height without setting to 0 */
-  max-height: none !important; /* Remove any max-height constraints */
-  display: block !important; /* Use block display instead of flex */
-  overflow: visible !important; /* Ensure content is not clipped */
+  min-height: unset; /* Reset min-height without setting to 0 */
+  max-height: none; /* Remove any max-height constraints */
+  display: block; /* Use block display instead of flex */
+  overflow: visible; /* Ensure content is not clipped */
 }
 /* SVG elements */
 .td-stencil-theme .x6-graph svg {
     visibility: visible;
     opacity: 1;
-    z-index: var(--td-stencil-z-index);
+    z-index: 10; /* Fixed z-index to avoid interfering with other UI elements */
     pointer-events: auto;
     width: 100%;
-    height: fit-content !important; /* Force height to fit content */
+    height: fit-content; /* Force height to fit content */
     display: block; /* Keep block */
     position: relative;
-    min-height: unset !important; /* Reset min-height without setting to 0 */
-    max-height: none !important; /* Remove any max-height constraints */
+    min-height: unset; /* Reset min-height without setting to 0 */
+    max-height: none; /* Remove any max-height constraints */
   }
 
 
@@ -226,18 +226,18 @@
     display: block;
     opacity: 1;
     transform-origin: center center;
-    z-index: var(--td-stencil-z-index); /* Keep z-index override */
+    z-index: 10; /* Fixed z-index to avoid interfering with other UI elements */
     position: relative; /* Ensure proper positioning */
-    max-width: 100% !important; /* Fix typo: was 100 without % */
-    max-height: 100% !important; /* Fix typo: was 100 without % */
+    max-width: 100%; /* Fix typo: was 100 without % */
+    max-height: 100%; /* Fix typo: was 100 without % */
   }
 
 /* Force stencil items to be visible */
 .td-stencil-theme .x6-widget-stencil-item {
-    /* min-height: 80px !important; /* Removed fixed min-height */
+    /* min-height: 80px; /* Removed fixed min-height */
     position: relative;
     overflow: visible; /* Keep this for the item container? */
-    /* background-color: rgba(255, 255, 255, 0.1) !important; /* Removed debug background */
+    /* background-color: rgba(255, 255, 255, 0.1); /* Removed debug background */
   }
 
 /* SVG child elements */
@@ -245,7 +245,7 @@
 .td-stencil-theme svg rect,
 .td-stencil-theme svg circle,
 .td-stencil-theme svg text {
-    /* background-color: transparent !important; /* Removed override */
+    /* background-color: transparent; /* Removed override */
     visibility: visible;
     display: block;
     opacity: 1;
