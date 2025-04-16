@@ -1,18 +1,10 @@
 <template>
     <div class="diagram-editor">
         <b-row class="main-content-row">
-            <b-col
-                md="3"
-                lg="2"
-                xl="2"
-                class="stencil-column">
+            <b-col cols="2" class="stencil-column">
                 <div ref="stencil_container" class="stencil-container td-stencil-theme" />
             </b-col>
-            <b-col
-                md="9"
-                lg="10"
-                xl="10"
-                class="content-column">
+            <b-col cols="10" class="content-column">
                 <b-row class="header-row">
                     <b-col>
                         <h3 class="td-graph-title">

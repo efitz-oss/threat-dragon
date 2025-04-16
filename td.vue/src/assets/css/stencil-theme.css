@@ -26,12 +26,12 @@
 .td-stencil-theme .x6-widget-stencil {
     width: 100%;
     max-width: 100%;
-    visibility: visible; /* Removed !important */
-    display: block; /* Removed !important */
+    visibility: visible;
+    display: block;
     overflow: visible; /* Revert to visible */ /* Ensure content is not clipped */
     background-color: var(--td-stencil-bg-color); /* Keep basic theme */
     color: var(--td-stencil-title-color); /* Keep basic theme */
-    position: relative; /* Removed !important */ /* Ensure proper positioning */
+    position: relative; /* Ensure proper positioning */
     /* min-height: 500px !important; /* Removed: Let parent container height dictate size */
 }
 
@@ -125,13 +125,27 @@
   opacity: 0.8;
 }
 
-/* ================= STENCIL CONTENT CONTAINER ================= */
+/* ================= STENCIL CONTAINER & CHILDREN ORDER ================= */
+.td-stencil-theme .x6-widget-stencil {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure container takes full height */
+}
+
+.td-stencil-theme .x6-widget-stencil-title {
+  order: 1; /* Title comes first */
+  padding: 5px; /* Add some padding */
+  background-color: var(--td-stencil-title-background); /* Use theme variable */
+  color: var(--td-stencil-title-color); /* Use theme variable */
+  font-weight: bold;
+  text-align: center;
+  flex-shrink: 0; /* Prevent title from shrinking */
+}
+
 .td-stencil-theme .x6-widget-stencil-content {
-    width: 100%;
-    overflow: visible; /* Removed !important */
-    position: relative; /* Removed !important */ /* Changed from absolute to relative */
-    /* min-height: 400px; /* Removed !important */ /* Let content determine height */
-    /* background-color: rgba(240, 240, 240, 0.2) !important; /* Removed debug background */
+  order: 2; /* Content comes second */
+  flex-grow: 1; /* Allow content to take remaining space */
+  overflow-y: auto; /* Allow scrolling if content overflows */
   }
 
 /* ================= STENCIL ITEMS ================= */
@@ -155,33 +169,24 @@
   z-index: var(--td-stencil-z-index);
   background: transparent; /* Keep transparent background */
   /* box-shadow: none; /* Removed rule */
+  visibility: visible;
+  opacity: 1;
 }
 /* SVG elements */
 .td-stencil-theme .x6-graph svg {
-    visibility: visible; /* Removed !important */
-    opacity: 1; /* Removed !important */
-    z-index: var(--td-stencil-z-index); /* Removed !important */
-    pointer-events: auto; /* Removed !important */
-    width: 100%; /* Removed !important */
+    visibility: visible;
+    opacity: 1;
+    z-index: var(--td-stencil-z-index);
+    pointer-events: auto;
+    width: 100%;
     /* height: auto; /* Remove auto height */
     /* overflow: visible !important; /* Let library handle overflow */
     display: block; /* Keep block, but removed !important */
-    position: relative; /* Removed !important */
-    /* min-height: 80px; /* Removed !important */ /* Let content determine height */
+    position: relative;
+    /* min-height: 80px; /* Let content determine height */
     /* background-color: rgba(200, 200, 200, 0.1) !important; /* Removed debug background */
   }
 
-/* Ensure the graph container is visible */
-.td-stencil-theme .x6-graph {
-    visibility: visible; /* Removed !important */
-    opacity: 1; /* Removed !important */
-    /* width: 100%; /* Remove width override */
-    /* height: auto; /* Remove height override */
-    /* overflow: visible; /* Removed !important */ /* Let library handle overflow */
-    /* min-height: 80px; /* Removed min-height */ /* Let content determine height */
-    position: relative; /* Removed !important */
-    /* background-color: rgba(220, 220, 220, 0.1) !important; /* Removed debug background */
-  }
 
 /* Shape elements */
 .td-stencil-theme .x6-node {
@@ -194,18 +199,18 @@
     display: block;
     opacity: 1;
     transform-origin: center center;
-    z-index: var(--td-stencil-z-index); /* Removed !important */ /* Keep z-index override */
-    position: relative; /* Removed !important */ /* Ensure proper positioning */
-    /* max-width: none !important; /* Allow library to constrain */
-    /* max-height: none !important; /* Allow library to constrain */
+    z-index: var(--td-stencil-z-index); /* Keep z-index override */
+    position: relative; /* Ensure proper positioning */
+    max-width: 100 !important; /* Allow library to constrain */
+    max-height: 100 !important; /* Allow library to constrain */
     /* overflow: visible !important; /* Let library handle overflow */
   }
 
 /* Force stencil items to be visible */
 .td-stencil-theme .x6-widget-stencil-item {
     /* min-height: 80px !important; /* Removed fixed min-height */
-    position: relative; /* Removed !important */
-    overflow: visible; /* Removed !important */ /* Keep this for the item container? */
+    position: relative;
+    overflow: visible; /* Keep this for the item container? */
     /* background-color: rgba(255, 255, 255, 0.1) !important; /* Removed debug background */
   }
 
@@ -218,7 +223,7 @@
     visibility: visible;
     display: block;
     opacity: 1;
-    pointer-events: auto; /* Removed !important */ /* Keep pointer-events override */
+    pointer-events: auto; /* Keep pointer-events override */
   }
   
   /* Explicitly set fill for common shapes to avoid black boxes */
@@ -232,13 +237,13 @@
   .td-stencil-theme .x6-node path,
   .td-stencil-theme .x6-node rect,
   .td-stencil-theme .x6-node circle {
-      fill: transparent; /* Removed !important */
+      fill: transparent;
       /* stroke: none; /* Let stroke be default or defined by shape */
   }
 
   /* Ensure text fill is not affected */
   .td-stencil-theme .x6-node text {
-      fill: currentColor; /* Removed !important */
+      fill: currentColor;
       /* stroke: none; /* Let stroke be default */
   }
   
@@ -260,6 +265,7 @@
   border: 1px solid var(--td-stencil-border-color);
   border-radius: 12px;
   outline: 0;
+  text-align: center;
 }
 
 /* ================= NOT FOUND STATE ================= */
