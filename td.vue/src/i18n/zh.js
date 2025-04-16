@@ -5,7 +5,7 @@ const zho = {
     operator: {
         operatedby: '本网站和OWASP Threat Dragon实例由以下机构运营：',
         name: `${process.env.VUE_APP_OPERATOR_NAME || '本网站的运营者'}`,
-        contact: '支持团队',
+        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(未提供联系信息)'}`,
     },
     tos: {
         title: '服务条款',
@@ -45,7 +45,7 @@ const zho = {
                 content: '这些条款受运营商总部所在地（如果是组织）或居住地（如果是个人）的司法管辖区法律管辖，不考虑法律冲突原则。'
             }
         ],
-        contact: '如果您对这些条款有任何疑问，请随时联系支持团队。'
+        contact: '如果您对这些条款有任何疑问，请联系网站运营者。'
     },
     privacy: {
         title: '隐私政策',
@@ -66,7 +66,7 @@ const zho = {
             },
             {
                 heading: '联系我们',
-                content: '如果您对本隐私政策有任何疑问，请随时联系支持团队。'
+                content: '如果您对本隐私政策有任何疑问，请联系网站运营者。'
             }
         ]
     },
@@ -341,7 +341,7 @@ const zho = {
             components: '组件',
             entities: '实体',
             metadata: '数据',
-            search: '搜索',
+            search: '搜索形状',
             notFound: '当前没有，要打开一个问题吗？ :)'
         },
         shapes: {

@@ -5,7 +5,7 @@ const deu = {
     operator: {
         operatedby: 'Diese Website und Instanz von OWASP Threat Dragon wird betrieben von:',
         name: `${process.env.VUE_APP_OPERATOR_NAME || 'dem Betreiber dieser Website'}`,
-        contact: 'dem Support-Team',
+        contact: `${process.env.VUE_APP_OPERATOR_CONTACT || '(Kontaktinformationen nicht angegeben)'}`,
     },
     tos: {
         title: 'Nutzungsbedingungen',
@@ -45,7 +45,7 @@ const deu = {
                 content: 'Diese Bedingungen unterliegen den Gesetzen der Gerichtsbarkeit, in der der Betreiber seinen Hauptsitz hat (im Falle einer Organisation) oder wohnt (im Falle einer Einzelperson), ohne Rücksicht auf Kollisionsnormen.'
             }
         ],
-        contact: 'Wenn Sie Fragen zu diesen Bedingungen haben, wenden Sie sich bitte an das Support-Team.'
+        contact: 'Wenn Sie Fragen zu diesen Bedingungen haben, wenden Sie sich bitte an den Betreiber.'
     },
     privacy: {
         title: 'Datenschutzrichtlinie',
@@ -66,7 +66,7 @@ const deu = {
             },
             {
                 heading: 'Kontaktieren Sie uns',
-                content: 'Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, wenden Sie sich bitte an das Support-Team.'
+                content: 'Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, wenden Sie sich bitte an den Betreiber.'
             }
         ]
     },
@@ -342,7 +342,7 @@ const deu = {
             components: 'Komponenten',
             entities: 'Einheiten',
             metadata: 'Metadata',
-            search: 'Suchen',
+            search: 'Formen suchen',
             notFound: 'Noch nicht vorhanden. Wollen Sie einen Issue öffnen? :)'
         },
         shapes: {
@@ -486,7 +486,7 @@ const deu = {
             showMitigatedThreats: 'Abgeschwächte Bedrohungen anzeigen',
             showModelDiagrams: 'Modell Diagramme anzeigen',
             showEmpty: 'Leere Elemente anzeigen',
-            showProperties: 'Show element properties',
+            showProperties: 'Elementeigenschaften anzeigen',
             showBranding: 'Threat Dragon Logo'
         },
         title: 'Bedrohungsmodell Bereicht für',
