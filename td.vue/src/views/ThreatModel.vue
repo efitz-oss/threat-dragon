@@ -21,7 +21,11 @@
         </b-row>
         <!-- Diagrams -->
         <b-row class="mb-4">
-            <b-col v-for="(diagram, idx) in model.detail.diagrams" :key="idx" class="tm_diagram" lg="3">
+            <b-col
+                v-for="(diagram, idx) in model.detail.diagrams"
+                :key="idx"
+                class="tm_diagram"
+                lg="3">
                 <BCard>
                     <template #header>
                         <h6 class="diagram-header-text">
@@ -37,7 +41,9 @@
                         </a>
                     </h6>
                     <a v-else href="javascript:void(0)" @click="editDiagram(diagram)">
-                        <BImg class="m-auto d-block td-diagram-thumb" :src="getThumbnailUrl(diagram)"
+                        <BImg
+                            class="m-auto d-block td-diagram-thumb"
+                            :src="getThumbnailUrl(diagram)"
                             :alt="diagram.title" />
                     </a>
                 </BCard>
@@ -46,11 +52,21 @@
         <b-row>
             <b-col class="text-right">
                 <BButtonGroup>
-                    <td-form-button id="td-edit-btn" :is-primary="true" :on-btn-click="onEditClick" icon="edit"
+                    <td-form-button
+                        id="td-edit-btn"
+                        :is-primary="true"
+                        :on-btn-click="onEditClick"
+                        icon="edit"
                         :text="$t('forms.edit')" />
-                    <td-form-button id="td-report-btn" :on-btn-click="onReportClick" icon="file-alt"
+                    <td-form-button
+                        id="td-report-btn"
+                        :on-btn-click="onReportClick"
+                        icon="file-alt"
                         :text="$t('forms.report')" />
-                    <td-form-button id="td-close-btn" :on-btn-click="onCloseClick" icon="times"
+                    <td-form-button
+                        id="td-close-btn"
+                        :on-btn-click="onCloseClick"
+                        icon="times"
                         :text="$t('forms.closeModel')" />
                 </BButtonGroup>
             </b-col>

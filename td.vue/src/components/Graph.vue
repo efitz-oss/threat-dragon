@@ -186,6 +186,12 @@ export default {
             updated.cells = graph.value.toJSON().cells;
             store.dispatch(tmActions.diagramSaved, updated);
             store.dispatch(tmActions.saveModel);
+
+            // Update the original diagram state after saving to prevent unnecessary "discard changes" dialog
+            originalDiagramState.value = JSON.parse(JSON.stringify({
+                selectedDiagram: store.state.threatmodel.selectedDiagram
+            }));
+            console.debug('Updated original diagram state after saving');
         };
 
         const getConfirmModal = async () => {
@@ -219,11 +225,14 @@ export default {
                 currentState
             );
 
-            console.debug('Diagram closing - store.modified:', store.getters.modelChanged,
+            // Also check the store's modified flag
+            const isModified = store.getters.modelChanged;
+
+            console.debug('Diagram closing - store.modified:', isModified,
                 'has actual changes:', hasActualChanges);
 
-            // Only show confirmation if there are actual changes
-            if (!hasActualChanges || (await getConfirmModal())) {
+            // Show confirmation if either the store says it's modified or our change tracker detects changes
+            if ((!hasActualChanges && !isModified) || (await getConfirmModal())) {
                 await store.dispatch(tmActions.diagramClosed);
                 await store.dispatch(tmActions.diagramClosed);
 

@@ -1,19 +1,37 @@
 <template>
     <div>
-        <b-modal v-if="editingThreat" id="threat-edit" ref="editModal" size="lg" ok-variant="primary"
-            header-bg-variant="primary" header-text-variant="light" :title="modalTitle" @hidden="onModalHidden">
+        <b-modal
+            v-if="editingThreat"
+            id="threat-edit"
+            ref="editModal"
+            size="lg"
+            ok-variant="primary"
+            header-bg-variant="primary"
+            header-text-variant="light"
+            :title="modalTitle"
+            no-close-on-backdrop
+            no-close-on-esc
+            hide-footer
+            @hidden="onModalHidden"
+            @ok="onSave">
             <b-form>
                 <b-form-row>
                     <b-col>
                         <b-form-group id="title-group" :label="t('threats.properties.title')" label-for="title">
-                            <b-form-input id="title" v-model="editingThreat.title" type="text" required />
+                            <b-form-input
+                                id="title"
+                                v-model="editingThreat.title"
+                                type="text"
+                                required />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="threat-type-group" :label="t('threats.properties.type')"
+                        <b-form-group
+                            id="threat-type-group"
+                            :label="t('threats.properties.type')"
                             label-for="threat-type">
                             <b-form-select id="threat-type" v-model="editingThreat.type" :options="threatTypes" />
                         </b-form-group>
@@ -22,32 +40,59 @@
 
                 <b-form-row class="threat-controls-row">
                     <b-col md="4" class="status-col">
-                        <b-form-group id="status-group" :label="t('threats.properties.status')" label-for="status"
+                        <b-form-group
+                            id="status-group"
+                            :label="t('threats.properties.status')"
+                            label-for="status"
                             class="text-left">
-                            <b-form-radio-group id="status" v-model="editingThreat.status" :options="statuses" buttons
-                                size="sm" button-variant="outline-secondary" class="status-radio-group" />
+                            <b-form-radio-group
+                                id="status"
+                                v-model="editingThreat.status"
+                                :options="statuses"
+                                buttons
+                                size="sm"
+                                button-variant="outline-secondary"
+                                class="status-radio-group" />
                         </b-form-group>
                     </b-col>
 
                     <b-col md="2" class="score-col">
-                        <b-form-group id="score-group" :label="t('threats.properties.score')" label-for="score"
+                        <b-form-group
+                            id="score-group"
+                            :label="t('threats.properties.score')"
+                            label-for="score"
                             class="text-center">
-                            <b-form-input id="score" v-model="editingThreat.score" type="text" class="text-center" />
+                            <b-form-input
+                                id="score"
+                                v-model="editingThreat.score"
+                                type="text"
+                                class="text-center" />
                         </b-form-group>
                     </b-col>
 
                     <b-col md="6" class="priority-col">
-                        <b-form-group id="priority-group" :label="t('threats.properties.priority')" label-for="priority"
+                        <b-form-group
+                            id="priority-group"
+                            :label="t('threats.properties.priority')"
+                            label-for="priority"
                             class="text-right">
-                            <b-form-radio-group id="priority" v-model="editingThreat.severity" :options="priorities"
-                                buttons size="sm" button-variant="outline-secondary" class="priority-radio-group" />
+                            <b-form-radio-group
+                                id="priority"
+                                v-model="editingThreat.severity"
+                                :options="priorities"
+                                buttons
+                                size="sm"
+                                button-variant="outline-secondary"
+                                class="priority-radio-group" />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="description-group" :label="t('threats.properties.description')"
+                        <b-form-group
+                            id="description-group"
+                            :label="t('threats.properties.description')"
                             label-for="description">
                             <b-form-textarea id="description" v-model="editingThreat.description" rows="5" />
                         </b-form-group>
@@ -56,7 +101,9 @@
 
                 <b-form-row>
                     <b-col>
-                        <b-form-group id="mitigation-group" :label="t('threats.properties.mitigation')"
+                        <b-form-group
+                            id="mitigation-group"
+                            :label="t('threats.properties.mitigation')"
                             label-for="mitigation">
                             <b-form-textarea id="mitigation" v-model="editingThreat.mitigation" rows="5" />
                         </b-form-group>
@@ -64,7 +111,7 @@
                 </b-form-row>
             </b-form>
 
-            <template #modal-footer>
+            <template #footer>
                 <div class="w-100 d-flex justify-content-between">
                     <div class="left-buttons">
                         <!-- Only show Delete button for existing threats -->
@@ -111,7 +158,8 @@ export default {
             deleteThreat,
             editExistingThreat,
             originalThreat,
-            createNewThreat // Now we need this in this component
+            createNewThreat, // Now we need this in this component
+            resetState // Expose resetState to be called after saving
         } = useThreatEditor();
 
         const editModal = ref(null);
@@ -181,6 +229,14 @@ export default {
                     return;
                 }
 
+                // Log cell reference state before processing
+                const cellRef = store?.state?.cell?.ref;
+                console.debug('Cell reference state at start of showDialog:', {
+                    cellExists: !!cellRef,
+                    cellData: cellRef ? !!cellRef.data : 'no cell',
+                    cellId: cellRef ? cellRef.id : 'no cell'
+                });
+
                 if (mode === 'new') {
                     // For new threats, the threatId is already for the in-memory threat
                     // The threat has already been created by createNewThreat in GraphMeta
@@ -240,6 +296,14 @@ export default {
                         return;
                     }
 
+                    // Log cell reference state right before showing modal
+                    const cellRefBeforeShow = store?.state?.cell?.ref;
+                    console.debug('Cell reference state before showing modal:', {
+                        cellExists: !!cellRefBeforeShow,
+                        cellData: cellRefBeforeShow ? !!cellRefBeforeShow.data : 'no cell',
+                        cellId: cellRefBeforeShow ? cellRefBeforeShow.id : 'no cell'
+                    });
+
                     console.debug('Showing threat edit modal');
                     editModal.value.show();
                 };
@@ -264,12 +328,68 @@ export default {
 
         // Event handlers
         const onSave = () => {
+            console.debug('onSave called with:', {
+                isNewThreat: isNewThreat.value,
+                hasChanges: hasChanges.value,
+                editingThreatExists: !!editingThreat.value,
+                editingThreatId: editingThreat.value ? editingThreat.value.id : 'null'
+            });
+
             // For new threats, always save regardless of hasChanges
             // For existing threats, only save if changes were made
             if (isNewThreat.value || hasChanges.value) {
                 console.debug('Saving threat, isNew:', isNewThreat.value, 'hasChanges:', hasChanges.value);
+
+                // Check if the cell reference is available
+                const cellRef = store.state.cell.ref;
+                console.debug('Cell reference check before saveThreat:', {
+                    cellExists: !!cellRef,
+                    cellData: cellRef ? !!cellRef.data : 'no cell',
+                    cellId: cellRef ? cellRef.id : 'no cell',
+                    cellThreats: cellRef && cellRef.data && cellRef.data.threats ? cellRef.data.threats.length : 'no threats'
+                });
+
+                // Check if the threat is properly initialized
+                if (editingThreat.value) {
+                    console.debug('Threat being saved:', {
+                        id: editingThreat.value.id,
+                        title: editingThreat.value.title,
+                        status: editingThreat.value.status,
+                        severity: editingThreat.value.severity
+                    });
+                }
+
+                // Call saveThreat to save the threat to the store
+                // Note: saveThreat no longer calls resetState() internally
                 saveThreat();
+
+                // Check cell reference after saving
+                const cellRefAfter = store.state.cell.ref;
+                console.debug('Cell reference check after saveThreat:', {
+                    cellExists: !!cellRefAfter,
+                    cellData: cellRefAfter ? !!cellRefAfter.data : 'no cell',
+                    cellId: cellRefAfter ? cellRefAfter.id : 'no cell',
+                    cellThreats: cellRefAfter && cellRefAfter.data && cellRefAfter.data.threats ? cellRefAfter.data.threats.length : 'no threats'
+                });
+
                 hasChanges.value = false;
+
+                // Set isEditing to false to prevent cancelEdit from being called in onModalHidden
+                isEditing.value = false;
+                console.debug('Set isEditing to false after saving threat');
+
+                // Now manually call resetState to clean up the threat editor state
+                // This ensures the state is reset after we've updated our UI state
+                resetState();
+                console.debug('Called resetState after saving threat');
+
+                // Hide the modal after saving
+                if (editModal.value) {
+                    console.debug('Hiding modal after save');
+                    editModal.value.hide();
+                }
+            } else {
+                console.debug('Not saving threat - no changes detected');
             }
         };
 
@@ -305,9 +425,24 @@ export default {
         };
 
         const onModalHidden = () => {
+            console.debug('Modal hidden event triggered');
+
+            // Check cell reference state when modal is hidden
+            const cellRef = store?.state?.cell?.ref;
+            console.debug('Cell reference state when modal is hidden:', {
+                cellExists: !!cellRef,
+                cellData: cellRef ? !!cellRef.data : 'no cell',
+                cellId: cellRef ? cellRef.id : 'no cell'
+            });
+
             // If modal is closed via escape key or clicking outside
+            // Only call cancelEdit if we're still in editing state
+            // This prevents cancelEdit from being called after a successful save
             if (isEditing.value) {
+                console.debug('Still in editing state, calling cancelEdit()');
                 cancelEdit();
+            } else {
+                console.debug('Not in editing state, skipping cancelEdit()');
             }
         };
 

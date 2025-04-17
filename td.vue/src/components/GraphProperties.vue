@@ -44,28 +44,43 @@
         <b-form v-if="cellRef && cellRef.data">
             <b-form-row>
                 <b-col md="6">
-                    <b-form-group id="name-group" label-cols="auto" :label="cellRef.data && cellRef.data.type === 'tm.Text'
-                        ? t('threatmodel.properties.text')
-                        : t('threatmodel.properties.name')
-                        " label-for="name">
-                        <b-form-textarea id="name" v-model="safeName" :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
+                    <b-form-group
+                        id="name-group"
+                        label-cols="auto"
+                        :label="cellRef.data && cellRef.data.type === 'tm.Text'
+                            ? t('threatmodel.properties.text')
+                            : t('threatmodel.properties.name')
+                        "
+                        label-for="name">
+                        <b-form-textarea
+                            id="name"
+                            v-model="safeName"
+                            :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
                             style="min-height: 60px" />
                     </b-form-group>
                 </b-col>
 
                 <b-col v-if="cellRef.data.type !== 'tm.Text'" md="6">
-                    <b-form-group id="description-group" label-cols="auto"
-                        :label="t('threatmodel.properties.description')" label-for="description">
-                        <b-form-textarea id="description" v-model="safeDescription" :rows="3"
+                    <b-form-group
+                        id="description-group"
+                        label-cols="auto"
+                        :label="t('threatmodel.properties.description')"
+                        label-for="description">
+                        <b-form-textarea
+                            id="description"
+                            v-model="safeDescription"
+                            :rows="3"
                             style="min-height: 80px" />
                     </b-form-group>
                 </b-col>
 
-                <b-col v-if="
-                    !cellRef.data.isTrustBoundary &&
-                    cellRef.data.type !== 'tm.Text' &&
-                    cellRef.data.type !== 'tm.Flow'
-                " md="6">
+                <b-col
+                    v-if="
+                        !cellRef.data.isTrustBoundary &&
+                            cellRef.data.type !== 'tm.Text' &&
+                            cellRef.data.type !== 'tm.Flow'
+                    "
+                    md="6">
                     <b-form-group id="outofscope-group" label-cols="auto">
                         <b-form-checkbox id="outofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">
                             {{ t('threatmodel.properties.outOfScope') }}
@@ -75,11 +90,15 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Flow'" md="6">
                     <b-form-group id="flowoutofscope-group" label-cols="auto">
-                        <b-form-checkbox id="flowoutofscope" v-model="cellRef.data.outOfScope"
+                        <b-form-checkbox
+                            id="flowoutofscope"
+                            v-model="cellRef.data.outOfScope"
                             @change="onChangeScope()">
                             {{ t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
-                        <b-form-checkbox id="bidirection" v-model="cellRef.data.isBidirectional"
+                        <b-form-checkbox
+                            id="bidirection"
+                            v-model="cellRef.data.isBidirectional"
                             @change="onChangeBidirection()">
                             {{ t('threatmodel.properties.bidirection') }}
                         </b-form-checkbox>
@@ -87,28 +106,45 @@
                 </b-col>
 
                 <b-col v-if="!cellRef.data.isTrustBoundary && cellRef.data.type !== 'tm.Text'" md="6" class="mt-3">
-                    <b-form-group id="reasonoutofscope-group" label-cols="auto"
-                        :label="t('threatmodel.properties.reasonOutOfScope')" label-for="reasonoutofscope">
-                        <b-form-textarea id="reasonoutofscope" v-model="safeReasonOutOfScope" :rows="3"
-                            style="min-height: 80px" :disabled="isReasonDisabled" />
+                    <b-form-group
+                        id="reasonoutofscope-group"
+                        label-cols="auto"
+                        :label="t('threatmodel.properties.reasonOutOfScope')"
+                        label-for="reasonoutofscope">
+                        <b-form-textarea
+                            id="reasonoutofscope"
+                            v-model="safeReasonOutOfScope"
+                            :rows="3"
+                            style="min-height: 80px"
+                            :disabled="!cellRef.data.outOfScope" />
                     </b-form-group>
                 </b-col>
 
                 <b-col v-if="cellRef.data.type === 'tm.Process'">
-                    <b-form-group id="privilegelevel-group" label-cols="auto"
-                        :label="t('threatmodel.properties.privilegeLevel')" label-for="privilegelevel">
-                        <b-form-input id="privilegelevel" v-model="cellRef.data.privilegeLevel" type="text"
+                    <b-form-group
+                        id="privilegelevel-group"
+                        label-cols="auto"
+                        :label="t('threatmodel.properties.privilegeLevel')"
+                        label-for="privilegelevel">
+                        <b-form-input
+                            id="privilegelevel"
+                            v-model="cellRef.data.privilegeLevel"
+                            type="text"
                             @change="onChangeProperties()" />
                     </b-form-group>
                 </b-col>
 
                 <b-col v-if="cellRef.data.type === 'tm.Process'">
                     <b-form-group id="process-handles-group" label-cols="auto">
-                        <b-form-checkbox id="handlesCardPayment" v-model="cellRef.data.handlesCardPayment"
+                        <b-form-checkbox
+                            id="handlesCardPayment"
+                            v-model="cellRef.data.handlesCardPayment"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.handlesCardPayment') }}
                         </b-form-checkbox>
-                        <b-form-checkbox id="handlesGoodsOrServices" v-model="cellRef.data.handlesGoodsOrServices"
+                        <b-form-checkbox
+                            id="handlesGoodsOrServices"
+                            v-model="cellRef.data.handlesGoodsOrServices"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.handlesGoodsOrServices') }}
                         </b-form-checkbox>
@@ -117,7 +153,9 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Process'">
                     <b-form-group id="web-app-group" label-cols="auto">
-                        <b-form-checkbox id="isWebApplication" v-model="cellRef.data.isWebApplication"
+                        <b-form-checkbox
+                            id="isWebApplication"
+                            v-model="cellRef.data.isWebApplication"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.isWebApplication') }}
                         </b-form-checkbox>
@@ -129,7 +167,9 @@
                         <b-form-checkbox id="isalog" v-model="cellRef.data.isALog" @change="onChangeProperties()">
                             {{ t('threatmodel.properties.isALog') }}
                         </b-form-checkbox>
-                        <b-form-checkbox id="storesCredentials" v-model="cellRef.data.storesCredentials"
+                        <b-form-checkbox
+                            id="storesCredentials"
+                            v-model="cellRef.data.storesCredentials"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.storesCredentials') }}
                         </b-form-checkbox>
@@ -138,7 +178,9 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Store'">
                     <b-form-group id="isEncrypted-group" label-cols="auto">
-                        <b-form-checkbox id="isEncrypted" v-model="cellRef.data.isEncrypted"
+                        <b-form-checkbox
+                            id="isEncrypted"
+                            v-model="cellRef.data.isEncrypted"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
@@ -150,7 +192,9 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Store'">
                     <b-form-group id="storesInventory-group" label-cols="auto">
-                        <b-form-checkbox id="storesInventory" v-model="cellRef.data.storesInventory"
+                        <b-form-checkbox
+                            id="storesInventory"
+                            v-model="cellRef.data.storesInventory"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.storesInventory') }}
                         </b-form-checkbox>
@@ -159,7 +203,9 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Actor'">
                     <b-form-group id="providesAuthentication-group" label-cols="auto">
-                        <b-form-checkbox id="providesAuthentication" v-model="cellRef.data.providesAuthentication"
+                        <b-form-checkbox
+                            id="providesAuthentication"
+                            v-model="cellRef.data.providesAuthentication"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.providesAuthentication') }}
                         </b-form-checkbox>
@@ -167,16 +213,24 @@
                 </b-col>
 
                 <b-col v-if="cellRef.data.type === 'tm.Flow'">
-                    <b-form-group id="protocol-group" label-cols="auto" :label="t('threatmodel.properties.protocol')"
+                    <b-form-group
+                        id="protocol-group"
+                        label-cols="auto"
+                        :label="t('threatmodel.properties.protocol')"
                         label-for="protocol">
-                        <b-form-input id="protocol" v-model="cellRef.data.protocol" type="text"
+                        <b-form-input
+                            id="protocol"
+                            v-model="cellRef.data.protocol"
+                            type="text"
                             @change="onChangeProperties()" />
                     </b-form-group>
                 </b-col>
 
                 <b-col v-if="cellRef.data.type === 'tm.Flow'">
                     <b-form-group id="isEncrypted-group" label-cols="auto">
-                        <b-form-checkbox id="isEncrypted" v-model="cellRef.data.isEncrypted"
+                        <b-form-checkbox
+                            id="isEncrypted"
+                            v-model="cellRef.data.isEncrypted"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
@@ -185,7 +239,9 @@
 
                 <b-col v-if="cellRef.data.type === 'tm.Flow'">
                     <b-form-group id="isPublicNetwork-group" label-cols="auto">
-                        <b-form-checkbox id="isPublicNetwork" v-model="cellRef.data.isPublicNetwork"
+                        <b-form-checkbox
+                            id="isPublicNetwork"
+                            v-model="cellRef.data.isPublicNetwork"
                             @change="onChangeProperties()">
                             {{ t('threatmodel.properties.publicNetwork') }}
                         </b-form-checkbox>
@@ -197,7 +253,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import dataChanged from '@/service/x6/graph/data-changed.js';
@@ -305,12 +361,38 @@ export default {
             }
         };
 
+        // Watch for changes to the outOfScope property
+        watch(() => cellRef.value?.data?.outOfScope, (newValue) => {
+            if (cellRef.value && cellRef.value.data) {
+                // If outOfScope is true but reasonOutOfScope is empty, initialize it
+                if (newValue && !cellRef.value.data.reasonOutOfScope) {
+                    cellRef.value.data.reasonOutOfScope = '';
+                }
+
+                // Force update
+                updateComponent();
+            }
+        });
+
         const onChangeScope = () => {
-            // We don't need to manually set the disabled state anymore
-            // as it's handled by the :disabled binding in the template
-            dataChanged.updateProperties(cellRef.value);
-            dataChanged.updateStyleAttrs(cellRef.value);
-            updateComponent();
+            // We need to ensure the outOfScope property change is properly detected
+            if (cellRef.value && cellRef.value.data) {
+                // Force reactivity by explicitly setting the property
+                cellRef.value.data.outOfScope = !!cellRef.value.data.outOfScope;
+
+                // Update the cell properties and style
+                dataChanged.updateProperties(cellRef.value);
+                dataChanged.updateStyleAttrs(cellRef.value);
+                updateComponent();
+            }
+        };
+
+        // Define the getReasonDisabled method
+        const getReasonDisabled = () => {
+            if (cellRef.value && cellRef.value.data) {
+                return !cellRef.value.data.outOfScope;
+            }
+            return true;
         };
 
         return {
@@ -323,6 +405,7 @@ export default {
             onChangeBidirection,
             onChangeProperties,
             onChangeScope,
+            getReasonDisabled,
             t
         };
     }

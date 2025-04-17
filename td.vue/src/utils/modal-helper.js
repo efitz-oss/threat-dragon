@@ -23,11 +23,12 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
     document.body.appendChild(modalContainer);
 
     // Create the modal component
-    const { BModal } = await import('bootstrap-vue-next');
+    const { BModal, BVN_COMPONENT_NAME, createBootstrap } = await import('bootstrap-vue-next');
     const { createApp, h } = await import('vue');
 
     // Return a Promise that resolves when the user confirms or cancels
     return new Promise((resolve) => {
+        // Create the app with Bootstrap Vue Next plugin
         const app = createApp({
             render() {
                 return h(
@@ -60,21 +61,25 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
             }
         });
 
+        // Register the Bootstrap Vue Next plugin
+        const bootstrap = createBootstrap();
+        app.use(bootstrap);
+
         let mounted = false;
-        
+
         // Use the i18n plugin if available
         // We need to use a Promise-based approach here since this is not an async function
         import('@/i18n/index.js').then(i18nFactory => {
             try {
                 const i18n = i18nFactory.default.get();
-                
+
                 if (i18n) {
                     app.use(i18n);
                 } else if (vueInstance && vueInstance.$i18n) {
                     // Fallback to instance i18n if available (legacy approach)
                     app.use(vueInstance.$i18n);
                 }
-                
+
                 // Mount after i18n is configured to ensure translations work
                 if (!mounted) {
                     const _modalInstance = app.mount(modalContainer);
@@ -107,13 +112,13 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
         let isCleanedUp = false;
         const cleanup = () => {
             if (isCleanedUp) return; // Prevent multiple cleanup calls
-            
+
             isCleanedUp = true;
             setTimeout(() => {
                 try {
                     // $destroy is not needed in Vue 3, app.unmount() is sufficient
                     app.unmount();
-                    
+
                     // Only try to remove if it's still a child of document.body
                     if (document.body.contains(modalContainer)) {
                         document.body.removeChild(modalContainer);

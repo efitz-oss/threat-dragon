@@ -129,7 +129,14 @@ const actions = {
         try {
             if (getProviderType(rootState.provider.selected) === providerTypes.local) {
                 // save locally for web app when local login
-                save.local(state.data, `${state.data.summary.title}.json`);
+                try {
+                    // Wait for the save operation to complete before proceeding
+                    await save.local(state.data, `${state.data.summary.title}.json`);
+                } catch (err) {
+                    console.error('Error saving file locally:', err);
+                    toast.error(t('threatmodel.errors.save'));
+                    return; // Exit early if save fails
+                }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.desktop) {
                 // desktop version always saves locally
                 console.debug('Desktop create action');
@@ -261,7 +268,14 @@ const actions = {
         try {
             if (getProviderType(rootState.provider.selected) === providerTypes.local) {
                 // save locally for web app when local login
-                save.local(state.data, `${state.data.summary.title}.json`);
+                try {
+                    // Wait for the save operation to complete before showing success toast
+                    await save.local(state.data, `${state.data.summary.title}.json`);
+                } catch (err) {
+                    console.error('Error saving file locally:', err);
+                    toast.error(t('threatmodel.errors.save'));
+                    return; // Exit early if save fails
+                }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.desktop) {
                 // desktop version always saves locally
                 console.debug('Desktop save action');
@@ -349,9 +363,9 @@ const mutations = {
             );
             console.debug(
                 'Threatmodel modified diagram applied : ' +
-                    state.modifiedDiagram.id +
-                    ' at index: ' +
-                    idx
+                state.modifiedDiagram.id +
+                ' at index: ' +
+                idx
             );
             state.data.detail.diagrams[idx] = state.modifiedDiagram;
         }

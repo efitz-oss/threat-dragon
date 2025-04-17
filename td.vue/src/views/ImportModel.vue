@@ -17,7 +17,11 @@
                     <b-row>
                         <b-col @drop.prevent="onDropFile" @dragenter.prevent @dragover.prevent>
                             <b-form-group id="json-input-group" label-for="json-input">
-                                <b-form-textarea id="json-input" v-model="tmJson" :placeholder="prompt" rows="16" />
+                                <b-form-textarea
+                                    id="json-input"
+                                    v-model="tmJson"
+                                    :placeholder="prompt"
+                                    rows="16" />
                             </b-form-group>
                         </b-col>
                     </b-row>
@@ -27,15 +31,22 @@
         <b-row>
             <b-col md="4" offset="2" class="text-left">
                 <BButtonGroup>
-                    <td-form-button id="td-open-btn" :on-btn-click="onOpenClick" icon="folder-open"
+                    <td-form-button
+                        id="td-open-btn"
+                        :on-btn-click="onOpenClick"
+                        icon="folder-open"
                         :text="$t('forms.open')" />
                 </BButtonGroup>
                 <!-- Correctly closed -->
             </b-col>
             <b-col md="4" class="text-right">
                 <BButtonGroup>
-                    <td-form-button id="td-import-btn" :is-primary="true" :on-btn-click="onImportClick"
-                        icon="file-import" :text="$t('forms.import')" />
+                    <td-form-button
+                        id="td-import-btn"
+                        :is-primary="true"
+                        :on-btn-click="onImportClick"
+                        icon="file-import"
+                        :text="$t('forms.import')" />
                 </BButtonGroup>
                 <!-- Correctly closed -->
             </b-col>

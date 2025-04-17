@@ -14,10 +14,28 @@ export function useThreatEditor() {
 
     // Reset all state
     const resetState = () => {
+        console.debug('resetState called - resetting threat editor state');
+
+        // Check cell reference before resetting state
+        const cellRef = store.state.cell.ref;
+        console.debug('Cell reference state in resetState (before reset):', {
+            cellExists: !!cellRef,
+            cellData: cellRef ? !!cellRef.data : 'no cell',
+            cellId: cellRef ? cellRef.id : 'no cell'
+        });
+
         editingThreat.value = null;
         originalThreat.value = null;
         isEditing.value = false;
         isNewThreat.value = false;
+
+        // Check cell reference after resetting state
+        const cellRefAfter = store.state.cell.ref;
+        console.debug('Cell reference state in resetState (after reset):', {
+            cellExists: !!cellRefAfter,
+            cellData: cellRefAfter ? !!cellRefAfter.data : 'no cell',
+            cellId: cellRefAfter ? cellRefAfter.id : 'no cell'
+        });
     };
 
     // Get the cell from the store
@@ -67,32 +85,93 @@ export function useThreatEditor() {
 
     // Save changes
     const saveThreat = () => {
-        if (!editingThreat.value || !cell.value) return;
+        console.debug('saveThreat called with:', {
+            editingThreat: editingThreat.value ? editingThreat.value.id : 'null',
+            isNewThreat: isNewThreat.value,
+            cellExists: !!cell.value,
+            cellData: cell.value ? !!cell.value.data : 'no cell'
+        });
 
-        if (isNewThreat.value) {
-            // For new threats: Add to the store for the first time
-            if (!cell.value.data.threats) {
-                cell.value.data.threats = [];
-            }
-
-            cell.value.data.threats.push(editingThreat.value);
-            console.debug('Added new threat to store:', editingThreat.value.id);
-        } else {
-            // For existing threats: Update in the store
-            const index = cell.value.data.threats.findIndex(t => t.id === editingThreat.value.id);
-            if (index >= 0) {
-                cell.value.data.threats[index] = editingThreat.value;
-                console.debug('Updated existing threat in store:', editingThreat.value.id);
-            }
+        if (!editingThreat.value) {
+            console.error('Cannot save threat: editingThreat is null or undefined');
+            return;
         }
 
-        // Update UI and store
-        cell.value.data.hasOpenThreats = cell.value.data.threats.some(t => t.status === 'Open');
-        store.dispatch(CELL_DATA_UPDATED, cell.value.data);
-        store.dispatch(tmActions.modified);
-        dataChanged.updateStyleAttrs(cell.value);
+        if (!cell.value) {
+            console.error('Cannot save threat: cell reference is null or undefined');
+            return;
+        }
 
-        resetState();
+        if (!cell.value.data) {
+            console.error('Cannot save threat: cell.data is null or undefined');
+            return;
+        }
+
+        // Log detailed information about the cell and threat
+        console.debug('Cell details:', {
+            id: cell.value.id,
+            type: cell.value.data.type,
+            name: cell.value.data.name,
+            hasThreats: !!cell.value.data.threats,
+            threatCount: cell.value.data.threats ? cell.value.data.threats.length : 0
+        });
+
+        console.debug('Threat details:', {
+            id: editingThreat.value.id,
+            title: editingThreat.value.title,
+            status: editingThreat.value.status,
+            isNew: isNewThreat.value
+        });
+
+        try {
+            if (isNewThreat.value) {
+                // For new threats: Add to the store for the first time
+                if (!cell.value.data.threats) {
+                    cell.value.data.threats = [];
+                    console.debug('Initialized empty threats array for cell');
+                }
+
+                // Make a deep copy of the threat to avoid reference issues
+                const threatCopy = JSON.parse(JSON.stringify(editingThreat.value));
+                cell.value.data.threats.push(threatCopy);
+                console.debug('Added new threat to store:', editingThreat.value.id);
+                console.debug('Cell threats after adding:', cell.value.data.threats.length);
+            } else {
+                // For existing threats: Update in the store
+                const index = cell.value.data.threats.findIndex(t => t.id === editingThreat.value.id);
+                if (index >= 0) {
+                    // Make a deep copy of the threat to avoid reference issues
+                    const threatCopy = JSON.parse(JSON.stringify(editingThreat.value));
+                    cell.value.data.threats[index] = threatCopy;
+                    console.debug('Updated existing threat in store:', editingThreat.value.id);
+                } else {
+                    console.warn('Could not find existing threat with ID:', editingThreat.value.id);
+                }
+            }
+
+            // Update UI and store
+            cell.value.data.hasOpenThreats = cell.value.data.threats.some(t => t.status === 'Open');
+            console.debug('Dispatching CELL_DATA_UPDATED with:', {
+                cellId: cell.value.id,
+                threatCount: cell.value.data.threats.length,
+                hasOpenThreats: cell.value.data.hasOpenThreats
+            });
+
+            store.dispatch(CELL_DATA_UPDATED, cell.value.data);
+            store.dispatch(tmActions.modified);
+            dataChanged.updateStyleAttrs(cell.value);
+
+            console.debug('Threat saved successfully');
+        } catch (error) {
+            console.error('Error saving threat:', error);
+        }
+
+        // Don't reset state immediately - let the component handle it
+        // This ensures the component can properly handle the UI state
+        console.debug('Threat saved successfully, returning control to component');
+
+        // The component will handle resetting the state after UI updates
+        // This prevents issues with the modal being hidden while still in editing state
     };
 
     // Cancel editing
@@ -100,7 +179,24 @@ export function useThreatEditor() {
         // For new threats: Nothing to clean up in the store
         // For existing threats: Revert any changes in the UI
         console.debug('Canceling edit of threat:', editingThreat.value?.id, 'isNew:', isNewThreat.value);
+
+        // Check cell reference before resetting state
+        const cellRef = store.state.cell.ref;
+        console.debug('Cell reference state before cancelEdit resets state:', {
+            cellExists: !!cellRef,
+            cellData: cellRef ? !!cellRef.data : 'no cell',
+            cellId: cellRef ? cellRef.id : 'no cell'
+        });
+
         resetState();
+
+        // Check cell reference after resetting state
+        const cellRefAfter = store.state.cell.ref;
+        console.debug('Cell reference state after cancelEdit resets state:', {
+            cellExists: !!cellRefAfter,
+            cellData: cellRefAfter ? !!cellRefAfter.data : 'no cell',
+            cellId: cellRefAfter ? cellRefAfter.id : 'no cell'
+        });
     };
 
     // Delete an existing threat
@@ -135,6 +231,7 @@ export function useThreatEditor() {
         editExistingThreat,
         saveThreat,
         cancelEdit,
-        deleteThreat
+        deleteThreat,
+        resetState
     };
 }

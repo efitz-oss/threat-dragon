@@ -375,6 +375,7 @@ const eng = {
         cancel: 'Cancel',
         close: 'Close',
         closeModel: 'Close Model',
+        create: 'Create',
         delete: 'Delete',
         discardTitle: 'Discard Changes?',
         discardMessage: 'Are you sure you want to discard your changes?',
