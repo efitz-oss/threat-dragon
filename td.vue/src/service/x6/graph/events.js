@@ -112,9 +112,9 @@ const cellAdded =
             // do not select new data flows or trust boundaries: it surprises the user
             if (
                 cell.shape !== 'path' &&
-            cell.shape !== 'edge' &&
-            cell.shape !== 'flow' &&
-            cell.shape !== 'trust-boundary-curve'
+                cell.shape !== 'edge' &&
+                cell.shape !== 'flow' &&
+                cell.shape !== 'trust-boundary-curve'
             ) {
                 graph.select(cell);
             }
@@ -128,7 +128,7 @@ const cellDeleted = () => {
 const cellSelected =
     (graph) =>
         ({ cell }) => {
-        // try and get the cell name
+            // try and get the cell name
             if (cell.data) {
                 if (cell.data.name) {
                     console.debug('Cell selected: ' + cell.data.name);
@@ -152,6 +152,10 @@ const cellSelected =
                 cell.remove();
                 cell = flow;
                 cell.setName(cell.data.name);
+
+                // Re-dispatch CELL_SELECTED with the new flow object
+                store.get().dispatch(CELL_SELECTED, cell);
+                return; // Return early as we've already dispatched the action
             }
 
             store.get().dispatch(CELL_SELECTED, cell);

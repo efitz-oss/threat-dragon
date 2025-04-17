@@ -259,6 +259,15 @@ const eng = {
             save: 'Error saving the Threat Model. Check the developer console for more information',
             googleDriveSave: 'Error saving to Google Drive. Make sure you have proper permissions.'
         },
+        localFilePicker: {
+            title: 'Select a Threat Model File',
+            noFiles: 'No files in this directory',
+            errors: {
+                loadDirectory: 'Error loading directory. Please try again.',
+                navigateDirectory: 'Error navigating to directory. Please try again.',
+                readFile: 'Error reading file. Please try again.'
+            }
+        },
         opened: 'Threat model successfully opened',
         saved: 'Threat model successfully saved',
         properties: {
@@ -451,6 +460,7 @@ const eng = {
             plot4ai: 'New PLOT4ai threat',
             stride: 'New STRIDE threat'
         },
+        new: 'New Threat',
         edit: 'Edit Threat',
         confirmDeleteTitle: 'Confirm Delete',
         confirmDeleteMessage: 'Are you sure you really want to delete this threat?',

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <local-file-picker ref="localFilePicker" @file-selected="onFileSelected" />
         <b-row>
             <b-col>
                 <div class="jumbotron text-center">
@@ -49,6 +50,7 @@ import isElectron from 'is-electron';
 import { getProviderType } from '@/service/provider/providers.js';
 import openThreatModel from '@/service/otm/openThreatModel.js';
 import TdFormButton from '@/components/FormButton.vue';
+import LocalFilePicker from '@/components/LocalFilePicker.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import { isValidSchema } from '@/service/schema/ajv';
 // Components imported automatically via bootstrap-vue-next plugin
@@ -69,7 +71,8 @@ const pickerFileOptions = {
 export default {
     name: 'ImportModel',
     components: {
-        TdFormButton
+        TdFormButton,
+        LocalFilePicker
     },
     data() {
         return {
@@ -111,29 +114,73 @@ export default {
             }
         },
         async onOpenClick() {
-            if ('showOpenFilePicker' in window) {
-                // Chrome and Edge browsers return an array of file handles
-                try {
-                    const [handle] = await window.showOpenFilePicker(pickerFileOptions);
-                    const file = await handle.getFile();
-                    if (file.name.endsWith('.json')) {
-                        this.tmJson = await file.text();
-                        this.$store.dispatch(tmActions.update, {
-                            fileName: file.name
-                        });
-                        this.onImportClick(file.name);
-                    } else {
-                        this.$toast.error(this.$t('threatmodel.errors.onlyJsonAllowed'));
+            try {
+                // For all users, use the native file picker if available
+                if ('showOpenFilePicker' in window) {
+                    try {
+                        const [handle] = await window.showOpenFilePicker(pickerFileOptions);
+                        const file = await handle.getFile();
+                        if (file.name.endsWith('.json')) {
+                            this.tmJson = await file.text();
+                            this.$store.dispatch(tmActions.update, {
+                                fileName: file.name
+                            });
+                            this.onImportClick(file.name);
+                        } else {
+                            this.$toast.error(this.$t('threatmodel.errors.onlyJsonAllowed'));
+                        }
+                    } catch (e) {
+                        // If the user cancels the file picker, don't show an error
+                        if (e.name !== 'AbortError') {
+                            this.$toast.warning(this.$t('threatmodel.errors.open'));
+                            console.warn(e);
+                        }
                     }
-                } catch (e) {
-                    // any error is most likely due to the picker being cancelled, which is benign so just warn
-                    this.$toast.warning(this.$t('threatmodel.errors.open'));
-                    console.warn(e);
+                } else {
+                    // For browsers that don't support the File System Access API,
+                    // use a traditional file input element
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+
+                    input.onchange = async (event) => {
+                        const file = event.target.files[0];
+                        if (file) {
+                            if (file.name.endsWith('.json')) {
+                                try {
+                                    const text = await file.text();
+                                    this.tmJson = text;
+                                    this.$store.dispatch(tmActions.update, {
+                                        fileName: file.name
+                                    });
+                                    this.onImportClick(file.name);
+                                } catch (e) {
+                                    this.$toast.error(this.$t('threatmodel.errors.invalidJson'));
+                                    console.error(e);
+                                }
+                            } else {
+                                this.$toast.error(this.$t('threatmodel.errors.onlyJsonAllowed'));
+                            }
+                        }
+                    };
+
+                    // Trigger the file input click
+                    input.click();
                 }
-            } else {
-                this.$toast.error(
-                    'File picker is not yet supported on this browser: use Paste or Drag and Drop'
-                );
+            } catch (e) {
+                this.$toast.warning(this.$t('threatmodel.errors.open'));
+                console.warn(e);
+            }
+        },
+
+        // Handle file selected from our custom file picker
+        onFileSelected(fileData) {
+            if (fileData && fileData.content) {
+                this.tmJson = fileData.content;
+                this.$store.dispatch(tmActions.update, {
+                    fileName: fileData.name
+                });
+                this.onImportClick(fileData.name);
             }
         },
         onImportClick(fileName) {
@@ -186,15 +233,13 @@ export default {
                 return;
             }
 
-            // Ensure all required params are included
-            const routeParams = {
-                ...params,
-                provider: params.provider || 'local', // Default to local if no provider
-                folder: params.folder || 'demo'       // Default to demo if no folder
-            };
+            // Only include the threatmodel parameter for routing
+            // Other parameters like provider and folder are handled by the route configuration
             this.$router.push({
                 name: `${this.providerType}ThreatModel`,
-                params: routeParams
+                params: {
+                    threatmodel: params.threatmodel
+                }
             });
         }
     }

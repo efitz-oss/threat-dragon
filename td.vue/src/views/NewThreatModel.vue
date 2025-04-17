@@ -10,48 +10,25 @@
             <b-col lg="8" offset-lg="2">
                 <b-card class="mt-3 mb-5">
                     <b-form @submit.prevent="saveModel">
-                        <b-form-group 
-                            :label="$t('threatmodel.title') + ' *'" 
-                            label-for="threat-model-title"
-                            class="required-field"
-                        >
-                            <b-form-input
-                                id="threat-model-title"
-                                v-model="threatModel.summary.title"
-                                required
-                                :placeholder="$t('threatmodel.placeholder.title')"
-                            ></b-form-input>
+                        <b-form-group :label="$t('threatmodel.title') + ' *'" label-for="threat-model-title"
+                            class="required-field">
+                            <b-form-input id="threat-model-title" v-model="threatModel.summary.title" required
+                                :placeholder="$t('threatmodel.placeholder.title')"></b-form-input>
                         </b-form-group>
 
                         <b-form-group :label="$t('threatmodel.owner')" label-for="threat-model-owner">
-                            <b-form-input
-                                id="threat-model-owner"
-                                v-model="threatModel.summary.owner"
-                                :placeholder="$t('threatmodel.placeholder.owner')"
-                            ></b-form-input>
+                            <b-form-input id="threat-model-owner" v-model="threatModel.summary.owner"
+                                :placeholder="$t('threatmodel.placeholder.owner')"></b-form-input>
                         </b-form-group>
 
-                        <b-form-group
-                            :label="$t('threatmodel.description')"
-                            label-for="threat-model-description"
-                        >
-                            <td-safe-form-textarea
-                                id="threat-model-description"
-                                v-model="threatModel.summary.description"
-                                rows="3"
-                                :placeholder="$t('threatmodel.placeholder.description')"
-                            ></td-safe-form-textarea>
+                        <b-form-group :label="$t('threatmodel.description')" label-for="threat-model-description">
+                            <b-form-textarea id="threat-model-description" v-model="threatModel.summary.description"
+                                rows="3" :placeholder="$t('threatmodel.placeholder.description')"></b-form-textarea>
                         </b-form-group>
 
-                        <b-form-group
-                            :label="$t('threatmodel.reviewer')"
-                            label-for="threat-model-reviewer"
-                        >
-                            <b-form-input
-                                id="threat-model-reviewer"
-                                v-model="threatModel.detail.reviewer"
-                                :placeholder="$t('threatmodel.placeholder.reviewer')"
-                            ></b-form-input>
+                        <b-form-group :label="$t('threatmodel.reviewer')" label-for="threat-model-reviewer">
+                            <b-form-input id="threat-model-reviewer" v-model="threatModel.detail.reviewer"
+                                :placeholder="$t('threatmodel.placeholder.reviewer')"></b-form-input>
                         </b-form-group>
 
                         <div class="text-right mt-4">
@@ -71,14 +48,12 @@
 import { mapState } from 'vuex';
 
 import isElectron from 'is-electron';
-import TdSafeFormTextarea from '@/components/TdFormTextareaWrapper.vue';
 import { getProviderType } from '@/service/provider/providers.js';
 import tmActions from '@/store/actions/threatmodel.js';
 
 export default {
     name: 'NewThreatModel',
     components: {
-        TdSafeFormTextarea
     },
     data() {
         return {
@@ -127,11 +102,11 @@ export default {
             } else if (this.providerType === 'google') {
                 // For Google provider, first go to DriveAccess to select save location
                 // Store the model in Vuex first
-                this.$store.dispatch(tmActions.update, { 
+                this.$store.dispatch(tmActions.update, {
                     title: this.threatModel.summary.title,
                     data: this.threatModel
                 });
-                
+
                 // Then navigate to the save screen
                 this.$router.push({
                     name: `${this.providerType}SaveModel`,
@@ -152,8 +127,10 @@ export default {
 .required-field label {
     font-weight: 600;
 }
+
 .form-group {
-    margin-bottom: 2.5rem;  /* Increased from 1.5rem to 2.5rem */
+    margin-bottom: 2.5rem;
+    /* Increased from 1.5rem to 2.5rem */
 }
 
 .form-group label {

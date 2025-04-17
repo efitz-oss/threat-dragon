@@ -21,39 +21,24 @@
         </b-row>
         <!-- Diagrams -->
         <b-row class="mb-4">
-            <b-col
-                v-for="(diagram, idx) in model.detail.diagrams"
-                :key="idx"
-                class="tm_diagram"
-                lg="3"
-            >
+            <b-col v-for="(diagram, idx) in model.detail.diagrams" :key="idx" class="tm_diagram" lg="3">
                 <BCard>
                     <template #header>
                         <h6 class="diagram-header-text">
-                            <a
-                                href="javascript:void(0)"
-                                class="diagram-edit"
-                                @click="editDiagram(diagram)"
-                            >
+                            <a href="javascript:void(0)" class="diagram-edit" @click="editDiagram(diagram)">
+                                <font-awesome-icon icon="diagram-project" class="mr-2" />
                                 {{ diagram.title }}
                             </a>
                         </h6>
                     </template>
                     <h6 v-if="diagram.description" class="diagram-description-text">
-                        <a
-                            href="javascript:void(0)"
-                            class="diagram-edit"
-                            @click="editDiagram(diagram)"
-                        >
+                        <a href="javascript:void(0)" class="diagram-edit" @click="editDiagram(diagram)">
                             {{ diagram.description }}
                         </a>
                     </h6>
                     <a v-else href="javascript:void(0)" @click="editDiagram(diagram)">
-                        <BImg
-                            class="m-auto d-block td-diagram-thumb"
-                            :src="getThumbnailUrl(diagram)"
-                            :alt="diagram.title"
-                        />
+                        <BImg class="m-auto d-block td-diagram-thumb" :src="getThumbnailUrl(diagram)"
+                            :alt="diagram.title" />
                     </a>
                 </BCard>
             </b-col>
@@ -61,25 +46,12 @@
         <b-row>
             <b-col class="text-right">
                 <BButtonGroup>
-                    <td-form-button
-                        id="td-edit-btn"
-                        :is-primary="true"
-                        :on-btn-click="onEditClick"
-                        icon="edit"
-                        :text="$t('forms.edit')"
-                    />
-                    <td-form-button
-                        id="td-report-btn"
-                        :on-btn-click="onReportClick"
-                        icon="file-alt"
-                        :text="$t('forms.report')"
-                    />
-                    <td-form-button
-                        id="td-close-btn"
-                        :on-btn-click="onCloseClick"
-                        icon="times"
-                        :text="$t('forms.closeModel')"
-                    />
+                    <td-form-button id="td-edit-btn" :is-primary="true" :on-btn-click="onEditClick" icon="edit"
+                        :text="$t('forms.edit')" />
+                    <td-form-button id="td-report-btn" :on-btn-click="onReportClick" icon="file-alt"
+                        :text="$t('forms.report')" />
+                    <td-form-button id="td-close-btn" :on-btn-click="onCloseClick" icon="times"
+                        :text="$t('forms.closeModel')" />
                 </BButtonGroup>
             </b-col>
         </b-row>
@@ -92,6 +64,7 @@ import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
 import TdThreatModelSummaryCard from '@/components/ThreatModelSummaryCard.vue';
 import tmActions from '@/store/actions/threatmodel.js';
+// FontAwesome is globally registered, but we need to make sure the icon is available
 export default {
     name: 'ThreatModel',
     components: {
@@ -105,9 +78,9 @@ export default {
     }),
     mounted() {
         const threatTop =
-                this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
+            this.model.detail.threatTop === undefined ? 100 : this.model.detail.threatTop;
         const diagramTop =
-                this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
+            this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
         const update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
         console.debug('updates: ' + JSON.stringify(update));
         this.$store.dispatch(tmActions.update, update);
@@ -124,7 +97,7 @@ export default {
         onReportClick(evt) {
             evt.preventDefault();
             console.debug(`Generating report with provider: ${this.providerType}`);
-            
+
             // Special handling for local provider
             if (this.providerType === 'local') {
                 console.debug('Using local route structure for report');
@@ -137,10 +110,10 @@ export default {
                 });
                 return;
             }
-            
+
             // For other providers, use the same validation logic as editDiagram
             const params = { ...this.$route.params };
-            
+
             // Provider-specific validation
             if (this.providerType === 'google') {
                 console.debug('Validating Google Drive params for report');
@@ -161,7 +134,7 @@ export default {
                     return;
                 }
             }
-            
+
             console.debug(`Navigating to ${this.providerType}Report with params:`, params);
             this.$router.push({
                 name: `${this.providerType}Report`,
@@ -187,9 +160,9 @@ export default {
             }
 
             this.$store.dispatch(tmActions.diagramSelected, diagram);
-            
+
             console.debug(`Editing diagram "${diagram.title}" with provider: ${this.providerType}`);
-            
+
             // When in local mode (demo models), use a simpler route structure
             // This avoids provider param issues that can cause infinite redirects
             if (this.providerType === 'local') {
@@ -204,13 +177,13 @@ export default {
                 });
                 return;
             }
-            
+
             // For other provider types, include all necessary params with validation
             const params = {
                 ...this.$route.params,
                 diagram: encodeURIComponent(diagram.title)
             };
-            
+
             // Provider-specific validation
             if (this.providerType === 'google') {
                 console.debug('Validating Google Drive params for diagram edit');
@@ -232,14 +205,14 @@ export default {
                 console.debug('Validating Git params for diagram edit');
                 // Ensure repository and branch are set
                 if (!params.repository || !params.branch) {
-                    console.error('Missing required Git parameters:', 
+                    console.error('Missing required Git parameters:',
                         !params.repository ? 'repository' : 'branch');
                     // Fall back to dashboard as we can't proceed without these params
                     this.$router.push({ name: 'MainDashboard' });
                     return;
                 }
             }
-            
+
             console.debug(`Navigating to ${this.providerType}DiagramEdit with params:`, params);
             this.$router.push({
                 name: `${this.providerType}DiagramEdit`,
@@ -251,19 +224,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    @use '@/styles/colors.scss' as colors; /* Import the SCSS file with color variables */
-    .tm-card {
-        font-size: 14px;
-        white-space: pre-wrap;
-    }
-    .diagram-header-text a {
-        color: colors.$black;
-    }
-    .diagram-description-text a {
-        color: colors.$black;
-    }
-    .td-diagram-thumb {
-        max-width: 200px;
-        max-height: 160px;
-    }
+@use '@/styles/colors.scss' as colors;
+
+/* Import the SCSS file with color variables */
+.tm-card {
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+.diagram-header-text a {
+    color: colors.$black;
+}
+
+.diagram-description-text a {
+    color: colors.$black;
+}
+
+.td-diagram-thumb {
+    max-width: 200px;
+    max-height: 160px;
+}
 </style>
