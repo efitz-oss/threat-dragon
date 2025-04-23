@@ -89,6 +89,24 @@ const updateProperties = (cell) => {
     if (cell) {
         if (cell.data) {
             console.debug('Updated properties for cell: ' + cell.getData().name);
+
+            // For edges/flows, ensure all required properties exist
+            if (cell.isEdge() || cell.shape === 'flow') {
+                const defaultProps = defaultProperties.flow;
+                let needsUpdate = false;
+
+                // Ensure all default flow properties exist on this cell
+                for (const key in defaultProps) {
+                    if (cell.data[key] === undefined) {
+                        cell.data[key] = defaultProps[key];
+                        needsUpdate = true;
+                    }
+                }
+
+                if (needsUpdate) {
+                    console.debug('Added missing properties to edge/flow');
+                }
+            }
         } else {
             if (cell.isEdge()) {
                 cell.type = defaultProperties.flow.type;
@@ -97,6 +115,7 @@ const updateProperties = (cell) => {
             cell.setData(defaultProperties.getByType(cell.type));
             console.debug('Default properties for ' + cell.shape + ' cell: ' + cell.getData().name);
         }
+
         const storeInstance = getStore();
         if (typeof storeInstance?.dispatch === 'function') {
             storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
@@ -110,30 +129,30 @@ const updateProperties = (cell) => {
 const setType = (cell) => {
     // fundamentally the shape is the only constant identifier
     switch (cell.shape) {
-    case 'actor':
-        cell.data.type = 'tm.Actor';
-        break;
-    case 'store':
-        cell.data.type = 'tm.Store';
-        break;
-    case 'process':
-        cell.data.type = 'tm.Process';
-        break;
-    case 'flow':
-        cell.data.type = 'tm.Flow';
-        break;
-    case 'trust-boundary-box':
-        cell.data.type = 'tm.BoundaryBox';
-        break;
-    case 'trust-boundary-curve':
-    case 'trust-broundary-curve':
-        cell.data.type = 'tm.Boundary';
-        break;
-    case 'td-text-block':
-        cell.data.type = 'tm.Text';
-        break;
-    default:
-        console.debug('Unrecognized shape');
+        case 'actor':
+            cell.data.type = 'tm.Actor';
+            break;
+        case 'store':
+            cell.data.type = 'tm.Store';
+            break;
+        case 'process':
+            cell.data.type = 'tm.Process';
+            break;
+        case 'flow':
+            cell.data.type = 'tm.Flow';
+            break;
+        case 'trust-boundary-box':
+            cell.data.type = 'tm.BoundaryBox';
+            break;
+        case 'trust-boundary-curve':
+        case 'trust-broundary-curve':
+            cell.data.type = 'tm.Boundary';
+            break;
+        case 'td-text-block':
+            cell.data.type = 'tm.Text';
+            break;
+        default:
+            console.debug('Unrecognized shape');
     }
 };
 

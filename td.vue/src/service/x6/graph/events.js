@@ -7,6 +7,7 @@ import shapes from '@/service/x6/shapes';
 import store from '@/store/index.js';
 import { CELL_SELECTED, CELL_UNSELECTED } from '@/store/actions/cell.js';
 import { THREATMODEL_MODIFIED } from '@/store/actions/threatmodel.js';
+import defaultProperties from '@/service/entity/default-properties.js';
 
 const showPorts = (show) => {
     const container = document.getElementById('graph-container');
@@ -35,10 +36,37 @@ const edgeConnected =
             if (edge.constructor.name === 'Edge') {
                 console.debug('connected unformatted edge/flow');
                 const flow = shapes.Flow.fromEdge(edge);
+
+                // Ensure the flow has all required properties
+                if (!flow.data) {
+                    flow.setData(Object.assign({}, defaultProperties.flow));
+                } else {
+                    // Ensure all default flow properties exist on this flow
+                    const defaultProps = defaultProperties.flow;
+                    for (const key in defaultProps) {
+                        if (flow.data[key] === undefined) {
+                            flow.data[key] = defaultProps[key];
+                        }
+                    }
+                }
+
+                // Add the flow to the graph
                 graph.addEdge(flow);
                 edge.remove();
                 edge = flow;
-                edge.setName(edge.data.name);
+
+                // Ensure the flow has a name
+                if (edge.data && edge.data.name) {
+                    edge.setName(edge.data.name);
+                }
+
+                // Select the new flow
+                graph.select(edge);
+
+                // Dispatch CELL_SELECTED to update the properties panel
+                store.get().dispatch(CELL_SELECTED, edge);
+                dataChanged.updateProperties(edge);
+                dataChanged.updateStyleAttrs(edge);
             }
         };
 
@@ -56,6 +84,24 @@ const mouseEnter = ({ cell }) => {
         tools.push('vertices');
         tools.push('source-arrowhead');
         tools.push('target-arrowhead');
+
+        // For edges, ensure they have all required properties
+        if (cell.data) {
+            // Ensure all default flow properties exist on this edge
+            const defaultProps = defaultProperties.flow;
+            let needsUpdate = false;
+
+            for (const key in defaultProps) {
+                if (cell.data[key] === undefined) {
+                    cell.data[key] = defaultProps[key];
+                    needsUpdate = true;
+                }
+            }
+
+            if (needsUpdate) {
+                dataChanged.updateProperties(cell);
+            }
+        }
     }
     cell.addTools(tools);
 
@@ -91,7 +137,23 @@ const cellAdded =
                 }
                 cell.remove();
                 cell = edge;
-                cell.setName(cell.data.name);
+
+                // Ensure the edge has all required properties
+                if (!cell.data) {
+                    cell.setData(Object.assign({}, defaultProperties.flow));
+                } else {
+                    // Ensure all default flow properties exist on this edge
+                    const defaultProps = defaultProperties.flow;
+                    for (const key in defaultProps) {
+                        if (cell.data[key] === undefined) {
+                            cell.data[key] = defaultProps[key];
+                        }
+                    }
+                }
+
+                if (cell.data && cell.data.name) {
+                    cell.setName(cell.data.name);
+                }
             }
 
             mouseLeave({ cell });
@@ -107,13 +169,37 @@ const cellAdded =
 
             if (cell.shape === 'edge') {
                 console.debug('added new edge (flow parent)');
+                // Convert unformatted edge to flow
+                const flow = shapes.Flow.fromEdge(cell);
+
+                // Ensure the flow has all required properties
+                if (!flow.data) {
+                    flow.setData(Object.assign({}, defaultProperties.flow));
+                } else {
+                    // Ensure all default flow properties exist on this flow
+                    const defaultProps = defaultProperties.flow;
+                    for (const key in defaultProps) {
+                        if (flow.data[key] === undefined) {
+                            flow.data[key] = defaultProps[key];
+                        }
+                    }
+                }
+
+                graph.addEdge(flow);
+                cell.remove();
+                cell = flow;
+
+                if (cell.data && cell.data.name) {
+                    cell.setName(cell.data.name);
+                }
+
+                // Re-dispatch CELL_SELECTED with the new flow object
+                store.get().dispatch(CELL_SELECTED, cell);
             }
 
-            // do not select new data flows or trust boundaries: it surprises the user
+            // Select all cells except paths and trust boundaries
             if (
                 cell.shape !== 'path' &&
-                cell.shape !== 'edge' &&
-                cell.shape !== 'flow' &&
                 cell.shape !== 'trust-boundary-curve'
             ) {
                 graph.select(cell);
@@ -145,19 +231,37 @@ const cellSelected =
                 console.warn('cell selected with no data');
             }
 
+            // Handle unformatted edge selection
             if (cell.shape === 'edge') {
                 console.debug('selected unformatted edge/flow');
                 const flow = shapes.Flow.fromEdge(cell);
                 graph.addEdge(flow);
                 cell.remove();
                 cell = flow;
-                cell.setName(cell.data.name);
 
-                // Re-dispatch CELL_SELECTED with the new flow object
-                store.get().dispatch(CELL_SELECTED, cell);
-                return; // Return early as we've already dispatched the action
+                // Ensure the flow has a name
+                if (cell.data && cell.data.name) {
+                    cell.setName(cell.data.name);
+                }
+
+                // Make sure the flow has all required properties
+                if (!cell.data) {
+                    cell.setData(Object.assign({}, defaultProperties.flow));
+                } else {
+                    // Ensure all default flow properties exist on this flow
+                    const defaultProps = defaultProperties.flow;
+                    for (const key in defaultProps) {
+                        if (cell.data[key] === undefined) {
+                            cell.data[key] = defaultProps[key];
+                        }
+                    }
+                }
+
+                // Select the new flow object
+                graph.select(cell);
             }
 
+            // Always dispatch CELL_SELECTED for any cell type
             store.get().dispatch(CELL_SELECTED, cell);
             dataChanged.updateProperties(cell);
             dataChanged.updateStyleAttrs(cell);
@@ -180,8 +284,8 @@ const listen = (graph) => {
     graph.on('resize', canvasResized);
     graph.on('edge:change:vertices', edgeChangeVertices(graph));
     graph.on('edge:connected', edgeConnected(graph));
-    graph.on('edge:dblclick', cellSelected);
-    graph.on('edge:move', cellSelected);
+    graph.on('edge:dblclick', cellSelected(graph));
+    graph.on('edge:move', cellSelected(graph));
     graph.on('cell:mouseleave', mouseLeave);
     graph.on('cell:mouseenter', mouseEnter);
     graph.on('cell:added', cellAdded(graph));
