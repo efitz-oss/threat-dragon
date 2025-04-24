@@ -75,9 +75,15 @@ export default {
             sections: privacySections
         };
 
+        // Create operator object for the template
+        const operator = {
+            heading: t('operator.heading')
+        };
+
         return {
             t,
-            privacy
+            privacy,
+            operator
         };
     }
 };

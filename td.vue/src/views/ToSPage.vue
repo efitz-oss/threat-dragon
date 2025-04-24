@@ -79,9 +79,15 @@ export default {
             sections: tosSections
         };
 
+        // Create operator object for the template
+        const operator = {
+            heading: t('operator.heading')
+        };
+
         return {
             t,
-            tos
+            tos,
+            operator
         };
     }
 };
