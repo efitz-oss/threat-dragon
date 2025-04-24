@@ -3,6 +3,7 @@ const deu = {
         sessionExpired: 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.'
     },
     operator: {
+        heading: 'Betreiber',
         operatedby: 'Diese Website und Instanz von OWASP Threat Dragon wird betrieben von:',
         name: `${process.env.VUE_APP_OPERATOR_NAME || 'dem Betreiber dieser Website'}`,
         contact: 'Kontakt: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(Kontaktinformationen nicht angegeben)'),
@@ -82,7 +83,7 @@ const deu = {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
         description:
-            'OWASP Threat Dragon ist eine kostenlose, Open-Source, plattformübergreifende Applikation für das Erstellen von Bedrohungsmodellen. Verwenden Sie es, um Diagramme zu Bedrohungsmodellen zu erstellen und Bedrohungen für Ihre Systeme zu identifizieren. Mit Fokus auf Flexibilität und Einfachheit ist das System leicht verständlich und für alle Benutzer zugänglich.'
+            'OWASP Threat Dragon ist eine kostenlose, Open-Source, plattformübergreifende Anwendung zum Erstellen von Bedrohungsmodellen. Nutzen Sie sie, um Diagramme zur Bedrohungsmodellierung zu zeichnen und Bedrohungen für Ihr System zu identifizieren. Mit dem Schwerpunkt auf Flexibilität und Einfachheit ist sie für alle Arten von Benutzern leicht zugänglich.'
     },
     providers: {
         desktop: {
@@ -181,6 +182,11 @@ const deu = {
         cancel: 'Abbrechen',
         name: 'Branch Name'
     },
+    folder: {
+        select: 'Wählen Sie einen',
+        from: 'Ordner aus der folgenden Liste',
+        noneFound: 'Dieser Ordner ist leer. Sie können hier ein neues Bedrohungsmodell erstellen.'
+    },
     threatmodelSelect: {
         select: 'Ein Bedrohungsmodell auswählen aus',
         from: 'aus folgenden Optionen, oder auswählen eines anderen',
@@ -275,16 +281,6 @@ const deu = {
             storesCredentials: 'Speichert Zugangsinformationen',
             storesInventory: 'Stores Inventory'
         },
-        buttons: {
-            delete: 'Auswahl löschen',
-            redo: 'Bearbeitung wiederholen',
-            shortcuts: 'Tastaturkürzel',
-            toggleGrid: 'Gitter umschalten',
-            undo: 'Bearbeitung zurücknehmen',
-            zoomIn: 'Vergrößern',
-            zoomOut: 'Verkleinern',
-            save: 'Speichern'
-        },
         controlButtons: {
             delete: 'Auswahl löschen',
             redo: 'Bearbeitung wiederholen',
@@ -331,7 +327,7 @@ const deu = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: 'Speichern'
             }
         },
         stencil: {
@@ -471,7 +467,7 @@ const deu = {
             mitigated: 'Abgeschwächt'
         },
         priority: {
-            tbd: '',
+            tbd: 'Zu bestimmen',
             low: 'Niedrig',
             medium: 'Mittel',
             high: 'Hoch',
@@ -504,15 +500,9 @@ const deu = {
             openUnknown: 'Offen / Unbekannte Priorität'
         }
     },
-    upgrade: {
-        modal: {
-            header: 'Bedrohungsmodell Aktualisierung',
-            welcome: 'Willkommen zu Version 2 von OWASP Threat Dragon!',
-            p1: 'Version 2 verwendet eine andere Zeichnungsbibliothek, wodurch sich die Art wie Bedrohungsmodelle gespeichert werden, ändert. Obwohl die meisten Diagramme genauso aussehen wie in früheren Versionen von Threat Dragon, kann es vorkommen, dass in einigen Fällen die Diagramme leicht angepasst werden müssen.',
-            p2: 'Nachdem schließen dieses Modells, sehen Sie wie Diagramme in diesem Modell im Version 2 Format dargestellt werden. Notieren Sie sich bitte alle Diagramme, die Sie eventuell anpassen müssen. Dies ist ein einmaliges Upgrade und Sie sollten diese Nachricht nach dem Speichern des Modells nicht erneut sehen.'
-        },
-        instructions: 'Super! Bringen wir Sie zu Ihrem Modell.',
-        continue: 'Weiter zum Bedrohungsmodell'
+    pagination: {
+        previous: 'Vorherige',
+        next: 'Nächste'
     }
 };
 

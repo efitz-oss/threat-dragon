@@ -3,6 +3,7 @@ const zho = {
         sessionExpired: '会话登录已过期，请重新登录。'
     },
     operator: {
+        heading: '运营者',
         operatedby: '本网站和OWASP Threat Dragon实例由以下机构运营：',
         name: `${process.env.VUE_APP_OPERATOR_NAME || '本网站的运营者'}`,
         contact: '联系方式: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(未提供联系信息)'),
@@ -82,7 +83,7 @@ const zho = {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragon Logo',
         description:
-            'Threat Dragon 是来自 OWASP 的免费开源威胁建模工具。它可以用作 Windows、MacOS 和 Linux 的独立桌面应用程序，也可以用作 Web 应用程序。如果您想在不授予其 GitHub 存储库访问权限的情况下试用该应用程序，则桌面应用程序非常棒，但如果您选择在线（Web）版本，则可以在威胁模型上释放 GitHub 的强大功能！根据需求选择下方登录方式。'
+            'OWASP Threat Dragon 是一款免费、开源、跨平台的威胁建模应用程序。使用它来绘制威胁建模图并识别系统的威胁。凭借其灵活性和简单性，各类用户都能轻松使用。'
     },
     providers: {
         desktop: {
@@ -179,6 +180,11 @@ const zho = {
         cancel: '取消',
         name: '分支名称'
     },
+    folder: {
+        select: '选择一个',
+        from: '文件夹从下面列表中',
+        noneFound: '此文件夹为空，您可以在此处创建新的威胁模型。'
+    },
     threatmodelSelect: {
         select: '从中选择一个威胁模型',
         from: '从下面列表中，或选择另一个',
@@ -198,6 +204,10 @@ const zho = {
         new: {
             title: '创建新威胁模型',
             description: '输入有关新威胁模型的信息'
+        },
+        edit: {
+            title: '编辑威胁模型',
+            description: '修改有关威胁模型的信息'
         },
         placeholder: {
             title: '威胁模型标题',
@@ -271,7 +281,7 @@ const zho = {
             storesCredentials: '存储凭证',
             storesInventory: '存储库存'
         },
-        buttons: {
+        controlButtons: {
             delete: '删除选中',
             redo: '重做',
             shortcuts: '键盘快捷键',
@@ -280,15 +290,6 @@ const zho = {
             zoomIn: '放大',
             zoomOut: '缩小',
             save: '保存'
-        },
-        controlButtons: {
-            delete: '删除选中',
-            redo: '重做',
-            shortcuts: '键盘快捷键',
-            toggleGrid: '切换网格',
-            undo: '撤消',
-            zoomIn: '放大',
-            zoomOut: '缩小'
         },
         shortcuts: {
             title: '快捷方式',
@@ -326,7 +327,7 @@ const zho = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: '保存'
             }
         },
         stencil: {
@@ -357,6 +358,7 @@ const zho = {
         discardTitle: '放弃更改？',
         discardMessage: '您确定要放弃您的更改吗？',
         edit: '编辑',
+        export: '导出',
         exportAs: '导出模型为',
         exportHtml: 'HTML报告',
         exportPdf: 'PDF报告',
@@ -496,15 +498,9 @@ const zho = {
             openUnknown: '未解决/未知优先级'
         }
     },
-    upgrade: {
-        modal: {
-            header: '威胁模型更新',
-            welcome: '欢迎来到OWASP Threat Dragon第2版!',
-            p1: '第二版使用不同的绘图库，这将改变你的威胁模型的部分保存方式。虽然大多数图看起来与以前版本的Threat Dragon相同，但在有些情况下可能需要稍作调整。',
-            p2: '关闭这个模式后，你会看到这个模型中的每个图是如何以第二版格式呈现的。请注意你可能需要调整的任何图表。这是一个一次性的升级，在保存这个模型后，你不应该再看到这个信息。'
-        },
-        instructions: '完美! 让我们来看看你的模型。',
-        continue: '继续威胁模型'
+    pagination: {
+        previous: '上一页',
+        next: '下一页'
     }
 };
 

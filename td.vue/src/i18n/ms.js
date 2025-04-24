@@ -1,4 +1,4 @@
-const ms = {
+const msa = {
     auth: {
         sessionExpired: 'Sesi anda telah tamat. Sila log masuk semula untuk meneruskan.'
     },
@@ -107,7 +107,12 @@ const ms = {
         refBranch: 'Cawangan Rujukan',
         add: 'tambah cawangan',
         cancel: 'Batal',
-        nama: 'nama cawangan'
+        name: 'nama cawangan'
+    },
+    folder: {
+        select: 'Pilih',
+        from: 'folder dari senarai di bawah',
+        noneFound: 'Folder ini kosong. Anda boleh mencipta model ancaman baharu di sini.'
     },
     threatmodelSelect: {
         select: 'Pilih Model Ancaman dari',
@@ -191,16 +196,6 @@ const ms = {
             storesCredentials: 'Simpan Kredensial',
             storesInventory: 'Simpan Inventori'
         },
-        buttons: {
-            delete: 'Padam yang dipilih',
-            redo: 'Buat semula suntingan',
-            shortcuts: 'Pintasan papan kekunci',
-            toggleGrid: 'Togel grid',
-            undo: 'Buat asal semula suntingan',
-            zoomIn: 'Zum masuk',
-            zoomOut: 'Zum keluar',
-            save: 'Simpan'
-        },
         controlButtons: {
             delete: 'Padam yang dipilih',
             redo: 'Buat semula suntingan',
@@ -247,7 +242,7 @@ const ms = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: 'Simpan'
             }
         },
         stencil: {
@@ -392,7 +387,7 @@ const ms = {
             showMitigatedThreats: 'Tunjukkan ancaman yang ditangani',
             showModelDiagrams: 'Tunjukkan gambarajah model',
             showEmpty: 'Tunjukkan elemen kosong',
-            showProperties: 'Show element properties',
+            showProperties: 'Tunjukkan ciri-ciri elemen',
             showBranding: 'Logo Threat Dragon'
         },
         title: 'Laporan model ancaman untuk',
@@ -411,17 +406,7 @@ const ms = {
             openTbd: 'Buka / Keutamaan TBD',
             openUnknown: 'Buka / Keutamaan Tidak Diketahui'
         }
-    },
-    upgrade: {
-        modal: {
-            header: 'Kemas kini Model Ancaman',
-            welcome: 'Selamat datang ke versi 2 OWASP Threat Dragon!',
-            p1: 'Versi 2 menggunakan pustaka lukisan yang berbeza, yang akan mengubah cara sebahagian daripada model ancaman anda disimpan. Walaupun kebanyakan gambarajah akan kelihatan sama seperti versi sebelumnya Threat Dragon, terdapat kes di mana mereka mungkin perlu diselaraskan sedikit.',
-            p2: 'Selepas menutup modal ini, anda akan melihat bagaimana setiap gambarajah dalam model ini dipaparkan dalam format versi 2. Sila buat nota gambarajah mana yang perlu anda selaraskan. Ini adalah peningkatan satu kali, dan anda tidak seharusnya melihat mesej ini lagi selepas menyimpan model ini.'
-        },
-        instructions: 'Hebat! Mari bawa anda ke model anda.',
-        continue: 'Teruskan ke Model Ancaman'
     }
 };
 
-export default ms;
+export default msa;

@@ -154,14 +154,18 @@ export default {
                 return 'Bahasa Indonesia'; // Indonesia
             case 'jpn':
                 return '日本語'; // Japanese
-            case 'ms':
-                return 'Malay'; // Malay
+            case 'msa':
+                return 'Bahasa Melayu'; // Malay
             case 'por':
                 return 'Português'; // Portuguese
             case 'rus':
                 return 'Русский'; // Russian
+            case 'tha':
+                return 'ไทย'; // Thai
             case 'ukr':
                 return 'Українська'; // Ukrainian
+            case 'heb':
+                return 'עברית'; // Hebrew
             case 'zho':
                 return '中文'; // Chinese
             default:
@@ -177,6 +181,8 @@ export default {
                 日本語: 'japanese',
                 Русский: 'russian',
                 Українська: 'ukrainian',
+                ไทย: 'thai',
+                עברית: 'hebrew',
                 中文: 'chinese'
             };
             return searchMapping[name] || name;

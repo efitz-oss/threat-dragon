@@ -16,7 +16,7 @@ jest.mock('@/i18n/index.js', () => ({
     useI18n: () => ({
         t: (key) => key,
         locale: { value: 'eng' },
-        availableLocales: { value: ['ara', 'deu', 'ell', 'eng', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'ms', 'por', 'rus', 'ukr', 'zho'] }
+        availableLocales: { value: ['ara', 'deu', 'ell', 'eng', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'msa', 'por', 'rus', 'ukr', 'zho'] }
     }),
     tc: (key) => key,
     default: {
@@ -38,7 +38,7 @@ describe('components/LocaleSelect.vue', () => {
             i18n = createI18n({
                 legacy: false, // Use Composition API for Vue 3
                 locale: 'eng',
-                availableLocales: ['ara', 'deu', 'ell', 'eng', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'ms', 'por', 'rus', 'ukr', 'zho'],
+                availableLocales: ['ara', 'deu', 'ell', 'eng', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'msa', 'por', 'rus', 'ukr', 'zho'],
                 messages: {
                     eng: { hello: 'Hello World' },
                     deu: { hello: 'Hallo Welt' }
@@ -65,7 +65,7 @@ describe('components/LocaleSelect.vue', () => {
                     },
                     mocks: {
                         $i18n: {
-                            availableLocales: ['ara', 'deu', 'ell', 'eng', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'ms', 'por', 'rus', 'ukr', 'zho'],
+                            availableLocales: ['ara', 'deu', 'ell', 'eng', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'msa', 'por', 'rus', 'ukr', 'zho'],
                             locale: 'eng'
                         }
                     }
@@ -160,7 +160,7 @@ describe('components/LocaleSelect.vue', () => {
             i18n = createI18n({
                 legacy: false,
                 locale: 'eng',
-                availableLocales: ['eng', 'ara', 'deu', 'ell', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'ms', 'por', 'zho', 'rus', 'ukr'],
+                availableLocales: ['eng', 'ara', 'deu', 'ell', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'msa', 'por', 'zho', 'rus', 'ukr'],
                 messages: { eng: { hello: 'Hello' } }
             });
             
@@ -178,7 +178,7 @@ describe('components/LocaleSelect.vue', () => {
                     },
                     mocks: {
                         $i18n: {
-                            availableLocales: ['eng', 'ara', 'deu', 'ell', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'ms', 'por', 'zho', 'rus', 'ukr'],
+                            availableLocales: ['eng', 'ara', 'deu', 'ell', 'spa', 'fin', 'fra', 'hin', 'ind', 'jpn', 'msa', 'por', 'zho', 'rus', 'ukr'],
                             locale: 'eng'
                         }
                     }
@@ -198,7 +198,7 @@ describe('components/LocaleSelect.vue', () => {
             expect(wrapper.vm.getLanguageName('hin')).toEqual('हिंदी');
             expect(wrapper.vm.getLanguageName('ind')).toEqual('Bahasa Indonesia');
             expect(wrapper.vm.getLanguageName('jpn')).toEqual('日本語');
-            expect(wrapper.vm.getLanguageName('ms')).toEqual('Malay');
+            expect(wrapper.vm.getLanguageName('msa')).toEqual('Bahasa Melayu');
             expect(wrapper.vm.getLanguageName('por')).toEqual('Português');
             expect(wrapper.vm.getLanguageName('zho')).toEqual('中文');
         });

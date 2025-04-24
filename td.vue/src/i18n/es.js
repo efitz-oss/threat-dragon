@@ -2,6 +2,12 @@ const spa = {
     auth: {
         sessionExpired: 'Su sesión ha expirado. Por favor inicie una nueva sesión para continuar.'
     },
+    operator: {
+        heading: 'Operador',
+        operatedby: 'Este sitio web y esta instancia de OWASP Threat Dragon son operados por:',
+        name: `${process.env.VUE_APP_OPERATOR_NAME || 'el operador de este sitio web'}`,
+        contact: 'Contacto: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(información de contacto no proporcionada)'),
+    },
     nav: {
         v2Warning:
             'Los modelos de amenazas(threat models) version 2.0 no son compatibles con los modelos de amenazas(threat model) de Threat Dragon versión 1.x. Los modelos importados de la versión 1.x serán actualizados acorde al esquema de la versión 2.0',
@@ -14,7 +20,7 @@ const spa = {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo de Threat Dragon',
         description:
-            'Threat Dragon es una herramienta de modelado de amenazas de código abierto de OWASP. Se puede utilizar como aplicación desktop para Windows, MacOS y Linux o como una aplicación web. La aplicación de desktop es excelente si desea probarla sin otorgar acceso a sus repositorios de GitHub. Sin embargo, si elige la versión web, podrá liberar el increíble poder de GitHub en sus modelos de amenazas (threat models). Por supuesto, para hacer esto, deberá iniciar sesión en GitHub y permitir el acceso al repositorio de interés'
+            'OWASP Threat Dragon es una aplicación gratuita, de código abierto y multiplataforma para crear modelos de amenazas. Úsela para dibujar diagramas de modelado de amenazas e identificar amenazas para su sistema. Con énfasis en la flexibilidad y simplicidad, es fácilmente accesible para todo tipo de usuarios.'
     },
     providers: {
         desktop: {
@@ -52,7 +58,8 @@ const spa = {
             fileName: 'Nombre del Archivo',
             fileNamePlaceholder: 'Ingrese un nombre para su archivo',
             selectFolder: 'Seleccione una carpeta en Google Drive',
-            selectFile: 'Seleccione un archivo de Google Drive'
+            selectFile: 'Seleccione un archivo de Google Drive',
+            selectThreatModel: 'Seleccione un Modelo de Amenaza de Google Drive'
         }
     },
     dashboard: {
@@ -110,6 +117,11 @@ const spa = {
         add: 'Añadir rama',
         cancel: 'Cancelar',
         name: 'Nombre de la sucursal'
+    },
+    folder: {
+        select: 'Seleccione una',
+        from: 'carpeta de la lista a continuación',
+        noneFound: 'Esta carpeta está vacía. Puede crear un nuevo modelo de amenazas aquí.'
     },
     threatmodelSelect: {
         select: 'Seleccione un modelo de amenazas (threat model) ',
@@ -213,7 +225,8 @@ const spa = {
             toggleGrid: 'Alternar cuadrícula',
             undo: 'Deshacer Edición',
             zoomIn: 'Ampliar zoom',
-            zoomOut: 'Reducir zoom'
+            zoomOut: 'Reducir zoom',
+            save: 'Guardar'
         },
         shortcuts: {
             title: 'Atajos',
@@ -252,10 +265,11 @@ const spa = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: 'Guardar'
             }
         },
         stencil: {
+            title: 'Formas',
             boundaries: 'Límites',
             components: 'Componentes',
             entities: 'Entidades',
@@ -288,11 +302,16 @@ const spa = {
         exportPdf: 'Reporte PDF',
         exportTd: 'Original (Threat Dragon)',
         exportOtm: 'Open Threat Model (OTM)',
+        exportFormats: {
+            png: 'PNG',
+            jpeg: 'JPEG',
+            svg: 'SVG'
+        },
         import: 'Importar',
         ok: 'OK',
         open: 'Abrir',
         openModel: 'Abrir modelo',
-        print: 'Print',
+        print: 'Imprimir',
         reload: 'Recargar',
         remove: 'Eliminar',
         report: 'Reporte',
@@ -396,8 +415,8 @@ const spa = {
             showOutOfScope: 'Mostrar elementos fuera de contexto',
             showMitigatedThreats: 'Mostrar amenazas mitigadas',
             showModelDiagrams: 'Mostrar diagramas de modelo',
-            showEmpty: 'Show empty elements',
-            showProperties: 'Show element properties',
+            showEmpty: 'Mostrar elementos vacíos',
+            showProperties: 'Mostrar propiedades de elementos',
             showBranding: 'Marca de Threat Dragon'
         },
         title: 'Reporte de modelo de amenaza para',

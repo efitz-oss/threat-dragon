@@ -109,6 +109,11 @@ const ind = {
         cancel: 'Batal',
         name: 'Nama Cabang'
     },
+    folder: {
+        select: 'Pilih',
+        from: 'folder dari daftar di bawah',
+        noneFound: 'Folder ini kosong. Anda dapat membuat model ancaman baru di sini.'
+    },
     threatmodelSelect: {
         select: 'Pilih Model Ancaman dari',
         from: 'dari daftar di bawah, atau pilih lain',
@@ -191,16 +196,6 @@ const ind = {
             storesCredentials: 'Menyimpan Kredensial',
             storesInventory: 'Menyimpan Persediaan'
         },
-        buttons: {
-            delete: 'Hapus yang dipilih',
-            redo: 'Lakukan lagi',
-            shortcuts: 'Pintasan keyboard',
-            toggleGrid: 'Aktifkan grid',
-            undo: 'Batalkan lagi',
-            zoomIn: 'Perbesar',
-            zoomOut: 'Perkecil',
-            save: 'Simpan'
-        },
         controlButtons: {
             delete: 'Hapus yang dipilih',
             redo: 'Lakukan lagi',
@@ -247,7 +242,7 @@ const ind = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: 'Simpan'
             }
         },
         stencil: {
@@ -391,7 +386,7 @@ const ind = {
             showMitigatedThreats: 'Tampilkan ancaman yang diredam',
             showModelDiagrams: 'Tampilkan diagram model',
             showEmpty: 'Tampilkan elemen kosong',
-            showProperties: 'Show element properties',
+            showProperties: 'Tampilkan properti elemen',
             showBranding: 'Logo Threat Dragon'
         },
         title: 'Laporan model ancaman untuk',
@@ -410,16 +405,6 @@ const ind = {
             openTbd: 'Terbuka / Prioritas TBD',
             openUnknown: 'Terbuka / Prioritas Tidak Diketahui'
         }
-    },
-    upgrade: {
-        modal: {
-            header: 'Pembaruan Model Ancaman',
-            welcome: 'Selamat datang di versi 2 OWASP Threat Dragon!',
-            p1: 'Versi 2 menggunakan perpustakaan gambar yang berbeda, yang akan mengubah cara bagian dari model ancaman Anda disimpan. Meskipun sebagian besar diagram akan terlihat sama seperti di versi Threat Dragon sebelumnya, ada kasus di mana mereka mungkin perlu disesuaikan sedikit.',
-            p2: 'Setelah menutup modal ini, Anda akan melihat bagaimana setiap diagram dalam model ini dirender dalam format versi 2. Harap perhatikan setiap diagram yang mungkin perlu Anda sesuaikan. Ini adalah peningkatan satu kali, dan Anda tidak akan melihat pesan ini lagi setelah menyimpan model ini.'
-        },
-        instructions: 'Bagus! Mari kita bawa Anda ke model Anda.',
-        continue: 'Lanjut ke Model Ancaman'
     }
 };
 

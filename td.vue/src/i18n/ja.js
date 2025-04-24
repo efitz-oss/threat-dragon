@@ -2,6 +2,12 @@ const jpn = {
     auth: {
         sessionExpired: 'セッションの有効期限が切れました。再ログインしてください。'
     },
+    operator: {
+        heading: '運営者',
+        operatedby: 'このウェブサイトとOWASP Threat Dragonのインスタンスは以下によって運営されています：',
+        name: `${process.env.VUE_APP_OPERATOR_NAME || 'このウェブサイトの運営者'}`,
+        contact: '連絡先: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(連絡先情報は提供されていません)'),
+    },
     nav: {
         v2Warning:
             'バージョン2.0の脅威モデルは、Threat Dragonバージョン1.xとの互換性を保っていません。バージョン1.xのモデルは、インポート時にバージョン2.0のフォーマットに変換されます。',
@@ -14,15 +20,19 @@ const jpn = {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Threat Dragonロゴ',
         description:
-            'OWASP Threat Dragonは無償で、脅威モデリングのソフトです。オープンソースで複数のプラットホームに対応しています。Threat Dragonで脅威モデルを作成することによって、システムに対する脅威が明確になります。重視が多様性と使い勝手に置かれているので、簡単に利用できます。'
+            'OWASP Threat Dragonは無料でオープンソース、クロスプラットフォームの脅威モデリングアプリケーションです。脅威モデリング図を描いてシステムの脅威を特定するために使用します。柔軟性とシンプルさを重視しており、あらゆるタイプのユーザーが簡単にアクセスできます。'
     },
     providers: {
         desktop: {
-            displayName: '開始',
-            loginWith: 'Threat Dragon'
+            displayName: 'Threat Dragon',
+            loginWith: '開始'
         },
         github: {
             displayName: 'GitHubで',
+            loginWith: 'ログイン'
+        },
+        gitlab: {
+            displayName: 'GitLabで',
             loginWith: 'ログイン'
         },
         bitbucket: {
@@ -106,6 +116,11 @@ const jpn = {
         add: 'ブランチを追加する\n',
         cancel: '取り消し',
         name: 'ブランチ名'
+    },
+    folder: {
+        select: '次のものから',
+        from: 'フォルダを選択してください',
+        noneFound: 'このフォルダは空です。ここに新しい脅威モデルを作成できます。'
     },
     threatmodelSelect: {
         select: '次のものから',
@@ -202,16 +217,6 @@ const jpn = {
             storesCredentials: '認証情報を保管している',
             storesInventory: '登録簿を保管している'
         },
-        buttons: {
-            delete: '選択を削除',
-            redo: '繰り返す',
-            shortcuts: 'キーボードショートカット',
-            toggleGrid: 'グリッドの表示',
-            undo: '戻す',
-            zoomIn: '拡大',
-            zoomOut: '縮小',
-            save: '保存'
-        },
         controlButtons: {
             delete: '選択を削除',
             redo: '繰り返す',
@@ -258,7 +263,7 @@ const jpn = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: '保存'
             }
         },
         stencil: {
@@ -288,11 +293,17 @@ const jpn = {
         discardTitle: '変更を破棄',
         discardMessage: '変更を本当に破棄しますか？',
         edit: '編集',
+        export: 'エクスポート',
         exportAs: '次としてエキスポート',
         exportHtml: 'HTMLとして保存',
         exportPdf: 'PDFとして保存',
         exportTd: 'オリジナル(Threat Dragon)',
         exportOtm: '脅威モデル(OTM)を開く',
+        exportFormats: {
+            png: 'PNG',
+            jpeg: 'JPEG',
+            svg: 'SVG'
+        },
         import: 'インポート',
         ok: 'OK',
         open: '開く',
@@ -406,7 +417,7 @@ const jpn = {
             showMitigatedThreats: '解決済みの脅威を表示',
             showModelDiagrams: 'モデルの図面を表示',
             showEmpty: '空要素を表示',
-            showProperties: 'Show element properties',
+            showProperties: '要素のプロパティを表示',
             showBranding: 'Threat Dragonロゴ'
         },
         title: '脅威レポート',
@@ -426,15 +437,9 @@ const jpn = {
             openUnknown: '未対応 / 優先度不明'
         }
     },
-    upgrade: {
-        modal: {
-            header: '脅威モデルを更新',
-            welcome: 'OWASP Threat Dragonバージョン2へようこそ！',
-            p1: 'バージョン2が使用している表示ライブラリが変わったため、脅威モデルのデータフォーマットに変更がありました。表示には以前と変わりがないが、場合によって図面を修正する必要があります。',
-            p2: 'モデルを閉じると、バージョン2のフォーマットでの表示が映ります。図面を修正する必要があるか確認してください。一旦保存したら再び修正する必要がないので、このメッセージは今後表示されません。'
-        },
-        instructions: '素晴らしい！モデルに進みましょう。',
-        continue: '脅威モデルへ進む'
+    pagination: {
+        previous: '前へ',
+        next: '次へ'
     }
 };
 

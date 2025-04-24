@@ -2,6 +2,75 @@ const fra = {
     auth: {
         sessionExpired: 'Votre session est expirée. Veuillez vous reconnecter pour continuer.'
     },
+    operator: {
+        heading: 'Opérateur',
+        operatedby: 'Ce site web et cette instance d\'OWASP Threat Dragon sont exploités par:',
+        name: `${process.env.VUE_APP_OPERATOR_NAME || 'l\'opérateur de ce site web'}`,
+        contact: 'Contact: ' + (process.env.VUE_APP_OPERATOR_CONTACT ? process.env.VUE_APP_OPERATOR_CONTACT.replace('@', ' [at] ') : '(informations de contact non fournies)'),
+    },
+    tos: {
+        title: 'Conditions d\'utilisation',
+        lastUpdated: '4 avril 2025',
+        introduction: 'Bienvenue sur notre instance d\'OWASP Threat Dragon. Ces conditions d\'utilisation ("Conditions") régissent votre accès et votre utilisation de ce site web, qui est une instance d\'une application web open-source mise à disposition par l\'opérateur mentionné ci-dessus ("L\'Opérateur").',
+        sections: [
+            {
+                heading: '1. Acceptation des conditions',
+                content: 'En accédant et en utilisant ce site web, vous acceptez d\'être lié par les termes et dispositions de cet accord. Si vous n\'acceptez pas ces conditions, veuillez ne pas utiliser ce site web.'
+            },
+            {
+                heading: '2. Utilisation du site web',
+                content: 'Vous ne pouvez utiliser le site web qu\'à des fins légales. Vous acceptez de ne pas abuser, perturber ou tenter d\'accéder sans autorisation au site web ou à ses systèmes sous-jacents.'
+            },
+            {
+                heading: '3. Aucune garantie',
+                content: 'Le site web est fourni "tel quel" sans garanties d\'aucune sorte, expresses ou implicites, y compris, mais sans s\'y limiter, l\'adéquation à un usage particulier, la disponibilité ou l\'exactitude. Nous ne garantissons pas un fonctionnement ininterrompu ou sans erreur.'
+            },
+            {
+                heading: '4. Limitation de responsabilité',
+                content: 'Dans toute la mesure permise par la loi, l\'Opérateur ne sera pas responsable des dommages directs, indirects, accessoires ou consécutifs résultant de votre utilisation ou de votre incapacité à utiliser le site web.'
+            },
+            {
+                heading: '5. Logiciel Open Source',
+                content: 'Ce site web utilise le logiciel OWASP Threat Dragon, dont le code source est disponible sur https://www.github.com/OWASP/threat-dragon. Votre utilisation du logiciel est soumise à ses conditions de licence open source. Nous ne sommes pas responsables du logiciel lui-même, mais uniquement de l\'exploitation de cette instance. L\'opérateur de ce site web n\'est pas affilié à OWASP.'
+            },
+            {
+                heading: '6. Modifications des conditions',
+                content: 'L\'Opérateur peut mettre à jour ces conditions à tout moment. L\'utilisation continue du site web après les modifications constitue une acceptation des conditions mises à jour.'
+            },
+            {
+                heading: '7. Résiliation',
+                content: 'L\'Opérateur se réserve le droit de suspendre ou de résilier l\'accès au site web à sa discrétion, sans préavis, pour quelque raison que ce soit.'
+            },
+            {
+                heading: '8. Loi applicable',
+                content: 'Ces conditions sont régies par les lois de la juridiction dans laquelle l\'Opérateur a son siège social (dans le cas d\'une organisation) ou réside (dans le cas d\'un individu), sans égard aux principes de conflit de lois.'
+            }
+        ],
+        contact: 'Si vous avez des questions concernant ces conditions, veuillez contacter l\'opérateur.'
+    },
+    privacy: {
+        title: 'Politique de confidentialité',
+        lastUpdated: '4 avril 2025',
+        introduction: 'L\'opérateur de ce site web s\'engage à protéger votre vie privée. Cette politique de confidentialité explique comment vos informations sont traitées.',
+        sections: [
+            {
+                heading: 'Utilisation minimale des données pour les opérations',
+                content: 'L\'opérateur ne collecte, ne stocke ni ne traite les données personnelles des utilisateurs à des fins de suivi, de profilage ou de partage avec des tiers. Des journaux temporaires, qui peuvent inclure des adresses IP ou des noms d\'utilisateur, sont générés uniquement à des fins opérationnelles et de débogage. Ces journaux sont supprimés dans un court laps de temps et ne sont pas conservés ou utilisés au-delà de ces fins limitées.'
+            },
+            {
+                heading: 'Conformité légale',
+                content: 'L\'opérateur ne divulguera des informations que si la loi l\'exige, par exemple en réponse à une ordonnance gouvernementale valide ou à une assignation à comparaître. Dans de tels cas, l\'opérateur se conformera aux obligations légales applicables.'
+            },
+            {
+                heading: 'Modifications de cette politique',
+                content: 'L\'opérateur peut mettre à jour cette politique de confidentialité de temps à autre. Tout changement sera publié sur cette page avec une date de "Dernière mise à jour" mise à jour.'
+            },
+            {
+                heading: 'Contactez-nous',
+                content: 'Si vous avez des questions concernant cette politique de confidentialité, veuillez contacter l\'opérateur.'
+            }
+        ]
+    },
     nav: {
         v2Warning:
             'Les modèles de menace de la version 2.0 ne sont pas rétrocompatibles avec les modèles Threat Dragon de la version 1.x. Les modèles importés de la version 1.x seront mis à niveau vers le schéma de la version 2.0',
@@ -14,7 +83,7 @@ const fra = {
         title: 'OWASP Threat Dragon',
         imgAlt: 'Logo Threat Dragon',
         description:
-            "Threat Dragon est un outil de modélisation des menaces open-source et gratuit d'OWASP. Il peut être utilisé comme une application de bureau sur Windows, MacOS et Linux, ou comme une application Web. L'application de bureau est idéale si vous voulez essayer Threat Dragon sans lui donner accès à vos projets GitHub, mais si vous choisissez la version en ligne, vous pouvez profiter de la puissance impressionnante de GitHub sur vos modèles de menace! Pour ce faire, vous devez d'abord vous connecter."
+            "OWASP Threat Dragon est une application gratuite, open-source et multiplateforme pour créer des modèles de menaces. Utilisez-la pour dessiner des diagrammes de modélisation des menaces et identifier les menaces pour votre système. Avec un accent sur la flexibilité et la simplicité, elle est facilement accessible pour tous types d'utilisateurs."
     },
     providers: {
         desktop: {
@@ -52,7 +121,8 @@ const fra = {
             fileName: 'Nom du fichier',
             fileNamePlaceholder: 'Entrez un nom pour votre fichier',
             selectFolder: 'Sélectionner un dossier dans Google Drive',
-            selectFile: 'Sélectionner un fichier depuis Google Drive'
+            selectFile: 'Sélectionner un fichier depuis Google Drive',
+            selectThreatModel: 'Sélectionner un modèle de menace depuis Google Drive'
         }
     },
     dashboard: {
@@ -112,6 +182,11 @@ const fra = {
         cancel: 'Annuler',
         name: 'Nom de la branche'
     },
+    folder: {
+        select: 'Sélectionnez un',
+        from: 'dossier dans la liste ci-dessous',
+        noneFound: 'Ce dossier est vide. Vous pouvez créer un nouveau modèle de menace ici.'
+    },
     threatmodelSelect: {
         select: 'Sélectionnez un modèle de menace parmi',
         from: 'parmi la liste ci-dessous, ou choisissez une autre',
@@ -145,40 +220,40 @@ const fra = {
             addNewDiagram: 'Ajouter un nouveau diagramme...',
             generic: {
                 defaultTitle: 'Nouveau diagramme générique',
-                defaultDescription: 'New generic diagram description',
+                defaultDescription: 'Description du nouveau diagramme générique',
                 select: 'Générique'
             },
             stride: {
                 defaultTitle: 'Nouveau diagramme STRIDE',
-                defaultDescription: 'New STRIDE diagram description',
+                defaultDescription: 'Description du nouveau diagramme STRIDE',
                 select: 'STRIDE'
             },
             linddun: {
                 defaultTitle: 'Nouveau diagramme LINDDUN',
-                defaultDescription: 'New LINDDUN diagram description',
+                defaultDescription: 'Description du nouveau diagramme LINDDUN',
                 select: 'LINDDUN'
             },
             plot4ai: {
                 defaultTitle: 'Nouveau diagramme PLOT4ai',
-                defaultDescription: 'New PLOT4ai diagram description',
+                defaultDescription: 'Description du nouveau diagramme PLOT4ai',
                 select: 'PLOT4ai'
             },
             die: {
-                defaultTitle: 'New DIE diagram',
-                defaultDescription: 'New DIE diagram description',
+                defaultTitle: 'Nouveau diagramme DIE',
+                defaultDescription: 'Description du nouveau diagramme DIE',
                 select: 'DIE'
             },
             cia: {
                 defaultTitle: 'Nouveau diagramme CIA',
-                defaultDescription: 'New CIA diagram description',
+                defaultDescription: 'Description du nouveau diagramme CIA',
                 select: 'CIA'
             }
         },
         threats: 'Menaces',
         errors: {
-            dropSingleFileOnly: 'Drag and drop requires a single file.',
+            dropSingleFileOnly: 'Le glisser-déposer nécessite un seul fichier.',
             invalidJson: 'JSON invalide. Veuillez vérifier votre modèle et réessayer.',
-            onlyJsonAllowed: 'Only files that end with .json are supported.',
+            onlyJsonAllowed: 'Seuls les fichiers se terminant par .json sont pris en charge.',
             open: "Erreur lors de l'ouverture de ce modèle de menace. Vérifiez la console de développement pour plus d'informations",
             save: "Erreur lors de la sauvegarde de ce modèle de menace. Vérifiez la console de développement pour plus d'informations",
             googleDriveSave:
@@ -215,7 +290,8 @@ const fra = {
             toggleGrid: "Grille d'affichage",
             undo: 'Annuler',
             zoomIn: 'Agrandir',
-            zoomOut: 'Rétrécir'
+            zoomOut: 'Rétrécir',
+            save: 'Sauvegarder'
         },
         shortcuts: {
             title: 'Raccourcis',
@@ -253,12 +329,13 @@ const fra = {
             },
             save: {
                 shortcut: '(ctrl/cmd) + s',
-                action: 'Save'
+                action: 'Sauvegarder'
             }
         },
         stencil: {
+            title: 'Formes',
             boundaries: 'Délimitations',
-            components: 'Components',
+            components: 'Composants',
             entities: 'Entités',
             metadata: 'Métadonnées',
             search: 'Recherche',
@@ -397,8 +474,8 @@ const fra = {
             showOutOfScope: 'Afficher les éléments hors du domaine visé',
             showMitigatedThreats: 'Afficher les menaces mitigées',
             showModelDiagrams: 'Afficher les diagrammes du modèle',
-            showEmpty: 'Show empty elements',
-            showProperties: 'Show element properties',
+            showEmpty: 'Afficher les éléments vides',
+            showProperties: 'Afficher les propriétés des éléments',
             showBranding: 'Icône de Threat Dragon'
         },
         title: 'Rapport sur le modèle de menace pour',

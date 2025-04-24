@@ -20,12 +20,14 @@ import ind from './id.js'; // Indonesian
 import eng from './en.js';
 import fin from './fi.js';
 import fra from './fr.js';
+import heb from './he.js'; // Hebrew
 import hin from './hi.js';
 import jpn from './ja.js';
-import ms from './ms.js';
+import msa from './ms.js';
 import por from './pt.js';
 import rus from './ru.js';
 import spa from './es.js';
+import tha from './th.js'; // Thai
 import ukr from './uk.js';
 import zho from './zh.js';
 
@@ -50,12 +52,14 @@ const getI18n = () => {
                 spa,
                 fin,
                 fra,
+                heb,
                 hin,
                 ind,
                 jpn,
-                ms,
+                msa,
                 por,
                 rus,
+                tha,
                 ukr,
                 zho
             }
