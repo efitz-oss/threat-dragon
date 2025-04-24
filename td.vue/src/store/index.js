@@ -10,6 +10,7 @@ import provider from './modules/provider.js';
 import repo from './modules/repository.js';
 import folder from './modules/folder.js';
 import threatmodel from './modules/threatmodel.js';
+import ui from './modules/ui.js';
 import vuexPersist from '../plugins/vuex-persist.js';
 
 const buildVersion = require('../../package.json').version;
@@ -31,7 +32,8 @@ const store = createStore({
         provider,
         repo,
         folder,
-        threatmodel
+        threatmodel,
+        ui
     },
     plugins: [vuexPersist.session.plugin]
 });

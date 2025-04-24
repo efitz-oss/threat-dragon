@@ -87,7 +87,7 @@
                     md="6"
                 >
                     <b-form-group id="outofscope-group" label-cols="auto">
-                        <b-form-checkbox id="outofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">
+                        <b-form-checkbox id="outofscope" v-model="cellRef.data.outOfScope" @change="onChangeProperties()">
                             {{ t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -98,7 +98,7 @@
                         <b-form-checkbox
                             id="flowoutofscope"
                             v-model="cellRef.data.outOfScope"
-                            @change="onChangeScope()"
+                            @change="onChangeProperties()"
                         >
                             {{ t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
@@ -121,10 +121,13 @@
                     >
                         <b-form-textarea
                             id="reasonoutofscope"
+                            :key="`reasonoutofscope-${outOfScopeValue ? 'enabled' : 'disabled'}`"
                             v-model="safeReasonOutOfScope"
                             :rows="3"
                             style="min-height: 80px"
-                            :disabled="!cellRef.data.outOfScope"
+                            :disabled="!outOfScopeValue"
+                            :class="outOfScopeValue ? 'enabled-textarea' : 'disabled-textarea'"
+                            placeholder="Enter reason for out of scope"
                         />
                     </b-form-group>
                 </b-col>
@@ -275,7 +278,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import dataChanged from '@/service/x6/graph/data-changed.js';
@@ -339,64 +342,36 @@ export default {
             }
         });
 
-        // Computed property to determine if reasonOutOfScope field should be disabled
-        const isReasonDisabled = computed(() => {
-            if (cellRef.value && cellRef.value.data) {
-                return !cellRef.value.data.outOfScope;
-            }
-            return true;
-        });
+        // Reactive reference to track the out of scope value
+        const outOfScopeValue = ref(false);
+        
+        // Watch for changes to cellRef.data.outOfScope
+        watch(() => cellRef.value?.data?.outOfScope, (newValue) => {
+            outOfScopeValue.value = !!newValue;
+        }, { immediate: true });
 
         // Define component methods
-        const updateComponent = () => {
-            // For Vue 3, forcing update is generally not needed
-            // This function is kept for compatibility
-        };
-
         const onChangeBidirection = () => {
             dataChanged.updateProperties(cellRef.value);
             dataChanged.updateStyleAttrs(cellRef.value);
-            updateComponent();
         };
 
         const onChangeProperties = () => {
+            // If outOfScope is true but reasonOutOfScope is empty, initialize it
+            if (cellRef.value && cellRef.value.data &&
+                cellRef.value.data.outOfScope &&
+                !cellRef.value.data.reasonOutOfScope) {
+                cellRef.value.data.reasonOutOfScope = '';
+            }
+            
+            // Update our reactive reference to match the current state
+            if (cellRef.value && cellRef.value.data) {
+                outOfScopeValue.value = !!cellRef.value.data.outOfScope;
+            }
+            
+            // Update the cell properties and style in Vuex
             dataChanged.updateProperties(cellRef.value);
-            updateComponent();
-        };
-
-
-        // Watch for changes to the outOfScope property
-        watch(() => cellRef.value?.data?.outOfScope, (newValue) => {
-            if (cellRef.value && cellRef.value.data) {
-                // If outOfScope is true but reasonOutOfScope is empty, initialize it
-                if (newValue && !cellRef.value.data.reasonOutOfScope) {
-                    cellRef.value.data.reasonOutOfScope = '';
-                }
-
-                // Force update
-                updateComponent();
-            }
-        });
-
-        const onChangeScope = () => {
-            // We need to ensure the outOfScope property change is properly detected
-            if (cellRef.value && cellRef.value.data) {
-                // Force reactivity by explicitly setting the property
-                cellRef.value.data.outOfScope = !!cellRef.value.data.outOfScope;
-
-                // Update the cell properties and style
-                dataChanged.updateProperties(cellRef.value);
-                dataChanged.updateStyleAttrs(cellRef.value);
-                updateComponent();
-            }
-        };
-
-        // Define the getReasonDisabled method
-        const getReasonDisabled = () => {
-            if (cellRef.value && cellRef.value.data) {
-                return !cellRef.value.data.outOfScope;
-            }
-            return true;
+            dataChanged.updateStyleAttrs(cellRef.value);
         };
 
         return {
@@ -404,12 +379,9 @@ export default {
             safeName,
             safeDescription,
             safeReasonOutOfScope,
-            isReasonDisabled,
-            updateComponent,
+            outOfScopeValue,
             onChangeBidirection,
             onChangeProperties,
-            onChangeScope,
-            getReasonDisabled,
             t
         };
     }
@@ -431,6 +403,30 @@ export default {
 :deep(textarea.form-control) {
     height: auto !important;
     resize: none !important;
+}
+
+/* Ensure disabled textareas have a very dark background */
+.disabled-textarea {
+    background-color: #343a40 !important;
+    opacity: 0.65 !important;
+    cursor: not-allowed !important;
+    border-color: #495057 !important;
+    color: #adb5bd !important;
+    pointer-events: none !important;
+}
+
+/* Ensure enabled textareas have a distinct appearance */
+.enabled-textarea {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+    cursor: text !important;
+    border-color: #80bdff !important;
+    color: #212529 !important;
+}
+
+/* Override Bootstrap's default disabled styles */
+:deep(textarea.form-control:disabled) {
+    background-color: #343a40 !important;
 }
 
 /* Improve form elements spacing */

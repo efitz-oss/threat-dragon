@@ -58,6 +58,7 @@ export default {
 
 <style lang="scss">
     @use '@/styles/sizes.scss' as sizes;
+    @use '@/styles/form-controls.scss';
     /* Font imports don't need to be changed - they're standard CSS imports, not Sass imports */
     @import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700');
 
