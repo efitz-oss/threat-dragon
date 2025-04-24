@@ -442,4 +442,23 @@ export default {
     width: 100%;
     height: 100%;
 }
+
+/*
+ * Custom styling for the selection box
+ * Original styles (for reference if we need to revert):
+ * - Default orange color (from primary color)
+ * - Default size (matches the element)
+ * - Default border width (1-2px)
+ */
+:deep(.x6-widget-selection-box) {
+    /* Make the selection box slightly smaller than the object */
+    transform: scale(0.95);
+    transform-origin: center;
+    
+    /* Change the border to 3px solid bright yellow */
+    border: 3px solid yellow !important;
+    
+    /* Ensure the border is visible */
+    box-sizing: border-box;
+}
 </style>
