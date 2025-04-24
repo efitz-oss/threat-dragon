@@ -11,6 +11,9 @@
             <b-row>
                 <b-col md="12">
                     <div class="td-operator mt-5 text-left">
+                        <h2>{{ operator.heading }}</h2>
+                    </div>
+                    <div class="td-operator mt-5 text-left">
                         {{ t('operator.operatedby') }}
                     </div>
                     <div class="td-operator mt-2 text-left">
