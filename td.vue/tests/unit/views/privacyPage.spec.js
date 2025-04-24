@@ -101,9 +101,10 @@ describe('PrivacyPage.vue', () => {
         
         // Check for sections
         const headings = wrapper.findAll('.td-description h2');
-        expect(headings).toHaveLength(2);
-        expect(headings.at(0).text()).toBe('Section 1');
-        expect(headings.at(1).text()).toBe('Section 2');
+        expect(headings).toHaveLength(3);
+        expect(headings.at(0).text()).toBe('Privacy Policy Title');
+        expect(headings.at(1).text()).toBe('Section 1');
+        expect(headings.at(2).text()).toBe('Section 2');
     });
     
     it('applies the correct CSS classes', () => {

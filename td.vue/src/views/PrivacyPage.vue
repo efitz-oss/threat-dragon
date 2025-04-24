@@ -27,6 +27,7 @@
             <b-row>
                 <b-col md="12">
                     <div class="td-description mt-5 text-left">
+                        <h2>{{ t('privacy.title') }}</h2>
                         <p>{{ t('privacy.lastUpdated') }}</p>
                         <p>{{ t('privacy.introduction') }}</p>
                         <div v-for="(section, index) in privacy.sections" :key="index" class="mt-4">
