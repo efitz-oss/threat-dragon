@@ -7,12 +7,18 @@
                         v-if="!!number"
                         type="button"
                         class="threat-title text-truncate d-block btn btn-link p-0 text-left"
-                        @click="threatSelected">#{{ number }} {{ title || 'Unknown Threat' }}</button>
+                        @click="threatSelected"
+                    >
+                        #{{ number }} {{ title || 'Unknown Threat' }}
+                    </button>
                     <button
                         v-else
                         type="button"
                         class="threat-title text-truncate d-block btn btn-link p-0 text-left"
-                        @click="threatSelected">{{ title || 'Unknown Threat' }}</button>
+                        @click="threatSelected"
+                    >
+                        {{ title || 'Unknown Threat' }}
+                    </button>
                 </b-col>
             </b-row>
             <b-row class="mt-2">
@@ -26,27 +32,32 @@
                         v-if="status !== 'Open'"
                         icon="check"
                         class="threat-icon green-icon"
-                        :title="status" />
+                        :title="status"
+                    />
                     <font-awesome-icon
                         v-if="status === 'Open'"
                         icon="exclamation-triangle"
                         class="threat-icon red-icon"
-                        :title="status" />
+                        :title="status"
+                    />
                     <font-awesome-icon
                         v-if="severity === 'High'"
                         icon="circle"
                         class="threat-icon red-icon"
-                        :title="severity" />
+                        :title="severity"
+                    />
                     <font-awesome-icon
                         v-if="severity === 'Medium'"
                         icon="circle"
                         class="threat-icon yellow-icon"
-                        :title="severity" />
+                        :title="severity"
+                    />
                     <font-awesome-icon
                         v-if="severity === 'Low'"
                         icon="circle"
                         class="threat-icon green-icon"
-                        :title="severity" />
+                        :title="severity"
+                    />
                 </b-col>
                 <b-col cols="6" class="text-right">
                     <b-badge v-if="!!modelType">
@@ -60,6 +71,10 @@
 
 <script>
 import { ref } from 'vue';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('components:GraphThreats');
 
 export default {
     name: 'TdGraphThreats',
@@ -126,7 +141,7 @@ export default {
                 });
                 document.dispatchEvent(event);
             } catch (error) {
-                console.error('Error emitting threat selected event:', error);
+                log.error('Error emitting threat selected event:', error);
             }
 
             // Reset processing state after a short delay

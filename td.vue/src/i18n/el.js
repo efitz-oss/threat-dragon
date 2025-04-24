@@ -127,9 +127,7 @@ const ell = {
         contributors: 'Συνεισφέροντες',
         contributorsPlaceholder: 'Προσθήκη ενός νέου συνεισφέροντος',
         description: 'Περιγραφή Συστήματος Υψηλού Επιπέδου',
-        dragAndDrop: 'Drag and drop or ',
-        editing: 'Υπό επεξεργασία',
-        jsonPaste: 'Κάντε επικόλληση (Paste) του JSON από το μοντέλο απειλών σας εδώ',
+        dragAndDrop: 'Drag and drop or ',        jsonPaste: 'Κάντε επικόλληση (Paste) του JSON από το μοντέλο απειλών σας εδώ',
         owner: 'Ιδιοκτήτης',
         reviewer: 'Αξιολογητής',
         title: 'Τίτλος',
@@ -143,11 +141,7 @@ const ell = {
             description:
                 'Εισάγετε μια περιγραφή υψηλού επιπέδου του συστήματος που μοντελοποιείται',
             reviewer: 'Όνομα Αξιολογητή'
-        },
-        actions: {
-            save: 'Αποθήκευση'
-        },
-        diagram: {
+        },        diagram: {
             diagrams: 'Διαγράμματα',
             addNewDiagram: 'Προσθέστε ένα νέο διάγραμμα...',
             generic: {

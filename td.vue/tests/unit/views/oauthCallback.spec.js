@@ -102,24 +102,18 @@ describe('views/OAuthCallback.vue', () => {
     });
 
     describe('missing provider', () => {
-        beforeEach(async () => {
+        it('displays an error when provider is missing', async () => {
             // Create vuex store without the provider
             mockStore = createStore({
                 state: {
                     provider: {
                         selected: null
                     }
-                },
-                actions: {
-                    PROVIDER_SELECTED: jest.fn()
                 }
             });
             
-            // Spy on the dispatch method
-            jest.spyOn(mockStore, 'dispatch');
-            
-            // Mock API response
-            loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
+            // Spy on console.error
+            console.error = jest.fn();
             
             // Mount the component
             _wrapper = mount(OAuthCallback, {
@@ -128,14 +122,19 @@ describe('views/OAuthCallback.vue', () => {
                 }
             });
             
-            // Wait for mounted hook to execute
+            // Wait for mounted hook and async operations to complete
             await nextTick();
-            await nextTick(); // Additional nextTick for async code
-        });
-
-        it('defaults to google provider when provider is missing', () => {
-            expect(mockStore.dispatch).toHaveBeenCalledWith('PROVIDER_SELECTED', 'google');
-            expect(loginApi.completeLoginAsync).toHaveBeenCalledWith('google', code);
+            await nextTick();
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Verify error handling occurred
+            expect(console.error).toHaveBeenCalled();
+            
+            // Check that the component displays the error message
+            expect(_wrapper.find('.alert-danger').exists()).toBe(true);
+            expect(_wrapper.text()).toContain('Error');
+            expect(_wrapper.vm.errorOccurred).toBe(true);
+            expect(_wrapper.vm.errorMessage).toContain('No provider found');
         });
     });
     

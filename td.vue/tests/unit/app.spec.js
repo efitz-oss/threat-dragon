@@ -102,8 +102,8 @@ describe('App.vue', () => {
         // In Vue 3 with Vuex 4, we need to spy on the store's dispatch method
         const dispatchSpy = jest.spyOn(mockStore, 'dispatch');
 
-        // Create a new wrapper to ensure the onMounted hook is triggered
-        const newWrapper = mount(App, {
+        // Create a new instance to ensure the onMounted hook is triggered
+        mount(App, {
             global: {
                 plugins: [
                     mockStore,

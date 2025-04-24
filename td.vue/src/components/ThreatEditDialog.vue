@@ -13,7 +13,8 @@
             no-close-on-esc
             hide-footer
             @hidden="onModalHidden"
-            @ok="onSave">
+            @ok="onSave"
+        >
             <b-form>
                 <b-form-row>
                     <b-col>
@@ -22,7 +23,8 @@
                                 id="title"
                                 v-model="editingThreat.title"
                                 type="text"
-                                required />
+                                required
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -32,7 +34,8 @@
                         <b-form-group
                             id="threat-type-group"
                             :label="t('threats.properties.type')"
-                            label-for="threat-type">
+                            label-for="threat-type"
+                        >
                             <b-form-select id="threat-type" v-model="editingThreat.type" :options="threatTypes" />
                         </b-form-group>
                     </b-col>
@@ -44,7 +47,8 @@
                             id="status-group"
                             :label="t('threats.properties.status')"
                             label-for="status"
-                            class="text-left">
+                            class="text-left"
+                        >
                             <b-form-radio-group
                                 id="status"
                                 v-model="editingThreat.status"
@@ -52,7 +56,8 @@
                                 buttons
                                 size="sm"
                                 button-variant="outline-secondary"
-                                class="status-radio-group" />
+                                class="status-radio-group"
+                            />
                         </b-form-group>
                     </b-col>
 
@@ -61,12 +66,14 @@
                             id="score-group"
                             :label="t('threats.properties.score')"
                             label-for="score"
-                            class="text-center">
+                            class="text-center"
+                        >
                             <b-form-input
                                 id="score"
                                 v-model="editingThreat.score"
                                 type="text"
-                                class="text-center" />
+                                class="text-center"
+                            />
                         </b-form-group>
                     </b-col>
 
@@ -75,7 +82,8 @@
                             id="priority-group"
                             :label="t('threats.properties.priority')"
                             label-for="priority"
-                            class="text-right">
+                            class="text-right"
+                        >
                             <b-form-radio-group
                                 id="priority"
                                 v-model="editingThreat.severity"
@@ -83,7 +91,8 @@
                                 buttons
                                 size="sm"
                                 button-variant="outline-secondary"
-                                class="priority-radio-group" />
+                                class="priority-radio-group"
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -93,7 +102,8 @@
                         <b-form-group
                             id="description-group"
                             :label="t('threats.properties.description')"
-                            label-for="description">
+                            label-for="description"
+                        >
                             <b-form-textarea id="description" v-model="editingThreat.description" rows="5" />
                         </b-form-group>
                     </b-col>
@@ -104,7 +114,8 @@
                         <b-form-group
                             id="mitigation-group"
                             :label="t('threats.properties.mitigation')"
-                            label-for="mitigation">
+                            label-for="mitigation"
+                        >
                             <b-form-textarea id="mitigation" v-model="editingThreat.mitigation" rows="5" />
                         </b-form-group>
                     </b-col>
@@ -139,6 +150,10 @@ import { useStore } from 'vuex';
 import threatModels from '@/service/threats/models/index.js';
 import { useThreatEditor } from '@/composables/useThreatEditor';
 import { useI18n } from '@/i18n/index.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('component:ThreatEditDialog');
 
 /**
  * ThreatEditDialog Component
@@ -220,18 +235,18 @@ export default {
 
         // Methods
         const showDialog = (threatId, mode) => {
-            console.debug('ThreatEditDialog showDialog called with:', threatId, mode);
+            log.debug('showDialog called', { threatId, mode });
 
             try {
                 // Validate inputs
                 if (!threatId) {
-                    console.error('Invalid threatId provided to showDialog:', threatId);
+                    log.error('Invalid threatId provided to showDialog', { threatId });
                     return;
                 }
 
                 // Log cell reference state before processing
                 const cellRef = store?.state?.cell?.ref;
-                console.debug('Cell reference state at start of showDialog:', {
+                log.debug('Cell reference state at start of showDialog', {
                     cellExists: !!cellRef,
                     cellData: cellRef ? !!cellRef.data : 'no cell',
                     cellId: cellRef ? cellRef.id : 'no cell'
@@ -240,11 +255,11 @@ export default {
                 if (mode === 'new') {
                     // For new threats, the threatId is already for the in-memory threat
                     // The threat has already been created by createNewThreat in GraphMeta
-                    console.debug('Processing new threat with ID:', threatId);
+                    log.debug('Processing new threat', { threatId });
 
                     // Ensure the threat is properly initialized
                     if (!editingThreat.value || editingThreat.value.id !== threatId) {
-                        console.debug('Threat not properly initialized, attempting to recover');
+                        log.debug('Threat not properly initialized, attempting to recover');
 
                         // Access the cell from the store reference we created in setup()
                         const cell = store?.state?.cell?.ref;
@@ -261,12 +276,12 @@ export default {
                                     cell.data.type,
                                     threatTop
                                 );
-                                console.debug('Successfully re-created threat with ID:', threatId);
+                                log.debug('Successfully re-created threat', { threatId });
                             } else {
-                                console.error('Cannot recover threat: Missing diagram or threatTop');
+                                log.error('Cannot recover threat: Missing diagram or threatTop');
                             }
                         } else {
-                            console.error('Cannot recover threat: No cell selected');
+                            log.error('Cannot recover threat: No cell selected');
                         }
 
                         // Set the new threat flag
@@ -275,10 +290,10 @@ export default {
 
                     // New threats are always considered changed
                     hasChanges.value = true;
-                    console.debug('New threat dialog opened, hasChanges set to true');
+                    log.debug('New threat dialog opened, hasChanges set to true');
                 } else {
                     // For existing threats, load from store
-                    console.debug('Loading existing threat with ID:', threatId);
+                    log.debug('Loading existing threat', { threatId });
                     editExistingThreat(threatId);
                     hasChanges.value = false; // Initially no changes for existing threats
                 }
@@ -288,30 +303,30 @@ export default {
                 const showModalWithRetry = (attempts = 0) => {
                     if (!editModal.value) {
                         if (attempts < 5) {
-                            console.debug(`Modal ref not available, retrying (attempt ${attempts + 1})`);
+                            log.debug('Modal ref not available, retrying', { attempt: attempts + 1 });
                             setTimeout(() => showModalWithRetry(attempts + 1), 50 * (attempts + 1));
                         } else {
-                            console.error('Failed to show modal after multiple attempts');
+                            log.error('Failed to show modal after multiple attempts');
                         }
                         return;
                     }
 
                     // Log cell reference state right before showing modal
                     const cellRefBeforeShow = store?.state?.cell?.ref;
-                    console.debug('Cell reference state before showing modal:', {
+                    log.debug('Cell reference state before showing modal', {
                         cellExists: !!cellRefBeforeShow,
                         cellData: cellRefBeforeShow ? !!cellRefBeforeShow.data : 'no cell',
                         cellId: cellRefBeforeShow ? cellRefBeforeShow.id : 'no cell'
                     });
 
-                    console.debug('Showing threat edit modal');
+                    log.debug('Showing threat edit modal');
                     editModal.value.show();
                 };
 
                 // Start the show process with retries
                 showModalWithRetry();
             } catch (error) {
-                console.error('Error showing threat edit dialog:', error);
+                log.error('Error showing threat edit dialog', { error });
             }
         };
 
@@ -322,13 +337,13 @@ export default {
                 const currentJson = JSON.stringify(newValue);
                 const originalJson = JSON.stringify(originalThreat.value);
                 hasChanges.value = currentJson !== originalJson || isNewThreat.value;
-                console.debug('Threat changed:', hasChanges.value);
+                log.debug('Threat changed', { hasChanges: hasChanges.value });
             }
         }, { deep: true });
 
         // Event handlers
         const onSave = () => {
-            console.debug('onSave called with:', {
+            log.debug('onSave called', {
                 isNewThreat: isNewThreat.value,
                 hasChanges: hasChanges.value,
                 editingThreatExists: !!editingThreat.value,
@@ -338,11 +353,11 @@ export default {
             // For new threats, always save regardless of hasChanges
             // For existing threats, only save if changes were made
             if (isNewThreat.value || hasChanges.value) {
-                console.debug('Saving threat, isNew:', isNewThreat.value, 'hasChanges:', hasChanges.value);
+                log.debug('Saving threat', { isNew: isNewThreat.value, hasChanges: hasChanges.value });
 
                 // Check if the cell reference is available
                 const cellRef = store.state.cell.ref;
-                console.debug('Cell reference check before saveThreat:', {
+                log.debug('Cell reference check before saveThreat', {
                     cellExists: !!cellRef,
                     cellData: cellRef ? !!cellRef.data : 'no cell',
                     cellId: cellRef ? cellRef.id : 'no cell',
@@ -351,7 +366,7 @@ export default {
 
                 // Check if the threat is properly initialized
                 if (editingThreat.value) {
-                    console.debug('Threat being saved:', {
+                    log.debug('Threat being saved', {
                         id: editingThreat.value.id,
                         title: editingThreat.value.title,
                         status: editingThreat.value.status,
@@ -365,7 +380,7 @@ export default {
 
                 // Check cell reference after saving
                 const cellRefAfter = store.state.cell.ref;
-                console.debug('Cell reference check after saveThreat:', {
+                log.debug('Cell reference check after saveThreat', {
                     cellExists: !!cellRefAfter,
                     cellData: cellRefAfter ? !!cellRefAfter.data : 'no cell',
                     cellId: cellRefAfter ? cellRefAfter.id : 'no cell',
@@ -376,20 +391,20 @@ export default {
 
                 // Set isEditing to false to prevent cancelEdit from being called in onModalHidden
                 isEditing.value = false;
-                console.debug('Set isEditing to false after saving threat');
+                log.debug('Set isEditing to false after saving threat');
 
                 // Now manually call resetState to clean up the threat editor state
                 // This ensures the state is reset after we've updated our UI state
                 resetState();
-                console.debug('Called resetState after saving threat');
+                log.debug('Called resetState after saving threat');
 
                 // Hide the modal after saving
                 if (editModal.value) {
-                    console.debug('Hiding modal after save');
+                    log.debug('Hiding modal after save');
                     editModal.value.hide();
                 }
             } else {
-                console.debug('Not saving threat - no changes detected');
+                log.debug('Not saving threat - no changes detected');
             }
         };
 
@@ -425,11 +440,11 @@ export default {
         };
 
         const onModalHidden = () => {
-            console.debug('Modal hidden event triggered');
+            log.debug('Modal hidden event triggered');
 
             // Check cell reference state when modal is hidden
             const cellRef = store?.state?.cell?.ref;
-            console.debug('Cell reference state when modal is hidden:', {
+            log.debug('Cell reference state when modal is hidden', {
                 cellExists: !!cellRef,
                 cellData: cellRef ? !!cellRef.data : 'no cell',
                 cellId: cellRef ? cellRef.id : 'no cell'
@@ -439,10 +454,10 @@ export default {
             // Only call cancelEdit if we're still in editing state
             // This prevents cancelEdit from being called after a successful save
             if (isEditing.value) {
-                console.debug('Still in editing state, calling cancelEdit()');
+                log.debug('Still in editing state, calling cancelEdit()');
                 cancelEdit();
             } else {
-                console.debug('Not in editing state, skipping cancelEdit()');
+                log.debug('Not in editing state, skipping cancelEdit()');
             }
         };
 

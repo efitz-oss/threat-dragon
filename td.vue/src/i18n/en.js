@@ -197,7 +197,6 @@ const eng = {
         contributorsPlaceholder: 'Start typing to add a contributor',
         description: 'High level system description',
         dragAndDrop: 'Drag and drop or ',
-        editing: 'Editing',
         jsonPaste: 'Drop a threat model JSON file or paste its content here:',
         owner: 'Owner',
         reviewer: 'Reviewer',
@@ -263,9 +262,7 @@ const eng = {
             title: 'Select a Threat Model File',
             noFiles: 'No files in this directory',
             errors: {
-                loadDirectory: 'Error loading directory. Please try again.',
-                navigateDirectory: 'Error navigating to directory. Please try again.',
-                readFile: 'Error reading file. Please try again.'
+                loadDirectory: 'Error loading directory. Please try again.'
             }
         },
         opened: 'Threat model successfully opened',
@@ -291,16 +288,6 @@ const eng = {
             publicNetwork: 'Public Network',
             storesCredentials: 'Stores Credentials',
             storesInventory: 'Stores Inventory'
-        },
-        buttons: {
-            delete: 'Delete selected',
-            redo: 'Redo edit',
-            shortcuts: 'Keyboard shortcuts',
-            toggleGrid: 'Toggle grid',
-            undo: 'Undo edit',
-            zoomIn: 'Zoom in',
-            zoomOut: 'Zoom out',
-            save: 'Save'
         },
         controlButtons: {
             delete: 'Delete selected',
@@ -521,15 +508,9 @@ const eng = {
             openUnknown: 'Open / Unknown Priority'
         }
     },
-    upgrade: {
-        modal: {
-            header: 'Threatmodel Update',
-            welcome: 'Welcome to version 2 of OWASP Threat Dragon!',
-            p1: 'Version 2 uses a different drawing library, which will change the way parts of your threat models are saved. While most diagrams will look the same as they did in previous versions of Threat Dragon, there are cases where they may need to be adjusted slightly.',
-            p2: 'After closing this modal, you will see how each diagram in this model renders in the version 2 format. Please make note of any diagrams you may need to adjust. This is a one-time upgrade, and you should not see this message again after saving this model.'
-        },
-        instructions: "Great! Let's get you to your model.",
-        continue: 'Continue to Threat Model'
+    pagination: {
+        previous: 'Previous',
+        next: 'Next'
     }
 };
 

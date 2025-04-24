@@ -4,6 +4,10 @@ import events from '@/service/x6/graph/events.js';
 import store from '@/store/index.js';
 import tmActions from '@/store/actions/threatmodel.js';
 import { passiveSupport } from 'passive-events-support/src/utils';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('service:migration:diagram');
 
 const appVersion = require('../../../package.json').version;
 
@@ -13,27 +17,27 @@ passiveSupport({
 
 const drawGraph = (diagram, graph) => {
     if (!diagram) {
-        console.error('Cannot draw null or undefined diagram');
+        log.error('Cannot draw null or undefined diagram');
         return graph;
     }
-    
-    console.debug('Drawing diagram:', diagram.title, 'with cells:', diagram.cells ? diagram.cells.length : 0);
-    
+
+    log.debug('Drawing diagram', { title: diagram.title, cellCount: diagram.cells ? diagram.cells.length : 0 });
+
     try {
         if (diagram.version && diagram.version.startsWith('2.')) {
-            console.debug('open diagram version: ' + diagram.version);
+            log.debug('Opening diagram', { version: diagram.version });
             diagram.version = appVersion;
-            
+
             // Ensure cells is an array
             if (!diagram.cells || !Array.isArray(diagram.cells)) {
-                console.warn('Diagram cells missing or not an array, initializing empty cells array');
+                log.warn('Diagram cells missing or not an array, initializing empty cells array');
                 diagram.cells = [];
             }
-            
+
             // Load the diagram JSON into the graph
             graph.fromJSON(diagram);
         } else {
-            console.debug('upgrade version 1.x diagram');
+            log.debug('Upgrading version 1.x diagram');
             // For older versions, we'll just create empty cells
             const updated = graph.toJSON();
             updated.version = appVersion;
@@ -47,9 +51,9 @@ const drawGraph = (diagram, graph) => {
             store.get().dispatch(tmActions.notModified);
         }
     } catch (error) {
-        console.error('Error drawing diagram:', error);
+        log.error('Error drawing diagram', { error });
     }
-    
+
     return graph;
 };
 

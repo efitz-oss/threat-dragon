@@ -3,6 +3,8 @@
  * @param {Object} data
  * @param {string} fileName
  */
+import logger from '@/utils/logger.js';
+const log = logger.getLogger('service:save');
 const local = (data, fileName) => {
     return saveTD(data, fileName);
 };
@@ -13,13 +15,13 @@ function saveTD(data, fileName) {
         typeof window !== 'undefined' && window.electronAPI && window.electronAPI.isElectron;
 
     if (isElectronEnv) {
-        console.debug('Save using Electron file dialog');
+        log.debug('Save using Electron file dialog');
         return saveElectron(data, fileName);
     } else if ('showSaveFilePicker' in window) {
-        console.debug('Save using browser file picker');
+        log.debug('Save using browser file picker');
         return writeFile(data, fileName);
     } else {
-        console.debug('Save using browser local filesystem download');
+        log.debug('Save using browser local filesystem download');
         return downloadFile(data, fileName);
     }
 }
@@ -29,10 +31,10 @@ async function saveElectron(data, fileName) {
     try {
         // Use Electron's saveFile function via IPC
         const result = await window.electronAPI.saveFile(jsonData, fileName);
-        console.debug('Electron save successful:', result);
+        log.debug('Electron save successful', { result });
         return result;
     } catch (err) {
-        console.error('Electron save failed:', err);
+        log.error('Electron save failed', { error: err });
         throw err;
     }
 }
@@ -67,7 +69,7 @@ async function writeFile(data, fileName) {
     try {
         fileHandle = await window.showSaveFilePicker(options);
     } catch (err) {
-        console.debug('Save failed, probably user canceled file picker');
+        log.debug('Save failed, probably user canceled file picker');
         return;
     }
 
@@ -76,7 +78,7 @@ async function writeFile(data, fileName) {
         try {
             await writable.write({ type: 'write', position: 0, data: jsonData });
         } catch (err) {
-            console.debug('Save failed, could not write to filesystem');
+            log.debug('Save failed, could not write to filesystem');
         }
         await writable.close();
     }

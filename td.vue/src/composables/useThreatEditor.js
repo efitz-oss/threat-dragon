@@ -4,6 +4,10 @@ import { v4 as uuidv4 } from 'uuid';
 import tmActions from '@/store/actions/threatmodel.js';
 import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
 import dataChanged from '@/service/x6/graph/data-changed.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('composable:useThreatEditor');
 
 export function useThreatEditor() {
     const store = useStore();
@@ -14,11 +18,11 @@ export function useThreatEditor() {
 
     // Reset all state
     const resetState = () => {
-        console.debug('resetState called - resetting threat editor state');
+        log.debug('resetState called - resetting threat editor state');
 
         // Check cell reference before resetting state
         const cellRef = store.state.cell.ref;
-        console.debug('Cell reference state in resetState (before reset):', {
+        log.debug('Cell reference state in resetState (before reset)', {
             cellExists: !!cellRef,
             cellData: cellRef ? !!cellRef.data : 'no cell',
             cellId: cellRef ? cellRef.id : 'no cell'
@@ -31,7 +35,7 @@ export function useThreatEditor() {
 
         // Check cell reference after resetting state
         const cellRefAfter = store.state.cell.ref;
-        console.debug('Cell reference state in resetState (after reset):', {
+        log.debug('Cell reference state in resetState (after reset)', {
             cellExists: !!cellRefAfter,
             cellData: cellRefAfter ? !!cellRefAfter.data : 'no cell',
             cellId: cellRefAfter ? cellRefAfter.id : 'no cell'
@@ -70,7 +74,7 @@ export function useThreatEditor() {
 
         const threatToEdit = cell.value.data.threats.find(t => t.id === threatId);
         if (!threatToEdit) {
-            console.warn(`Threat with ID ${threatId} not found`);
+            log.warn('Threat not found', { threatId });
             return;
         }
 
@@ -85,7 +89,7 @@ export function useThreatEditor() {
 
     // Save changes
     const saveThreat = () => {
-        console.debug('saveThreat called with:', {
+        log.debug('saveThreat called', {
             editingThreat: editingThreat.value ? editingThreat.value.id : 'null',
             isNewThreat: isNewThreat.value,
             cellExists: !!cell.value,
@@ -93,22 +97,22 @@ export function useThreatEditor() {
         });
 
         if (!editingThreat.value) {
-            console.error('Cannot save threat: editingThreat is null or undefined');
+            log.error('Cannot save threat: editingThreat is null or undefined');
             return;
         }
 
         if (!cell.value) {
-            console.error('Cannot save threat: cell reference is null or undefined');
+            log.error('Cannot save threat: cell reference is null or undefined');
             return;
         }
 
         if (!cell.value.data) {
-            console.error('Cannot save threat: cell.data is null or undefined');
+            log.error('Cannot save threat: cell.data is null or undefined');
             return;
         }
 
         // Log detailed information about the cell and threat
-        console.debug('Cell details:', {
+        log.debug('Cell details', {
             id: cell.value.id,
             type: cell.value.data.type,
             name: cell.value.data.name,
@@ -116,7 +120,7 @@ export function useThreatEditor() {
             threatCount: cell.value.data.threats ? cell.value.data.threats.length : 0
         });
 
-        console.debug('Threat details:', {
+        log.debug('Threat details', {
             id: editingThreat.value.id,
             title: editingThreat.value.title,
             status: editingThreat.value.status,
@@ -128,14 +132,14 @@ export function useThreatEditor() {
                 // For new threats: Add to the store for the first time
                 if (!cell.value.data.threats) {
                     cell.value.data.threats = [];
-                    console.debug('Initialized empty threats array for cell');
+                    log.debug('Initialized empty threats array for cell');
                 }
 
                 // Make a deep copy of the threat to avoid reference issues
                 const threatCopy = JSON.parse(JSON.stringify(editingThreat.value));
                 cell.value.data.threats.push(threatCopy);
-                console.debug('Added new threat to store:', editingThreat.value.id);
-                console.debug('Cell threats after adding:', cell.value.data.threats.length);
+                log.debug('Added new threat to store', { threatId: editingThreat.value.id });
+                log.debug('Cell threats after adding', { count: cell.value.data.threats.length });
             } else {
                 // For existing threats: Update in the store
                 const index = cell.value.data.threats.findIndex(t => t.id === editingThreat.value.id);
@@ -143,15 +147,15 @@ export function useThreatEditor() {
                     // Make a deep copy of the threat to avoid reference issues
                     const threatCopy = JSON.parse(JSON.stringify(editingThreat.value));
                     cell.value.data.threats[index] = threatCopy;
-                    console.debug('Updated existing threat in store:', editingThreat.value.id);
+                    log.debug('Updated existing threat in store', { threatId: editingThreat.value.id });
                 } else {
-                    console.warn('Could not find existing threat with ID:', editingThreat.value.id);
+                    log.warn('Could not find existing threat', { threatId: editingThreat.value.id });
                 }
             }
 
             // Update UI and store
             cell.value.data.hasOpenThreats = cell.value.data.threats.some(t => t.status === 'Open');
-            console.debug('Dispatching CELL_DATA_UPDATED with:', {
+            log.debug('Dispatching CELL_DATA_UPDATED', {
                 cellId: cell.value.id,
                 threatCount: cell.value.data.threats.length,
                 hasOpenThreats: cell.value.data.hasOpenThreats
@@ -161,14 +165,14 @@ export function useThreatEditor() {
             store.dispatch(tmActions.modified);
             dataChanged.updateStyleAttrs(cell.value);
 
-            console.debug('Threat saved successfully');
+            log.debug('Threat saved successfully');
         } catch (error) {
-            console.error('Error saving threat:', error);
+            log.error('Error saving threat', { error });
         }
 
         // Don't reset state immediately - let the component handle it
         // This ensures the component can properly handle the UI state
-        console.debug('Threat saved successfully, returning control to component');
+        log.debug('Threat saved successfully, returning control to component');
 
         // The component will handle resetting the state after UI updates
         // This prevents issues with the modal being hidden while still in editing state
@@ -178,11 +182,11 @@ export function useThreatEditor() {
     const cancelEdit = () => {
         // For new threats: Nothing to clean up in the store
         // For existing threats: Revert any changes in the UI
-        console.debug('Canceling edit of threat:', editingThreat.value?.id, 'isNew:', isNewThreat.value);
+        log.debug('Canceling edit of threat', { threatId: editingThreat.value?.id, isNew: isNewThreat.value });
 
         // Check cell reference before resetting state
         const cellRef = store.state.cell.ref;
-        console.debug('Cell reference state before cancelEdit resets state:', {
+        log.debug('Cell reference state before cancelEdit resets state', {
             cellExists: !!cellRef,
             cellData: cellRef ? !!cellRef.data : 'no cell',
             cellId: cellRef ? cellRef.id : 'no cell'
@@ -192,7 +196,7 @@ export function useThreatEditor() {
 
         // Check cell reference after resetting state
         const cellRefAfter = store.state.cell.ref;
-        console.debug('Cell reference state after cancelEdit resets state:', {
+        log.debug('Cell reference state after cancelEdit resets state', {
             cellExists: !!cellRefAfter,
             cellData: cellRefAfter ? !!cellRefAfter.data : 'no cell',
             cellId: cellRefAfter ? cellRefAfter.id : 'no cell'
@@ -208,7 +212,7 @@ export function useThreatEditor() {
             t => t.id !== editingThreat.value.id
         );
 
-        console.debug('Deleted threat from store:', editingThreat.value.id);
+        log.debug('Deleted threat from store', { threatId: editingThreat.value.id });
 
         // Update UI and store
         cell.value.data.hasOpenThreats = cell.value.data.threats.some(t => t.status === 'Open');

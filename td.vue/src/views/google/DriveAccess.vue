@@ -9,6 +9,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import api from '@/service/api/api.js';
 import { THREATMODEL_UPDATE } from '@/store/actions/threatmodel.js';
 import { useI18n } from '@/i18n';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('views:google:DriveAccess');
 
 // Add Google Drive icon to FontAwesome library
 library.add(faGoogleDrive);
@@ -84,7 +88,7 @@ const getGoogleAccessToken = async () => {
 
         return data.data.accessToken;
     } catch (error) {
-        console.error('Error fetching Google access token:', error);
+        log.error('Error fetching Google access token:', error);
         toast.error('Failed to get access to Google Drive. Please try again.');
         return null;
     } finally {
@@ -94,9 +98,9 @@ const getGoogleAccessToken = async () => {
 
 const loadPickerAPI = () => {
     if (typeof gapi !== 'undefined') {
-        gapi.load('picker', { callback: () => console.log('Google Picker API loaded') });
+        gapi.load('picker', { callback: () => log.info('Google Picker API loaded') });
     } else {
-        console.error('Google API not loaded');
+        log.error('Google API not loaded');
     }
 };
 
@@ -108,7 +112,7 @@ const handleAuth = async () => {
         accessToken.value = token;
         createPicker();
     } catch (error) {
-        console.error('Error during Google authorization:', error);
+        log.error('Error during Google authorization:', error);
         toast.error('Failed to authenticate with Google Drive');
     } finally {
         isLoading.value = false;
@@ -117,11 +121,11 @@ const handleAuth = async () => {
 
 const createPicker = () => {
     if (!accessToken.value) {
-        console.error('No access token available for Google Picker');
+        log.error('No access token available for Google Picker');
         return;
     }
     if (typeof google === 'undefined' || !google.picker) {
-        console.error('Google Picker API not loaded');
+        log.error('Google Picker API not loaded');
         toast.error('Google Picker API failed to load');
         return;
     }
@@ -169,7 +173,7 @@ const createPicker = () => {
         const picker = pickerBuilder.build();
         picker.setVisible(true);
     } catch (error) {
-        console.error('Error creating Google Picker:', error);
+        log.error('Error creating Google Picker:', error);
         toast.error('Failed to open Google Drive picker');
     }
 };
@@ -231,7 +235,7 @@ const pickerCallback = async (data) => {
                     });
                 }
             } catch (error) {
-                console.error('Error saving threat model:', error);
+                log.error('Error saving threat model:', error);
                 toast.error('Failed to save threat model to Google Drive');
             } finally {
                 isLoading.value = false;
@@ -259,9 +263,9 @@ const pickerCallback = async (data) => {
                         fileId: document.id
                     });
                     
-                    console.debug('Successfully stored model data in store before navigation');
+                    log.debug('Successfully stored model data in store before navigation');
                 } catch (parseError) {
-                    console.error('Error parsing threat model JSON:', parseError);
+                    log.error('Error parsing threat model JSON:', parseError);
                     toast.error('File format error. Could not parse the threat model.');
                     isLoading.value = false;
                     return;
@@ -279,13 +283,13 @@ const pickerCallback = async (data) => {
                     }
                 });
             } catch (error) {
-                console.error('Error processing file:', error);
+                log.error('Error processing file:', error);
                 toast.error('Failed to import file from Google Drive');
             } finally {
                 isLoading.value = false;
             }
         } else {
-            console.warn('Invalid file type selected. Please select a JSON file.');
+            log.warn('Invalid file type selected. Please select a JSON file.');
             toast.warning('Please select a JSON file');
         }
     }
@@ -300,7 +304,7 @@ const fetchFileContent = async (fileId) => {
     );
     if (!response.ok) {
         const errorText = await response.text();
-        console.error('Google Drive API error:', errorText);
+        log.error('Google Drive API error:', errorText);
         
         // If we get a 401 Unauthorized, the token might be expired
         if (response.status === 401) {
@@ -356,7 +360,7 @@ const saveFileToDrive = async (folderId, fileName, content) => {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Google Drive API error:', errorText);
+            log.error('Google Drive API error:', errorText);
             
             // If we get a 401 Unauthorized, the token might be expired
             if (response.status === 401) {
@@ -397,7 +401,7 @@ const saveFileToDrive = async (folderId, fileName, content) => {
         const result = await response.json();
         return result.id;
     } catch (error) {
-        console.error('Error saving to Google Drive:', error);
+        log.error('Error saving to Google Drive:', error);
         throw new Error('Failed to save file to Google Drive');
     }
 };
@@ -410,7 +414,7 @@ const sendToBackend = async (fileId, fileContent) => {
         });
         return true;
     } catch (error) {
-        console.error('Error sending file to backend:', error);
+        log.error('Error sending file to backend:', error);
         throw new Error('Failed to import file to Threat Dragon');
     }
 };
@@ -464,7 +468,7 @@ onMounted(() => {
                             id="file-name"
                             v-model="fileName"
                             :placeholder="t('providers.googleDrive.fileNamePlaceholder')"
-                        ></b-form-input>
+                        />
                     </b-form-group>
                 </b-col>
             </b-row>

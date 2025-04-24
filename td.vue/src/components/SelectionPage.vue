@@ -57,11 +57,15 @@
         <b-row>
             <b-col md="6" offset="3">
                 <div class="pagination">
-                    <button :disabled="!pagePrev" @click="prevPage">{{ t('pagination.previous') }}</button>
+                    <button :disabled="!pagePrev" @click="prevPage">
+                        {{ t('pagination.previous') }}
+                    </button>
                     <button class="btn" disabled>
                         {{ pageRef }}
                     </button>
-                    <button :disabled="!pageNext" @click="nextPage">{{ t('pagination.next') }}</button>
+                    <button :disabled="!pageNext" @click="nextPage">
+                        {{ t('pagination.next') }}
+                    </button>
                 </div>
             </b-col>
         </b-row>

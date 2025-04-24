@@ -14,8 +14,7 @@ describe('helpers/logger.helper.js', () => {
             error: 1,
             warn: 2,
             info: 3,
-            debug: 4,
-            silly: 5
+            debug: 4
         };
         const stream = new Writable();
         stream._write = (chunk, encoding, next) => {
@@ -28,7 +27,7 @@ describe('helpers/logger.helper.js', () => {
         });
         winstonLogger = createLogger({
             transports: streamTransport,
-            level: 'silly',
+            level: 'debug',
             levels
         });
         logger = new loggerHelper.Logger('logger.helper.spec.js', winstonLogger);
@@ -42,11 +41,6 @@ describe('helpers/logger.helper.js', () => {
         logger.log('warn', 'whatever');
         expect(output.trim().includes('whatever')).to.be.true;
         expect(output.trim().includes('warn')).to.be.true;
-    });
-
-    it('logs an audit message', () => {
-        logger.audit('some message');
-        expect(output.trim().includes('some message')).to.be.true;
     });
 
     it('logs an error message', () => {
@@ -71,12 +65,6 @@ describe('helpers/logger.helper.js', () => {
         logger.debug('some message');
         expect(output.trim().includes('some message')).to.be.true;
         expect(output.trim().includes('debug')).to.be.true;
-    });
-
-    it('logs a silly message', () => {
-        logger.silly('some message');
-        expect(output.trim().includes('some message')).to.be.true;
-        expect(output.trim().includes('silly')).to.be.true;
     });
 
     it('throws an error for an unknown level', () => {

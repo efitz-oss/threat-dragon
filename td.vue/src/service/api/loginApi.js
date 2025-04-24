@@ -1,41 +1,49 @@
 import api from './api.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('api:login');
 
 const loginAsync = (provider) => api.getAsync(`/api/login/${provider}`);
 
 const completeLoginAsync = async (provider, code) => {
-    console.log(`Making completeLoginAsync request to /api/oauth/${provider}/completeLogin`);
+    log.info('Making completeLoginAsync request', { endpoint: `/api/oauth/${provider}/completeLogin` });
 
     // Ensure code is valid before making the API call
     if (!code) {
-        console.error('completeLoginAsync: No authorization code provided');
+        log.error('completeLoginAsync: No authorization code provided');
         throw new Error('No authorization code provided');
     }
 
     // Don't log the full code for security
-    console.log('Authorization code present:', Boolean(code));
-    console.log('Authorization code length:', code.length);
+    log.info('Authorization code validation', {
+        codePresent: Boolean(code),
+        codeLength: code.length
+    });
 
     try {
-        console.log('API base URL:', window.location.origin);
+        log.debug('API request details', {
+            baseUrl: window.location.origin,
+            endpoint: `/api/oauth/${provider}/completeLogin`
+        });
         const url = `/api/oauth/${provider}/completeLogin`;
-        console.log('Full request URL:', window.location.origin + url);
 
         // Make the API call with explicit content type headers
-        console.log('Sending POST with payload:', { code: 'REDACTED' });
-
-        // Use API service for consistent behavior in tests
-        console.log('Using API service for API calls');
+        log.debug('Sending request', {
+            method: 'POST',
+            payload: { code: 'REDACTED' }
+        });
 
         const response = await api.postAsync(url, { code });
 
         // API service already handles status codes and parsing
-        console.log('Response received from API service');
+        log.debug('Response received from API service');
 
         // Standard response format should include data property
         const data = response.data;
 
         // Log success but not the actual tokens for security
-        console.log('completeLoginAsync response data:', {
+        log.info('Response data validation', {
             hasData: Boolean(data),
             dataType: typeof data,
             accessTokenPresent: Boolean(data?.accessToken),
@@ -44,7 +52,7 @@ const completeLoginAsync = async (provider, code) => {
 
         // Validate response format
         if (!data || !data.accessToken || !data.refreshToken) {
-            console.error('completeLoginAsync: Invalid response format, missing tokens', {
+            log.error('Invalid response format, missing tokens', {
                 hasData: Boolean(data),
                 hasAccessToken: Boolean(data?.accessToken),
                 hasRefreshToken: Boolean(data?.refreshToken),
@@ -55,18 +63,20 @@ const completeLoginAsync = async (provider, code) => {
 
         return data; // Expecting { accessToken, refreshToken }
     } catch (error) {
-        console.error('Error in completeLoginAsync API call:', error.message);
-        if (error.response) {
-            console.error('Response status:', error.response.status);
-            console.error('Response status text:', error.response.statusText);
-            console.error('Response headers:', JSON.stringify(error.response.headers));
-            console.error('Response data:', error.response.data);
-        } else if (error.request) {
-            console.error('No response received. Request details:', {
+        log.error('Error in completeLoginAsync API call', {
+            message: error.message,
+            ...(error.response ? {
+                status: error.response.status,
+                statusText: error.response.statusText,
+                headers: error.response.headers,
+                data: error.response.data
+            } : {}),
+            ...(error.request ? {
+                requestSent: true,
                 method: 'POST',
                 url: `/api/oauth/${provider}/completeLogin`
-            });
-        }
+            } : {})
+        });
         throw error;
     }
 };

@@ -1,4 +1,8 @@
 import clientFactory from '../httpClient.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('api');
 
 /**
  * Does a GET request to the given resource
@@ -12,7 +16,7 @@ const getAsync = async (url, query) => {
         const res = await client.get(url, { params: query });
         return res.data;
     } catch (error) {
-        console.error(`GET request to ${url} failed:`, error.message);
+        log.error('GET request failed', { url, error: error.message });
         throw error;
     }
 };
@@ -26,18 +30,18 @@ const getAsync = async (url, query) => {
  */
 const postAsync = async (url, body) => {
     // Debug logging for POST requests
-    console.log(`Making POST request to: ${url}`);
+    log.debug('Making POST request', { url });
 
     try {
         const client = clientFactory.get();
-        console.log('HTTP client created');
+        log.debug('HTTP client created');
 
         const res = await client.post(url, body);
-        console.log(`POST request to ${url} succeeded with status: ${res.status}`);
+        log.debug('POST request succeeded', { url, status: res.status });
 
         return res.data;
     } catch (error) {
-        console.error(`POST request to ${url} failed:`, error.message);
+        log.error('POST request failed', { url, error: error.message });
         throw error;
     }
 };
@@ -55,7 +59,7 @@ const putAsync = async (url, body) => {
         const res = await client.put(url, body);
         return res.data;
     } catch (error) {
-        console.error(`PUT request to ${url} failed:`, error.message);
+        log.error('PUT request failed', { url, error: error.message });
         throw error;
     }
 };

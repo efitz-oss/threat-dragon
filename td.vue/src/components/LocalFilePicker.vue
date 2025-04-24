@@ -7,6 +7,10 @@
 <script>
 import { ref } from 'vue';
 import { useI18n } from '@/i18n/index.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('components:LocalFilePicker');
 
 export default {
     name: 'LocalFilePicker',
@@ -66,7 +70,7 @@ export default {
                     content
                 });
             } catch (error) {
-                console.error('Error loading file:', error);
+                log.error('Error loading file:', error);
                 // If user cancels the file picker, don't show an error
                 if (error.name !== 'AbortError') {
                     // Use the browser's alert for now since we don't have a modal

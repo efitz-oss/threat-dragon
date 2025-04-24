@@ -230,7 +230,6 @@ describe('views/ThreatmodelEdit.vue', () => {
                     expect(mockRouter.push).toHaveBeenCalledWith({
                         name: 'localThreatModel',
                         params: {
-                            provider: 'local',
                             folder: 'demo'
                         }
                     });

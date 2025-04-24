@@ -3,6 +3,10 @@ import isElectron from 'is-electron';
 import { PROVIDER_CLEAR, PROVIDER_FETCH, PROVIDER_SELECTED } from '../actions/provider.js';
 import providers from '../../service/provider/providers.js';
 import threatmodelApi from '../../service/api/threatmodelApi.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('store:provider');
 
 export const clearState = (state) => {
     state.all.length = 0;
@@ -38,8 +42,7 @@ const actions = {
             });
         } else {
             const resp = await threatmodelApi.organisationAsync();
-            const providerUri = `${resp.protocol}://${resp.hostname}${
-                resp.port ? ':' + resp.port : ''
+            const providerUri = `${resp.protocol}://${resp.hostname}${resp.port ? ':' + resp.port : ''
             }`;
             commit(PROVIDER_SELECTED, { providerName: providerName, providerUri: providerUri });
         }
@@ -55,12 +58,10 @@ const mutations = {
     [PROVIDER_SELECTED]: (state, { providerName, providerUri }) => {
         state.selected = providerName;
         state.providerUri = providerUri;
-        console.debug(
-            'PROVIDER_SELECTED providerName: ' +
-                state.selected +
-                ', providerUri: ' +
-                state.providerUri
-        );
+        log.debug('PROVIDER_SELECTED', {
+            providerName: state.selected,
+            providerUri: state.providerUri
+        });
     }
 };
 

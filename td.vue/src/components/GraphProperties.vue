@@ -51,12 +51,14 @@
                             ? t('threatmodel.properties.text')
                             : t('threatmodel.properties.name')
                         "
-                        label-for="name">
+                        label-for="name"
+                    >
                         <b-form-textarea
                             id="name"
                             v-model="safeName"
                             :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
-                            style="min-height: 60px" />
+                            style="min-height: 60px"
+                        />
                     </b-form-group>
                 </b-col>
 
@@ -65,12 +67,14 @@
                         id="description-group"
                         label-cols="auto"
                         :label="t('threatmodel.properties.description')"
-                        label-for="description">
+                        label-for="description"
+                    >
                         <b-form-textarea
                             id="description"
                             v-model="safeDescription"
                             :rows="3"
-                            style="min-height: 80px" />
+                            style="min-height: 80px"
+                        />
                     </b-form-group>
                 </b-col>
 
@@ -80,7 +84,8 @@
                             cellRef.data.type !== 'tm.Text' &&
                             cellRef.data.type !== 'tm.Flow'
                     "
-                    md="6">
+                    md="6"
+                >
                     <b-form-group id="outofscope-group" label-cols="auto">
                         <b-form-checkbox id="outofscope" v-model="cellRef.data.outOfScope" @change="onChangeScope()">
                             {{ t('threatmodel.properties.outOfScope') }}
@@ -93,13 +98,15 @@
                         <b-form-checkbox
                             id="flowoutofscope"
                             v-model="cellRef.data.outOfScope"
-                            @change="onChangeScope()">
+                            @change="onChangeScope()"
+                        >
                             {{ t('threatmodel.properties.outOfScope') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="bidirection"
                             v-model="cellRef.data.isBidirectional"
-                            @change="onChangeBidirection()">
+                            @change="onChangeBidirection()"
+                        >
                             {{ t('threatmodel.properties.bidirection') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -110,13 +117,15 @@
                         id="reasonoutofscope-group"
                         label-cols="auto"
                         :label="t('threatmodel.properties.reasonOutOfScope')"
-                        label-for="reasonoutofscope">
+                        label-for="reasonoutofscope"
+                    >
                         <b-form-textarea
                             id="reasonoutofscope"
                             v-model="safeReasonOutOfScope"
                             :rows="3"
                             style="min-height: 80px"
-                            :disabled="!cellRef.data.outOfScope" />
+                            :disabled="!cellRef.data.outOfScope"
+                        />
                     </b-form-group>
                 </b-col>
 
@@ -125,12 +134,14 @@
                         id="privilegelevel-group"
                         label-cols="auto"
                         :label="t('threatmodel.properties.privilegeLevel')"
-                        label-for="privilegelevel">
+                        label-for="privilegelevel"
+                    >
                         <b-form-input
                             id="privilegelevel"
                             v-model="cellRef.data.privilegeLevel"
                             type="text"
-                            @change="onChangeProperties()" />
+                            @change="onChangeProperties()"
+                        />
                     </b-form-group>
                 </b-col>
 
@@ -139,13 +150,15 @@
                         <b-form-checkbox
                             id="handlesCardPayment"
                             v-model="cellRef.data.handlesCardPayment"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.handlesCardPayment') }}
                         </b-form-checkbox>
                         <b-form-checkbox
                             id="handlesGoodsOrServices"
                             v-model="cellRef.data.handlesGoodsOrServices"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.handlesGoodsOrServices') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -156,7 +169,8 @@
                         <b-form-checkbox
                             id="isWebApplication"
                             v-model="cellRef.data.isWebApplication"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.isWebApplication') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -170,7 +184,8 @@
                         <b-form-checkbox
                             id="storesCredentials"
                             v-model="cellRef.data.storesCredentials"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.storesCredentials') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -181,7 +196,8 @@
                         <b-form-checkbox
                             id="isEncrypted"
                             v-model="cellRef.data.isEncrypted"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
                         <b-form-checkbox id="isSigned" v-model="cellRef.data.isSigned" @change="onChangeProperties()">
@@ -195,7 +211,8 @@
                         <b-form-checkbox
                             id="storesInventory"
                             v-model="cellRef.data.storesInventory"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.storesInventory') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -206,7 +223,8 @@
                         <b-form-checkbox
                             id="providesAuthentication"
                             v-model="cellRef.data.providesAuthentication"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.providesAuthentication') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -217,12 +235,14 @@
                         id="protocol-group"
                         label-cols="auto"
                         :label="t('threatmodel.properties.protocol')"
-                        label-for="protocol">
+                        label-for="protocol"
+                    >
                         <b-form-input
                             id="protocol"
                             v-model="cellRef.data.protocol"
                             type="text"
-                            @change="onChangeProperties()" />
+                            @change="onChangeProperties()"
+                        />
                     </b-form-group>
                 </b-col>
 
@@ -231,7 +251,8 @@
                         <b-form-checkbox
                             id="isEncrypted"
                             v-model="cellRef.data.isEncrypted"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.isEncrypted') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -242,7 +263,8 @@
                         <b-form-checkbox
                             id="isPublicNetwork"
                             v-model="cellRef.data.isPublicNetwork"
-                            @change="onChangeProperties()">
+                            @change="onChangeProperties()"
+                        >
                             {{ t('threatmodel.properties.publicNetwork') }}
                         </b-form-checkbox>
                     </b-form-group>
@@ -331,11 +353,6 @@ export default {
             // This function is kept for compatibility
         };
 
-        const onChangeName = () => {
-            dataChanged.updateName(cellRef.value);
-            updateComponent();
-        };
-
         const onChangeBidirection = () => {
             dataChanged.updateProperties(cellRef.value);
             dataChanged.updateStyleAttrs(cellRef.value);
@@ -347,19 +364,6 @@ export default {
             updateComponent();
         };
 
-        const updateDescription = (value) => {
-            if (cellRef.value && cellRef.value.data) {
-                cellRef.value.data.description = value;
-                onChangeProperties();
-            }
-        };
-
-        const updateReasonOutOfScope = (value) => {
-            if (cellRef.value && cellRef.value.data) {
-                cellRef.value.data.reasonOutOfScope = value;
-                onChangeProperties();
-            }
-        };
 
         // Watch for changes to the outOfScope property
         watch(() => cellRef.value?.data?.outOfScope, (newValue) => {

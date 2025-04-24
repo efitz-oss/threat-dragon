@@ -1,4 +1,8 @@
 const buildVersion = require('../../../package.json').version;
+import logger from '../../utils/logger.js';
+
+// Create a logger instance for this module
+const log = logger.getLogger('service:otm:OTMtoTD');
 
 const convertSummary = (jsonModel) => {
     const noteText =
@@ -110,7 +114,7 @@ export const convert = function (jsonModel) {
     dragonModel.summary = convertSummary(jsonModel);
     dragonModel.detail = convertDetail(jsonModel);
 
-    console.log(dragonModel);
+    log.debug('Converted OTM model to TD format:', { dragonModel });
     /*
     jsonModel.components.forEach(function(comp) {
         var cell = new Object();

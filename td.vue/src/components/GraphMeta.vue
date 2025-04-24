@@ -18,7 +18,8 @@
                                 :disabled="disableNewThreat"
                                 variant="primary"
                                 size="sm"
-                                @click="onNewThreat()">
+                                @click="onNewThreat()"
+                            >
                                 <font-awesome-icon icon="plus" class="mr-1" />
                                 {{ t('threats.newThreat') }}
                             </BButton>
@@ -33,7 +34,8 @@
                                     lg="4"
                                     md="6"
                                     sm="12"
-                                    class="threat-card-col mb-3">
+                                    class="threat-card-col mb-3"
+                                >
                                     <td-graph-threats
                                         :id="threat.id"
                                         :status="threat.status"
@@ -44,7 +46,8 @@
                                         :mitigation="threat.mitigation"
                                         :model-type="threat.modelType"
                                         :number="threat.number"
-                                        @threat-selected="onThreatSelected" />
+                                        @threat-selected="onThreatSelected"
+                                    />
                                 </b-col>
                             </b-row>
                         </b-card-text>
@@ -58,7 +61,8 @@
                         v-if="!disableNewThreat"
                         href="javascript:void(0)"
                         class="new-threat-by-type m-2"
-                        @click="onAddThreatByType()">
+                        @click="onAddThreatByType()"
+                    >
                         <font-awesome-icon icon="plus" />
                         {{ t('threats.newThreatByType') }}
                     </a>
@@ -66,7 +70,8 @@
                         v-if="!disableNewThreat"
                         href="javascript:void(0)"
                         class="new-threat-by-type m-2"
-                        @click="onAddThreatByContext()">
+                        @click="onAddThreatByContext()"
+                    >
                         <font-awesome-icon icon="plus" />
                         {{ t('threats.newThreatByContext') }}
                     </a>
@@ -85,6 +90,10 @@ import { CELL_UNSELECTED } from '@/store/actions/cell.js';
 import tmActions from '@/store/actions/threatmodel.js';
 import TdGraphProperties from '@/components/GraphProperties.vue';
 import TdGraphThreats from '@/components/GraphThreats.vue';
+import logger from '@/utils/logger.js';
+
+// Create a logger instance for this component
+const log = logger.getLogger('components:GraphMeta');
 
 export default {
     name: 'TdGraphMeta',
@@ -102,7 +111,7 @@ export default {
             const i18n = useI18n();
             t = i18n.t;
         } catch (error) {
-            console.warn('Error initializing i18n in GraphMeta:', error);
+            log.warn('Error initializing i18n in GraphMeta:', { error });
             // Fallback for tests
             t = (key) => key;
         }
@@ -136,7 +145,7 @@ export default {
 
         // Event handlers
         const onThreatSelected = (threatId, state) => {
-            console.debug('Selected threat ID:', threatId);
+            log.debug('Selected threat ID:', { threatId });
             emit('threatSelected', threatId, state);
         };
 

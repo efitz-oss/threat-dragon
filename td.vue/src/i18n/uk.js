@@ -121,9 +121,7 @@ const ukr = {
         contributors: 'Contributors',
         contributorsPlaceholder: 'Start typing to add a contributor',
         description: 'High level system description',
-        dragAndDrop: 'Drag and drop or ',
-        editing: 'Editing',
-        jsonPaste: 'Drop a threat model JSON file or paste its content here:',
+        dragAndDrop: 'Drag and drop or ',        jsonPaste: 'Drop a threat model JSON file or paste its content here:',
         owner: 'Owner',
         reviewer: 'Reviewer',
         title: 'Title',
@@ -422,6 +420,10 @@ const ukr = {
         },
         instructions: "Great! Let's get you to your model.",
         continue: 'Continue to Threat Model'
+    },
+    pagination: {
+        previous: 'Попередній',
+        next: 'Наступний'
     }
 };
 

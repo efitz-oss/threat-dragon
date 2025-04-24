@@ -8,6 +8,10 @@ import store from '@/store/index.js';
 import { CELL_SELECTED, CELL_UNSELECTED } from '@/store/actions/cell.js';
 import { THREATMODEL_MODIFIED } from '@/store/actions/threatmodel.js';
 import defaultProperties from '@/service/entity/default-properties.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('graph:events');
 
 const showPorts = (show) => {
     const container = document.getElementById('graph-container');
@@ -18,7 +22,7 @@ const showPorts = (show) => {
 };
 
 const canvasResized = ({ width, height }) => {
-    console.debug('canvas resized to width ', width, ' height ', height);
+    log.debug('canvas resized', { width, height });
     showPorts(false);
 };
 
@@ -26,7 +30,7 @@ const edgeChangeVertices =
     () =>
         ({ edge }) => {
             if (edge.constructor.name === 'Edge') {
-                console.debug('vertex for unformatted edge/flow');
+                log.debug('vertex for unformatted edge/flow');
             }
         };
 
@@ -34,7 +38,7 @@ const edgeConnected =
     (graph) =>
         ({ edge }) => {
             if (edge.constructor.name === 'Edge') {
-                console.debug('connected unformatted edge/flow');
+                log.debug('connected unformatted edge/flow');
                 const flow = shapes.Flow.fromEdge(edge);
 
                 // Ensure the flow has all required properties
@@ -111,7 +115,7 @@ const mouseEnter = ({ cell }) => {
 const cellAdded =
     (graph) =>
         ({ cell }) => {
-            console.debug('cell added with shape: ', cell.shape);
+            log.debug('cell added with shape', { shape: cell.shape });
             // ensure selection of other components is removed
             graph.resetSelection();
 
@@ -133,7 +137,7 @@ const cellAdded =
                 } else if (cell.type === shapes.TrustBoundaryCurveStencil.prototype.type) {
                     edge = graph.addEdge(new shapes.TrustBoundaryCurve(config));
                 } else {
-                    console.warn('Unknown edge stencil');
+                    log.warn('Unknown edge stencil');
                 }
                 cell.remove();
                 cell = edge;
@@ -168,7 +172,7 @@ const cellAdded =
             dataChanged.updateStyleAttrs(cell);
 
             if (cell.shape === 'edge') {
-                console.debug('added new edge (flow parent)');
+                log.debug('added new edge (flow parent)');
                 // Convert unformatted edge to flow
                 const flow = shapes.Flow.fromEdge(cell);
 
@@ -207,7 +211,7 @@ const cellAdded =
         };
 
 const cellDeleted = () => {
-    console.debug('cell deleted');
+    log.debug('cell deleted');
     store.get().dispatch(THREATMODEL_MODIFIED);
 };
 
@@ -217,23 +221,23 @@ const cellSelected =
             // try and get the cell name
             if (cell.data) {
                 if (cell.data.name) {
-                    console.debug('Cell selected: ' + cell.data.name);
+                    log.debug('Cell selected', { name: cell.data.name });
                 } else if (cell.getLabels) {
                     const labels = cell.getLabels();
                     if (labels.length && labels[0].attrs.label) {
                         cell.data.name = labels[0].attrs.label.text;
-                        console.debug('Cell selected with label: ' + cell.data.name);
+                        log.debug('Cell selected with label', { name: cell.data.name });
                     }
                 } else {
-                    console.warn('Cell selected with no name');
+                    log.warn('Cell selected with no name');
                 }
             } else {
-                console.warn('cell selected with no data');
+                log.warn('cell selected with no data');
             }
 
             // Handle unformatted edge selection
             if (cell.shape === 'edge') {
-                console.debug('selected unformatted edge/flow');
+                log.debug('selected unformatted edge/flow');
                 const flow = shapes.Flow.fromEdge(cell);
                 graph.addEdge(flow);
                 cell.remove();
@@ -269,7 +273,7 @@ const cellSelected =
         };
 
 const cellUnselected = ({ cell }) => {
-    console.debug('cell unselected');
+    log.debug('cell unselected');
     mouseLeave({ cell });
     store.get().dispatch(CELL_UNSELECTED);
 };

@@ -88,7 +88,7 @@ describe('store/actions/folder.js', () => {
             ).rejects.toThrow(testError);
 
             // Verify error is logged
-            expect(console.error).toHaveBeenCalledWith('Error fetching folders:', testError);
+            expect(console.error).toHaveBeenCalledWith(expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\]\[ERROR\]\[store:actions:folder\] Error fetching folders:/), { error: testError });
             
             // Verify no commits were made
             expect(commit).not.toHaveBeenCalled();

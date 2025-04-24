@@ -261,7 +261,11 @@ describe('store/modules/threatmodel.js', () => {
                     });
 
                     it('logs the error', () => {
-                        expect(console.error).toHaveBeenCalledTimes(2);
+                        // With the new logger, we expect one call with the formatted message
+                        expect(console.error).toHaveBeenCalledWith(
+                            expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\]\[ERROR\]\[store:threatmodel\] Failed to save new threat model/),
+                            expect.objectContaining({ error: expect.anything() })
+                        );
                     });
                 });
             });
@@ -536,7 +540,11 @@ describe('store/modules/threatmodel.js', () => {
                     });
 
                     it('logs the error', () => {
-                        expect(console.error).toHaveBeenCalledTimes(2);
+                        // With the new logger, we expect one call with the formatted message
+                        expect(console.error).toHaveBeenCalledWith(
+                            expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\]\[ERROR\]\[store:threatmodel\] Failed to save threat model/),
+                            expect.objectContaining({ error: expect.anything() })
+                        );
                     });
                 });
                 

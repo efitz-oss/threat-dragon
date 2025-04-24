@@ -125,7 +125,6 @@ const fra = {
         contributorsPlaceholder: 'Ajouter un nouveau contributeur',
         description: 'Description de haut niveau du système',
         dragAndDrop: 'Glissez-déposez ou ',
-        editing: 'Modification',
         jsonPaste: 'Collez le JSON de votre modèle de menace ici',
         owner: 'Auteur',
         reviewer: 'Réviseur',
@@ -140,9 +139,6 @@ const fra = {
             description:
                 'Entrez une description de haut niveau du système en cours de modélisation',
             reviewer: 'Nom du réviseur'
-        },
-        actions: {
-            save: 'Enregistrer'
         },
         diagram: {
             diagrams: 'Diagrammes',
@@ -422,15 +418,9 @@ const fra = {
             openUnknown: 'Ouvert / Priorité Inconnue'
         }
     },
-    upgrade: {
-        modal: {
-            header: 'Mise à jour du modèle de menace - Threat Model',
-            welcome: 'Bienvenue à la version 2 de OWASP Threat Dragon!',
-            p1: 'La version 2 utilise une bibliothèque de dessins différente, ce qui modifie la façon dont certaines parties de vos modèles de menace sont enregistrées. Bien que la plupart des diagrammes se présenteront de la même manière que dans les versions précédentes de Threat Dragon, il est possible que de légères modifications soient nécessaires dans certains cas.',
-            p2: "Après avoir fermé cette fenêtre, vous verrez comment chaque diagramme de ce modèle est rendu dans le format de la version 2. Veuillez noter les diagrammes que vous devrez éventuellement ajuster. Il s'agit d'une mise à jour unique, et vous ne devriez plus voir ce message après avoir sauvegardé ce modèle."
-        },
-        instructions: 'Excellent! Allons à votre modèle.',
-        continue: 'Continuer au modèle de menace'
+    pagination: {
+        previous: 'précédent',
+        next: 'suivant'
     }
 };
 

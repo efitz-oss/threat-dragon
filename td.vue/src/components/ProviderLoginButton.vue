@@ -10,7 +10,8 @@
                 :icon="provider.icon"
                 size="2x"
                 color="white"
-                class="mr-2" />
+                class="mr-2"
+            />
         </span>
         <span>
             {{ $t('providers.' + provider.key + '.loginWith') }}
@@ -25,6 +26,10 @@ import { providerNames } from '@/service/provider/providers.js';
 import { AUTH_SET_LOCAL } from '@/store/actions/auth.js';
 import loginApi from '@/service/api/loginApi.js';
 import { PROVIDER_SELECTED } from '@/store/actions/provider.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('components:ProviderLoginButton');
 
 export default {
     name: 'TdProviderLoginButton',
@@ -42,7 +47,7 @@ export default {
     // Keep Options API for test compatibility
     methods: {
         async onProviderClick() {
-            console.debug('login with provider: ' + this.provider.key);
+            log.debug('login with provider: ' + this.provider.key);
             await this.$store.dispatch(PROVIDER_SELECTED, this.provider.key);
 
             if (

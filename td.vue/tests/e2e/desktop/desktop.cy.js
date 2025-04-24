@@ -79,8 +79,13 @@ describe('Desktop application', () => {
                 // Trigger the close app request
                 win.electronAPI.onCloseAppRequest.yield({});
         
-                // Allow time for the modal to appear
-                cy.wait(500);
+                // Wait for the modal to appear or for the app close to be called
+                cy.get('body').should(() => {
+                    // This will retry until either the modal appears or appClose is called
+                    const modalVisible = Cypress.$('.modal-content').length > 0;
+                    const appCloseCalled = win.electronAPI.appClose.called;
+                    expect(modalVisible || appCloseCalled).to.be.true;
+                });
         
                 // Verification depends on environment:
                 // In real application, we would check for visible modal
@@ -91,9 +96,7 @@ describe('Desktop application', () => {
                         cy.get('.modal-footer .btn-primary').click();
             
                         // Verify app close was called
-                        cy.wait(100).then(() => {
-                            expect(win.electronAPI.appClose).to.be.called;
-                        });
+                        cy.wrap(win.electronAPI.appClose).should('be.called');
                     } else {
                         // If modal is not found, it might be a test environment
                         // Just verify the flow works by checking if window.confirm was called

@@ -3,7 +3,9 @@
         <b-row class="mt-3 mb-3">
             <b-col>
                 <h1>{{ $t('threatmodel.new.title') }}</h1>
-                <p class="lead">{{ $t('threatmodel.new.description') }}</p>
+                <p class="lead">
+                    {{ $t('threatmodel.new.description') }}
+                </p>
             </b-col>
         </b-row>
         <b-row>
@@ -13,19 +15,22 @@
                         <b-form-group
                             :label="$t('threatmodel.title') + ' *'"
                             label-for="threat-model-title"
-                            class="required-field">
+                            class="required-field"
+                        >
                             <b-form-input
                                 id="threat-model-title"
                                 v-model="threatModel.summary.title"
                                 required
-                                :placeholder="$t('threatmodel.placeholder.title')"></b-form-input>
+                                :placeholder="$t('threatmodel.placeholder.title')"
+                            />
                         </b-form-group>
 
                         <b-form-group :label="$t('threatmodel.owner')" label-for="threat-model-owner">
                             <b-form-input
                                 id="threat-model-owner"
                                 v-model="threatModel.summary.owner"
-                                :placeholder="$t('threatmodel.placeholder.owner')"></b-form-input>
+                                :placeholder="$t('threatmodel.placeholder.owner')"
+                            />
                         </b-form-group>
 
                         <b-form-group :label="$t('threatmodel.description')" label-for="threat-model-description">
@@ -33,14 +38,16 @@
                                 id="threat-model-description"
                                 v-model="threatModel.summary.description"
                                 rows="3"
-                                :placeholder="$t('threatmodel.placeholder.description')"></b-form-textarea>
+                                :placeholder="$t('threatmodel.placeholder.description')"
+                            />
                         </b-form-group>
 
                         <b-form-group :label="$t('threatmodel.reviewer')" label-for="threat-model-reviewer">
                             <b-form-input
                                 id="threat-model-reviewer"
                                 v-model="threatModel.detail.reviewer"
-                                :placeholder="$t('threatmodel.placeholder.reviewer')"></b-form-input>
+                                :placeholder="$t('threatmodel.placeholder.reviewer')"
+                            />
                         </b-form-group>
 
                         <div class="text-right mt-4">

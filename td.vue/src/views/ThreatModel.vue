@@ -25,7 +25,8 @@
                 v-for="(diagram, idx) in model.detail.diagrams"
                 :key="idx"
                 class="tm_diagram"
-                lg="3">
+                lg="3"
+            >
                 <BCard>
                     <template #header>
                         <h6 class="diagram-header-text">
@@ -44,7 +45,8 @@
                         <BImg
                             class="m-auto d-block td-diagram-thumb"
                             :src="getThumbnailUrl(diagram)"
-                            :alt="diagram.title" />
+                            :alt="diagram.title"
+                        />
                     </a>
                 </BCard>
             </b-col>
@@ -57,17 +59,20 @@
                         :is-primary="true"
                         :on-btn-click="onEditClick"
                         icon="edit"
-                        :text="$t('forms.edit')" />
+                        :text="$t('forms.edit')"
+                    />
                     <td-form-button
                         id="td-report-btn"
                         :on-btn-click="onReportClick"
                         icon="file-alt"
-                        :text="$t('forms.report')" />
+                        :text="$t('forms.report')"
+                    />
                     <td-form-button
                         id="td-close-btn"
                         :on-btn-click="onCloseClick"
                         icon="times"
-                        :text="$t('forms.closeModel')" />
+                        :text="$t('forms.closeModel')"
+                    />
                 </BButtonGroup>
             </b-col>
         </b-row>
@@ -80,6 +85,10 @@ import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
 import TdThreatModelSummaryCard from '@/components/ThreatModelSummaryCard.vue';
 import tmActions from '@/store/actions/threatmodel.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('views:ThreatModel');
 // FontAwesome is globally registered, but we need to make sure the icon is available
 export default {
     name: 'ThreatModel',
@@ -98,7 +107,7 @@ export default {
         const diagramTop =
             this.model.detail.diagramTop === undefined ? 10 : this.model.detail.diagramTop;
         const update = { diagramTop: diagramTop, version: this.version, threatTop: threatTop };
-        console.debug('updates: ' + JSON.stringify(update));
+        log.debug('updates: ' + JSON.stringify(update));
         this.$store.dispatch(tmActions.update, update);
         this.$store.dispatch(tmActions.notModified);
     },
@@ -112,11 +121,11 @@ export default {
         },
         onReportClick(evt) {
             evt.preventDefault();
-            console.debug(`Generating report with provider: ${this.providerType}`);
+            log.debug(`Generating report with provider: ${this.providerType}`);
 
             // Special handling for local provider
             if (this.providerType === 'local') {
-                console.debug('Using local route structure for report');
+                log.debug('Using local route structure for report');
                 this.$router.push({
                     name: 'localReport',
                     params: {
@@ -132,9 +141,9 @@ export default {
 
             // Provider-specific validation
             if (this.providerType === 'google') {
-                console.debug('Validating Google Drive params for report');
+                log.debug('Validating Google Drive params for report');
                 if (!params.folder) {
-                    console.error('Missing folder parameter for Google Drive route');
+                    log.error('Missing folder parameter for Google Drive route');
                     if (this.$store.state.folder && this.$store.state.folder.selected) {
                         params.folder = this.$store.state.folder.selected;
                     } else {
@@ -143,15 +152,15 @@ export default {
                     }
                 }
             } else if (this.providerType === 'git') {
-                console.debug('Validating Git params for report');
+                log.debug('Validating Git params for report');
                 if (!params.repository || !params.branch) {
-                    console.error('Missing required Git parameters');
+                    log.error('Missing required Git parameters');
                     this.$router.push({ name: 'MainDashboard' });
                     return;
                 }
             }
 
-            console.debug(`Navigating to ${this.providerType}Report with params:`, params);
+            log.debug(`Navigating to ${this.providerType}Report with params:`, params);
             this.$router.push({
                 name: `${this.providerType}Report`,
                 params: params,
@@ -177,12 +186,12 @@ export default {
 
             this.$store.dispatch(tmActions.diagramSelected, diagram);
 
-            console.debug(`Editing diagram "${diagram.title}" with provider: ${this.providerType}`);
+            log.debug(`Editing diagram "${diagram.title}" with provider: ${this.providerType}`);
 
             // When in local mode (demo models), use a simpler route structure
             // This avoids provider param issues that can cause infinite redirects
             if (this.providerType === 'local') {
-                console.debug('Using local route structure for diagram edit');
+                log.debug('Using local route structure for diagram edit');
                 this.$router.push({
                     name: 'localDiagramEdit',
                     params: {
@@ -202,26 +211,26 @@ export default {
 
             // Provider-specific validation
             if (this.providerType === 'google') {
-                console.debug('Validating Google Drive params for diagram edit');
+                log.debug('Validating Google Drive params for diagram edit');
                 // Special handling for Google Drive provider to ensure folder param is present
                 if (!params.folder) {
-                    console.error('Missing folder parameter for Google Drive route');
+                    log.error('Missing folder parameter for Google Drive route');
                     // Use a default folder ID if available in the state
                     if (this.$store.state.folder && this.$store.state.folder.selected) {
-                        console.debug('Using folder ID from state:', this.$store.state.folder.selected);
+                        log.debug('Using folder ID from state:', this.$store.state.folder.selected);
                         params.folder = this.$store.state.folder.selected;
                     } else {
                         // Redirect to folder selection if we don't have a folder
-                        console.debug('No folder ID available, redirecting to folder selection');
+                        log.debug('No folder ID available, redirecting to folder selection');
                         this.$router.push({ name: 'googleFolder' });
                         return;
                     }
                 }
             } else if (this.providerType === 'git') {
-                console.debug('Validating Git params for diagram edit');
+                log.debug('Validating Git params for diagram edit');
                 // Ensure repository and branch are set
                 if (!params.repository || !params.branch) {
-                    console.error('Missing required Git parameters:',
+                    log.error('Missing required Git parameters:',
                         !params.repository ? 'repository' : 'branch');
                     // Fall back to dashboard as we can't proceed without these params
                     this.$router.push({ name: 'MainDashboard' });
@@ -229,7 +238,7 @@ export default {
                 }
             }
 
-            console.debug(`Navigating to ${this.providerType}DiagramEdit with params:`, params);
+            log.debug(`Navigating to ${this.providerType}DiagramEdit with params:`, params);
             this.$router.push({
                 name: `${this.providerType}DiagramEdit`,
                 params: params,

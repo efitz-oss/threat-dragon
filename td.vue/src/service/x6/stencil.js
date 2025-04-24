@@ -2,6 +2,10 @@
 import shapes from './shapes/index.js';
 import factory from './factory.js';
 import { tc } from '@/i18n/index.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('service:x6:stencil');
 
 /**
  * Gets or creates a stencil for the graph
@@ -11,7 +15,7 @@ import { tc } from '@/i18n/index.js';
  * @returns {Object} - A stencil instance
  */
 const get = (graph, container, StencilConstructor) => {
-    console.debug('Setting up stencil for diagram editor');
+    log.debug('Setting up stencil for diagram editor');
 
     let resizeObserver;
 
@@ -44,7 +48,7 @@ const get = (graph, container, StencilConstructor) => {
 
     // Force a fresh translation lookup each time the stencil is created
     // This ensures we get the current locale's translations
-    console.debug('Getting translations for stencil with current locale');
+    log.debug('Getting translations for stencil with current locale');
 
     // Create stencil configuration
     const stencilConfig = {
@@ -231,12 +235,15 @@ const get = (graph, container, StencilConstructor) => {
     }
 
     // Add custom class to help with styling
-    if (stencilInstance && stencilInstance.container) {
+    if (stencilInstance && stencilInstance.container && stencilInstance.container.classList) {
         stencilInstance.container.classList.add('td-stencil-container');
     }
 
     // Add to DOM first so we can access the elements
-    container.appendChild(stencilInstance.container);
+    // Only append if both container and stencilInstance.container exist
+    if (container && stencilInstance && stencilInstance.container) {
+        container.appendChild(stencilInstance.container);
+    }
 
     // Force a redraw of all groups to ensure proper sizing
     setTimeout(() => {
@@ -244,11 +251,11 @@ const get = (graph, container, StencilConstructor) => {
             stencilInstance.layout();
         }
 
-        console.debug('Setting stencil group heights based on shape counts');
+        log.debug('Setting stencil group heights based on shape counts');
 
         // Get all groups after they've been added to the DOM
         const groups = container.querySelectorAll('.x6-widget-stencil-group');
-        console.debug(`Found ${groups.length} stencil groups`);
+        log.debug('Found stencil groups', { count: groups.length });
 
         // Create a mapping from display titles to internal group names
         // Force a fresh translation lookup for the mapping
@@ -261,7 +268,7 @@ const get = (graph, container, StencilConstructor) => {
             // Get the title element and extract the text
             const titleEl = group.querySelector('.x6-widget-stencil-group-title');
             const displayTitle = titleEl ? titleEl.textContent.trim() : '';
-            console.debug(`Processing group: "${displayTitle}"`);
+            log.debug('Processing group', { title: displayTitle });
 
             // Map display title to internal name
             const groupName = titleToName[displayTitle] || displayTitle.toLowerCase();
@@ -269,13 +276,13 @@ const get = (graph, container, StencilConstructor) => {
             // Get the content element
             const content = group.querySelector('.x6-widget-stencil-group-content');
             if (!content) {
-                console.debug(`No content element found for group: ${displayTitle}`);
+                log.debug('No content element found for group', { title: displayTitle });
                 return;
             }
 
             // Calculate height using our consistent function
             const calculatedHeight = getGroupHeight(groupName);
-            console.debug(`Setting height to ${calculatedHeight}px for group "${displayTitle}" (${groupName})`);
+            log.debug('Setting group height', { height: calculatedHeight, title: displayTitle, name: groupName });
 
             // Apply the height if the group is not collapsed
             if (!group.classList.contains('collapsed')) {

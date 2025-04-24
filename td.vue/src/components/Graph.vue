@@ -37,6 +37,10 @@ import { ref, computed, onMounted, onUnmounted, getCurrentInstance, nextTick, wa
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import { useRouter, useRoute } from 'vue-router';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('component:Graph');
 
 import TdGraphButtons from '@/components/GraphButtons.vue';
 import TdGraphMeta from '@/components/GraphMeta.vue';
@@ -71,7 +75,7 @@ export default {
         let t = () => '';
         // Initialize i18n in setup function
         let i18nInstance;
-        const locale = ref('eng');
+        // No need for locale ref as we're using i18nInstance.locale directly
 
         try {
             i18nInstance = useI18n();
@@ -80,7 +84,7 @@ export default {
                 // Don't reassign the ref, just use it directly
             }
         } catch (error) {
-            console.warn('i18n not available in setup, using default:', error);
+            log.warn('i18n not available in setup, using default', { error });
         }
         const graph = ref(null);
         const stencilInstance = ref(null);
@@ -112,7 +116,7 @@ export default {
             originalDiagramState.value = JSON.parse(JSON.stringify({
                 selectedDiagram: store.state.threatmodel.selectedDiagram
             }));
-            console.debug('Stored original diagram state for change detection');
+            log.debug('Stored original diagram state for change detection');
 
             // Notify store that the diagram is in its initial state
             store.dispatch(tmActions.notModified);
@@ -127,7 +131,7 @@ export default {
 
         // Event handlers
         const threatSelected = (threatId, state) => {
-            console.debug('Graph component received threatSelected event', threatId, state);
+            log.debug('Graph component received threatSelected event', { threatId, state });
 
             // Check if we're in a test environment
             const isTestEnv = process.env.NODE_ENV === 'test';
@@ -137,7 +141,7 @@ export default {
                 if (threatEditDialog.value) {
                     threatEditDialog.value.showDialog(threatId, state);
                 } else {
-                    console.error('threatEditDialog ref is not available');
+                    log.error('threatEditDialog ref is not available');
                 }
             } else {
                 // In production, use timeouts to ensure the ref is available
@@ -145,18 +149,18 @@ export default {
                 setTimeout(() => {
                     if (threatEditDialog.value) {
                         // Use the new public showDialog method
-                        console.debug('Showing threat edit dialog for:', threatId, state);
+                        log.debug('Showing threat edit dialog for', { threatId, state });
                         threatEditDialog.value.showDialog(threatId, state);
                     } else {
-                        console.error('threatEditDialog ref is not available');
+                        log.error('threatEditDialog ref is not available');
 
                         // Try again after a longer delay as a fallback
                         setTimeout(() => {
                             if (threatEditDialog.value) {
-                                console.debug('Retry showing threat edit dialog for:', threatId, state);
+                                log.debug('Retry showing threat edit dialog for', { threatId, state });
                                 threatEditDialog.value.showDialog(threatId, state);
                             } else {
-                                console.error('threatEditDialog ref still not available after retry');
+                                log.error('threatEditDialog ref still not available after retry');
                             }
                         }, 100);
                     }
@@ -167,7 +171,7 @@ export default {
         // Add a document-level event listener as a backup mechanism
         const documentThreatSelectedHandler = (event) => {
             if (event.detail && event.detail.id) {
-                console.debug('Graph component received document-level threat-selected event', event.detail);
+                log.debug('Graph component received document-level threat-selected event', { detail: event.detail });
                 if (threatEditDialog.value) {
                     threatEditDialog.value.showDialog(event.detail.id, event.detail.state || 'old');
                 }
@@ -181,7 +185,7 @@ export default {
         };
 
         const saved = () => {
-            console.debug('Save diagram');
+            log.debug('Save diagram');
             const updated = Object.assign({}, diagram.value);
             updated.cells = graph.value.toJSON().cells;
             store.dispatch(tmActions.diagramSaved, updated);
@@ -191,7 +195,7 @@ export default {
             originalDiagramState.value = JSON.parse(JSON.stringify({
                 selectedDiagram: store.state.threatmodel.selectedDiagram
             }));
-            console.debug('Updated original diagram state after saving');
+            log.debug('Updated original diagram state after saving');
         };
 
         const getConfirmModal = async () => {
@@ -209,7 +213,7 @@ export default {
                     centered: true
                 });
             } catch (error) {
-                console.error('Error showing confirm modal:', error);
+                log.error('Error showing confirm modal', { error });
                 return false;
             }
         };
@@ -228,8 +232,7 @@ export default {
             // Also check the store's modified flag
             const isModified = store.getters.modelChanged;
 
-            console.debug('Diagram closing - store.modified:', isModified,
-                'has actual changes:', hasActualChanges);
+            log.debug('Diagram closing', { isModified, hasActualChanges });
 
             // Show confirmation if either the store says it's modified or our change tracker detects changes
             if ((!hasActualChanges && !isModified) || (await getConfirmModal())) {
@@ -239,7 +242,7 @@ export default {
                 // Use setTimeout to ensure state is updated before navigation
                 setTimeout(() => {
                     try {
-                        console.debug(`Closing diagram with provider: ${providerType.value}`);
+                        log.debug('Closing diagram with provider', { provider: providerType.value });
                         const routeParams = { ...route.params };
 
                         // Remove diagram param as we're going back to the model view
@@ -249,7 +252,7 @@ export default {
 
                         // Special handling for local provider
                         if (providerType.value === 'local') {
-                            console.debug('Using local route structure for diagram close');
+                            log.debug('Using local route structure for diagram close');
                             router.push({
                                 name: 'localThreatModel',
                                 params: {
@@ -262,7 +265,7 @@ export default {
 
                         // Provider-specific validation
                         if (providerType.value === 'google' && !routeParams.folder) {
-                            console.error('Missing folder parameter for Google Drive route');
+                            log.error('Missing folder parameter for Google Drive route');
                             if (store.state.folder && store.state.folder.selected) {
                                 routeParams.folder = store.state.folder.selected;
                             } else {
@@ -271,19 +274,19 @@ export default {
                             }
                         } else if (providerType.value === 'git' &&
                             (!routeParams.repository || !routeParams.branch)) {
-                            console.error('Missing required Git parameters');
+                            log.error('Missing required Git parameters');
                             router.push({ name: 'MainDashboard' });
                             return;
                         }
 
-                        console.debug(`Navigating to ${providerType.value}ThreatModel with params:`, routeParams);
+                        log.debug('Navigating to ThreatModel', { provider: providerType.value, params: routeParams });
                         router.push({
                             name: `${providerType.value}ThreatModel`,
                             params: routeParams,
                             replace: true
                         });
                     } catch (error) {
-                        console.error('Error during navigation:', error);
+                        log.error('Error during navigation', { error });
                         // Fallback to dashboard if navigation fails
                         router.push({ name: 'MainDashboard' });
                     }
@@ -301,17 +304,18 @@ export default {
             // Initialize stencil after DOM updates and graph is ready
             nextTick(() => {
                 if (graph.value && stencilContainer.value) {
-                    console.debug('Initializing stencil within nextTick');
+                    log.debug('Initializing stencil within nextTick');
                     stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
                 } else {
-                    console.error('Graph or stencil container not ready for stencil initialization in nextTick');
+                    log.error('Graph or stencil container not ready for stencil initialization in nextTick');
                 }
             });
 
             // Watch for locale changes and re-initialize stencil
-            // Use i18nInstance.locale directly in the watch
-            watch(i18nInstance.locale, (newLocale, oldLocale) => {
-                console.debug(`Locale changed from ${oldLocale} to ${newLocale}, reinitializing stencil`);
+            // Use i18nInstance?.locale?.value or a ref to ensure it's watchable
+            const localeToWatch = i18nInstance?.locale || ref('eng');
+            watch(localeToWatch, (newLocale, oldLocale) => {
+                log.debug('Locale changed, reinitializing stencil', { from: oldLocale, to: newLocale });
 
                 // Completely clean up the stencil container
                 if (stencilContainer.value) {
@@ -326,15 +330,15 @@ export default {
 
                     // Re-initialize stencil with new localized strings
                     if (graph.value) {
-                        console.debug('Reinitializing stencil with new locale');
+                        log.debug('Reinitializing stencil with new locale');
                         nextTick(() => {
                             stencilInstance.value = stencil.get(graph.value, stencilContainer.value);
                         });
                     } else {
-                        console.error('Graph not ready for stencil reinitialization');
+                        log.error('Graph not ready for stencil reinitialization');
                     }
                 } else {
-                    console.error('Stencil container not available for reinitialization');
+                    log.error('Stencil container not available for reinitialization');
                 }
             });
         });

@@ -40,7 +40,7 @@ export class TokenStore {
      */
     verify(token) {
         if (!this.backend.exists(token)) {
-            logger.audit('Refresh token not found in repository');
+            logger.error('Refresh token not found in repository');
             return false;
         }
 
@@ -50,7 +50,7 @@ export class TokenStore {
             logger.debug('Refresh token verified');
             return jwtHelper.verifyRefresh(token);
         } catch (err) {
-            logger.audit('Error verifying refresh token');
+            logger.error('Error verifying refresh token');
             logger.info(err);
 
             // Since the token is invalid and was found in the array, we should remove it

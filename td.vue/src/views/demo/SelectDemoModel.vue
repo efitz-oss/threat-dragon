@@ -31,6 +31,10 @@
 import demo from '@/service/demo/index.js';
 import isElectron from 'is-electron';
 import tmActions from '@/store/actions/threatmodel.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('views:demo:SelectDemoModel');
 
 export default {
     name: 'SelectDemoModel',
@@ -48,15 +52,15 @@ export default {
             // 1. First explicitly clear provider state when selecting demo model
             // This prevents routing conflict with previous provider (e.g., Google Drive)
             this.$store.dispatch('PROVIDER_CLEAR');
-            console.debug('Cleared provider state');
+            log.debug('Cleared provider state');
             
             // 2. Select the local provider explicitly
             this.$store.dispatch('PROVIDER_SELECTED', 'local');
-            console.debug('Selected local provider');
+            log.debug('Selected local provider');
             
             // 3. Select the threat model
             this.$store.dispatch(tmActions.selected, model.model);
-            console.debug('Selected threat model data');
+            log.debug('Selected threat model data');
             
             if (isElectron()) {
                 // tell any electron server that the model has changed
@@ -69,7 +73,7 @@ export default {
                 threatmodel: model.name
             };
             
-            console.debug('Navigating to demo model:', model.name);
+            log.debug('Navigating to demo model:', model.name);
 
             // First try to navigate by name, but if that fails, use path as fallback
             try {
@@ -81,7 +85,7 @@ export default {
                     replace: true // Use replace to avoid adding to history
                 });
             } catch (err) {
-                console.error('Error navigating by route name, falling back to path:', err);
+                log.error('Error navigating by route name, falling back to path:', err);
                 // Fallback to direct path navigation to avoid route naming issues
                 this.$router.push(`/models/${model.name}`);
             }

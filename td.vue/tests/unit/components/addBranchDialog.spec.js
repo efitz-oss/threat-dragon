@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+// nextTick is not used in this file
 import { createWrapper } from '../setup/test-utils.js';
 import AddBranchDialog from '@/components/AddBranchDialog.vue';
 import branchActions from '@/store/actions/branch.js';

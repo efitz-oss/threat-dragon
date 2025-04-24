@@ -6,28 +6,24 @@
 
 // Log levels matching server-side winston levels for consistency
 export const LOG_LEVELS = {
-    AUDIT: 0,
-    ERROR: 1,
-    WARN: 2,
-    INFO: 3,
-    DEBUG: 4,
-    SILLY: 5
+    ERROR: 0,
+    WARN: 1,
+    INFO: 2,
+    DEBUG: 3
 };
 
 // Map log level names to their numeric values for comparison
 const LOG_LEVEL_VALUES = {
-    audit: LOG_LEVELS.AUDIT,
     error: LOG_LEVELS.ERROR,
     warn: LOG_LEVELS.WARN,
     info: LOG_LEVELS.INFO,
-    debug: LOG_LEVELS.DEBUG,
-    silly: LOG_LEVELS.SILLY
+    debug: LOG_LEVELS.DEBUG
 };
 
 // Default configuration
 const DEFAULT_CONFIG = {
     level: 'info', // Default log level
-    enabledInProduction: false, // Disable debug and silly in production
+    enabledInProduction: false, // Disable debug in production
     correlationIdKey: 'td-correlation-id', // Key for correlation ID in localStorage
     debugQueryParam: 'td-debug', // URL query param to enable debug mode
     context: 'app' // Default context
@@ -46,7 +42,7 @@ const shouldLog = (level) => {
     if (
         process.env.NODE_ENV === 'production' &&
         !loggerConfig.enabledInProduction &&
-        (level === 'debug' || level === 'silly')
+        level === 'debug'
     ) {
         return false;
     }
@@ -169,12 +165,6 @@ const doLog = (level, context, message, metadata = {}) => {
     case 'debug':
         consoleMethod = 'debug';
         break;
-    case 'silly':
-        consoleMethod = 'debug';
-        break; // Use debug for silly too
-    case 'audit':
-        consoleMethod = 'info';
-        break; // Use info for audit
     }
 
     // For errors, use a more detailed format
@@ -215,13 +205,6 @@ class Logger {
     }
 
     /**
-     * Logs a message at the AUDIT level (highest priority)
-     */
-    audit(message, metadata = {}) {
-        return doLog('audit', this.context, message, metadata);
-    }
-
-    /**
      * Logs a message at the ERROR level
      */
     error(message, metadata = {}) {
@@ -247,13 +230,6 @@ class Logger {
      */
     debug(message, metadata = {}) {
         return doLog('debug', this.context, message, metadata);
-    }
-
-    /**
-     * Logs a message at the SILLY level (lowest priority)
-     */
-    silly(message, metadata = {}) {
-        return doLog('silly', this.context, message, metadata);
     }
 
     /**
@@ -297,10 +273,8 @@ export default {
     configureLogger,
     getCorrelationId,
     LOG_LEVELS,
-    audit: (...args) => defaultLogger.audit(...args),
     error: (...args) => defaultLogger.error(...args),
     warn: (...args) => defaultLogger.warn(...args),
     info: (...args) => defaultLogger.info(...args),
-    debug: (...args) => defaultLogger.debug(...args),
-    silly: (...args) => defaultLogger.silly(...args)
+    debug: (...args) => defaultLogger.debug(...args)
 };

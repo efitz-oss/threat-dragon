@@ -11,10 +11,12 @@
  * @param {boolean} options.centered Whether to center the modal vertically
  * @returns {Promise<boolean>} Resolves to true if confirmed, false if cancelled
  */
+import logger from '@/utils/logger.js';
+const log = logger.getLogger('util:modal-helper');
 export const showConfirmDialog = async (vueInstance, options = {}) => {
     // If no options, reject
     if (!options) {
-        console.error('showConfirmDialog: Invalid parameters');
+        log.error('showConfirmDialog: Invalid parameters');
         return Promise.reject(new Error('Invalid parameters'));
     }
 
@@ -23,7 +25,7 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
     document.body.appendChild(modalContainer);
 
     // Create the modal component
-    const { BModal, BVN_COMPONENT_NAME, createBootstrap } = await import('bootstrap-vue-next');
+    const { BModal, createBootstrap } = await import('bootstrap-vue-next');
     const { createApp, h } = await import('vue');
 
     // Return a Promise that resolves when the user confirms or cancels
@@ -86,7 +88,7 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
                     mounted = true;
                 }
             } catch (e) {
-                console.warn('Could not load i18n for modal:', e);
+                log.warn('Could not load i18n for modal', { error: e });
                 // Even if i18n fails, we still need to mount the app
                 if (!mounted) {
                     const _modalInstance = app.mount(modalContainer);
@@ -94,7 +96,7 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
                 }
             }
         }).catch(e => {
-            console.warn('Could not import i18n for modal:', e);
+            log.warn('Could not import i18n for modal', { error: e });
             // Even if i18n fails, we still need to mount the app
             if (!mounted) {
                 const _modalInstance = app.mount(modalContainer);
@@ -124,7 +126,7 @@ export const showConfirmDialog = async (vueInstance, options = {}) => {
                         document.body.removeChild(modalContainer);
                     }
                 } catch (error) {
-                    console.warn('Modal cleanup error:', error);
+                    log.warn('Modal cleanup error', { error });
                 }
             }, 100);
         };

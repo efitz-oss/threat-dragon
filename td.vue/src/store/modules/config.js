@@ -1,6 +1,10 @@
 import { CONFIG_CLEAR, CONFIG_LOADED } from '@/store/actions/config';
 import api from '@/service/api/api';
 import { isElectronMode } from '@/utils/environment';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('store:config');
 
 export const clearState = (state) => {
     state.config = null;
@@ -38,20 +42,20 @@ const actions = {
 
         // In Electron mode, set a default config and skip the API call
         if (isElectronMode()) {
-            console.log('DESKTOP MODE: Using desktop config with Google auth disabled');
+            log.info('DESKTOP MODE: Using desktop config with Google auth disabled');
             commit(CONFIG_LOADED, { config: desktopConfig });
             return;
         }
 
         try {
-            console.log('FETCHING config from server');
+            log.info('FETCHING config from server');
             const response = await api.getAsync('/api/config');
-            console.log('SERVER CONFIG RECEIVED:', response.data);
+            log.info('SERVER CONFIG RECEIVED', { config: response.data });
             commit(CONFIG_LOADED, { config: response.data });
         } catch (error) {
-            console.error('Error fetching config:', error);
+            log.error('Error fetching config', { error });
             // Set a fallback config on error
-            console.log('Using fallback config due to API error');
+            log.info('Using fallback config due to API error');
             commit(CONFIG_LOADED, { config: webFallbackConfig });
         }
     }
@@ -61,7 +65,7 @@ const mutations = {
     [CONFIG_CLEAR]: (state) => clearState(state),
 
     [CONFIG_LOADED]: (state, { config }) => {
-        console.log('CONFIG LOADED:', config);
+        log.info('CONFIG LOADED', { config });
         state.config = config;
     }
 };

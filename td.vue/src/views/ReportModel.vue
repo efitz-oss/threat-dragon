@@ -123,6 +123,10 @@ import TdFormButton from '@/components/FormButton.vue';
 import TdPrintCoversheet from '@/components/printed-report/Coversheet.vue';
 import TdPrintExecutiveSummary from '@/components/printed-report/ExecutiveSummary.vue';
 import threatService from '@/service/threats/index.js';
+import logger from '@/utils/logger.js';
+
+// Create a logger instance for this component
+const log = logger.getLogger('views:ReportModel');
 export default {
     name: 'ReportModel',
     components: {
@@ -185,11 +189,11 @@ export default {
             });
         },
         print() {
-            console.debug('Print the report window');
+            log.debug('Print the report window');
             window.print();
         },
         printPdf() {
-            console.debug('Export the report window to PDF (desktop only)');
+            log.debug('Export the report window to PDF (desktop only)');
             if (isElectron()) {
                 // request electron server to print PDF
                 window.electronAPI.modelPrint('PDF');

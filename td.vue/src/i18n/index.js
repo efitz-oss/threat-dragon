@@ -1,4 +1,8 @@
 import { createI18n, useI18n as vueUseI18n } from 'vue-i18n';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('i18n');
 
 /**
  * Vue 3 Internationalization Module
@@ -12,12 +16,11 @@ import { createI18n, useI18n as vueUseI18n } from 'vue-i18n';
 import ara from './ar.js';
 import deu from './de.js';
 import ell from './el.js';
-import id from './id.js';
+import ind from './id.js'; // Indonesian
 import eng from './en.js';
 import fin from './fi.js';
 import fra from './fr.js';
 import hin from './hi.js';
-import ind from './id.js';
 import jpn from './ja.js';
 import ms from './ms.js';
 import por from './pt.js';
@@ -46,7 +49,6 @@ const getI18n = () => {
                 eng,
                 spa,
                 fin,
-                id,
                 fra,
                 hin,
                 ind,
@@ -82,7 +84,7 @@ export const useI18n = () => {
         return vueUseI18n();
     } catch (e) {
         // Return a simple mock if something goes wrong
-        console.warn('Error in useI18n:', e);
+        log.warn('Error in useI18n', { error: e });
         return {
             t: (key) => key,
             locale: { value: 'eng' },
@@ -108,7 +110,7 @@ export const useI18n = () => {
 export const useI18nMigration = () => {
     // Get the composition API version
     const { t } = useI18n();
-    
+
     // Return only what's needed in templates  
     return { t };
 };
@@ -133,7 +135,7 @@ export const tc = (key, options = {}) => {
             return i18nInstance.global.t(key, options);
         }
     } catch (err) {
-        console.warn(`Translation error for key: ${key}`, err);
+        log.warn('Translation error', { key, error: err });
     }
 
     // Return key as fallback if translation fails

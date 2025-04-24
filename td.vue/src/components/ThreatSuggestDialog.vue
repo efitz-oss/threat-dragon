@@ -7,7 +7,8 @@
             ok-variant="primary"
             header-bg-variant="primary"
             header-text-variant="light"
-            :title="modalTitle">
+            :title="modalTitle"
+        >
             <b-form>
                 <b-form-row>
                     <b-col>
@@ -16,7 +17,8 @@
                                 id="title"
                                 v-model="threat.title"
                                 type="text"
-                                required />
+                                required
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -26,7 +28,8 @@
                         <b-form-group
                             id="threat-type-group"
                             :label="t('threats.properties.type')"
-                            label-for="threat-type">
+                            label-for="threat-type"
+                        >
                             <b-form-select id="threat-type" v-model="threat.type" :options="types" />
                         </b-form-group>
                     </b-col>
@@ -38,12 +41,14 @@
                             id="status-group"
                             class="float-left"
                             :label="t('threats.properties.status')"
-                            label-for="status">
+                            label-for="status"
+                        >
                             <b-form-radio-group
                                 id="status"
                                 v-model="threat.status"
                                 :options="statuses"
-                                buttons />
+                                buttons
+                            />
                         </b-form-group>
                     </b-col>
 
@@ -58,12 +63,14 @@
                             id="priority-group"
                             class="float-right"
                             :label="t('threats.properties.priority')"
-                            label-for="priority">
+                            label-for="priority"
+                        >
                             <b-form-radio-group
                                 id="priority"
                                 v-model="threat.severity"
                                 :options="priorities"
-                                buttons />
+                                buttons
+                            />
                         </b-form-group>
                     </b-col>
                 </b-form-row>
@@ -73,7 +80,8 @@
                         <b-form-group
                             id="description-group"
                             :label="t('threats.properties.description')"
-                            label-for="description">
+                            label-for="description"
+                        >
                             <b-form-textarea id="description" v-model="threat.description" rows="5" />
                         </b-form-group>
                     </b-col>
@@ -84,7 +92,8 @@
                         <b-form-group
                             id="mitigation-group"
                             :label="t('threats.properties.mitigation')"
-                            label-for="mitigation">
+                            label-for="mitigation"
+                        >
                             <b-form-textarea id="mitigation" v-model="threat.mitigation" rows="5" />
                         </b-form-group>
                     </b-col>
@@ -130,7 +139,19 @@ export default {
     },
     setup() {
         const store = useStore();
-        const { t } = useI18n();
+        
+        // Safely get i18n functions
+        let t = key => key;
+        let _locale = { value: 'en' };
+        try {
+            const i18n = useI18n();
+            if (i18n && i18n.t) {
+                t = i18n.t;
+                _locale = i18n.locale || _locale;
+            }
+        } catch (error) {
+            console.warn('Error initializing i18n in ThreatSuggestDialog:', error);
+        }
 
         // Refs for component state
         const editModal = ref(null);

@@ -5,43 +5,50 @@
                 :on-btn-click="deleteSelected"
                 icon="trash"
                 :title="t('threatmodel.controlButtons.delete')"
-                text="" />
+                text=""
+            />
 
             <td-form-button
                 :on-btn-click="showShortcuts"
                 icon="keyboard"
                 :title="t('threatmodel.controlButtons.shortcuts')"
-                text="" />
+                text=""
+            />
 
             <td-form-button
                 :on-btn-click="undo"
                 icon="undo"
                 :title="t('threatmodel.controlButtons.undo')"
-                text="" />
+                text=""
+            />
 
             <td-form-button
                 :on-btn-click="redo"
                 icon="redo"
                 :title="t('threatmodel.controlButtons.redo')"
-                text="" />
+                text=""
+            />
 
             <td-form-button
                 :on-btn-click="zoomIn"
                 icon="search-plus"
                 :title="t('threatmodel.controlButtons.zoomIn')"
-                text="" />
+                text=""
+            />
 
             <td-form-button
                 :on-btn-click="zoomOut"
                 icon="search-minus"
                 :title="t('threatmodel.controlButtons.zoomOut')"
-                text="" />
+                text=""
+            />
 
             <td-form-button
                 :on-btn-click="toggleGrid"
                 icon="th"
                 :title="t('threatmodel.controlButtons.toggleGrid')"
-                text="" />
+                text=""
+            />
 
             <b-dropdown id="export-graph-btn" right :text="t('forms.export')">
                 <b-dropdown-item id="export-graph-png" @click="exportPNG">
@@ -61,7 +68,8 @@
                 :is-primary="true"
                 :on-btn-click="save"
                 icon="save"
-                :text="t('forms.save')" />
+                :text="t('forms.save')"
+            />
         </BButtonGroup>
     </div>
 </template>
@@ -70,6 +78,10 @@
 import { mapState } from 'vuex';
 import { useI18n } from '@/i18n/index.js';
 import TdFormButton from '@/components/FormButton.vue';
+import logger from '@/utils/logger.js';
+
+// Create a logger instance for this component
+const log = logger.getLogger('components:GraphButtons');
 
 export default {
     name: 'TdGraphButtons',
@@ -129,7 +141,7 @@ export default {
             } else {
                 this.graph.zoom(0.2);
             }
-            console.debug('zoom to ' + this.graph.zoom());
+            log.debug('Zoom level changed:', { level: this.graph.zoom() });
         },
         zoomOut() {
             if (!this.graph || typeof this.graph.zoom !== 'function') return;
@@ -139,7 +151,7 @@ export default {
             } else {
                 this.graph.zoom(-0.2);
             }
-            console.debug('zoom to ' + this.graph.zoom());
+            log.debug('Zoom level changed:', { level: this.graph.zoom() });
         },
         deleteSelected() {
             if (!this.graph || typeof this.graph.removeCells !== 'function' || typeof this.graph.getSelectedCells !== 'function') return;

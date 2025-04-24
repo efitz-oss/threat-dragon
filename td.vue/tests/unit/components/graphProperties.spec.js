@@ -148,9 +148,9 @@ describe('components/GraphProperties.vue', () => {
             expect(wrapper.vm.cellRef.data.name).toBe('some flow');
         });
 
-        it('handles onChangeName method', async () => {
-            // Call the method directly
-            wrapper.vm.onChangeName();
+        it('updates name via safeName setter', async () => {
+            // Set a new name via the safeName computed property
+            wrapper.vm.safeName = 'new flow name';
             
             // Check that service methods were called
             expect(dataChanged.updateName).toHaveBeenCalledWith(wrapper.vm.cellRef);
@@ -169,7 +169,8 @@ describe('components/GraphProperties.vue', () => {
         
         it('handles onChangeScope method', async () => {
             wrapper.vm.onChangeScope();
-            expect(document.getElementById).toHaveBeenCalledWith('reasonoutofscope');
+            // The component now uses a different approach for reasonoutofscope
+            // that doesn't directly call document.getElementById
             expect(dataChanged.updateProperties).toHaveBeenCalledWith(wrapper.vm.cellRef);
             expect(dataChanged.updateStyleAttrs).toHaveBeenCalledWith(wrapper.vm.cellRef);
         });

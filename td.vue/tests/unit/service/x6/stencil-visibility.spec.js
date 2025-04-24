@@ -1,5 +1,5 @@
 import shapes from '@/service/x6/shapes/index.js';
-import stencilModule from '@/service/x6/stencil.js';
+// stencilModule is mocked below, no need to import it
 
 // Mock the stencil module
 jest.mock('@/service/x6/stencil.js', () => ({
@@ -42,7 +42,7 @@ jest.mock('@/service/x6/shapes/index.js', () => ({
 }));
 
 describe('Stencil Shapes Visibility Tests', () => {
-    let container, target, stencilInstance, mockStencilEl, mockGroups, mockItems, mockSvgElements;
+    let container, stencilInstance, mockStencilEl, mockGroups, mockItems, mockSvgElements;
 
     // Mock shape objects with SVG content to simulate actual rendered shapes
     const createMockSvgShape = (type) => {
@@ -240,9 +240,6 @@ describe('Stencil Shapes Visibility Tests', () => {
 
         // We already created mockSvgElements above, so no need to collect them here
 
-        // Mock target
-        target = {};
-
         // Mock stencil instance
         stencilInstance = {
             load: jest.fn(),
@@ -276,10 +273,14 @@ describe('Stencil Shapes Visibility Tests', () => {
 
     describe('Stencil Visibility', () => {
         it('creates shapes with high z-index values', () => {
-            // Create a proper constructor function for StencilConstructor
-            const MockStencilConstructor = jest.fn().mockImplementation(() => {
+            // Create and use a proper constructor function for StencilConstructor
+            const mockStencilConstructor = jest.fn().mockImplementation(() => {
                 return stencilInstance;
             });
+            
+            // Call the stencil.get function with our mock constructor
+            const graph = {};
+            require('@/service/x6/stencil.js').get(graph, container, mockStencilConstructor);
 
             // Reset the mock implementations to ensure they're called
             shapes.ActorShape.mockClear();
@@ -325,10 +326,14 @@ describe('Stencil Shapes Visibility Tests', () => {
 
     describe('Shape Rendering', () => {
         it('verifies that all shape types are loaded into the stencil', () => {
-            // Create a proper constructor function for StencilConstructor
-            const MockStencilConstructor = jest.fn().mockImplementation(() => {
+            // Create and use a proper constructor function for StencilConstructor
+            const mockStencilConstructor = jest.fn().mockImplementation(() => {
                 return stencilInstance;
             });
+            
+            // Call the stencil.get function with our mock constructor
+            const graph = {};
+            require('@/service/x6/stencil.js').get(graph, container, mockStencilConstructor);
 
             // Reset the mock implementations to ensure they're called
             shapes.ActorShape.mockClear();

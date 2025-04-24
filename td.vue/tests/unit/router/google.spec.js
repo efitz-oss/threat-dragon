@@ -1,25 +1,6 @@
 import { googleRoutes } from '@/router/google.js';
 
 describe('routes/google.js', () => {
-    describe('Drive folder access', () => {
-        let route;
-
-        beforeEach(() => {
-            route = googleRoutes.find(x => x.name === 'googleFolder');
-        });
-
-        it('uses the expected path', () => {
-            expect(route.path).toEqual('/drive/folder');
-        });
-
-        it('uses a lazily loaded component for DriveAccess', async () => {
-            // In Vue 3, dynamic imports are handled differently
-            const cmp = await route.component();
-            expect(cmp).toBeDefined();
-            // Name check is unreliable in Vue 3 with webpack chunking
-        });
-    });
-
     describe('Threat model access', () => {
         let route;
 

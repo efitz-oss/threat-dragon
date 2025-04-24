@@ -3,7 +3,9 @@
         <b-row class="mt-3 mb-3">
             <b-col>
                 <h1>{{ $t('threatmodel.edit.title') }}</h1>
-                <p class="lead">{{ $t('threatmodel.edit.description') }}</p>
+                <p class="lead">
+                    {{ $t('threatmodel.edit.description') }}
+                </p>
             </b-col>
         </b-row>
         <b-row>
@@ -16,13 +18,15 @@
                                     id="title-group"
                                     :label="$t('threatmodel.title') + ' *'"
                                     label-for="title"
-                                    class="required-field">
+                                    class="required-field"
+                                >
                                     <b-form-input
                                         id="title"
                                         v-model="model.summary.title"
                                         type="text"
                                         required
-                                        @input="onModifyModel()" />
+                                        @input="onModifyModel()"
+                                    />
                                 </b-form-group>
                             </b-col>
                         </b-form-row>
@@ -33,19 +37,22 @@
                                         id="owner"
                                         v-model="model.summary.owner"
                                         type="text"
-                                        @input="onModifyModel()" />
+                                        @input="onModifyModel()"
+                                    />
                                 </b-form-group>
                             </b-col>
                             <b-col md="6">
                                 <b-form-group
                                     id="reviewer-group"
                                     :label="$t('threatmodel.reviewer')"
-                                    label-for="reviewer">
+                                    label-for="reviewer"
+                                >
                                     <b-form-input
                                         id="reviewer"
                                         v-model="model.detail.reviewer"
                                         type="text"
-                                        @input="onModifyModel()" />
+                                        @input="onModifyModel()"
+                                    />
                                 </b-form-group>
                             </b-col>
                         </b-form-row>
@@ -54,13 +61,15 @@
                                 <b-form-group
                                     id="description-group"
                                     :label="$t('threatmodel.description')"
-                                    label-for="description">
+                                    label-for="description"
+                                >
                                     <b-form-textarea
                                         id="description"
                                         v-model="model.summary.description"
                                         type="text"
                                         rows="3"
-                                        @input="onModifyModel()" />
+                                        @input="onModifyModel()"
+                                    />
                                 </b-form-group>
                             </b-col>
                         </b-form-row>
@@ -69,7 +78,8 @@
                                 <b-form-group
                                     id="contributors-group"
                                     :label="$t('threatmodel.contributors')"
-                                    label-for="contributors">
+                                    label-for="contributors"
+                                >
                                     <b-form-tags
                                         id="contributors"
                                         v-model="contributors"
@@ -77,7 +87,8 @@
                                         variant="primary"
                                         separator=",;"
                                         tag-class="mx-2"
-                                        @input="onModifyModel()" />
+                                        @input="onModifyModel()"
+                                    />
                                 </b-form-group>
                             </b-col>
                         </b-form-row>
@@ -92,7 +103,8 @@
                                     <b-dropdown
                                         variant="secondary"
                                         class="select-diagram-type"
-                                        :text="model.detail.diagrams[idx].diagramType">
+                                        :text="model.detail.diagrams[idx].diagramType"
+                                    >
                                         <b-dropdown-item-button @click="onDiagramTypeClick(idx, 'CIA')">
                                             {{ $t('threatmodel.diagram.cia.select') }}
                                         </b-dropdown-item-button>
@@ -116,16 +128,19 @@
                                         v-model="model.detail.diagrams[idx].title"
                                         type="text"
                                         class="diagram-title"
-                                        placeholder="Diagram title" />
+                                        placeholder="Diagram title"
+                                    />
                                     <b-form-input
                                         v-model="model.detail.diagrams[idx].description"
                                         :placeholder="model.detail.diagrams[idx].placeholder"
                                         type="text"
-                                        class="diagram-description" />
+                                        class="diagram-description"
+                                    />
                                     <b-button
                                         variant="secondary"
                                         class="remove-diagram-btn"
-                                        @click="onRemoveDiagramClick(idx)">
+                                        @click="onRemoveDiagramClick(idx)"
+                                    >
                                         <font-awesome-icon icon="times" />
                                         {{ $t('forms.remove') }}
                                     </b-button>
@@ -149,17 +164,20 @@
                                         :is-primary="true"
                                         :on-btn-click="onSaveClick"
                                         icon="save"
-                                        :text="$t('forms.save')" />
+                                        :text="$t('forms.save')"
+                                    />
                                     <td-form-button
                                         id="td-reload-btn"
                                         :on-btn-click="onReloadClick"
                                         icon="undo"
-                                        :text="$t('forms.reload')" />
+                                        :text="$t('forms.reload')"
+                                    />
                                     <td-form-button
                                         id="td-close-btn"
                                         :on-btn-click="onCloseClick"
                                         icon="times"
-                                        :text="$t('forms.close')" />
+                                        :text="$t('forms.close')"
+                                    />
                                 </BButtonGroup>
                             </b-col>
                         </b-form-row>
@@ -176,6 +194,10 @@ import { mapState } from 'vuex';
 import { getProviderType } from '@/service/provider/providers.js';
 import TdFormButton from '@/components/FormButton.vue';
 import tmActions from '@/store/actions/threatmodel.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('views:ThreatModelEdit');
 export default {
     name: 'ThreatModelEdit',
     components: {
@@ -205,22 +227,22 @@ export default {
         // If fileId is passed in route params, store it in the threatmodel state
         if (this.$route && this.$route.params && this.$route.params.fileId) {
             this.$store.dispatch(tmActions.update, { fileId: this.$route.params.fileId });
-            console.debug('File ID stored from route params:', this.$route.params.fileId);
+            log.debug('File ID stored from route params:', this.$route.params.fileId);
         }
 
         // For Google Drive provider, check that we have model data
         if (this.providerType === 'google' && (!this.model || !this.model.summary)) {
-            console.debug('Google provider detected but missing model data, attempting to load from fileId:', this.fileId);
+            log.debug('Google provider detected but missing model data, attempting to load from fileId:', this.fileId);
 
             // If we have a fileId but no model data, try to fetch the model data
             if (this.fileId) {
                 try {
                     // Try to directly fetch the model data using the stored fileId
-                    console.debug('Attempting to fetch model data from Google Drive fileId:', this.fileId);
+                    log.debug('Attempting to fetch model data from Google Drive fileId:', this.fileId);
                     await this.$store.dispatch(tmActions.fetch, this.fileId);
-                    console.debug('Model data loaded successfully from fileId');
+                    log.debug('Model data loaded successfully from fileId');
                 } catch (error) {
-                    console.error('Failed to fetch model data from fileId:', error);
+                    log.error('Failed to fetch model data from fileId:', error);
                 }
             }
         }

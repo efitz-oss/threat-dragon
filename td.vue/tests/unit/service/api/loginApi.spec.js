@@ -66,13 +66,13 @@ describe('service/loginApi.js', () => {
             
             // Check that no log contains the actual code or tokens
             const allCalls = console.log.mock.calls.flat();
+            // Filter to only include string messages
+            const stringLogs = allCalls.filter(logMsg => typeof logMsg === 'string');
             const sensitiveData = [code, 'test-access-token', 'test-refresh-token'];
             
             sensitiveData.forEach(data => {
-                allCalls.forEach(logMsg => {
-                    if (typeof logMsg === 'string') {
-                        expect(logMsg).not.toContain(data);
-                    }
+                stringLogs.forEach(logMsg => {
+                    expect(logMsg).not.toContain(data);
                 });
             });
         });

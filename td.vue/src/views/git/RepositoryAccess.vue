@@ -1,6 +1,6 @@
 <template>
     <td-selection-page
-        v-model:filter="searchQuery"
+        :filter="searchQuery"
         :items="repositories"
         :page="page"
         :page-next="pageNext"
@@ -9,7 +9,9 @@
         :paginate="paginate"
         :empty-state-text="`${t('repository.noneFound')} ${t(
             'providers.' + provider + '.displayName'
-        )}`">
+        )}`"
+        @update:filter="searchQuery = $event"
+    >
         {{ t('repository.select') }} {{ t(`providers.${provider}.displayName`) }}
         {{ t('repository.from') }}
     </td-selection-page>
@@ -25,6 +27,10 @@ import { getProviderType } from '@/service/provider/providers.js';
 import _providerActions from '@/store/actions/provider.js';
 import repoActions from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
+import logger from '@/utils/logger.js';
+
+// Create a logger instance for this component
+const log = logger.getLogger('views:git:RepositoryAccess');
 
 export default {
     name: 'RepositoryAccess',
@@ -53,7 +59,7 @@ export default {
         watch(searchQuery, (newQuery) => {
             clearTimeout(searchTimeout.value);
             searchTimeout.value = setTimeout(() => {
-                console.log('Suche nach:', newQuery);
+                log.debug('Searching repositories:', { query: newQuery });
                 store.dispatch(repoActions.fetch, {
                     page: 1,
                     searchQuery: newQuery

@@ -226,7 +226,7 @@ const logout = (req, res) =>
             try {
                 const refreshToken = req.body.refreshToken;
                 if (!refreshToken) {
-                    logger.audit('Log out without a refresh token');
+                    logger.error('Log out without a refresh token');
                     // Return OK, it could be a client error or an expired token
                     return '';
                 }

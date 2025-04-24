@@ -4,7 +4,8 @@
             <b-img
                 :src="require('@/assets/threatdragon_logo_image.svg')"
                 class="td-brand-img"
-                alt="Threat Dragon Logo" />
+                alt="Threat Dragon Logo"
+            />
             Threat Dragon v{{ packageBuildVersion
             }}{{ packageBuildState }}
         </b-navbar-brand>
@@ -27,53 +28,62 @@
                         v-tooltip.hover
                         icon="sign-out-alt"
                         class="td-fa-nav"
-                        :title="t('nav.logOut')" />
+                        :title="t('nav.logOut')"
+                    />
                 </b-nav-item>
                 <b-nav-item v-if="googleEnabled" id="nav-tos" to="/tos">
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="file-contract"
                         class="td-fa-nav"
-                        :title="t('nav.tos')" />
+                        :title="t('nav.tos')"
+                    />
                 </b-nav-item>
                 <b-nav-item v-if="googleEnabled" id="nav-privacy" to="/privacy">
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="shield-alt"
                         class="td-fa-nav"
-                        :title="t('nav.privacy')" />
+                        :title="t('nav.privacy')"
+                    />
                 </b-nav-item>
                 <b-nav-item
                     id="nav-docs"
                     href="https://owasp.org/www-project-threat-dragon/docs-2/"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                >
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="question-circle"
                         class="td-fa-nav"
-                        :title="t('desktop.help.docs')" />
+                        :title="t('desktop.help.docs')"
+                    />
                 </b-nav-item>
                 <b-nav-item
                     id="nav-tm-cheat-sheet"
                     href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                >
                     <font-awesome-icon
                         v-tooltip.hover
                         icon="gift"
                         class="td-fa-nav"
-                        :title="t('desktop.help.sheets')" />
+                        :title="t('desktop.help.sheets')"
+                    />
                 </b-nav-item>
                 <b-nav-item
                     id="nav-owasp-td"
                     href="https://owasp.org/www-project-threat-dragon/"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                >
                     <b-img
                         :src="require('@/assets/owasp.svg')"
                         class="td-fa-nav td-owasp-logo"
-                        :title="t('desktop.help.visit')" />
+                        :title="t('desktop.help.visit')"
+                    />
                 </b-nav-item>
             </b-navbar-nav>
         </b-collapse>
@@ -87,6 +97,10 @@ import { LOGOUT } from '@/store/actions/auth.js';
 import { useI18n } from '@/i18n';
 import TdLocaleSelect from './LocaleSelect.vue';
 import { getDisplayName } from '@/service/provider/providers.js';
+import logger from '@/utils/logger.js';
+
+// Create a logger instance for this component
+const log = logger.getLogger('components:Navbar');
 
 export default {
     name: 'TdNavbar',
@@ -109,7 +123,7 @@ export default {
             try {
                 return getDisplayName(selectedProvider.value);
             } catch (err) {
-                console.warn('Error getting provider display name:', err);
+                log.warn('Error getting provider display name:', { error: err });
                 return selectedProvider.value;
             }
         });
@@ -126,28 +140,28 @@ export default {
             // Dispatch logout action and wait for it to complete
             await store.dispatch(LOGOUT);
 
-            console.debug('Logout action completed, now navigating to home page');
+            log.debug('Logout action completed, now navigating to home page');
 
             // Always navigate to home page after logout
             // Try multiple approaches to ensure navigation works
             try {
                 // First try using the Vue Router instance from the component
                 if (getCurrentInstance() && getCurrentInstance().proxy.$router) {
-                    console.debug('Navigating to home page after logout (component router)');
+                    log.debug('Navigating to home page after logout (component router)');
                     getCurrentInstance().proxy.$router.push('/').catch((error) => {
                         if (error.name !== 'NavigationDuplicated') {
-                            console.warn('Navigation error:', error);
+                            log.warn('Navigation error:', { error });
                             // Try alternative navigation method
                             window.location.href = '/';
                         }
                     });
                 } else {
                     // Fallback to direct location change if router is not available
-                    console.debug('Navigating to home page after logout (location change)');
+                    log.debug('Navigating to home page after logout (location change)');
                     window.location.href = '/';
                 }
             } catch (error) {
-                console.error('Error during logout navigation:', error);
+                log.error('Error during logout navigation:', { error });
                 // Final fallback
                 window.location.href = '/';
             }

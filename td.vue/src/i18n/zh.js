@@ -191,9 +191,7 @@ const zho = {
         contributors: '贡献者',
         contributorsPlaceholder: '添加新的贡献者',
         description: '详细系统描述',
-        dragAndDrop: '拖放或',
-        editing: '编辑',
-        jsonPaste: '在此处粘贴威胁模型的JSON',
+        dragAndDrop: '拖放或',        jsonPaste: '在此处粘贴威胁模型的JSON',
         owner: '所有者',
         reviewer: '审稿人',
         title: '标题',
@@ -206,11 +204,7 @@ const zho = {
             owner: '所有者名称或团队',
             description: '输入所建模系统的高级描述',
             reviewer: '审稿人名称'
-        },
-        actions: {
-            save: '保存'
-        },
-        diagram: {
+        },        diagram: {
             diagrams: '图表',
             addNewDiagram: '添加新图表...',
             generic: {

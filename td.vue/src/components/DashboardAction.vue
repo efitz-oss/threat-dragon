@@ -3,7 +3,7 @@
         <router-link :to="to" class="action-pane-link">
             <b-container class="text-center action-pane p-4 bg-light rounded shadow-sm">
                 <font-awesome-icon :icon="[iconPreface, icon]" size="4x" class="action-icon" />
-                <br />
+                <br>
                 {{ t(`dashboard.actions.${description}`) }}
             </b-container>
         </router-link>

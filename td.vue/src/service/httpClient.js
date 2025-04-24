@@ -6,6 +6,10 @@ import { store } from '@/store/index.js'; // Direct import of the store instance
 
 import { tc } from '@/i18n/index.js';
 import { useToast } from '@/plugins/toast-notification.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('httpClient');
 
 // Get translation using the standardized helper
 const getTranslation = (key) => tc(key);
@@ -32,7 +36,7 @@ const getBaseUrl = () => {
 
 const createClient = () => {
     const baseURL = getBaseUrl();
-    console.log(`Creating HTTP client with base URL: ${baseURL}`);
+    log.debug('Creating HTTP client', { baseURL });
 
     const client = axios.create({
         baseURL
@@ -50,7 +54,7 @@ const createClient = () => {
             return config;
         },
         (err) => {
-            console.error('Request error:', err);
+            log.error('Request error', { error: err });
             store.dispatch(LOADER_FINISHED);
             return Promise.reject(err);
         }
@@ -64,7 +68,7 @@ const createClient = () => {
         async (err) => {
             const logAndExit = () => {
                 // Better error logging with structured information
-                console.error('Request error:', {
+                log.error('Request error', {
                     message: err.message,
                     url: err.config?.url,
                     method: err.config?.method,
@@ -95,8 +99,7 @@ const createClient = () => {
                 store.dispatch(LOADER_FINISHED);
                 return retryResp;
             } catch (retryError) {
-                console.warn('Error retrying after refresh token update');
-                console.warn(retryError);
+                log.warn('Error retrying after refresh token update', { error: retryError });
                 getToast().info(getTranslation('auth.sessionExpired'));
                 router.push({ name: 'HomePage' });
                 return await logAndExit();

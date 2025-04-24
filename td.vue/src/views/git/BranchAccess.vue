@@ -5,15 +5,17 @@
         :page-next="pageNext"
         :page-prev="pagePrev"
         :on-item-click="onBranchClick"
-        :paginate="paginate">
+        :paginate="paginate"
+    >
         {{ t('branch.select') }}
         <!-- Fixme: The href should get the configured hostname from env -->
         <a
             id="repo_link"
             :href="`${providerUri}/${repoName}`"
             target="_blank"
-            rel="noopener noreferrer">{{ repoName
-            }}</a>
+            rel="noopener noreferrer"
+        >{{ repoName
+        }}</a>
         {{ t('branch.from') }}
         <a id="return-to-repo" href="javascript:void(0)" @click="selectRepoClick">
             {{ t('branch.chooseRepo') }}

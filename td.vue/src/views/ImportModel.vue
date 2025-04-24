@@ -21,7 +21,8 @@
                                     id="json-input"
                                     v-model="tmJson"
                                     :placeholder="prompt"
-                                    rows="16" />
+                                    rows="16"
+                                />
                             </b-form-group>
                         </b-col>
                     </b-row>
@@ -35,7 +36,8 @@
                         id="td-open-btn"
                         :on-btn-click="onOpenClick"
                         icon="folder-open"
-                        :text="$t('forms.open')" />
+                        :text="$t('forms.open')"
+                    />
                 </BButtonGroup>
                 <!-- Correctly closed -->
             </b-col>
@@ -46,7 +48,8 @@
                         :is-primary="true"
                         :on-btn-click="onImportClick"
                         icon="file-import"
-                        :text="$t('forms.import')" />
+                        :text="$t('forms.import')"
+                    />
                 </BButtonGroup>
                 <!-- Correctly closed -->
             </b-col>
@@ -64,6 +67,10 @@ import TdFormButton from '@/components/FormButton.vue';
 import LocalFilePicker from '@/components/LocalFilePicker.vue';
 import tmActions from '@/store/actions/threatmodel.js';
 import { isValidSchema } from '@/service/schema/ajv';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('views:ImportModel');
 // Components imported automatically via bootstrap-vue-next plugin
 
 // only search for text files
@@ -144,7 +151,7 @@ export default {
                         // If the user cancels the file picker, don't show an error
                         if (e.name !== 'AbortError') {
                             this.$toast.warning(this.$t('threatmodel.errors.open'));
-                            console.warn(e);
+                            log.warn(e);
                         }
                     }
                 } else {
@@ -167,7 +174,7 @@ export default {
                                     this.onImportClick(file.name);
                                 } catch (e) {
                                     this.$toast.error(this.$t('threatmodel.errors.invalidJson'));
-                                    console.error(e);
+                                    log.error(e);
                                 }
                             } else {
                                 this.$toast.error(this.$t('threatmodel.errors.onlyJsonAllowed'));
@@ -180,7 +187,7 @@ export default {
                 }
             } catch (e) {
                 this.$toast.warning(this.$t('threatmodel.errors.open'));
-                console.warn(e);
+                log.warn(e);
             }
         },
 
@@ -199,7 +206,7 @@ export default {
             // check for empty input
             if (!this.tmJson || this.tmJson.trim() === '') {
                 this.$toast.error(this.$t('threatmodel.errors.invalidJson'));
-                console.error('Empty JSON input');
+                log.error('Empty JSON input');
                 return;
             }
 
@@ -208,7 +215,7 @@ export default {
                 jsonModel = JSON.parse(this.tmJson);
             } catch (e) {
                 this.$toast.error(this.$t('threatmodel.errors.invalidJson'));
-                console.error(e);
+                log.error(e);
                 return;
             }
 
@@ -240,7 +247,7 @@ export default {
                 this.$toast.error(
                     this.$t('threatmodel.errors.invalidJson') + ' : ' + e.message
                 );
-                console.error(e);
+                log.error(e);
                 return;
             }
 

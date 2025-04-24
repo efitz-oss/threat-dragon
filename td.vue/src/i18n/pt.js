@@ -123,9 +123,7 @@ const por = {
         contributors: 'Contribuidores',
         contributorsPlaceholder: 'Adicionar um novo contribuidor',
         description: 'Descrição de alto nível do sistema (high level system)',
-        dragAndDrop: 'Drag and drop or ',
-        editing: 'Edição',
-        jsonPaste: 'Drop a threat model JSON file or paste its content here:',
+        dragAndDrop: 'Drag and drop or ',        jsonPaste: 'Drop a threat model JSON file or paste its content here:',
         owner: 'Proprietário',
         reviewer: 'Revisor',
         title: 'Título',
@@ -138,11 +136,7 @@ const por = {
             owner: 'Nome do Proprietário ou Equipe',
             description: 'Insira uma descrição de alto nível do sistema sendo modelado',
             reviewer: 'Nome do Revisor'
-        },
-        actions: {
-            save: 'Salvar'
-        },
-        diagram: {
+        },        diagram: {
             diagrams: 'Diagramas',
             addNewDiagram: 'Adicionar um novo diagrama...',
             generic: {

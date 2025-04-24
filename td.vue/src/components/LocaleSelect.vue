@@ -9,7 +9,7 @@
                     placeholder="Search language..."
                     @click.stop
                     @input="filterLocales"
-                />
+                >
             </div>
             <div class="dropdown-items-container">
                 <b-dropdown-item
@@ -31,6 +31,10 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { LOCALE_SELECTED } from '@/store/actions/locale.js';
 import isElectron from 'is-electron';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('components:LocaleSelect');
 
 export default {
     name: 'TdLocalSelect',
@@ -54,7 +58,7 @@ export default {
                     i18n.locale.value = newLocale;
                 }
             } catch (err) {
-                console.warn('Error syncing locale:', err);
+                log.warn('Error syncing locale:', err);
             }
         }, { immediate: true });
 
@@ -154,6 +158,10 @@ export default {
                 return 'Malay'; // Malay
             case 'por':
                 return 'Português'; // Portuguese
+            case 'rus':
+                return 'Русский'; // Russian
+            case 'ukr':
+                return 'Українська'; // Ukrainian
             case 'zho':
                 return '中文'; // Chinese
             default:
@@ -167,6 +175,8 @@ export default {
                 Ελληνικά: 'greek',
                 हिंदी: 'hindi',
                 日本語: 'japanese',
+                Русский: 'russian',
+                Українська: 'ukrainian',
                 中文: 'chinese'
             };
             return searchMapping[name] || name;

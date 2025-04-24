@@ -9,7 +9,8 @@
         visible
         centered
         hide-footer
-        @hide="closeDialog">
+        @hide="closeDialog"
+    >
         <form @submit.prevent="addBranch">
             <b-row>
                 <b-col lg="12" class="pb-2">
@@ -22,7 +23,8 @@
                             lazy-formatter
                             trim
                             required
-                            @input="validate" />
+                            @input="validate"
+                        />
                         <b-form-invalid-feedback :state="isError">
                             {{ branchNameError }}
                         </b-form-invalid-feedback>
@@ -37,24 +39,27 @@
                             v-model="refBranch"
                             :options="branchNames"
                             size="md"
-                            required />
+                            required
+                        />
                     </b-form-group>
                 </b-col>
             </b-row>
         </form>
-        <hr />
+        <hr>
         <div class="d-flex justify-content-end">
             <b-overlay
                 :show="wait"
                 variant="light"
                 blur="true"
                 opacity="0.8"
-                spinner-small>
+                spinner-small
+            >
                 <b-button
                     variant="primary"
                     type="submit"
                     class="m-1"
-                    @click="addBranch">
+                    @click="addBranch"
+                >
                     {{ t('branch.add') }}
                 </b-button>
             </b-overlay>
@@ -69,6 +74,10 @@ import { ref, computed, watch, onMounted, getCurrentInstance } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import branchActions from '@/store/actions/branch.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('components:AddBranchDialog');
 
 export default {
     name: 'AddBranchModal',
@@ -94,7 +103,7 @@ export default {
             const i18n = useI18n();
             t = i18n.t;
         } catch (error) {
-            console.warn('Error initializing i18n in AddBranchDialog:', error);
+            log.warn('Error initializing i18n in AddBranchDialog:', error);
             // Fallback for tests
             t = (key) => key;
         }

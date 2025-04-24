@@ -21,6 +21,10 @@ import loginAPI from '@/service/api/loginApi.js';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { onMounted, ref } from 'vue';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const appLogger = logger.getLogger('views:OAuthCallback');
 
 export default {
     setup() {
@@ -110,14 +114,13 @@ export default {
 
                 log(`Authorization code found, length: ${code.length}`);
 
-                // Get the provider from store or determine from URL
-                let provider = store.state?.provider?.selected;
+                // Get the provider from store
+                const provider = store.state?.provider?.selected;
                 if (!provider) {
-                    log('No provider found in store, defaulting to google');
-                    provider = 'google';
-                    // Set provider in store
-                    log('Setting provider in store');
-                    store.dispatch('PROVIDER_SELECTED', provider);
+                    const errorMsg = 'No provider found in store';
+                    log(errorMsg);
+                    appLogger.error(errorMsg);
+                    throw new Error(errorMsg);
                 }
                 log(`Using provider: ${provider}`);
 
@@ -146,8 +149,8 @@ export default {
                 // Small delay for visual feedback
                 setTimeout(() => {}, 1000);
             } catch (error) {
-                // Log errors both to console.error (for tests) and to debug display
-                console.error(`OAuth callback error: ${error.message}`);
+                // Log errors to both the logger service and debug display
+                appLogger.error(`OAuth callback error: ${error.message}`);
                 log(`Error occurred: ${error.message}`);
 
                 if (error.response) {

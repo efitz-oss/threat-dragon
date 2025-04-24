@@ -1,9 +1,13 @@
 /**
  * DiagramChangeTracker Service
- * 
+ *
  * This service provides comprehensive change tracking for diagrams, threats, and properties.
  * It uses deep comparison to detect actual changes rather than relying on flags.
  */
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('service:DiagramChangeTracker');
 
 /**
  * Deep compare two objects to determine if they are equal
@@ -67,14 +71,14 @@ export const hasDiagramChanges = (originalDiagram, currentDiagram) => {
     const currentCells = currentDiagram.cells || [];
 
     if (originalCells.length !== currentCells.length) {
-        console.debug('Diagram changed: different number of cells');
+        log.debug('Diagram changed: different number of cells');
         return true;
     }
 
     // Deep compare cells
     const cellsEqual = deepCompare(originalCells, currentCells);
     if (!cellsEqual) {
-        console.debug('Diagram changed: cells modified');
+        log.debug('Diagram changed: cells modified');
         return true;
     }
 
@@ -85,7 +89,7 @@ export const hasDiagramChanges = (originalDiagram, currentDiagram) => {
     );
 
     if (!diagramPropsEqual) {
-        console.debug('Diagram changed: properties modified');
+        log.debug('Diagram changed: properties modified');
         return true;
     }
 
@@ -101,7 +105,7 @@ export const hasDiagramChanges = (originalDiagram, currentDiagram) => {
 export const hasThreatChanges = (originalThreats = [], currentThreats = []) => {
     // 1. Check if threats were added or removed
     if (originalThreats.length !== currentThreats.length) {
-        console.debug('Threats changed: different number of threats');
+        log.debug('Threats changed: different number of threats');
         return true;
     }
 
@@ -113,7 +117,7 @@ export const hasThreatChanges = (originalThreats = [], currentThreats = []) => {
     // Compare each threat
     for (let i = 0; i < sortedOriginal.length; i++) {
         if (!deepCompare(sortedOriginal[i], sortedCurrent[i])) {
-            console.debug('Threats changed: threat modified', sortedOriginal[i].id);
+            log.debug('Threats changed: threat modified', { id: sortedOriginal[i].id });
             return true;
         }
     }
@@ -173,7 +177,7 @@ export const hasActualChanges = (originalState, currentState) => {
         for (const [cellId, currentCell] of currentCellMap.entries()) {
             const originalCell = originalCellMap.get(cellId);
             if (hasCellThreatChanges(originalCell, currentCell)) {
-                console.debug('Cell threats changed:', cellId);
+                log.debug('Cell threats changed', { cellId });
                 return true;
             }
         }

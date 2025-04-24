@@ -124,7 +124,6 @@ const spa = {
         contributorsPlaceholder: 'Agregar un nuevo colaborador',
         description: 'Descripción de alto nivel del sistema (high level system)',
         dragAndDrop: 'Arrastre y suelte o ',
-        editing: 'Edición',
         jsonPaste: 'Arrastre el archivo JSON de su modelo de amenazas o pegue el texto aquí',
         owner: 'Propietario',
         reviewer: 'Revisor',
@@ -138,9 +137,6 @@ const spa = {
             owner: 'Nombre del Propietario o Equipo',
             description: 'Ingrese una descripción de alto nivel del sistema que se está modelando',
             reviewer: 'Nombre del Revisor'
-        },
-        actions: {
-            save: 'Guardar'
         },
         diagram: {
             diagrams: 'Diagramas',
@@ -421,15 +417,9 @@ const spa = {
             openUnknown: 'Abierto / Prioridad Desconocida'
         }
     },
-    upgrade: {
-        modal: {
-            header: 'Actualización del modelo de amenazas',
-            welcome: 'Bienvenido a la versión 2 de OWASP Threat Dragon!',
-            p1: 'La versión 2 utiliza una librería de gráficos diferente, la cual cambiará la forma en que las partes de sus modelos de amenazas son guardadas. Mientras la mayoría de los diagramas se verán igual que en las versiones previas de Threat Dragon, habrá casos donde éstos necesitarán ser ligeramente ajustados.',
-            p2: 'Después de cerrar este diálogo, usted podrá ver cómo cada diagrama en este modelo ha sido transformado en el formato de la versión 2. Por favor tome nota de todos los diagramas que pudieran necesitar ajustes. Esta es una actualización única, y usted no verá este mensaje otra vez después de guardar este modelo.'
-        },
-        instructions: '¡Genial! Vayamos a su modelo.',
-        continue: 'Continuar'
+    pagination: {
+        previous: 'Previo',
+        next: 'próximo'
     }
 };
 

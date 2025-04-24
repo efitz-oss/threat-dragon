@@ -1,6 +1,10 @@
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-default.css';
 import { ref } from 'vue';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('plugin:toast-notification');
 
 /**
  * Vue 3 Toast Notification System
@@ -13,19 +17,19 @@ import { ref } from 'vue';
 // Create a mock toast service for testing and fallback purposes
 const createMockToast = () => ({
     open: (msg) => {
-        console.log('Toast:', msg);
+        log.debug('Toast notification', { message: msg });
     },
     success: (msg) => {
-        console.log('Success:', msg);
+        log.debug('Success notification', { message: msg });
     },
     error: (msg) => {
-        console.error('Error:', msg);
+        log.error('Error notification', { message: msg });
     },
     warning: (msg) => {
-        console.warn('Warning:', msg);
+        log.warn('Warning notification', { message: msg });
     },
     info: (msg) => {
-        console.info('Info:', msg);
+        log.info('Info notification', { message: msg });
     }
 });
 
@@ -79,7 +83,7 @@ export const toastNotificationPlugin = {
                 window.$toast = toastInstance;
             }
         } catch (err) {
-            console.error('Error initializing toast plugin:', err);
+            log.error('Error initializing toast plugin', { error: err });
 
             // Create a fallback mock implementation
             const mockToast = createMockToast();

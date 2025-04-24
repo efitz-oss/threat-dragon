@@ -11,6 +11,10 @@ import { isElectronMode } from './utils/environment';
 // CSS is already included via link tag in index.html
 // Don't try to import it directly to avoid webpack errors
 import configActions from './store/actions/config.js';
+import logger from './utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('main');
 // Add support for passive event listeners with appropriate options
 import passiveEventsSupport from 'passive-events-support/dist/main.js'; 
 // In the web version, the module is imported directly and we need to check if configure exists
@@ -47,23 +51,23 @@ app.mount('#app');
 
 // Log the build mode
 if (isWebOnly) {
-    console.log('Running in web-only mode');
+    log.info('Running in web-only mode');
 }
 
 // Fetch config (this will set appropriate values for desktop/web modes)
 store.dispatch(configActions.fetch).then(() => {
     // Only import and initialize Google Sign-In in web mode and if Google auth is enabled
     if ((!isElectronMode() || isWebOnly) && store.state.config?.config?.googleEnabled) {
-        console.log('Google auth is enabled, initializing Google Sign-In plugin');
+        log.info('Google auth is enabled, initializing Google Sign-In plugin');
         import('vue3-google-signin').then((GoogleSignInModule) => {
             const GoogleSignInPlugin = GoogleSignInModule.default;
             app.use(GoogleSignInPlugin, {
                 clientId: process.env.VUE_APP_GOOGLE_CLIENT_ID
             });
-            console.log('Google Sign-In plugin initialized');
+            log.info('Google Sign-In plugin initialized');
         });
     } else {
-        console.log(
+        log.info(
             'Google auth is not enabled or running in desktop mode, skipping Google Sign-In plugin'
         );
     }

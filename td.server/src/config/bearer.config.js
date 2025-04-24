@@ -59,11 +59,11 @@ const middleware = (req, res, next) => {
         return next();
     } catch (e) {
         if (e.name === 'TokenExpiredError') {
-            logger.audit('Expired JWT encountered');
+            logger.error('Expired JWT encountered');
             return errors.unauthorized(res, logger);
         }
 
-        logger.audit('Error decoding JWT');
+        logger.error('Error decoding JWT');
         logger.error(e);
         return errors.badRequest('Invalid JWT', res, logger);
     }

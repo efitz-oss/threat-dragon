@@ -18,7 +18,7 @@ const getGoogleToken = (req, res) =>
         async () => {
             // Use await to ensure async function has await expression
             await Promise.resolve();
-            logger.audit(`Google token requested by user ${req.user?.username || 'unknown'}`);
+            logger.info(`Google token requested by user ${req.user?.username || 'unknown'}`);
 
             // Log the full provider details to debug
             logger.debug(

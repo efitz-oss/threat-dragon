@@ -3,6 +3,10 @@ import isElectron from 'is-electron';
 import { getProviderType } from '@/service/provider/providers';
 import { tc } from '@/i18n/index.js';
 import { providerTypes } from '@/service/provider/providerTypes';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('store:threatmodel');
 import {
     THREATMODEL_CLEAR,
     THREATMODEL_CONTRIBUTORS_UPDATED,
@@ -44,28 +48,28 @@ const toast = {
         if (typeof window !== 'undefined' && window.$toast) {
             window.$toast.success(message, options);
         } else {
-            console.log('Success:', message);
+            log.info('Success', { message });
         }
     },
     error: (message, options) => {
         if (typeof window !== 'undefined' && window.$toast) {
             window.$toast.error(message, options);
         } else {
-            console.error('Error:', message);
+            log.error('Error', { message });
         }
     },
     warning: (message, options) => {
         if (typeof window !== 'undefined' && window.$toast) {
             window.$toast.warning(message, options);
         } else {
-            console.warn('Warning:', message);
+            log.warn('Warning', { message });
         }
     },
     info: (message, options) => {
         if (typeof window !== 'undefined' && window.$toast) {
             window.$toast.info(message, options);
         } else {
-            console.info('Info:', message);
+            log.info('Info', { message });
         }
     }
 };
@@ -75,7 +79,7 @@ const t = (key) => {
     try {
         return tc(key) || key;
     } catch (err) {
-        console.warn(`Translation error for key: ${key}`, err);
+        log.warn('Translation error for key', { key, error: err });
         return key;
     }
 };
@@ -114,7 +118,7 @@ const deepClone = (threatModel) => {
 };
 
 const stashThreatModel = (theState, threatModel) => {
-    console.debug('Stash threat model');
+    log.debug('Stash threat model');
     // Create a deep clone of the threat model
     theState.data = deepClone(threatModel);
     // Still use JSON for the stash to maintain backward compatibility
@@ -133,19 +137,19 @@ const actions = {
                     // Wait for the save operation to complete before proceeding
                     await save.local(state.data, `${state.data.summary.title}.json`);
                 } catch (err) {
-                    console.error('Error saving file locally:', err);
+                    log.error('Error saving file locally', { error: err });
                     toast.error(t('threatmodel.errors.save'));
                     return; // Exit early if save fails
                 }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.desktop) {
                 // desktop version always saves locally
-                console.debug('Desktop create action');
+                log.debug('Desktop create action');
                 await window.electronAPI.modelSave(state.data, state.fileName);
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-                console.debug('Google Drive create action - folder:', rootState.folder.selected);
+                log.debug('Google Drive create action', { folder: rootState.folder.selected });
                 try {
                     const fileName = `${state.data.summary.title}.json`;
-                    console.debug('Creating file:', fileName);
+                    log.debug('Creating file', { fileName });
 
                     const res = await googleDriveApi.createAsync(
                         rootState.folder.selected,
@@ -153,7 +157,7 @@ const actions = {
                         fileName
                     );
 
-                    console.debug('File created successfully, result:', res.data);
+                    log.debug('File created successfully', { result: res.data });
 
                     if (res.data && res.data.id) {
                         // Save the file ID in the state for future saves
@@ -161,12 +165,12 @@ const actions = {
                             fileName: fileName,
                             fileId: res.data.id
                         });
-                        console.debug('Updated state with fileId:', res.data.id);
+                        log.debug('Updated state with fileId', { fileId: res.data.id });
                     }
 
                     toast.success(t('threatmodel.saved') + ' : ' + fileName);
                 } catch (err) {
-                    console.error('Error creating file in Google Drive:', err);
+                    log.error('Error creating file in Google Drive', { error: err });
                     toast.error(t('threatmodel.errors.googleDriveSave'));
                     throw err;
                 }
@@ -182,8 +186,7 @@ const actions = {
             dispatch(THREATMODEL_STASH);
             commit(THREATMODEL_NOT_MODIFIED);
         } catch (ex) {
-            console.error('Failed to save new threat model!');
-            console.error(ex);
+            log.error('Failed to save new threat model', { error: ex });
             toast.error(t('threatmodel.errors.save'));
         }
     },
@@ -199,7 +202,7 @@ const actions = {
         dispatch(THREATMODEL_CLEAR);
         let resp;
         if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-            console.debug('Fetching Google Drive model with ID:', threatModel);
+            log.debug('Fetching Google Drive model', { id: threatModel });
             resp = await googleDriveApi.modelAsync(threatModel);
             // Store the fileId for future updates
             commit(THREATMODEL_UPDATE, { fileId: threatModel });
@@ -229,7 +232,7 @@ const actions = {
     },
     [THREATMODEL_MODIFIED]: ({ commit }) => commit(THREATMODEL_MODIFIED),
     [THREATMODEL_RESTORE]: async ({ commit, state, rootState }) => {
-        console.debug('Restore threat model action');
+        log.debug('Restore threat model action');
         let originalModel;
 
         try {
@@ -251,14 +254,14 @@ const actions = {
                 originalModel = deepClone(resp.data);
             }
         } catch (err) {
-            console.error('Error restoring threat model:', err);
+            log.error('Error restoring threat model', { error: err });
             originalModel = deepClone(state.data); // Use current data as fallback
         }
 
         commit(THREATMODEL_RESTORE, originalModel);
     },
     [THREATMODEL_SAVE]: async ({ dispatch, commit, rootState, state }) => {
-        console.debug('Save threat model action');
+        log.debug('Save threat model action');
         // Identify if threat model is in OTM format
         if (Object.hasOwn(state.data, 'otmVersion')) {
             //  convert dragon to OTM format not yet available
@@ -272,13 +275,13 @@ const actions = {
                     // Wait for the save operation to complete before showing success toast
                     await save.local(state.data, `${state.data.summary.title}.json`);
                 } catch (err) {
-                    console.error('Error saving file locally:', err);
+                    log.error('Error saving file locally', { error: err });
                     toast.error(t('threatmodel.errors.save'));
                     return; // Exit early if save fails
                 }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.desktop) {
                 // desktop version always saves locally
-                console.debug('Desktop save action');
+                log.debug('Desktop save action');
 
                 try {
                     // Use our deep clone function instead of JSON stringify/parse
@@ -294,7 +297,7 @@ const actions = {
 
                     // For saving to disk, we'll use the JSON string directly
                     const result = await window.electronAPI.saveFile(jsonData, fileName);
-                    console.debug('Save completed successfully:', result);
+                    log.debug('Save completed successfully', { result });
 
                     // Update the state after successful save
                     if (result && state.fileName !== result) {
@@ -303,26 +306,28 @@ const actions = {
                         commit(THREATMODEL_UPDATE, { fileName });
                     }
                 } catch (saveError) {
-                    console.error('Error in desktop save:', saveError);
+                    log.error('Error in desktop save', { error: saveError });
                     throw saveError;
                 }
             } else if (getProviderType(rootState.provider.selected) === providerTypes.google) {
                 // For Google Drive we need to use the fileId from the state rather than folder.selected
-                console.debug('Google Drive save - fileId:', state.fileId);
-                console.debug('Google Drive provider selected:', rootState.provider.selected);
+                log.debug('Google Drive save', {
+                    fileId: state.fileId,
+                    provider: rootState.provider.selected
+                });
 
                 if (!state.fileId) {
-                    console.error('No file ID found in state for Google Drive save');
+                    log.error('No file ID found in state for Google Drive save');
                     toast.error(t('threatmodel.errors.googleDriveSave'));
                     throw new Error('No file ID found for Google Drive save');
                 }
 
                 try {
-                    console.debug('Attempting to update file with ID:', state.fileId);
+                    log.debug('Attempting to update file', { fileId: state.fileId });
                     await googleDriveApi.updateAsync(state.fileId, state.data);
-                    console.debug('Google Drive update successful');
+                    log.debug('Google Drive update successful');
                 } catch (err) {
-                    console.error('Error during Google Drive update:', err);
+                    log.error('Error during Google Drive update', { error: err });
                     toast.error(t('threatmodel.errors.googleDriveSave'));
                     throw err;
                 }
@@ -338,8 +343,7 @@ const actions = {
             commit(THREATMODEL_NOT_MODIFIED);
             toast.success(t('threatmodel.saved') + ' : ' + state.fileName, { timeout: 1000 });
         } catch (ex) {
-            console.error('Failed to save threat model!');
-            console.error(ex);
+            log.error('Failed to save threat model', { error: ex });
             toast.error(t('threatmodel.errors.save'));
         }
     },
@@ -361,34 +365,32 @@ const mutations = {
             const idx = state.data.detail.diagrams.findIndex(
                 (x) => x.id === state.modifiedDiagram.id
             );
-            console.debug(
-                'Threatmodel modified diagram applied : ' +
-                state.modifiedDiagram.id +
-                ' at index: ' +
-                idx
-            );
+            log.debug('Threatmodel modified diagram applied', {
+                id: state.modifiedDiagram.id,
+                index: idx
+            });
             state.data.detail.diagrams[idx] = state.modifiedDiagram;
         }
     },
     [THREATMODEL_DIAGRAM_CLOSED]: (state) => {
         state.modified = false;
         state.modifiedDiagram = {};
-        console.debug('Threatmodel diagram closed to edits');
+        log.debug('Threatmodel diagram closed to edits');
     },
     [THREATMODEL_DIAGRAM_MODIFIED]: (state, diagram) => {
         if (diagram && Object.keys(state.modifiedDiagram).length !== 0) {
             // const idx = state.data.detail.diagrams.findIndex(x => x.id === diagram.id);
-            // console.debug('Threatmodel diagram modified: ' + diagram.id + ' at index: ' + idx);
+            // log.debug('Threatmodel diagram modified: ' + diagram.id + ' at index: ' + idx);
             state.modifiedDiagram = diagram;
             if (state.modified === false) {
-                console.debug('model (diagram) now modified');
+                log.debug('model (diagram) now modified');
                 state.modified = true;
             }
         }
     },
     [THREATMODEL_DIAGRAM_SAVED]: (state, diagram) => {
         const idx = state.data.detail.diagrams.findIndex((x) => x.id === diagram.id);
-        console.debug('Threatmodel diagram saved: ' + diagram.id + ' at index: ' + idx);
+        log.debug('Threatmodel diagram saved', { id: diagram.id, index: idx });
         // beware: this will trigger a redraw of the diagram, ?possibly to the wrong canvas size?
         state.selectedDiagram = diagram;
         // beware ^^
@@ -411,7 +413,7 @@ const mutations = {
         state.modifiedDiagram = diagramClone;
 
         const idx = state.data.detail.diagrams.findIndex((x) => x.id === diagram.id);
-        console.debug(`Threatmodel diagram selected for edits: ${diagram.id} at index: ${idx}`);
+        log.debug('Threatmodel diagram selected for edits', { id: diagram.id, index: idx });
     },
 
     [THREATMODEL_FETCH]: (state, threatModel) => stashThreatModel(state, threatModel),
@@ -428,11 +430,11 @@ const mutations = {
         state.modified = true;
     },
     [THREATMODEL_RESTORE]: (state, originalThreatModel) => {
-        console.debug('Threatmodel restored');
+        log.debug('Threatmodel restored');
         stashThreatModel(state, originalThreatModel);
     },
     [THREATMODEL_SELECTED]: (state, threatModel) => {
-        console.debug('Threatmodel selected');
+        log.debug('Threatmodel selected');
         stashThreatModel(state, threatModel);
     },
     [THREATMODEL_STASH]: (state) => {
@@ -460,7 +462,7 @@ const mutations = {
         if (update.fileId) {
             state.fileId = update.fileId;
         }
-        console.debug('Threatmodel update: ' + JSON.stringify(update));
+        log.debug('Threatmodel update', { update });
     }
 };
 
@@ -473,7 +475,7 @@ const getters = {
         return contribs.map((x) => x.name);
     },
     modelChanged: (state) => {
-        console.debug('model modified: ' + state.modified);
+        log.debug('model modified', { modified: state.modified });
         return state.modified;
     },
     isV1Model: (state) =>
@@ -482,7 +484,7 @@ const getters = {
 };
 
 export const clearState = (state) => {
-    console.debug('Threatmodel cleared');
+    log.debug('Threatmodel cleared');
     state.all.length = 0;
     state.data = {};
     state.stash = '';

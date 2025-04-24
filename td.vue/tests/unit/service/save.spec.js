@@ -1,18 +1,30 @@
 import save from '@/service/save.js';
 
+// Mock the logger
+jest.mock('@/utils/logger.js', () => ({
+    getLogger: jest.fn().mockReturnValue({
+        debug: jest.fn(),
+        error: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn()
+    })
+}));
+
+// Get the mocked logger
+const mockLogger = require('@/utils/logger.js').getLogger();
+
 describe('service/save.js', () => {
     const data = { foo: 'bar' };
     const name = 'test.json';
     
-    let consoleSpy;
-    
     beforeEach(() => {
-        consoleSpy = jest.spyOn(console, 'debug').mockImplementation(() => {});
+        // Reset mocks
+        mockLogger.debug.mockClear();
+        mockLogger.error.mockClear();
     });
     
     afterEach(() => {
-        consoleSpy.mockRestore();
-        jest.restoreAllMocks();
+        jest.clearAllMocks();
         delete window.showSaveFilePicker;
     });
     
@@ -63,7 +75,7 @@ describe('service/save.js', () => {
             });
             
             it('logs the correct debug message', () => {
-                expect(consoleSpy).toHaveBeenCalledWith('Save using browser local filesystem download');
+                expect(mockLogger.debug).toHaveBeenCalledWith('Save using browser local filesystem download');
             });
         });
         
@@ -124,7 +136,7 @@ describe('service/save.js', () => {
                 });
                 
                 it('logs the correct debug message', () => {
-                    expect(consoleSpy).toHaveBeenCalledWith('Save using browser file picker');
+                    expect(mockLogger.debug).toHaveBeenCalledWith('Save using browser file picker');
                 });
             });
             
@@ -135,7 +147,7 @@ describe('service/save.js', () => {
                 });
                 
                 it('logs the correct debug message when user cancels', () => {
-                    expect(consoleSpy).toHaveBeenCalledWith('Save failed, probably user canceled file picker');
+                    expect(mockLogger.debug).toHaveBeenCalledWith('Save failed, probably user canceled file picker');
                 });
             });
             
@@ -217,7 +229,7 @@ describe('service/save.js', () => {
                 });
                 
                 it('logs the correct error message when write fails', () => {
-                    expect(consoleSpy).toHaveBeenCalledWith('Save failed, could not write to filesystem');
+                    expect(mockLogger.debug).toHaveBeenCalledWith('Save failed, could not write to filesystem');
                 });
                 
                 it('still tries to close the writable', () => {

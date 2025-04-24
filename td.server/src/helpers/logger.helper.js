@@ -14,8 +14,7 @@ const logLevels = {
     error: 1,
     warn: 2,
     info: 3,
-    debug: 4,
-    silly: 5
+    debug: 4
 };
 
 // declare the various destinations for the logging messages
@@ -82,10 +81,6 @@ class Logger {
 
     log(level, message) {
         this.logger.log(level, this._formatMessage(this.service, message));
-    }
-
-    silly(message) {
-        this.logger.silly(this._formatMessage(this.service, message, 'silly'));
     }
 
     debug(message) {

@@ -210,7 +210,7 @@ describe('store/modules/auth.js', () => {
                     });
 
                     it('logs the error', () => {
-                        expect(console.error).toHaveBeenCalledWith('Error calling logout api', err);
+                        expect(console.error).toHaveBeenCalledWith(expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\]\[ERROR\]\[store:auth\] Error calling logout api/), { error: err });
                     });
     
                     it('dispatches the AUTH_CLEAR action', () => {
@@ -363,8 +363,8 @@ describe('store/modules/auth.js', () => {
                     
                     // Verify error logging
                     expect(console.error).toHaveBeenCalledWith(
-                        'Error decoding JWT',
-                        expect.any(Error)
+                        expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\]\[ERROR\]\[store:auth\] Error decoding JWT/),
+                        { error: expect.any(Error) }
                     );
                 });
                 
@@ -388,8 +388,8 @@ describe('store/modules/auth.js', () => {
                     
                     // Verify error logging
                     expect(console.error).toHaveBeenCalledWith(
-                        'Error decoding JWT',
-                        expect.any(Error)
+                        expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\]\[ERROR\]\[store:auth\] Error decoding JWT/),
+                        { error: expect.any(Error) }
                     );
                 });
             });

@@ -193,9 +193,7 @@ const deu = {
         contributors: 'Mitwirkende',
         contributorsPlaceholder: 'Tippen Sie, um Mitwirkende hinzuzufügen',
         description: 'High-Level System Beschreibung',
-        dragAndDrop: 'Ziehen und ablegen oder ',
-        editing: 'Bearbeiten',
-        jsonPaste:
+        dragAndDrop: 'Ziehen und ablegen oder ',        jsonPaste:
             'Legen Sie eine Bedrohungsmodell JSON Datei ab oder kopieren Sie den Inhalt hier:',
         owner: 'Eigentümer',
         reviewer: 'Prüfer',
