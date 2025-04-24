@@ -293,6 +293,12 @@ import { computed, ref, watch, onMounted, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import dataChanged from '@/service/x6/graph/data-changed.js';
+import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
+import { THREATMODEL_MODIFIED } from '@/store/actions/threatmodel.js';
+import logger from '@/utils/logger.js';
+
+// Create a context-specific logger
+const log = logger.getLogger('component:GraphProperties');
 
 // Simple utility function to check if an element is visible
 const isVisible = (element) => {
@@ -320,11 +326,45 @@ export default {
 
         // Get cellRef from store
         const cellRef = computed(() => store.state.cell.ref);
+        
+        // Use getters to access cell properties
+        const hasCell = computed(() => store.getters['hasCell']);
+        const cellType = computed(() => store.getters['cellType']);
 
         // Computed property to check if cell data is ready
         const isCellDataReady = computed(() =>
             isReadyToRender.value && cellRef.value && cellRef.value.data
         );
+        
+        // Helper function to update cell data in the store
+        const updateCellData = (data) => {
+            if (cellRef.value && cellRef.value.data) {
+                // Create a new object with the updated data
+                const updatedData = { ...cellRef.value.data, ...data };
+                
+                // Apply the updates directly to the cell data
+                Object.assign(cellRef.value.data, data);
+                
+                // Only dispatch CELL_DATA_UPDATED for explicit user actions
+                // like changing a name or description
+                store.dispatch(CELL_DATA_UPDATED, updatedData);
+                
+                // Update the visual representation
+                if (data.name !== undefined) {
+                    dataChanged.updateName(cellRef.value);
+                }
+                
+                // Don't call updateStyleAttrs or updateProperties here
+                // as they can cause selection issues
+                // Instead, update specific attributes as needed
+                
+                log.debug('Updated cell data', {
+                    type: cellType.value,
+                    shape: cellRef.value.shape,
+                    data
+                });
+            }
+        };
 
         // Computed property for name with two-way binding and null check
         const safeName = computed({
@@ -335,10 +375,7 @@ export default {
                 return '';
             },
             set: (value) => {
-                if (cellRef.value && cellRef.value.data) {
-                    cellRef.value.data.name = value;
-                    dataChanged.updateName(cellRef.value);
-                }
+                updateCellData({ name: value });
             }
         });
 
@@ -351,10 +388,7 @@ export default {
                 return '';
             },
             set: (value) => {
-                if (cellRef.value && cellRef.value.data) {
-                    cellRef.value.data.description = value;
-                    dataChanged.updateProperties(cellRef.value);
-                }
+                updateCellData({ description: value });
             }
         });
 
@@ -367,10 +401,7 @@ export default {
                 return '';
             },
             set: (value) => {
-                if (cellRef.value && cellRef.value.data) {
-                    cellRef.value.data.reasonOutOfScope = value;
-                    dataChanged.updateProperties(cellRef.value);
-                }
+                updateCellData({ reasonOutOfScope: value });
             }
         });
 
@@ -384,26 +415,51 @@ export default {
 
         // Define component methods
         const onChangeBidirection = () => {
-            dataChanged.updateProperties(cellRef.value);
-            dataChanged.updateStyleAttrs(cellRef.value);
+            if (cellRef.value && cellRef.value.data) {
+                // Update the bidirectional property
+                const isBidirectional = cellRef.value.data.isBidirectional;
+                
+                log.debug('Bidirectional changed', {
+                    isBidirectional,
+                    cellType: cellRef.value.data.type,
+                    cellShape: cellRef.value.shape
+                });
+                
+                // Use updateCellData to update the property
+                updateCellData({ isBidirectional });
+            }
         };
 
         const onChangeProperties = () => {
-            // If outOfScope is true but reasonOutOfScope is empty, initialize it
-            if (cellRef.value && cellRef.value.data &&
-                cellRef.value.data.outOfScope &&
-                !cellRef.value.data.reasonOutOfScope) {
-                cellRef.value.data.reasonOutOfScope = '';
-            }
-            
-            // Update our reactive reference to match the current state
             if (cellRef.value && cellRef.value.data) {
+                // Collect all changes to apply at once
+                const updates = {};
+                
+                // If outOfScope is true but reasonOutOfScope is empty, initialize it
+                if (cellRef.value.data.outOfScope && !cellRef.value.data.reasonOutOfScope) {
+                    updates.reasonOutOfScope = '';
+                }
+                
+                // Update our reactive reference to match the current state
                 outOfScopeValue.value = !!cellRef.value.data.outOfScope;
+                
+                // Log the changes
+                log.debug('Properties changed', {
+                    outOfScope: cellRef.value.data.outOfScope,
+                    cellType: cellRef.value.data.type,
+                    cellShape: cellRef.value.shape,
+                    updates
+                });
+                
+                // Only update if we have changes to make
+                if (Object.keys(updates).length > 0) {
+                    updateCellData(updates);
+                } else {
+                    // If no specific updates, just mark the model as modified
+                    // without triggering a cell selection
+                    store.dispatch(THREATMODEL_MODIFIED);
+                }
             }
-            
-            // Update the cell properties and style in Vuex
-            dataChanged.updateProperties(cellRef.value);
-            dataChanged.updateStyleAttrs(cellRef.value);
         };
 
         // Initialize component
@@ -416,6 +472,8 @@ export default {
 
         return {
             cellRef,
+            hasCell,
+            cellType,
             safeName,
             safeDescription,
             safeReasonOutOfScope,

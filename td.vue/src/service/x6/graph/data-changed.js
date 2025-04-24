@@ -55,16 +55,25 @@ const updateStyleAttrs = (cell) => {
     }
 
     if (cell.data) {
+        // Update hasOpenThreats property
         cell.data.hasOpenThreats = threats.hasOpenThreats(cell.data);
+        
+        // Only dispatch THREATMODEL_MODIFIED, not CELL_DATA_UPDATED
+        // This prevents cells from being "selected" when their style is updated
         const storeInstance = getStore();
         if (typeof storeInstance?.dispatch === 'function') {
-            storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
+            // Don't dispatch CELL_DATA_UPDATED which can cause selection issues
+            // storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
             storeInstance.dispatch(THREATMODEL_MODIFIED);
+            
+            log.debug('Dispatched THREATMODEL_MODIFIED but not CELL_DATA_UPDATED');
         }
     }
 
+    // Get default styles
     let { color, strokeDasharray, strokeWidth, sourceMarker } = styles.default;
 
+    // Apply style based on cell properties
     if (cellData.hasOpenThreats) {
         color = styles.hasOpenThreats.color;
         strokeWidth = styles.hasOpenThreats.strokeWidth;
@@ -78,8 +87,14 @@ const updateStyleAttrs = (cell) => {
         sourceMarker = '';
     }
 
+    // Update the cell's visual style
     if (cell.updateStyle) {
-        log.debug('Update cell style');
+        log.debug('Update cell style', {
+            color,
+            strokeDasharray,
+            strokeWidth,
+            sourceMarker
+        });
         cell.updateStyle(color, strokeDasharray, strokeWidth, sourceMarker);
     }
 };
@@ -97,7 +112,14 @@ const updateProperties = (cell) => {
         if (cell.data) {
             // Safely access cell name for logging
             const cellName = cell.getData && typeof cell.getData === 'function' ? cell.getData().name : cell.data.name || 'unnamed';
-            log.debug('Updated properties for cell', { name: cellName });
+            const cellType = cell.data.type || 'unknown';
+            const cellShape = cell.shape || 'unknown';
+            
+            log.debug('Updated properties for cell', {
+                name: cellName,
+                type: cellType,
+                shape: cellShape
+            });
 
             // For edges/flows, ensure all required properties exist
             if ((cell.isEdge && typeof cell.isEdge === 'function' && cell.isEdge()) || cell.shape === 'flow') {
@@ -117,7 +139,7 @@ const updateProperties = (cell) => {
                 }
             }
         } else {
-            if (cell.isEdge()) {
+            if (cell.isEdge && typeof cell.isEdge === 'function' && cell.isEdge()) {
                 cell.type = defaultProperties.flow.type;
                 log.debug('Edge cell given type', { type: cell.type });
             }
@@ -125,10 +147,16 @@ const updateProperties = (cell) => {
             log.debug('Default properties for cell', { shape: cell.shape, name: cell.getData().name });
         }
 
+        // Only dispatch CELL_DATA_UPDATED if we're explicitly updating properties
+        // This prevents cells from being "selected" when their properties are updated
         const storeInstance = getStore();
         if (typeof storeInstance?.dispatch === 'function') {
-            storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
+            // Only dispatch THREATMODEL_MODIFIED to mark the model as changed
+            // Don't dispatch CELL_DATA_UPDATED which can cause selection issues
+            // storeInstance.dispatch(CELL_DATA_UPDATED, cell.data);
             storeInstance.dispatch(THREATMODEL_MODIFIED);
+            
+            log.debug('Dispatched THREATMODEL_MODIFIED but not CELL_DATA_UPDATED');
         }
     } else {
         log.warn('No cell found to update properties');

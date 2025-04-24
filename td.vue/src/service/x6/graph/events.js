@@ -9,9 +9,99 @@ import { CELL_SELECTED, CELL_UNSELECTED } from '@/store/actions/cell.js';
 import { THREATMODEL_MODIFIED } from '@/store/actions/threatmodel.js';
 import defaultProperties from '@/service/entity/default-properties.js';
 import logger from '@/utils/logger.js';
+import { tc } from '@/i18n/index.js';
 
 // Create a context-specific logger
 const log = logger.getLogger('graph:events');
+
+// Helper function to get the localized default name for a cell type
+const getLocalizedDefaultName = (cell) => {
+    // Add debug logging to help diagnose issues
+    log.debug('Getting localized name for cell', {
+        shape: cell.shape,
+        type: cell.data?.type,
+        constructor: cell.constructor?.name
+    });
+    
+    // First try to determine the type from cell.data.type
+    if (cell.data && cell.data.type) {
+        switch (cell.data.type) {
+        case 'tm.Actor':
+            return tc('threatmodel.shapes.actor');
+        case 'tm.Process':
+            return tc('threatmodel.shapes.process');
+        case 'tm.Store':
+            return tc('threatmodel.shapes.store');
+        case 'tm.Text':
+            return tc('threatmodel.shapes.text');
+        case 'tm.Boundary':
+        case 'tm.BoundaryBox':
+            return tc('threatmodel.shapes.trustBoundary');
+        case 'tm.Flow':
+            return tc('threatmodel.shapes.flowStencil');
+        }
+    }
+    
+    // Get the shape name and constructor name
+    const shape = cell.shape || '';
+    const constructorName = cell.constructor?.name || '';
+    
+    // More reliable type detection using a combination of methods
+    // Check for actor
+    if (shape === 'actor' ||
+        constructorName.includes('Actor') ||
+        (cell.data && cell.data.providesAuthentication !== undefined)) {
+        return tc('threatmodel.shapes.actor');
+    }
+    
+    // Check for process
+    if (shape === 'process' ||
+        constructorName.includes('Process') ||
+        (cell.data && (cell.data.isWebApplication !== undefined ||
+                      cell.data.handlesCardPayment !== undefined))) {
+        return tc('threatmodel.shapes.process');
+    }
+    
+    // Check for store
+    if (shape === 'store' ||
+        constructorName.includes('Store') ||
+        (cell.data && (cell.data.isALog !== undefined ||
+                      cell.data.storesCredentials !== undefined))) {
+        return tc('threatmodel.shapes.store');
+    }
+    
+    // Check for text
+    if (shape === 'td-text-block' ||
+        constructorName.includes('Text') ||
+        (cell.data && cell.data.type === 'tm.Text')) {
+        return tc('threatmodel.shapes.text');
+    }
+    
+    // Check for boundary box
+    if (shape === 'trust-boundary-box' ||
+        constructorName.includes('BoundaryBox') ||
+        (cell.data && cell.data.isTrustBoundary === true)) {
+        return tc('threatmodel.shapes.trustBoundary');
+    }
+    
+    // Check for boundary curve
+    if (shape === 'trust-boundary-curve' ||
+        constructorName.includes('BoundaryCurve')) {
+        return tc('threatmodel.shapes.trustBoundary');
+    }
+    
+    // Check for flow
+    if (shape === 'flow' ||
+        constructorName.includes('Flow') ||
+        (cell.data && (cell.data.isBidirectional !== undefined ||
+                      cell.data.protocol !== undefined))) {
+        return tc('threatmodel.shapes.flowStencil');
+    }
+    
+    // Fallback to a capitalized shape name if we can't determine the type
+    log.debug('Could not determine cell type, using fallback', { shape });
+    return shape.charAt(0).toUpperCase() + shape.slice(1);
+};
 
 const showPorts = (show) => {
     const container = document.getElementById('graph-container');
@@ -102,13 +192,23 @@ const mouseEnter = ({ cell }) => {
                 }
             }
 
+            // Don't update the name on mouseEnter - only ensure other properties are set
             if (needsUpdate) {
                 dataChanged.updateProperties(cell);
             }
+        } else {
+            // Initialize data object with default properties if it doesn't exist
+            // But don't set a name - that should only happen on explicit selection
+            const defaultProps = { ...defaultProperties.flow };
+            cell.setData(defaultProps);
+            dataChanged.updateProperties(cell);
         }
     }
+    
+    // Add tools to the cell
     cell.addTools(tools);
 
+    // Show ports
     showPorts(true);
 };
 
@@ -153,11 +253,24 @@ const cellAdded =
                             cell.data[key] = defaultProps[key];
                         }
                     }
+                    
+                    // Ensure the cell has a localized name
+                    if (!cell.data.name) {
+                        cell.data.name = getLocalizedDefaultName(cell);
+                    }
                 }
 
                 if (cell.data && cell.data.name) {
                     cell.setName(cell.data.name);
                 }
+            }
+            
+            // Ensure all cells have data and a localized name property
+            if (!cell.data) {
+                const defaultName = getLocalizedDefaultName(cell);
+                cell.setData({ name: defaultName });
+            } else if (!cell.data.name) {
+                cell.data.name = getLocalizedDefaultName(cell);
             }
 
             mouseLeave({ cell });
@@ -227,12 +340,46 @@ const cellSelected =
                     if (labels.length && labels[0].attrs.label) {
                         cell.data.name = labels[0].attrs.label.text;
                         log.debug('Cell selected with label', { name: cell.data.name });
+                    } else {
+                        // Set a localized default name based on cell type
+                        const defaultName = getLocalizedDefaultName(cell);
+                        cell.data.name = defaultName;
+                        log.debug('Set localized default name for cell', {
+                            name: defaultName,
+                            type: cell.data?.type,
+                            shape: cell.shape,
+                            constructor: cell.constructor?.name
+                        });
+                        
+                        // Make sure to update the cell properties
+                        dataChanged.updateProperties(cell);
                     }
                 } else {
-                    log.warn('Cell selected with no name');
+                    // Set a localized default name based on cell type
+                    const defaultName = getLocalizedDefaultName(cell);
+                    cell.data.name = defaultName;
+                    log.debug('Set localized default name for cell', {
+                        name: defaultName,
+                        type: cell.data?.type,
+                        shape: cell.shape,
+                        constructor: cell.constructor?.name
+                    });
+                    
+                    // Make sure to update the cell properties
+                    dataChanged.updateProperties(cell);
                 }
             } else {
-                log.warn('cell selected with no data');
+                // Initialize data object with default properties if it doesn't exist
+                const defaultName = getLocalizedDefaultName(cell);
+                cell.setData({ name: defaultName });
+                log.debug('Initialized cell data with localized default name', {
+                    name: defaultName,
+                    shape: cell.shape,
+                    constructor: cell.constructor?.name
+                });
+                
+                // Make sure to update the cell properties
+                dataChanged.updateProperties(cell);
             }
 
             // Handle unformatted edge selection
@@ -279,9 +426,18 @@ const cellUnselected = ({ cell }) => {
 };
 
 const cellDataChanged = ({ cell }) => {
-    store.get().dispatch(CELL_SELECTED, cell);
+    // Don't dispatch CELL_SELECTED here - only update the style attributes
+    // This prevents cells from being "selected" when their data changes
+    // store.get().dispatch(CELL_SELECTED, cell);
+    
+    // Just update the style attributes and mark the model as modified
     dataChanged.updateStyleAttrs(cell);
     store.get().dispatch(THREATMODEL_MODIFIED);
+    
+    log.debug('Cell data changed but not selecting cell', {
+        cellType: cell.data?.type,
+        cellShape: cell.shape
+    });
 };
 
 const listen = (graph) => {
@@ -297,15 +453,25 @@ const listen = (graph) => {
     graph.on('cell:change:data', cellDataChanged);
     graph.on('cell:selected', cellSelected(graph));
     graph.on('cell:unselected', cellUnselected);
-    graph.on('node:move', cellSelected);
+    graph.on('node:move', cellSelected(graph));
+    
+    // Log all registered event handlers for debugging
+    log.debug('Registered event handlers', {
+        handlers: [
+            'resize', 'edge:change:vertices', 'edge:connected', 'edge:dblclick',
+            'edge:move', 'cell:mouseleave', 'cell:mouseenter', 'cell:added',
+            'cell:removed', 'cell:change:data', 'cell:selected', 'cell:unselected',
+            'node:move'
+        ]
+    });
 };
 
 const removeListeners = (graph) => {
     graph.off('resize', canvasResized);
     graph.off('edge:change:vertices', edgeChangeVertices(graph));
     graph.off('edge:connected', edgeConnected(graph));
-    graph.off('edge:dblclick', cellSelected);
-    graph.off('edge:move', cellSelected);
+    graph.off('edge:dblclick', cellSelected(graph));
+    graph.off('edge:move', cellSelected(graph));
     graph.off('cell:mouseleave', mouseLeave);
     graph.off('cell:mouseenter', mouseEnter);
     graph.off('cell:added', cellAdded(graph));
@@ -313,7 +479,9 @@ const removeListeners = (graph) => {
     graph.off('cell:change:data', cellDataChanged);
     graph.off('cell:selected', cellSelected(graph));
     graph.off('cell:unselected', cellUnselected);
-    graph.off('node:move', cellSelected);
+    graph.off('node:move', cellSelected(graph));
+    
+    log.debug('Removed all event handlers');
 };
 
 export default {
