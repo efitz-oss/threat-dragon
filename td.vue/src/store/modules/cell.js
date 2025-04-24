@@ -62,7 +62,7 @@ const getCellTypeFromShape = (shape) => {
 };
 
 const actions = {
-    [CELL_SELECTED]: ({ commit, state }, ref) => {
+    [CELL_SELECTED]: ({ commit }, ref) => {
         // Ensure cell has a type based on its shape if not already set
         if (ref && ref.data) {
             if (!ref.data.type && ref.shape) {

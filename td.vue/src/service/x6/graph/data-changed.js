@@ -4,7 +4,6 @@
  */
 
 import store from '@/store/index.js';
-import { CELL_DATA_UPDATED } from '@/store/actions/cell.js';
 import { THREATMODEL_MODIFIED } from '@/store/actions/threatmodel.js';
 import threats from '@/service/threats/index.js';
 import defaultProperties from '@/service/entity/default-properties.js';
