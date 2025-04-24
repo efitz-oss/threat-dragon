@@ -54,11 +54,13 @@
                         label-for="name"
                     >
                         <b-form-textarea
+                            v-if="isCellDataReady"
                             id="name"
                             v-model="safeName"
                             :rows="cellRef.data.type === 'tm.Text' ? 7 : 2"
                             style="min-height: 60px"
                         />
+                        <div v-else class="placeholder-textarea" style="min-height: 60px" />
                     </b-form-group>
                 </b-col>
 
@@ -70,11 +72,13 @@
                         label-for="description"
                     >
                         <b-form-textarea
+                            v-if="isCellDataReady"
                             id="description"
                             v-model="safeDescription"
                             :rows="3"
                             style="min-height: 80px"
                         />
+                        <div v-else class="placeholder-textarea" style="min-height: 80px" />
                     </b-form-group>
                 </b-col>
 
@@ -120,6 +124,7 @@
                         label-for="reasonoutofscope"
                     >
                         <b-form-textarea
+                            v-if="isCellDataReady"
                             id="reasonoutofscope"
                             :key="`reasonoutofscope-${outOfScopeValue ? 'enabled' : 'disabled'}`"
                             v-model="safeReasonOutOfScope"
@@ -128,6 +133,12 @@
                             :disabled="!outOfScopeValue"
                             :class="outOfScopeValue ? 'enabled-textarea' : 'disabled-textarea'"
                             placeholder="Enter reason for out of scope"
+                        />
+                        <div
+                            v-else
+                            class="placeholder-textarea"
+                            :class="outOfScopeValue ? 'enabled-textarea' : 'disabled-textarea'"
+                            style="min-height: 80px"
                         />
                     </b-form-group>
                 </b-col>
@@ -278,10 +289,23 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from '@/i18n';
 import dataChanged from '@/service/x6/graph/data-changed.js';
+
+// Simple utility function to check if an element is visible
+const isVisible = (element) => {
+    if (!element) return false;
+    
+    // Check if the element has dimensions and is not hidden
+    const style = window.getComputedStyle(element);
+    return style.display !== 'none' &&
+           style.visibility !== 'hidden' &&
+           style.opacity !== '0' &&
+           element.offsetWidth > 0 &&
+           element.offsetHeight > 0;
+};
 
 export default {
     name: 'TdGraphProperties',
@@ -291,8 +315,16 @@ export default {
         const store = useStore();
         const { t } = useI18n();
 
+        // Reactive state to track when it's safe to render textareas
+        const isReadyToRender = ref(false);
+
         // Get cellRef from store
         const cellRef = computed(() => store.state.cell.ref);
+
+        // Computed property to check if cell data is ready
+        const isCellDataReady = computed(() =>
+            isReadyToRender.value && cellRef.value && cellRef.value.data
+        );
 
         // Computed property for name with two-way binding and null check
         const safeName = computed({
@@ -374,6 +406,14 @@ export default {
             dataChanged.updateStyleAttrs(cellRef.value);
         };
 
+        // Initialize component
+        onMounted(() => {
+            // Delay rendering of textareas to ensure DOM is ready
+            setTimeout(() => {
+                isReadyToRender.value = true;
+            }, 100);
+        });
+
         return {
             cellRef,
             safeName,
@@ -382,6 +422,7 @@ export default {
             outOfScopeValue,
             onChangeBidirection,
             onChangeProperties,
+            isCellDataReady,
             t
         };
     }
@@ -427,6 +468,13 @@ export default {
 /* Override Bootstrap's default disabled styles */
 :deep(textarea.form-control:disabled) {
     background-color: #343a40 !important;
+}
+
+/* Placeholder for textareas while they're loading */
+.placeholder-textarea {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
 }
 
 /* Improve form elements spacing */
