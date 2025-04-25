@@ -9,42 +9,64 @@ const logger = loggerHelper.get('controllers/threatmodelcontroller.js');
 const repos = (req, res) =>
     responseWrapper.sendResponseAsync(
         async () => {
-            const repository = repositories.get();
+            try {
+                logger.debug(`Provider from request: ${req.provider?.name || 'unknown'}`);
+                logger.debug(`Access token available: ${Boolean(req.provider?.access_token)}`);
 
-            const page = req.query.page || 1;
-            const searchQuerys = req.query.searchQuery || [];
-            let reposResp;
-            let repos;
-            // backwardly compatible with previous use of env vars GITHUB_USE_SEARCH and GITHUB_SEARCH_QUERY
-            if (
-                env.get().config.REPO_USE_SEARCH === 'true' ||
-                env.get().config.GITHUB_USE_SEARCH === 'true'
-            ) {
-                logger.debug('Using searchAsync');
-                const searchQuery =
-                    env.get().config.REPO_SEARCH_QUERY ?? env.get().config.GITHUB_SEARCH_QUERY;
-                reposResp = await repository.searchAsync(page, req.provider.access_token, [
-                    searchQuery,
-                    ...searchQuerys
-                ]);
-                repos = reposResp[0].items ?? reposResp[0];
-            } else {
-                logger.debug('Using reposAsync');
-                reposResp = await repository.reposAsync(page, req.provider.access_token, [
-                    searchQuerys
-                ]);
-                repos = reposResp[0];
+                // Set repository based on provider name
+                if (req.provider && req.provider.name) {
+                    logger.debug(`Setting repository to ${req.provider.name}repo`);
+                    repositories.set(`${req.provider.name}repo`);
+                }
+
+                const repository = repositories.get();
+                logger.debug(`Using repository: ${repository.name || 'unknown'}`);
+
+                const page = req.query.page || 1;
+                const searchQuerys = req.query.searchQuery || [];
+                let reposResp;
+                let repos;
+                // backwardly compatible with previous use of env vars GITHUB_USE_SEARCH and GITHUB_SEARCH_QUERY
+                if (
+                    env.get().config.REPO_USE_SEARCH === 'true' ||
+                    env.get().config.GITHUB_USE_SEARCH === 'true'
+                ) {
+                    logger.debug('Using searchAsync');
+                    const searchQuery =
+                        env.get().config.REPO_SEARCH_QUERY ?? env.get().config.GITHUB_SEARCH_QUERY;
+                    reposResp = await repository.searchAsync(page, req.provider.access_token, [
+                        searchQuery,
+                        ...searchQuerys
+                    ]);
+                    repos = reposResp[0].items ?? reposResp[0];
+                } else {
+                    logger.debug('Using reposAsync');
+                    reposResp = await repository.reposAsync(page, req.provider.access_token, [
+                        searchQuerys
+                    ]);
+                    repos = reposResp[0];
+                }
+                const headers = reposResp[1];
+                const pageLinks = reposResp[2];
+                logger.debug(`API repos request: ${logger.transformToString(req)}`);
+
+                const pagination = getPagination(headers, pageLinks, page);
+
+                return {
+                    repos: repos.map((x) => x.full_name),
+                    pagination: pagination
+                };
+            } catch (error) {
+                logger.error(`Error in repos controller: ${error.message}`);
+                logger.error(`Error stack: ${error.stack}`);
+
+                if (error.response) {
+                    logger.error(`Response status: ${error.response.status}`);
+                    logger.error(`Response data: ${JSON.stringify(error.response.data || {})}`);
+                }
+
+                throw error;
             }
-            const headers = reposResp[1];
-            const pageLinks = reposResp[2];
-            logger.debug(`API repos request: ${logger.transformToString(req)}`);
-
-            const pagination = getPagination(headers, pageLinks, page);
-
-            return {
-                repos: repos.map((x) => x.full_name),
-                pagination: pagination
-            };
         },
         req,
         res,

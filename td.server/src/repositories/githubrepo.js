@@ -15,21 +15,42 @@ const getBaseUrl = () => {
 };
 
 const fetchGitHub = async (path, accessToken, options = {}) => {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}${path}`, {
-        ...options,
-        headers: {
-            Authorization: `token ${accessToken}`,
-            Accept: 'application/vnd.github.v3+json',
-            ...options.headers
-        }
-    });
-
-    if (!response.ok) {
-        throw new Error(`GitHub API error: ${response.statusText}`);
+    if (!accessToken) {
+        throw new Error('GitHub API error: No access token provided');
     }
 
-    return response.json();
+    const baseUrl = getBaseUrl();
+    const url = `${baseUrl}${path}`;
+
+    try {
+        console.log(`GitHub API request to: ${url}`);
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                Authorization: `token ${accessToken}`,
+                Accept: 'application/vnd.github.v3+json',
+                ...options.headers
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`GitHub API error (${response.status}): ${response.statusText}`);
+            console.error(`Error response body: ${errorText}`);
+
+            throw new Error(
+                `GitHub API error (${response.status}): ${response.statusText} - ${errorText}`
+            );
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error(`Error fetching from GitHub API: ${error.message}`);
+        if (error.stack) {
+            console.error(`Error stack: ${error.stack}`);
+        }
+        throw error;
+    }
 };
 
 const reposAsync = async (page, accessToken) => {

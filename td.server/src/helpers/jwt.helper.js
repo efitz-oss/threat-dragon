@@ -43,20 +43,56 @@ const decodeProvider = (encodedProvider) => {
 };
 
 const decode = (token, key) => {
-    try {
-        // Verify the token
-        const { provider, user } = jwt.verify(token, key);
+    const logger = loggerHelper.get('helpers/jwt.helper.js');
 
-        const decodedProvider = decodeProvider(provider);
-        return {
-            provider: decodedProvider,
-            user
-        };
+    try {
+        if (!token) {
+            logger.error('No token provided for verification');
+            throw new Error('No token provided');
+        }
+
+        // Verify the token
+        logger.debug(`Verifying token (length: ${token.length})`);
+        const decoded = jwt.verify(token, key);
+
+        if (!decoded) {
+            logger.error('JWT verification returned null/undefined');
+            throw new Error('JWT verification failed');
+        }
+
+        if (!decoded.provider) {
+            logger.error('JWT missing provider information');
+            throw new Error('JWT missing provider information');
+        }
+
+        const { provider, user } = decoded;
+
+        try {
+            logger.debug('Decoding provider information from JWT');
+            const decodedProvider = decodeProvider(provider);
+
+            logger.debug(`Successfully decoded JWT for provider: ${decodedProvider.name}`);
+            return {
+                provider: decodedProvider,
+                user
+            };
+        } catch (providerError) {
+            logger.error(`Error decoding provider from JWT: ${providerError.message}`);
+            logger.error(`Provider data: ${JSON.stringify(provider)}`);
+            throw new Error(`Failed to decode provider data: ${providerError.message}`);
+        }
     } catch (error) {
-        const logger = loggerHelper.get('helpers/jwt.helper.js');
         logger.error(`Error verifying token: ${error.message}`);
         logger.error(`Error stack: ${error.stack}`);
-        throw new Error('Invalid JWT');
+
+        // Provide more specific error messages based on the type of error
+        if (error.name === 'TokenExpiredError') {
+            throw new Error('JWT token has expired');
+        } else if (error.name === 'JsonWebTokenError') {
+            throw new Error(`Invalid JWT: ${error.message}`);
+        } else {
+            throw new Error(`JWT verification error: ${error.message}`);
+        }
     }
 };
 
