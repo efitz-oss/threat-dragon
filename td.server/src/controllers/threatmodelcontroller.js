@@ -144,19 +144,53 @@ const branches = (req, res) =>
             logger.debug(`Branch request info: ${JSON.stringify(repoInfo)}`);
             logger.debug(`API branches request: ${logger.transformToString(req)}`);
 
-            const branchesResp = await repository.branchesAsync(
-                repoInfo,
-                req.provider.access_token
-            );
-            const branches = branchesResp[0];
-            const headers = branchesResp[1];
-            const pageLinks = branchesResp[2];
+            try {
+                const branchesResp = await repository.branchesAsync(
+                    repoInfo,
+                    req.provider.access_token
+                );
 
-            const branchNames = branches.map((x) => ({
-                name: x.name,
-                // Protected branches are not so easy to determine from the API on Bitbucket
-                protected: x.protected || false
-            }));
+                // Log the response for debugging
+                logger.debug(`Branch response received: ${JSON.stringify(branchesResp)}`);
+
+                const branches = branchesResp[0];
+                const headers = branchesResp[1];
+                const pageLinks = branchesResp[2];
+
+                // Check if branches is an array
+                if (!Array.isArray(branches)) {
+                    logger.error(`Branches is not an array: ${typeof branches}`);
+                    logger.debug(`Branches response: ${JSON.stringify(branches)}`);
+
+                    // If branches is not an array, return an empty array
+                    return {
+                        branches: [],
+                        pagination: { page: repoInfo.page, next: false, prev: false }
+                    };
+                }
+
+                const branchNames = branches.map((x) => ({
+                    name: x.name,
+                    // Protected branches are not so easy to determine from the API on Bitbucket
+                    protected: x.protected || false
+                }));
+
+                // Code moved inside try-catch block
+            } catch (error) {
+                logger.error(`Error fetching branches: ${error.message}`);
+                logger.error(`Error stack: ${error.stack}`);
+
+                if (error.response) {
+                    logger.error(`Response status: ${error.response.status}`);
+                    logger.error(`Response data: ${JSON.stringify(error.response.data || {})}`);
+                }
+
+                // Return empty branches array on error
+                return {
+                    branches: [],
+                    pagination: { page: repoInfo.page, next: false, prev: false }
+                };
+            }
 
             const pagination = getPagination(headers, pageLinks, repoInfo.page);
 
