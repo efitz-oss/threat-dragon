@@ -30,14 +30,14 @@
         <b-row>
             <b-col md="6" offset="3">
                 <b-list-group>
-                    <b-list-group-item v-if="showBackItem" href="#" @click="$emit('back-click')">
+                    <b-list-group-item v-if="showBackItem" href="#" @click="handleBackClick">
                         ...
                     </b-list-group-item>
 
                     <b-list-group-item
                         v-if="items.length === 0 && !!emptyStateText"
                         href="#"
-                        @click="$emit('empty-state-click')"
+                        @click="handleEmptyStateClick"
                     >
                         {{ emptyStateText }}
                     </b-list-group-item>
@@ -46,7 +46,7 @@
                         v-for="(item, idx) in displayedItems"
                         :key="idx"
                         href="#"
-                        @click="$emit('item-click', item)"
+                        @click="handleItemClick(item)"
                     >
                         {{ isGoogleProvider ? item.name : item }}
                     </b-list-group-item>
@@ -155,12 +155,44 @@ export default {
             }
         };
         
+        // Handle item click by calling the onItemClick prop function
+        // and also emitting the item-click event for backward compatibility
+        const handleItemClick = (item) => {
+            // Call the onItemClick prop function
+            if (props.onItemClick) {
+                props.onItemClick(item);
+            }
+            
+            // Also emit the item-click event for backward compatibility
+            emit('item-click', item);
+        };
+        
+        // Handle back click by calling the onBackClick prop function
+        // and also emitting the back-click event for backward compatibility
+        const handleBackClick = () => {
+            // Call the onBackClick prop function
+            if (props.onBackClick) {
+                props.onBackClick();
+            }
+            
+            // Also emit the back-click event for backward compatibility
+            emit('back-click');
+        };
+        
+        // Handle empty state click by emitting the empty-state-click event
+        const handleEmptyStateClick = () => {
+            emit('empty-state-click');
+        };
+        
         return {
             filter,
             pageRef,
             displayedItems,
             prevPage,
             nextPage,
+            handleItemClick,
+            handleBackClick,
+            handleEmptyStateClick,
             t
         };
     }
