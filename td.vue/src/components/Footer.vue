@@ -49,6 +49,7 @@ export default {
 .td-footer {
     background-color: colors.$orange;
     border-color: colors.$orange-alt;
+    height: sizes.$header-height - 5;
     padding: 0.75rem 0;
     margin-top: 2rem;
     border-radius: 0.3rem;
