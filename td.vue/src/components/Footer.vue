@@ -1,7 +1,7 @@
 <template>
     <b-container v-if="googleEnabled" fluid>
         <footer class="td-footer">
-            <b-row class="h-100">
+            <b-row class="h-100 w-100">
                 <b-col class="text-center d-flex align-items-center justify-content-center">
                     <div class="footer-nav">
                         <router-link to="/privacy" class="td-footer-link">
@@ -54,6 +54,7 @@ export default {
     font-size: 14px; /* Slightly smaller than navbar */
     display: flex; /* Make it a flex container */
     align-items: center; /* Center items vertically */
+    width: 100%; /* Ensure footer takes full width */
 }
 
 .td-footer-link {
@@ -73,5 +74,11 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%; /* Take full height of the footer */
+    width: 100%; /* Take full width */
+}
+
+/* Ensure row takes full width */
+.w-100 {
+    width: 100%;
 }
 </style>
