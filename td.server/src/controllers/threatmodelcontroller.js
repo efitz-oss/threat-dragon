@@ -128,11 +128,20 @@ const branches = (req, res) =>
         async () => {
             const repository = repositories.get();
 
+            // Extract page parameter, handling both direct and nested formats
+            let page = req.query.page;
+            if (!page && req.query.params && req.query.params.page) {
+                page = req.query.params.page;
+                logger.debug(`Found page parameter in nested params object: ${page}`);
+            }
+
             const repoInfo = {
                 organisation: req.params.organisation,
                 repo: req.params.repo,
-                page: req.query.page || 1
+                page: page || 1
             };
+
+            logger.debug(`Branch request info: ${JSON.stringify(repoInfo)}`);
             logger.debug(`API branches request: ${logger.transformToString(req)}`);
 
             const branchesResp = await repository.branchesAsync(
@@ -166,11 +175,16 @@ const models = (req, res) =>
         async () => {
             const repository = repositories.get();
 
+            // Extract any nested parameters
+            const params = req.query.params || {};
+
             const branchInfo = {
                 organisation: req.params.organisation,
                 repo: req.params.repo,
                 branch: req.params.branch
             };
+
+            logger.debug(`Models request info: ${JSON.stringify(branchInfo)}`);
             logger.debug(`API models request: ${logger.transformToString(req)}`);
 
             let modelsResp;
@@ -194,12 +208,18 @@ const model = (req, res) =>
     responseWrapper.sendResponseAsync(
         async () => {
             const repository = repositories.get();
+
+            // Extract any nested parameters
+            const params = req.query.params || {};
+
             const modelInfo = {
                 organisation: req.params.organisation,
                 repo: req.params.repo,
                 branch: req.params.branch,
                 model: req.params.model
             };
+
+            logger.debug(`Model request info: ${JSON.stringify(modelInfo)}`);
             logger.debug(`API model request: ${logger.transformToString(req)}`);
 
             const modelResp = await repository.modelAsync(modelInfo, req.provider.access_token);
