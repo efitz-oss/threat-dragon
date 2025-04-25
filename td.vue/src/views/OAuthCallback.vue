@@ -182,37 +182,55 @@ export default {
 
                 // Call the API to complete login
                 log(`Calling completeLoginAsync for provider: ${provider}`);
-                const response = await loginAPI.completeLoginAsync(provider, code);
+                try {
+                    log(`Making API call to /api/oauth/${provider}/completeLogin with code length: ${code.length}`);
+                    const response = await loginAPI.completeLoginAsync(provider, code);
+                    log(`API call successful, received response`);
 
-                log(`Login completed successfully`);
-                log(
-                    `Received tokens: accessToken=${
-                        response.accessToken ? 'present' : 'missing'
-                    }, refreshToken=${response.refreshToken ? 'present' : 'missing'}`
-                );
+                    log(`Login completed successfully`);
+                    log(
+                        `Received tokens: accessToken=${
+                            response.accessToken ? 'present' : 'missing'
+                        }, refreshToken=${response.refreshToken ? 'present' : 'missing'}`
+                    );
 
-                // Store JWT tokens
-                log('Storing tokens in Vuex store');
-                store.dispatch('AUTH_SET_JWT', response);
+                    // Store JWT tokens
+                    log('Storing tokens in Vuex store');
+                    store.dispatch('AUTH_SET_JWT', response);
 
-                // Update status
-                statusMessage.value = 'Login successful! Redirecting...';
+                    // Update status
+                    statusMessage.value = 'Login successful! Redirecting...';
 
-                // Redirect to dashboard
-                log('Redirecting to dashboard');
-                router.push({ name: 'MainDashboard' });
+                    // Redirect to dashboard
+                    log('Redirecting to dashboard');
+                    router.push({ name: 'MainDashboard' });
 
-                // Small delay for visual feedback
-                setTimeout(() => {}, 1000);
+                    // Small delay for visual feedback
+                    setTimeout(() => {}, 1000);
+                } catch (apiError) {
+                    log(`API call failed: ${apiError.message}`);
+                    if (apiError.response) {
+                        log(`Response status: ${apiError.response.status}`);
+                        log(`Response data: ${JSON.stringify(apiError.response.data || {})}`);
+                        log(`Response headers: ${JSON.stringify(apiError.response.headers || {})}`);
+                    }
+                    throw apiError;
+                }
             } catch (error) {
                 // Log errors to both the logger service and debug display
                 appLogger.error(`OAuth callback error: ${error.message}`);
                 log(`Error occurred: ${error.message}`);
+                log(`Error stack: ${error.stack}`);
 
                 if (error.response) {
                     log(`Response status: ${error.response.status}`);
                     log(`Response data: ${JSON.stringify(error.response.data || {})}`);
+                    log(`Response headers: ${JSON.stringify(error.response.headers || {})}`);
                 }
+                
+                // Add environment information to help debug
+                log(`Environment: ${process.env.NODE_ENV}`);
+                log(`Base URL: ${window.location.origin}`);
 
                 errorOccurred.value = true;
                 errorMessage.value = error.message;

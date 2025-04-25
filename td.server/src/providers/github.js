@@ -61,30 +61,93 @@ const getOauthReturnUrl = (code) => {
  */
 const completeLoginAsync = async (code) => {
     const url = `${getGithubUrl()}/login/oauth/access_token`;
+
+    // Get the redirect URI from environment and ensure it uses HTTPS if needed
+    let redirectUri = env.get().config.GITHUB_REDIRECT_URI;
+
+    // If we're in production and the URI starts with http:// but we're using https,
+    // update it to use https:// to match the actual protocol being used
+    if (
+        env.get().config.NODE_ENV === 'production' &&
+        redirectUri &&
+        redirectUri.startsWith('http://') &&
+        (env.get().config.SERVER_API_PROTOCOL === 'https' ||
+            env.get().config.APP_USE_TLS === 'true')
+    ) {
+        const httpsUri = redirectUri.replace('http://', 'https://');
+        console.log(`GitHub OAuth: Converting redirect URI from ${redirectUri} to ${httpsUri}`);
+        redirectUri = httpsUri;
+    }
+
+    console.log(`GitHub OAuth: Using redirect URI: ${redirectUri}`);
+
     const body = {
         client_id: env.get().config.GITHUB_CLIENT_ID,
         client_secret: env.get().config.GITHUB_CLIENT_SECRET,
-        code
+        code,
+        redirect_uri: redirectUri
     };
+
+    console.log(`GitHub OAuth: Exchanging code for token at ${url}`);
+    console.log(
+        `GitHub OAuth: Request body: ${JSON.stringify({
+            client_id: env.get().config.GITHUB_CLIENT_ID,
+            code_length: code?.length || 0,
+            redirect_uri: redirectUri
+        })}`
+    );
+
     const options = {
         headers: {
             accept: 'application/json'
         }
     };
 
-    const providerResp = await axios.post(url, body, options);
+    try {
+        const providerResp = await axios.post(url, body, options);
+        console.log(
+            `GitHub OAuth: Token exchange successful, received ${Object.keys(
+                providerResp.data
+            ).join(', ')}`
+        );
 
-    repositories.set('githubrepo');
-    const repo = repositories.get();
-    const fullUser = await repo.userAsync(providerResp.data.access_token);
-    const user = {
-        username: fullUser.login,
-        repos_url: fullUser.repos_url
-    };
-    return {
-        user,
-        opts: providerResp.data
-    };
+        repositories.set('githubrepo');
+        const repo = repositories.get();
+
+        if (!providerResp.data.access_token) {
+            console.error(
+                `GitHub OAuth: No access token received. Response: ${JSON.stringify(
+                    providerResp.data
+                )}`
+            );
+            throw new Error('No access token received from GitHub');
+        }
+
+        console.log(`GitHub OAuth: Getting user info with access token`);
+        const fullUser = await repo.userAsync(providerResp.data.access_token);
+        console.log(`GitHub OAuth: User info received for ${fullUser.login}`);
+
+        const user = {
+            username: fullUser.login,
+            repos_url: fullUser.repos_url
+        };
+        return {
+            user,
+            opts: providerResp.data
+        };
+    } catch (error) {
+        console.error(`GitHub OAuth Error: ${error.message}`);
+        if (error.response) {
+            console.error(
+                `GitHub OAuth Error Response: ${JSON.stringify({
+                    status: error.response.status,
+                    statusText: error.response.statusText,
+                    data: error.response.data
+                })}`
+            );
+        }
+        throw error;
+    }
 };
 
 export default {
