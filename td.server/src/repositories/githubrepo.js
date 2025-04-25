@@ -53,23 +53,73 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
     }
 };
 
-const reposAsync = async (page, accessToken) => {
+const reposAsync = async (page, accessToken, searchQueries = []) => {
     await Promise.resolve(); // Ensure async function has await expression
-    return fetchGitHub('/user/repos', accessToken, {
-        method: 'GET',
-        headers: {
-            Accept: 'application/vnd.github.v3+json'
-        }
-    });
+
+    // Log the parameters for debugging
+    console.log(`GitHub reposAsync called with page: ${page}`);
+    console.log(`GitHub reposAsync called with searchQueries:`, searchQueries);
+
+    // Construct the URL with pagination
+    const url = `/user/repos?page=${page}&per_page=100`;
+
+    console.log(`GitHub reposAsync using URL: ${url}`);
+
+    try {
+        const response = await fetchGitHub(url, accessToken, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/vnd.github.v3+json'
+            }
+        });
+
+        // Return the response in the expected format [repos, headers, pageLinks]
+        return [response, {}, {}];
+    } catch (error) {
+        console.error(`Error in reposAsync: ${error.message}`);
+        throw error;
+    }
 };
 
-const searchAsync = async (page, accessToken, searchQuery) => {
+const searchAsync = async (page, accessToken, searchQueries = []) => {
     await Promise.resolve(); // Ensure async function has await expression
-    const data = await fetchGitHub(
-        `/search/repositories?q=${encodeURIComponent(searchQuery)}&page=${page}`,
-        accessToken
-    );
-    return data.items;
+
+    // Log the parameters for debugging
+    console.log(`GitHub searchAsync called with page: ${page}`);
+    console.log(`GitHub searchAsync called with searchQueries:`, searchQueries);
+
+    // Filter out empty search queries
+    const validQueries = searchQueries.filter((q) => q && typeof q === 'string' && q.trim() !== '');
+
+    // Use the first valid query or default to a broad search
+    let searchQuery = 'stars:>0';
+    if (validQueries.length > 0) {
+        searchQuery = validQueries[0];
+    }
+
+    console.log(`GitHub searchAsync using query: ${searchQuery}`);
+
+    try {
+        const url = `/search/repositories?q=${encodeURIComponent(
+            searchQuery
+        )}&page=${page}&per_page=100`;
+        console.log(`GitHub searchAsync using URL: ${url}`);
+
+        const data = await fetchGitHub(url, accessToken);
+
+        // Return the response in the expected format [repos, headers, pageLinks]
+        return [
+            data,
+            {},
+            {
+                next: data.total_count > page * 100,
+                prev: page > 1
+            }
+        ];
+    } catch (error) {
+        console.error(`Error in searchAsync: ${error.message}`);
+        throw error;
+    }
 };
 
 const userAsync = async (accessToken) => {
@@ -162,6 +212,7 @@ const getModelPath = (modelInfo) =>
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
 
 export default {
+    name: 'githubrepo',
     branchesAsync,
     createAsync,
     deleteAsync,

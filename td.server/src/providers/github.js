@@ -148,16 +148,30 @@ const completeLoginAsync = async (code) => {
             ).join(', ')}`
         );
 
-        repositories.set('githubrepo');
-        const repo = repositories.get();
+        try {
+            console.log('Setting repository to githubrepo');
+            repositories.set('githubrepo');
+            const repo = repositories.get();
 
-        if (!providerResp.data.access_token) {
-            console.error(
-                `GitHub OAuth: No access token received. Response: ${JSON.stringify(
-                    providerResp.data
-                )}`
-            );
-            throw new Error('No access token received from GitHub');
+            if (!repo) {
+                console.error('Failed to get GitHub repository after setting it');
+                throw new Error('Failed to get GitHub repository');
+            }
+
+            console.log(`Successfully set repository to: ${repo.name || 'unknown'}`);
+
+            if (!providerResp.data.access_token) {
+                console.error(
+                    `GitHub OAuth: No access token received. Response: ${JSON.stringify(
+                        providerResp.data
+                    )}`
+                );
+                throw new Error('No access token received from GitHub');
+            }
+        } catch (repoError) {
+            console.error(`Error setting repository: ${repoError.message}`);
+            console.error(`Error stack: ${repoError.stack}`);
+            throw repoError;
         }
 
         console.log(`GitHub OAuth: Successfully obtained access token, fetching user info`);

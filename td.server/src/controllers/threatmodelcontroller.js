@@ -34,17 +34,44 @@ const repos = (req, res) =>
                     logger.debug('Using searchAsync');
                     const searchQuery =
                         env.get().config.REPO_SEARCH_QUERY ?? env.get().config.GITHUB_SEARCH_QUERY;
+                    logger.debug('Using searchAsync');
+                    logger.debug(`Search query: ${searchQuery}`);
+                    logger.debug(`Additional search queries: ${JSON.stringify(searchQuerys)}`);
+
                     reposResp = await repository.searchAsync(page, req.provider.access_token, [
                         searchQuery,
                         ...searchQuerys
                     ]);
-                    repos = reposResp[0].items ?? reposResp[0];
+
+                    // Handle different response formats
+                    if (reposResp[0] && reposResp[0].items) {
+                        logger.debug(`Search returned ${reposResp[0].items.length} items`);
+                        repos = reposResp[0].items;
+                    } else {
+                        logger.debug(
+                            `Search returned direct array with ${reposResp[0].length} items`
+                        );
+                        repos = reposResp[0];
+                    }
                 } else {
                     logger.debug('Using reposAsync');
-                    reposResp = await repository.reposAsync(page, req.provider.access_token, [
+                    logger.debug(`Search queries: ${JSON.stringify(searchQuerys)}`);
+
+                    reposResp = await repository.reposAsync(
+                        page,
+                        req.provider.access_token,
                         searchQuerys
-                    ]);
-                    repos = reposResp[0];
+                    );
+
+                    // Ensure repos is an array
+                    if (Array.isArray(reposResp[0])) {
+                        logger.debug(`Repos returned ${reposResp[0].length} items`);
+                        repos = reposResp[0];
+                    } else {
+                        logger.error(`Unexpected repos response format: ${typeof reposResp[0]}`);
+                        logger.debug(`Response: ${JSON.stringify(reposResp[0])}`);
+                        repos = [];
+                    }
                 }
                 const headers = reposResp[1];
                 const pageLinks = reposResp[2];
@@ -52,8 +79,31 @@ const repos = (req, res) =>
 
                 const pagination = getPagination(headers, pageLinks, page);
 
+                // Safely map repos to full_name, handling potential issues
+                let repoNames = [];
+                if (Array.isArray(repos)) {
+                    logger.debug(`Mapping ${repos.length} repos to their full names`);
+                    repoNames = repos
+                        .filter((x) => x && typeof x === 'object')
+                        .map((x) => {
+                            if (x.full_name) {
+                                return x.full_name;
+                            } else if (x.name && x.owner && x.owner.login) {
+                                return `${x.owner.login}/${x.name}`;
+                            } else {
+                                logger.warn(`Repo missing full_name: ${JSON.stringify(x)}`);
+                                return null;
+                            }
+                        })
+                        .filter(Boolean); // Remove null values
+                } else {
+                    logger.error(`Repos is not an array: ${typeof repos}`);
+                }
+
+                logger.debug(`Returning ${repoNames.length} repositories`);
+
                 return {
-                    repos: repos.map((x) => x.full_name),
+                    repos: repoNames,
                     pagination: pagination
                 };
             } catch (error) {
