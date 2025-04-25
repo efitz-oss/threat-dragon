@@ -129,10 +129,35 @@ const userAsync = async (accessToken) => {
 
 const branchesAsync = async (repoInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    return fetchGitHub(
-        `/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`,
-        accessToken
+
+    console.log(
+        `GitHub branchesAsync called with repo: ${repoInfo.organisation}/${repoInfo.repo}, page: ${repoInfo.page}`
     );
+
+    try {
+        const response = await fetchGitHub(
+            `/repos/${repoInfo.organisation}/${repoInfo.repo}/branches?page=${repoInfo.page}`,
+            accessToken
+        );
+
+        console.log(`GitHub branchesAsync response type: ${typeof response}`);
+
+        // Ensure we return an array
+        if (Array.isArray(response)) {
+            console.log(`GitHub branchesAsync found ${response.length} branches`);
+            return [response, {}, {}];
+        } else {
+            console.log(`GitHub branchesAsync response is not an array, converting to array`);
+            console.log(`Response: ${JSON.stringify(response)}`);
+
+            // If response is not an array, return an empty array
+            return [[], {}, {}];
+        }
+    } catch (error) {
+        console.error(`Error in branchesAsync: ${error.message}`);
+        // Return empty array on error
+        return [[], {}, {}];
+    }
 };
 
 const modelsAsync = async (branchInfo, accessToken) => {
