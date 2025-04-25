@@ -49,7 +49,7 @@ export default {
 .td-footer {
     background-color: colors.$orange;
     border-color: colors.$orange-alt;
-    height: sizes.$header-height - 5;
+    height: sizes.$header-height;
     border-radius: 0.3rem;
     font-size: 14px; /* Slightly smaller than navbar */
 }
