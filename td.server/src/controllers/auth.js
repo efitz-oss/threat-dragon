@@ -114,49 +114,138 @@ const oauthReturn = (req, res) => {
 
 // Helper to process OAuth login completion
 const processOAuthLogin = async (providerName, code, logger) => {
-    const provider = providers.get(providerName);
+    try {
+        logger.info(`Processing OAuth login for provider: ${providerName}`);
 
-    if (!provider) {
-        logger.error(`Provider ${providerName} not found in providers list`);
-        logger.error(`Available providers: ${Object.keys(providers).join(', ')}`);
-        throw new Error(`Provider ${providerName} not found`);
+        // Validate provider
+        if (!providerName) {
+            logger.error('No provider name specified');
+            throw new Error('No provider name specified');
+        }
+
+        // Get available providers for better error messages
+        const availableProviders = Object.keys(providers.all || {}).join(', ');
+        logger.info(`Available providers: ${availableProviders}`);
+
+        // Get the provider
+        let provider;
+        try {
+            provider = providers.get(providerName);
+            logger.info(`Provider ${providerName} found`);
+        } catch (providerError) {
+            logger.error(`Provider ${providerName} not found or not configured`);
+            logger.error(`Provider error: ${providerError.message}`);
+            throw new Error(
+                `Provider ${providerName} not found or not configured. Available providers: ${availableProviders}`
+            );
+        }
+
+        if (!provider) {
+            logger.error(`Provider ${providerName} is null or undefined`);
+            throw new Error(`Provider ${providerName} is null or undefined`);
+        }
+
+        // Validate authorization code
+        if (!code) {
+            logger.error('Missing authorization code');
+            throw new Error('Missing authorization code in request body');
+        }
+
+        // Complete the login process with the provider
+        logger.info(`Calling provider.completeLoginAsync with code length: ${code.length}`);
+        let user, opts;
+        try {
+            const result = await provider.completeLoginAsync(code);
+            user = result.user;
+            opts = result.opts;
+
+            if (!user || !opts) {
+                logger.error('Provider returned invalid user or options data');
+                // Redact sensitive information from logs
+                const safeUserData = { ...(user || {}) };
+                if (safeUserData.email) safeUserData.email = '[REDACTED]';
+                if (safeUserData.id) safeUserData.id = '[REDACTED]';
+
+                const safeOptsData = { ...(opts || {}) };
+                if (safeOptsData.access_token) safeOptsData.access_token = '[REDACTED]';
+                if (safeOptsData.refresh_token) safeOptsData.refresh_token = '[REDACTED]';
+                if (safeOptsData.id_token) safeOptsData.id_token = '[REDACTED]';
+
+                logger.error(`User data: ${JSON.stringify(safeUserData)}`);
+                logger.error(`Options data: ${JSON.stringify(safeOptsData)}`);
+                throw new Error('Provider returned invalid user or options data');
+            }
+
+            if (!opts.access_token) {
+                logger.error('Provider did not return an access token');
+                throw new Error('Provider did not return an access token');
+            }
+        } catch (loginError) {
+            logger.error(`Error in provider.completeLoginAsync: ${loginError.message}`);
+            logger.error(`Error stack: ${loginError.stack}`);
+            throw new Error(`OAuth provider login failed: ${loginError.message}`);
+        }
+
+        // Redact sensitive information from user data before logging
+        const safeUserInfo = { ...(user || {}) };
+        if (safeUserInfo.email) safeUserInfo.email = '[REDACTED]';
+        if (safeUserInfo.id) safeUserInfo.id = '[REDACTED]';
+
+        logger.info(`Got user info: ${JSON.stringify(safeUserInfo)}`);
+
+        // Only log the presence of tokens, not their values
+        logger.info(
+            `Provider options received: ${JSON.stringify({
+                has_access_token: Boolean(opts?.access_token),
+                has_refresh_token: Boolean(opts?.refresh_token),
+                has_id_token: Boolean(opts?.id_token),
+                token_type: opts?.token_type || 'none',
+                expires_in: opts?.expires_in || 'none'
+            })}`
+        );
+
+        // Create JWT tokens
+        logger.info(`Creating JWT for ${provider.name}`);
+        let accessToken, refreshToken;
+        try {
+            const tokens = await jwtHelper.createAsync(provider.name, opts, user);
+            accessToken = tokens.accessToken;
+            refreshToken = tokens.refreshToken;
+
+            if (!accessToken || !refreshToken) {
+                logger.error('Failed to create JWT tokens');
+                throw new Error('Failed to create JWT tokens');
+            }
+        } catch (jwtError) {
+            logger.error(`Error creating JWT: ${jwtError.message}`);
+            logger.error(`Error stack: ${jwtError.stack}`);
+            throw new Error(`Failed to create authentication tokens: ${jwtError.message}`);
+        }
+
+        logger.info(`JWT created successfully, length: ${accessToken?.length || 0}`);
+        logger.info(`Refresh token created, length: ${refreshToken?.length || 0}`);
+
+        // Store the refresh token
+        try {
+            tokenRepo.add(refreshToken);
+            logger.info('Refresh token stored successfully');
+        } catch (tokenError) {
+            logger.error(`Error storing refresh token: ${tokenError.message}`);
+            // Don't fail the process if token storage fails
+        }
+
+        logger.info(
+            `Login completed successfully for ${user?.username || 'unknown'}, ${
+                user?.email || 'no email'
+            }`
+        );
+
+        return { accessToken, refreshToken, user };
+    } catch (error) {
+        logger.error(`Error in processOAuthLogin: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
+        throw error;
     }
-
-    if (!code) {
-        logger.error('Missing authorization code');
-        throw new Error('Missing authorization code in request body');
-    }
-
-    logger.info('Calling provider.completeLoginAsync with code');
-    const { user, opts } = await provider.completeLoginAsync(code);
-
-    logger.info(`Got user info: ${JSON.stringify(user || {})}`);
-    logger.info(
-        `Provider options received: ${JSON.stringify({
-            has_access_token: Boolean(opts?.access_token),
-            has_refresh_token: Boolean(opts?.refresh_token),
-            has_id_token: Boolean(opts?.id_token),
-            token_type: opts?.token_type || 'none',
-            expires_in: opts?.expires_in || 'none'
-        })}`
-    );
-
-    logger.info(`Creating JWT for ${provider.name}`);
-    const { accessToken, refreshToken } = await jwtHelper.createAsync(provider.name, opts, user);
-
-    logger.info(`JWT created successfully, length: ${accessToken?.length || 0}`);
-    logger.info(`Refresh token created, length: ${refreshToken?.length || 0}`);
-
-    // Store the refresh token
-    tokenRepo.add(refreshToken);
-
-    logger.info(
-        `Login completed successfully for ${user?.username || 'unknown'}, ${
-            user?.email || 'no email'
-        }`
-    );
-
-    return { accessToken, refreshToken, user };
 };
 
 const completeLogin = (req, res) => {
@@ -173,17 +262,39 @@ const completeLogin = (req, res) => {
     logger.debug(`API completeLogin request: ${logger.transformToString(req)}`);
 
     try {
+        // Validate request parameters
+        if (!req.params.provider) {
+            logger.error('No provider specified in request parameters');
+            return errors.badRequest('No provider specified', res, logger);
+        }
+
+        if (!req.body.code) {
+            logger.error('No authorization code provided in request body');
+            return errors.badRequest('No authorization code provided', res, logger);
+        }
+
         // Errors in here will return as server errors as opposed to bad requests
         return responseWrapper.sendResponseAsync(
             async () => {
                 try {
+                    logger.info(`Processing OAuth login for provider: ${req.params.provider}`);
+                    logger.info(`With code length: ${req.body.code.length}`);
+
                     const result = await processOAuthLogin(
                         req.params.provider,
                         req.body.code,
                         logger
                     );
 
+                    if (!result || !result.accessToken) {
+                        logger.error('OAuth login process did not return valid tokens');
+                        throw new Error('Failed to obtain authentication tokens');
+                    }
+
                     logger.info(`=== End of OAuth flow for ${req.params.provider} ===`);
+                    logger.info(`Access token length: ${result.accessToken.length}`);
+                    logger.info(`Refresh token length: ${result.refreshToken.length}`);
+
                     return {
                         accessToken: result.accessToken,
                         refreshToken: result.refreshToken
@@ -204,7 +315,10 @@ const completeLogin = (req, res) => {
                         );
                     }
 
-                    throw error;
+                    // Provide a more specific error message
+                    const errorMessage =
+                        error.message || 'Unknown error during OAuth login process';
+                    throw new Error(`OAuth login failed: ${errorMessage}`);
                 }
             },
             req,

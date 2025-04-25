@@ -65,6 +65,17 @@ const completeLoginAsync = async (code) => {
     console.log(`Starting GitHub completeLoginAsync with code length: ${code?.length || 0}`);
     console.log(`NODE_ENV: ${env.get().config.NODE_ENV}`);
 
+    // Validate GitHub client credentials
+    if (!env.get().config.GITHUB_CLIENT_ID) {
+        console.error('GitHub OAuth Error: GITHUB_CLIENT_ID is not configured');
+        throw new Error('GitHub client ID is not configured');
+    }
+
+    if (!env.get().config.GITHUB_CLIENT_SECRET) {
+        console.error('GitHub OAuth Error: GITHUB_CLIENT_SECRET is not configured');
+        throw new Error('GitHub client secret is not configured');
+    }
+
     const url = `${getGithubUrl()}/login/oauth/access_token`;
     console.log(`Token exchange URL: ${url}`);
 
@@ -103,11 +114,13 @@ const completeLoginAsync = async (code) => {
     };
 
     console.log(`GitHub OAuth: Exchanging code for token at ${url}`);
+
+    // Log request details without sensitive information
     console.log(
         `GitHub OAuth: Request body: ${JSON.stringify({
-            client_id: env.get().config.GITHUB_CLIENT_ID,
+            client_id: '[REDACTED]', // Don't log actual client ID
             code_length: code?.length || 0,
-            redirect_uri: redirectUri
+            redirect_uri: redirectUri ? '[REDACTED_URI]' : 'none' // Don't log actual URI
         })}`
     );
 
@@ -127,12 +140,18 @@ const completeLoginAsync = async (code) => {
 
         console.log(`GitHub OAuth: Received token response from GitHub`);
         console.log(`GitHub OAuth: Response status: ${providerResp.status}`);
+
+        // Log presence of tokens without revealing their values
         console.log(
             `GitHub OAuth: Response has access_token: ${Boolean(providerResp.data.access_token)}`
+        );
+        console.log(
+            `GitHub OAuth: Response has refresh_token: ${Boolean(providerResp.data.refresh_token)}`
         );
         console.log(`GitHub OAuth: Response has error: ${Boolean(providerResp.data.error)}`);
 
         if (providerResp.data.error) {
+            // Log error information (errors are generally safe to log)
             console.error(`GitHub OAuth Error: ${providerResp.data.error}`);
             console.error(`GitHub OAuth Error Description: ${providerResp.data.error_description}`);
             throw new Error(
@@ -142,46 +161,66 @@ const completeLoginAsync = async (code) => {
             );
         }
 
+        // Log keys received without revealing their values
         console.log(
-            `GitHub OAuth: Token exchange successful, received ${Object.keys(
+            `GitHub OAuth: Token exchange successful, received keys: ${Object.keys(
                 providerResp.data
             ).join(', ')}`
         );
 
-        try {
-            console.log('Setting repository to githubrepo');
-            repositories.set('githubrepo');
-            const repo = repositories.get();
-
-            if (!repo) {
-                console.error('Failed to get GitHub repository after setting it');
-                throw new Error('Failed to get GitHub repository');
-            }
-
-            console.log(`Successfully set repository to: ${repo.name || 'unknown'}`);
-
-            if (!providerResp.data.access_token) {
-                console.error(
-                    `GitHub OAuth: No access token received. Response: ${JSON.stringify(
-                        providerResp.data
-                    )}`
-                );
-                throw new Error('No access token received from GitHub');
-            }
-        } catch (repoError) {
-            console.error(`Error setting repository: ${repoError.message}`);
-            console.error(`Error stack: ${repoError.stack}`);
-            throw repoError;
+        // Validate access token
+        if (!providerResp.data.access_token) {
+            console.error(
+                `GitHub OAuth: No access token received. Response: ${JSON.stringify(
+                    providerResp.data
+                )}`
+            );
+            throw new Error('No access token received from GitHub');
         }
 
         console.log(`GitHub OAuth: Successfully obtained access token, fetching user info`);
-        console.log(`GitHub OAuth: Getting user info with access token`);
+
+        // Set up GitHub API URL for user info
+        const githubApiUrl = env.get().config.GITHUB_ENTERPRISE_HOSTNAME
+            ? `${getGithubUrl()}/api/v3/user`
+            : 'https://api.github.com/user';
+
+        console.log(`GitHub OAuth: Getting user info from ${githubApiUrl}`);
 
         try {
-            const fullUser = await repo.userAsync(providerResp.data.access_token);
-            console.log(`GitHub OAuth: User info received for ${fullUser.login}`);
+            // Make direct API call to GitHub to get user info
+            const userResponse = await axios.get(githubApiUrl, {
+                headers: {
+                    Authorization: `token ${providerResp.data.access_token}`,
+                    Accept: 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (!userResponse.data || !userResponse.data.login) {
+                console.error('GitHub OAuth: Invalid user data received');
+                console.error(`GitHub OAuth: User response: ${JSON.stringify(userResponse.data)}`);
+                throw new Error('Invalid user data received from GitHub');
+            }
+
+            const fullUser = userResponse.data;
+
+            // Log user info without revealing sensitive data
+            console.log(`GitHub OAuth: User info received for ${fullUser.login || '[UNKNOWN]'}`);
             console.log(`GitHub OAuth: User info has name: ${Boolean(fullUser.name)}`);
             console.log(`GitHub OAuth: User info has email: ${Boolean(fullUser.email)}`);
+
+            // Don't log any actual user data that might be sensitive
+
+            // Set repository for future use
+            try {
+                console.log('Setting repository to githubrepo');
+                repositories.set('githubrepo');
+                console.log('Repository set successfully');
+            } catch (repoError) {
+                // Log but don't fail if repository setting fails
+                console.error(`Warning - Error setting repository: ${repoError.message}`);
+                console.error(`This may cause issues with future operations`);
+            }
 
             const user = {
                 username: fullUser.login,
@@ -189,9 +228,12 @@ const completeLoginAsync = async (code) => {
                 repos_url: fullUser.repos_url
             };
 
-            console.log(`GitHub OAuth: Created user object with username: ${user.username}`);
+            console.log(
+                `GitHub OAuth: Created user object with username: ${user.username || '[UNKNOWN]'}`
+            );
             if (user.email) {
-                console.log(`GitHub OAuth: Created user object with email: ${user.email}`);
+                // Don't log the actual email address
+                console.log(`GitHub OAuth: Created user object with email: [REDACTED]`);
             }
 
             console.log('=========== GITHUB OAUTH TOKEN EXCHANGE COMPLETE ===========');
@@ -212,7 +254,7 @@ const completeLoginAsync = async (code) => {
                     )}`
                 );
             }
-            throw userError;
+            throw new Error(`Failed to fetch GitHub user info: ${userError.message}`);
         }
     } catch (error) {
         console.error(`GitHub OAuth Error: ${error.message}`);
