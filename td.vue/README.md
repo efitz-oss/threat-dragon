@@ -3,6 +3,10 @@
 This is a Vue project that serves as the front end of the OWASP Threat Dragon website project,
 and also provides the electron desktop project
 
+## Script location
+
+This project uses npm workspaces and is a monorepo.  npm scripts should generally be run from the project root directory.
+
 ## Project setup
 
 `npm install`
