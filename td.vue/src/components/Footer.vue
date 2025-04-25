@@ -65,10 +65,12 @@ export default {
     }
 }
 
-/* Center the nav items */
+/* Center the nav items horizontally and vertically */
 .footer-nav {
     display: flex;
     justify-content: center;
-    padding: 0.5rem 0;
+    align-items: center;
+    height: 100%; /* Take full height of the footer */
+    padding: 0; /* Remove padding as we're using height: 100% */
 }
 </style>

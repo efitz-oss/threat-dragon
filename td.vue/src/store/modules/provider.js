@@ -12,6 +12,14 @@ export const clearState = (state) => {
     state.all.length = 0;
     state.selected = '';
     state.providerUri = '';
+    
+    // Clear localStorage provider data
+    try {
+        localStorage.removeItem('td_provider');
+        localStorage.removeItem('td_providerUri');
+    } catch (e) {
+        log.error('Failed to clear provider from localStorage', { error: e });
+    }
 };
 
 const state = {
@@ -58,6 +66,15 @@ const mutations = {
     [PROVIDER_SELECTED]: (state, { providerName, providerUri }) => {
         state.selected = providerName;
         state.providerUri = providerUri;
+        
+        // Store provider info in localStorage to persist across redirects
+        try {
+            localStorage.setItem('td_provider', providerName);
+            localStorage.setItem('td_providerUri', providerUri);
+        } catch (e) {
+            log.error('Failed to store provider in localStorage', { error: e });
+        }
+        
         log.debug('PROVIDER_SELECTED', {
             providerName: state.selected,
             providerUri: state.providerUri

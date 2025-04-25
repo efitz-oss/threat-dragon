@@ -10,6 +10,23 @@
                 <div v-if="debugInfo.length > 0" class="mt-4 debug-section">
                     <h5>Debug Information</h5>
                     <pre class="debug-info">{{ debugInfo.join('\n') }}</pre>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-secondary" @click="showAdvancedDebug = !showAdvancedDebug">
+                            {{ showAdvancedDebug ? 'Hide' : 'Show' }} Advanced Debug Info
+                        </button>
+                    </div>
+                    
+                    <div v-if="showAdvancedDebug" class="mt-3">
+                        <h6>Store State</h6>
+                        <pre class="debug-info">Provider: {{ storeDebugInfo.provider }}
+Auth: {{ storeDebugInfo.auth }}</pre>
+                        
+                        <h6>URL Information</h6>
+                        <pre class="debug-info">Full URL: {{ window.location.href.replace(/code=[^&]+/, 'code=REDACTED') }}
+Hash: {{ window.location.hash.replace(/code=[^&]+/, 'code=REDACTED') }}
+Search: {{ window.location.search.replace(/code=[^&]+/, 'code=REDACTED') }}</pre>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,6 +51,11 @@ export default {
         const errorMessage = ref('');
         const errorOccurred = ref(false);
         const debugInfo = ref([]);
+        const showAdvancedDebug = ref(false);
+        const storeDebugInfo = ref({
+            provider: 'Not available',
+            auth: 'Not available'
+        });
 
         const log = (message) => {
             // Only add to debug display, no console logging in production
@@ -114,14 +136,48 @@ export default {
 
                 log(`Authorization code found, length: ${code.length}`);
 
-                // Get the provider from store
-                const provider = store.state?.provider?.selected;
+                // Try to get the provider from store first
+                let provider = store.state?.provider?.selected;
+                
+                // If not in store, try to get from localStorage (fallback for redirects)
                 if (!provider) {
-                    const errorMsg = 'No provider found in store';
+                    log('Provider not found in store, checking localStorage');
+                    try {
+                        provider = localStorage.getItem('td_provider');
+                        const providerUri = localStorage.getItem('td_providerUri');
+                        
+                        if (provider && providerUri) {
+                            log(`Found provider in localStorage: ${provider}`);
+                            // Restore provider to store
+                            store.commit('PROVIDER_SELECTED', {
+                                providerName: provider,
+                                providerUri: providerUri
+                            });
+                        }
+                    } catch (e) {
+                        log(`Error accessing localStorage: ${e.message}`);
+                    }
+                }
+                
+                // If still no provider, check if we can determine it from the state parameter
+                if (!provider && window.location.hash) {
+                    log('Checking state parameter in URL hash');
+                    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+                    const stateParam = hashParams.get('state');
+                    
+                    if (stateParam) {
+                        log(`Found state parameter: ${stateParam}`);
+                        provider = stateParam;
+                    }
+                }
+                
+                if (!provider) {
+                    const errorMsg = 'No provider found in store, localStorage, or URL';
                     log(errorMsg);
                     appLogger.error(errorMsg);
                     throw new Error(errorMsg);
                 }
+                
                 log(`Using provider: ${provider}`);
 
                 // Call the API to complete login
@@ -168,13 +224,28 @@ export default {
             // Process OAuth callback immediately
             log('OAuth callback component mounted');
             handleOAuthCallback();
+            
+            // Collect store debug info
+            storeDebugInfo.value = {
+                provider: JSON.stringify({
+                    selected: store.state?.provider?.selected || 'none',
+                    providerUri: store.state?.provider?.providerUri || 'none'
+                }, null, 2),
+                auth: JSON.stringify({
+                    loggedIn: Boolean(store.state?.auth?.jwt),
+                    username: store.state?.auth?.user?.username || 'none'
+                }, null, 2)
+            };
         });
 
         return {
             statusMessage,
             errorMessage,
             errorOccurred,
-            debugInfo
+            debugInfo,
+            showAdvancedDebug,
+            storeDebugInfo,
+            window
         };
     }
 };
