@@ -116,25 +116,43 @@ const decrypt = (encryptedData) => {
             throw new Error('Missing initialization vector (IV)');
         }
 
-        if (!encryptedData.keyId) {
-            logger.error('Missing key ID in encrypted data');
-            throw new Error('Missing key ID');
-        }
-
         if (!encryptedData.data) {
             logger.error('Missing data in encrypted data object');
             throw new Error('Missing encrypted data');
         }
 
-        logger.debug(`Decrypting data with key ID: ${encryptedData.keyId}`);
+        // Handle missing keyId by using the primary key (for backward compatibility)
+        let key;
+        if (!encryptedData.keyId && encryptedData.keyId !== 0) {
+            logger.warn('Missing key ID in encrypted data, using primary key');
+            key = getPrimaryKey();
+        } else {
+            logger.debug(`Decrypting data with key ID: ${encryptedData.keyId}`);
+            key = getKeyById(encryptedData.keyId);
+        }
+
         const iv = Buffer.from(encryptedData.iv, keyEncoding);
-        const key = getKeyById(encryptedData.keyId);
 
         try {
             return decryptData(encryptedData.data, key, iv);
         } catch (decryptError) {
             logger.error(`Error in decryption process: ${decryptError.message}`);
             logger.error(`Error stack: ${decryptError.stack}`);
+
+            // If decryption fails with the specified key, try with the primary key as fallback
+            if (encryptedData.keyId && encryptedData.keyId !== 0) {
+                logger.warn(
+                    `Decryption failed with key ID ${encryptedData.keyId}, trying primary key as fallback`
+                );
+                try {
+                    const primaryKey = getPrimaryKey();
+                    return decryptData(encryptedData.data, primaryKey, iv);
+                } catch (fallbackError) {
+                    logger.error(`Fallback decryption also failed: ${fallbackError.message}`);
+                    throw new Error(`Decryption failed with all available keys`);
+                }
+            }
+
             throw new Error(`Decryption failed: ${decryptError.message}`);
         }
     } catch (error) {

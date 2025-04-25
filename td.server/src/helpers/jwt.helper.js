@@ -36,23 +36,66 @@ const createAsync = async (providerName, providerOptions, user) => {
 };
 
 const decodeProvider = (encodedProvider) => {
-    const providerName = Object.keys(encodedProvider)[0];
+    const logger = loggerHelper.get('helpers/jwt.helper.js');
 
-    const decodedProvider = JSON.parse(
-        Buffer.from(encodedProvider[providerName], 'base64').toString('utf-8')
-    );
+    try {
+        // Get the provider name from the encoded provider object
+        const providerName = Object.keys(encodedProvider)[0];
+        if (!providerName) {
+            logger.error('No provider name found in encoded provider');
+            throw new Error('No provider name found in encoded provider');
+        }
 
-    const provider = JSON.parse(encryptionHelper.decrypt(decodedProvider));
+        logger.debug(`Decoding provider data for: ${providerName}`);
 
-    // Ensure the provider name is set consistently
-    provider.name = providerName;
+        // Decode the base64 encoded provider data
+        let decodedProvider;
+        try {
+            decodedProvider = JSON.parse(
+                Buffer.from(encodedProvider[providerName], 'base64').toString('utf-8')
+            );
+            logger.debug(`Successfully decoded base64 provider data`);
+        } catch (decodeError) {
+            logger.error(`Error decoding base64 provider data: ${decodeError.message}`);
+            throw new Error(`Failed to decode provider data: ${decodeError.message}`);
+        }
 
-    // For backward compatibility, also set provider_name
-    if (!provider.provider_name) {
-        provider.provider_name = providerName;
+        // Check if the decoded provider has the required fields for decryption
+        if (!decodedProvider) {
+            logger.error('Decoded provider is null or undefined');
+            throw new Error('Decoded provider is null or undefined');
+        }
+
+        // Add keyId if it's missing (for backward compatibility)
+        if (!decodedProvider.keyId && decodedProvider.data) {
+            logger.warn('Adding missing keyId to provider data for backward compatibility');
+            decodedProvider.keyId = 0; // Default key ID
+        }
+
+        // Decrypt the provider data
+        let provider;
+        try {
+            provider = JSON.parse(encryptionHelper.decrypt(decodedProvider));
+            logger.debug(`Successfully decrypted provider data`);
+        } catch (decryptError) {
+            logger.error(`Error decrypting provider data: ${decryptError.message}`);
+            throw new Error(`Failed to decrypt provider data: ${decryptError.message}`);
+        }
+
+        // Ensure the provider name is set consistently
+        provider.name = providerName;
+
+        // For backward compatibility, also set provider_name
+        if (!provider.provider_name) {
+            provider.provider_name = providerName;
+        }
+
+        return provider;
+    } catch (error) {
+        logger.error(`Error in decodeProvider: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
+        throw error;
     }
-
-    return provider;
 };
 
 const decode = (token, key) => {

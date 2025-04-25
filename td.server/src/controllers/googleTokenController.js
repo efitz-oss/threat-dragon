@@ -28,17 +28,54 @@ const getGoogleToken = (req, res) =>
                 if (safeHeaders.authorization) safeHeaders.authorization = '[REDACTED]';
                 logger.info(`Request headers: ${JSON.stringify(safeHeaders || {})}`);
 
+                // Log JWT token information (without the actual token)
+                if (req.headers.authorization) {
+                    const authParts = req.headers.authorization.split(' ');
+                    if (authParts.length === 2 && authParts[0] === 'Bearer') {
+                        logger.info(`JWT token present, length: ${authParts[1].length}`);
+
+                        // Try to extract some basic info from the JWT without decoding it
+                        try {
+                            const jwtParts = authParts[1].split('.');
+                            if (jwtParts.length === 3) {
+                                logger.info('JWT token has valid format (3 parts)');
+                            } else {
+                                logger.warn(
+                                    `JWT token has invalid format (${jwtParts.length} parts)`
+                                );
+                            }
+                        } catch (jwtError) {
+                            logger.warn(`Error analyzing JWT format: ${jwtError.message}`);
+                        }
+                    } else {
+                        logger.warn('Authorization header does not contain a Bearer token');
+                    }
+                } else {
+                    logger.warn('No authorization header present');
+                }
+
                 // Log the full provider details to debug
-                logger.debug(
-                    `Provider details in JWT: ${JSON.stringify({
-                        providerExists: Boolean(req.provider),
-                        providerName: req.provider?.name || 'none',
-                        hasAccessToken: Boolean(req.provider?.access_token),
-                        providerKeys: req.provider ? Object.keys(req.provider) : [],
-                        hasUser: Boolean(req.user),
-                        userKeys: req.user ? Object.keys(req.user) : []
-                    })}`
-                );
+                if (req.provider) {
+                    // Create a safe copy of the provider object without sensitive data
+                    const safeProvider = { ...req.provider };
+                    if (safeProvider.access_token) safeProvider.access_token = '[REDACTED]';
+                    if (safeProvider.refresh_token) safeProvider.refresh_token = '[REDACTED]';
+                    if (safeProvider.id_token) safeProvider.id_token = '[REDACTED]';
+
+                    logger.debug(
+                        `Provider details in JWT: ${JSON.stringify({
+                            providerExists: true,
+                            providerName: req.provider.name || req.provider.provider_name || 'none',
+                            hasAccessToken: Boolean(req.provider.access_token),
+                            providerKeys: Object.keys(req.provider),
+                            hasUser: Boolean(req.user),
+                            userKeys: req.user ? Object.keys(req.user) : [],
+                            provider: safeProvider
+                        })}`
+                    );
+                } else {
+                    logger.debug('No provider information in request');
+                }
 
                 // For security, only log that a token exists, not its value
                 if (req.provider && req.provider.access_token) {
@@ -62,10 +99,12 @@ const getGoogleToken = (req, res) =>
 
                 logger.debug(`Provider name from JWT: ${providerName || 'unknown'}`);
 
-                // More flexible provider name checking
-                if (!providerName || providerName.toLowerCase() !== 'google') {
+                // More flexible provider name checking - accept any provider that has 'google' in the name
+                if (!providerName || !providerName.toLowerCase().includes('google')) {
                     logger.warn(
-                        `Wrong provider type: ${providerName || 'unknown'} (should be 'google')`
+                        `Wrong provider type: ${
+                            providerName || 'unknown'
+                        } (should contain 'google')`
                     );
                     logger.warn(`Provider keys: ${Object.keys(req.provider).join(', ')}`);
                     throw new Error(
