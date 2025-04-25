@@ -64,28 +64,88 @@ const getGoogleAccessToken = async () => {
     try {
         isLoading.value = true;
         if (!store.state.auth.jwt) {
+            log.error('No JWT token available');
             toast.error('You need to sign in with Google before using Google Drive');
             return null;
+        }
+
+        log.info('Making request to /api/google-token');
+        log.debug(`JWT token length: ${store.state.auth.jwt.length}`);
+        
+        try {
+            // First try to parse the JWT to see if it has the right provider
+            const jwtParts = store.state.auth.jwt.split('.');
+            if (jwtParts.length === 3) {
+                const payload = JSON.parse(atob(jwtParts[1]));
+                log.debug('JWT payload provider info:',
+                    payload.provider ? 'Provider exists' : 'No provider in JWT');
+                
+                // Check if the provider is google
+                if (payload.provider) {
+                    const providerName = Object.keys(payload.provider)[0];
+                    log.debug(`JWT provider name: ${providerName}`);
+                    
+                    if (providerName !== 'google') {
+                        log.error(`Wrong provider in JWT: ${providerName} (should be 'google')`);
+                        toast.error('You need to sign in with Google to use Google Drive');
+                        return null;
+                    }
+                }
+            }
+        } catch (jwtError) {
+            log.error('Error parsing JWT:', jwtError);
+            // Continue anyway, the server will validate the JWT
         }
 
         const response = await fetch('/api/google-token', {
             headers: { Authorization: `Bearer ${store.state.auth.jwt}` }
         });
 
+        log.debug(`Response status: ${response.status}`);
+        
         if (!response.ok) {
+            // Try to get the error details from the response
+            let errorDetails = '';
+            try {
+                const errorData = await response.json();
+                errorDetails = errorData.message || errorData.details || '';
+                log.error('Error response data:', errorData);
+            } catch (parseError) {
+                try {
+                    errorDetails = await response.text();
+                    log.error('Error response text:', errorDetails);
+                } catch (textError) {
+                    log.error('Could not parse error response');
+                }
+            }
+            
             // If we get a 401 Unauthorized, the token might be expired
             if (response.status === 401) {
+                log.error('Unauthorized: JWT token might be expired');
                 toast.info('Session expired. Please sign in again.');
                 router.push({ name: 'HomePage' });
                 return null;
             }
-            throw new Error(`Server returned ${response.status} from /api/google-token`);
+            
+            // If we get a 400 Bad Request, there might be an issue with the provider
+            if (response.status === 400) {
+                log.error(`Bad request: ${errorDetails}`);
+                toast.error('Authentication error. Please sign out and sign in again with Google.');
+                return null;
+            }
+            
+            throw new Error(`Server returned ${response.status} from /api/google-token: ${errorDetails}`);
         }
 
         const data = await response.json();
-        if (!data.data || !data.data.accessToken)
+        log.debug('Response data:', data.status ? 'Status: ' + data.status : 'No status');
+        
+        if (!data.data || !data.data.accessToken) {
+            log.error('No access token in response:', data);
             throw new Error('No access token in response');
+        }
 
+        log.info('Successfully retrieved Google access token');
         return data.data.accessToken;
     } catch (error) {
         log.error('Error fetching Google access token:', error);
