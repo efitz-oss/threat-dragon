@@ -80,14 +80,30 @@ export default {
 
         // Methods
         const onRepoClick = (repoName) => {
+            log.debug('Repository clicked', { repoName });
+            
+            // Store the selected repository
             store.dispatch(repoActions.selected, repoName);
+            log.debug('Repository selected action dispatched', { repoName });
+            
             const params = Object.assign({}, route.params, {
                 repository: repoName
             });
+            
+            // Log navigation attempt
+            log.debug('Attempting navigation to branch page', {
+                routeName: `${providerType.value}Branch`,
+                params,
+                query: route.query
+            });
+            
+            // Navigate to branch selection
             router.push({
                 name: `${providerType.value}Branch`,
                 params,
                 query: route.query
+            }).catch(error => {
+                log.error('Navigation error', { error: error.message, stack: error.stack });
             });
         };
 

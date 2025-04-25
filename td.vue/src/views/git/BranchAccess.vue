@@ -41,6 +41,10 @@ import _providerActions from '@/store/actions/provider.js';
 import repoActions from '@/store/actions/repository.js';
 import TdSelectionPage from '@/components/SelectionPage.vue';
 import AddBranchModal from '@/components/AddBranchDialog.vue';
+import logger from '@/utils/logger.js';
+
+// Create a logger instance for this component
+const log = logger.getLogger('views:git:BranchAccess');
 
 export default {
     name: 'BranchAccess',
@@ -79,14 +83,44 @@ export default {
         const pagePrev = computed(() => store.state.branch.pagePrev);
 
         onMounted(() => {
+            log.debug('BranchAccess component mounted', {
+                routeParams: route.params,
+                routeQuery: route.query,
+                currentRepoName: repoName.value,
+                routeRepoName: route.params.repository,
+                provider: provider.value,
+                providerType: providerType.value
+            });
+            
             // Provider is now managed via meta.provider in the route configuration
             // and router navigation guard will set it in the store
 
             if (repoName.value !== route.params.repository) {
+                log.debug('Repository name mismatch, updating store', {
+                    current: repoName.value,
+                    new: route.params.repository
+                });
                 store.dispatch(repoActions.selected, route.params.repository);
             }
 
-            store.dispatch(branchActions.fetch, 1);
+            log.debug('Fetching branches', {
+                repository: repoName.value,
+                page: 1
+            });
+            
+            // Fetch branches with error handling
+            store.dispatch(branchActions.fetch, 1)
+                .then(() => {
+                    log.debug('Branches fetched successfully', {
+                        branchCount: branches.value.length
+                    });
+                })
+                .catch(error => {
+                    log.error('Error fetching branches', {
+                        error: error.message,
+                        stack: error.stack
+                    });
+                });
         });
 
         // Methods

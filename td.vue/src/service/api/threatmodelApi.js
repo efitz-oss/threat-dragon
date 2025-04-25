@@ -3,8 +3,55 @@ import api from './api.js';
 const resource = '/api/threatmodel';
 
 const extractRepoParts = (fullRepoName) => {
-    const org = fullRepoName.split('/')[0];
+    // Import logger dynamically to avoid circular dependencies
+    const logger = (function() {
+        try {
+            // Try to import synchronously first
+            return require('@/utils/logger.js').default.getLogger('api:threatmodelApi:extractRepoParts');
+        } catch (e) {
+            // Fallback to console if logger can't be imported
+            return {
+                debug: console.debug,
+                error: console.error
+            };
+        }
+    })();
+    
+    logger.debug('Extracting repo parts', { fullRepoName });
+    
+    if (!fullRepoName) {
+        const error = new Error('Cannot extract parts from empty repository name');
+        logger.error('Empty repository name', { error: error.message });
+        throw error;
+    }
+    
+    if (typeof fullRepoName !== 'string') {
+        const error = new Error(`Repository name must be a string, got ${typeof fullRepoName}`);
+        logger.error('Invalid repository name type', {
+            error: error.message,
+            type: typeof fullRepoName,
+            value: String(fullRepoName)
+        });
+        throw error;
+    }
+    
+    const parts = fullRepoName.split('/');
+    
+    if (parts.length < 2) {
+        const error = new Error(`Invalid repository name format: ${fullRepoName}`);
+        logger.error('Invalid repository name format', {
+            error: error.message,
+            fullRepoName,
+            parts
+        });
+        throw error;
+    }
+    
+    const org = parts[0];
     const repo = fullRepoName.replace(`${org}/`, '');
+    
+    logger.debug('Repository parts extracted', { org, repo });
+    
     return { org, repo };
 };
 
@@ -34,12 +81,49 @@ const reposAsync = (page = 1, searchQuery = '') => {
  * @param {Number} page
  * @returns {Promise}
  */
-const branchesAsync = (fullRepoName, page = 1) => {
-    const { org, repo } = extractRepoParts(fullRepoName);
-    const [encodedOrg, encodedRepo] = encodeUrlComponents(org, repo);
-    return api.getAsync(`${resource}/${encodedOrg}/${encodedRepo}/branches`, {
-        params: { page: page }
-    });
+const branchesAsync = async (fullRepoName, page = 1) => {
+    // Import logger dynamically to avoid circular dependencies
+    const logger = await import('@/utils/logger.js');
+    const log = logger.default.getLogger('api:threatmodelApi:branchesAsync');
+    
+    log.debug('branchesAsync called', { fullRepoName, page });
+    
+    if (!fullRepoName) {
+        const error = new Error('Repository name is required but was not provided');
+        log.error('Missing repository name', { error: error.message });
+        throw error;
+    }
+    
+    try {
+        const { org, repo } = extractRepoParts(fullRepoName);
+        log.debug('Repository parts extracted', { org, repo });
+        
+        const [encodedOrg, encodedRepo] = encodeUrlComponents(org, repo);
+        const url = `${resource}/${encodedOrg}/${encodedRepo}/branches`;
+        
+        log.debug('Making API request', {
+            url,
+            params: { page }
+        });
+        
+        const response = await api.getAsync(url, {
+            params: { page: page }
+        });
+        
+        log.debug('API response received', {
+            status: 'success',
+            branchCount: response.data?.branches?.length || 0
+        });
+        
+        return response;
+    } catch (error) {
+        log.error('Error in branchesAsync', {
+            error: error.message,
+            stack: error.stack,
+            fullRepoName
+        });
+        throw error;
+    }
 };
 
 /**

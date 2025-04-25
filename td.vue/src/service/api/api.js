@@ -11,12 +11,41 @@ const log = logger.getLogger('api');
  * @returns Promise
  */
 const getAsync = async (url, query) => {
+    log.debug('GET request initiated', {
+        url,
+        params: query
+    });
+    
     try {
         const client = clientFactory.get();
+        log.debug('HTTP client created for GET request');
+        
         const res = await client.get(url, { params: query });
+        log.debug('GET request succeeded', {
+            url,
+            status: res.status,
+            dataSize: JSON.stringify(res.data).length
+        });
+        
         return res.data;
     } catch (error) {
-        log.error('GET request failed', { url, error: error.message });
+        log.error('GET request failed', {
+            url,
+            error: error.message,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            responseData: error.response?.data
+        });
+        
+        if (error.response) {
+            log.error('Error response details', {
+                status: error.response.status,
+                statusText: error.response.statusText,
+                headers: error.response.headers,
+                data: error.response.data
+            });
+        }
+        
         throw error;
     }
 };

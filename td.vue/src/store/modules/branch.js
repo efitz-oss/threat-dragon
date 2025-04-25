@@ -20,14 +20,46 @@ const state = {
 const actions = {
     [BRANCH_CLEAR]: ({ commit }) => commit(BRANCH_CLEAR),
     [BRANCH_FETCH]: async ({ commit, dispatch, rootState }, page = 1) => {
-        dispatch(BRANCH_CLEAR);
-        const resp = await threatmodelApi.branchesAsync(rootState.repo.selected, page);
-        commit(BRANCH_FETCH, {
-            branches: resp.data.branches,
-            page: resp.data.pagination.page,
-            pageNext: resp.data.pagination.next,
-            pagePrev: resp.data.pagination.prev
+        // Import logger dynamically to avoid circular dependencies
+        const logger = await import('@/utils/logger.js');
+        const log = logger.default.getLogger('store:modules:branch');
+        
+        log.debug('BRANCH_FETCH action called', {
+            page,
+            selectedRepo: rootState.repo.selected
         });
+        
+        dispatch(BRANCH_CLEAR);
+        
+        try {
+            log.debug('Calling branchesAsync', {
+                repository: rootState.repo.selected,
+                page
+            });
+            
+            const resp = await threatmodelApi.branchesAsync(rootState.repo.selected, page);
+            
+            log.debug('branchesAsync response received', {
+                branchCount: resp.data?.branches?.length || 0,
+                pagination: resp.data?.pagination
+            });
+            
+            commit(BRANCH_FETCH, {
+                branches: resp.data.branches,
+                page: resp.data.pagination.page,
+                pageNext: resp.data.pagination.next,
+                pagePrev: resp.data.pagination.prev
+            });
+        } catch (error) {
+            log.error('Error fetching branches', {
+                error: error.message,
+                stack: error.stack,
+                repository: rootState.repo.selected
+            });
+            
+            // Re-throw the error to allow proper error handling
+            throw error;
+        }
     },
     [BRANCH_SELECTED]: ({ commit }, branch) => commit(BRANCH_SELECTED, branch),
     [BRANCH_CREATE]: async ({ dispatch, rootState }, { branchName, refBranch }) => {

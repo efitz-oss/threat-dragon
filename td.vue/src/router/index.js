@@ -122,14 +122,28 @@ router.beforeEach((to, from, next) => {
         }
     } else if (to.meta.provider === 'git' && to.path.includes('/repository/')) {
         // For Git routes: Ensure repository parameter exists
+        log.debug('Git route detected with repository path', {
+            path: to.path,
+            params: to.params,
+            meta: to.meta,
+            name: to.name
+        });
+        
         if (!to.params.repository) {
             log.warn('Missing required repository parameter for Git route', { path: to.path });
             // Redirect to repository selection - use github as default provider
+            log.debug('Redirecting to repository selection', {
+                redirectTo: 'gitRepository'
+            });
             next({ name: 'gitRepository' });
             return;
         } else if (to.path.includes('/branch/') && !to.params.branch) {
             log.warn('Missing required branch parameter for Git route', { path: to.path });
             // Redirect to branch selection
+            log.debug('Redirecting to branch selection', {
+                redirectTo: 'gitBranch',
+                repository: to.params.repository
+            });
             next({
                 name: 'gitBranch',
                 params: {
@@ -138,6 +152,12 @@ router.beforeEach((to, from, next) => {
             });
             return;
         }
+        
+        log.debug('Git route parameters validated successfully', {
+            path: to.path,
+            repository: to.params.repository,
+            branch: to.params.branch
+        });
     }
 
     // Check if this is a provider-specific route that needs special handling
