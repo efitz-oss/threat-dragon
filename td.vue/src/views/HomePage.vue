@@ -1,55 +1,60 @@
 <template>
-    <b-container fluid data-testid="home-page">
-        <div class="welcome-jumbotron" data-testid="welcome-jumbotron">
-            <b-row class="text-center mb-2">
-                <b-col md="12">
-                    <h1 class="display-3 text-center" data-testid="home-title">
-                        {{ $t('home.title') }}
-                    </h1>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col md="4">
-                    <b-img
-                        id="home-td-logo"
-                        class="td-cupcake"
-                        data-testid="home-logo"
-                        :alt="$t('home.imgAlt')"
-                        :src="require('@/assets/threatdragon_logo_image.svg')"
-                    />
-                </b-col>
-                <b-col md="8">
-                    <b-row>
-                        <p class="td-description mt-5" data-testid="home-description">
-                            {{ $t('home.description') }}
-                        </p>
-                    </b-row>
-                    <b-row>
-                        <b-col class="mt-5 ml-5 text-center" data-testid="login-buttons">
-                            <td-provider-login-button
-                                v-for="(provider, idx) in providers"
-                                :key="idx"
-                                :provider="provider"
-                                data-testid="provider-login-button"
-                            />
-                        </b-col>
-                    </b-row>
-                </b-col>
-            </b-row>
-        </div>
-    </b-container>
+    <div>
+        <b-container fluid data-testid="home-page">
+            <div class="welcome-jumbotron" data-testid="welcome-jumbotron">
+                <b-row class="text-center mb-2">
+                    <b-col md="12">
+                        <h1 class="display-3 text-center" data-testid="home-title">
+                            {{ $t('home.title') }}
+                        </h1>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col md="4">
+                        <b-img
+                            id="home-td-logo"
+                            class="td-cupcake"
+                            data-testid="home-logo"
+                            :alt="$t('home.imgAlt')"
+                            :src="require('@/assets/threatdragon_logo_image.svg')"
+                        />
+                    </b-col>
+                    <b-col md="8">
+                        <b-row>
+                            <p class="td-description mt-5" data-testid="home-description">
+                                {{ $t('home.description') }}
+                            </p>
+                        </b-row>
+                        <b-row>
+                            <b-col class="mt-5 ml-5 text-center" data-testid="login-buttons">
+                                <td-provider-login-button
+                                    v-for="(provider, idx) in providers"
+                                    :key="idx"
+                                    :provider="provider"
+                                    data-testid="provider-login-button"
+                                />
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                </b-row>
+            </div>
+        </b-container>
+        <td-footer />
+    </div>
 </template>
 
 <script>
 import { allProviders } from '@/service/provider/providers.js';
 import { isElectronMode } from '@/utils/environment';
 import TdProviderLoginButton from '@/components/ProviderLoginButton.vue';
+import TdFooter from '@/components/Footer.vue';
 import configActions from '@/store/actions/config.js';
 import { mapState } from 'vuex';
 export default {
     name: 'HomePage',
     components: {
-        TdProviderLoginButton
+        TdProviderLoginButton,
+        TdFooter
     },
     computed: mapState({
         config: (state) => {

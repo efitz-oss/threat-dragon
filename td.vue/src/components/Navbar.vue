@@ -31,22 +31,6 @@
                         :title="t('nav.logOut')"
                     />
                 </b-nav-item>
-                <b-nav-item v-if="googleEnabled" id="nav-tos" to="/tos">
-                    <font-awesome-icon
-                        v-tooltip.hover
-                        icon="file-contract"
-                        class="td-fa-nav"
-                        :title="t('nav.tos')"
-                    />
-                </b-nav-item>
-                <b-nav-item v-if="googleEnabled" id="nav-privacy" to="/privacy">
-                    <font-awesome-icon
-                        v-tooltip.hover
-                        icon="shield-alt"
-                        class="td-fa-nav"
-                        :title="t('nav.privacy')"
-                    />
-                </b-nav-item>
                 <b-nav-item
                     id="nav-docs"
                     href="https://owasp.org/www-project-threat-dragon/docs-2/"
