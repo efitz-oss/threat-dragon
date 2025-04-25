@@ -4,8 +4,14 @@ import jwt from 'jsonwebtoken';
 import loggerHelper from '../helpers/logger.helper.js';
 
 const createAsync = async (providerName, providerOptions, user) => {
+    // Ensure provider name is set in the options
+    const optionsWithName = {
+        ...providerOptions,
+        name: providerName // Ensure name is explicitly set
+    };
+
     const encryptedProviderOptions = await encryptionHelper.encryptPromise(
-        JSON.stringify(providerOptions)
+        JSON.stringify(optionsWithName)
     );
     const providerOptsEncoded = Buffer.from(JSON.stringify(encryptedProviderOptions)).toString(
         'base64'
@@ -38,7 +44,14 @@ const decodeProvider = (encodedProvider) => {
 
     const provider = JSON.parse(encryptionHelper.decrypt(decodedProvider));
 
+    // Ensure the provider name is set consistently
     provider.name = providerName;
+
+    // For backward compatibility, also set provider_name
+    if (!provider.provider_name) {
+        provider.provider_name = providerName;
+    }
+
     return provider;
 };
 

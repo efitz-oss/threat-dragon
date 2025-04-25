@@ -32,22 +32,34 @@ const getGoogleToken = (req, res) =>
                 })}`
             );
 
-            // For security, only log partial token if it exists
+            // For security, only log that a token exists, not its value
             if (req.provider && req.provider.access_token) {
-                const tokenPreview = req.provider.access_token.substring(0, 10) + '...';
-                logger.debug(`Access token preview: ${tokenPreview}`);
+                logger.debug(
+                    `Access token is present (length: ${req.provider.access_token.length})`
+                );
             }
 
-            // Validate that the user has a Google provider and token
+            // Validate that the user has a provider and token
             if (!req.provider) {
                 logger.warn('No provider information available in JWT');
-                throw new Error('No provider information available in JWT');
+                throw new Error('No provider information available in JWT. Please sign in again.');
             }
 
-            if (req.provider.name !== 'google') {
-                logger.warn(`Wrong provider type: ${req.provider.name} (should be 'google')`);
+            // Check for provider name in multiple places (for compatibility)
+            const providerName = req.provider.name || req.provider.provider_name;
+
+            logger.debug(`Provider name from JWT: ${providerName || 'unknown'}`);
+
+            // More flexible provider name checking
+            if (!providerName || providerName.toLowerCase() !== 'google') {
+                logger.warn(
+                    `Wrong provider type: ${providerName || 'unknown'} (should be 'google')`
+                );
+                logger.warn(`Provider keys: ${Object.keys(req.provider).join(', ')}`);
                 throw new Error(
-                    `Authentication with Google is required. Current provider: ${req.provider.name}`
+                    `Authentication with Google is required. Current provider: ${
+                        providerName || 'unknown'
+                    }`
                 );
             }
 
@@ -55,6 +67,8 @@ const getGoogleToken = (req, res) =>
                 logger.warn('No Google access token available in JWT');
                 throw new Error('No Google access token available in JWT. Please sign in again.');
             }
+
+            logger.info(`Google token request validated for provider: ${providerName}`);
 
             // Prevent caching of the token response
             res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');

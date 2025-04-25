@@ -207,13 +207,20 @@ const completeLoginAsync = async (code) => {
         // Fetch user info
         const user = await fetchUserInfo(tokenData.access_token, googleLogger);
 
-        googleLogger.info(`Created user object with username: ${user.username}`);
-        googleLogger.info(`Created user object with email: ${user.email}`);
+        // Redact sensitive information in logs
+        googleLogger.info(`Created user object with username: ${user.username || '[UNKNOWN]'}`);
+        googleLogger.info(`Created user object with email: [REDACTED]`);
         googleLogger.info('=========== GOOGLE OAUTH TOKEN EXCHANGE COMPLETE ===========');
+
+        // Ensure the provider name is explicitly set in the options
+        const opts = {
+            ...tokenData,
+            provider_name: 'google' // Add explicit provider name
+        };
 
         return {
             user,
-            opts: tokenData
+            opts
         };
     } catch (error) {
         // Log errors from API calls
