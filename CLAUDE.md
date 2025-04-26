@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Overview
+
+This project is a threat modeling tool that enables the creation of data flow diagrams and then associating threats with components on those diagrams, and facilitates saving and loading threat model files.
+
+The app is in a monorepo; it has two main components:
+- td.server is an express web server that provides an API and functionality like OAuth login with different providers
+- td.vue is a Vue web application that is a web site front end to the application, and it is build on the webpack dev server.
+
+The app uses npm workspaces; all scripts are designed to be run from the project root directory.
+- Build: npm run build
+- Lint: npm run lint:fix
+- Test: npm run test
+
+The app uses the open source AntV/X6 package for diagramming functionality.
+
 ## Build Commands
 
 -   run all npm scripts from the project root directory
@@ -52,7 +67,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 -   Consistent error handling patterns
 -   Use try/catch blocks for async code
 -   Provide informative error messages
--   Prefer the configured logging framework for server.td
+-   Prefer the configured logging frameworks
 
 ## User preferences
 

@@ -40,7 +40,17 @@ export const TrustBoundaryCurveStencil = Shape.Path.define({
         label: {
             text: tc('threatmodel.shapes.trustBoundary'),
             fill: '#333',
-            textVerticalAnchor: 'middle'
+            textVerticalAnchor: 'middle',
+            textWrap: {
+                width: 60, // Maximum width before wrapping
+                height: 40, // Maximum height
+                ellipsis: true // Show ellipsis when text overflows
+            },
+            fontSize: 10, // Slightly smaller font to fit better
+            refX: 0.5, // Center horizontally
+            refY: 0.5, // Center vertically
+            refX2: 0, // No additional offset
+            refY2: 0  // No additional offset
         }
     },
     data: defaultProperties.boundary

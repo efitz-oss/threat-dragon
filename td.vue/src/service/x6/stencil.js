@@ -140,7 +140,20 @@ const get = (graph, container, StencilConstructor) => {
         attrs: {
             body: {
                 refWidth: '100%',
-                refHeight: '100%'
+                refHeight: '100%',
+                fill: 'transparent',
+                opacity: 0,
+                fillOpacity: 0
+            },
+            topLine: {
+                stroke: '#333333',
+                strokeWidth: 2,
+                refD: 'M 0 15 l 100 0'
+            },
+            bottomLine: {
+                stroke: '#333333',
+                strokeWidth: 2,
+                refD: 'M 0 35 l 100 0'
             }
         }
     });
@@ -170,7 +183,13 @@ const get = (graph, container, StencilConstructor) => {
                 refHeight: '100%'
             },
             label: {
-                text: tc('threatmodel.shapes.trustBoundary')
+                text: tc('threatmodel.shapes.trustBoundary'),
+                textWrap: {
+                    width: 80,
+                    height: 40,
+                    ellipsis: true
+                },
+                fontSize: 12
             }
         }
     });
@@ -185,7 +204,15 @@ const get = (graph, container, StencilConstructor) => {
                 refHeight: '100%'
             },
             label: {
-                text: tc('threatmodel.shapes.trustBoundary')
+                text: tc('threatmodel.shapes.trustBoundary'),
+                textWrap: {
+                    width: 60,
+                    height: 40,
+                    ellipsis: true
+                },
+                fontSize: 10,
+                refX: 0.5,
+                refY: 0.5
             }
         }
     });

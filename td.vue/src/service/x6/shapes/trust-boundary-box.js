@@ -23,7 +23,13 @@ export const TrustBoundaryBox = Shape.Rect.define({
             textAnchor: 'bottom',
             textVerticalAnchor: 'top',
             refX: '15%',
-            refY: '12'
+            refY: '12',
+            textWrap: {
+                width: 80, // Maximum width before wrapping
+                height: 40, // Maximum height
+                ellipsis: true // Show ellipsis when text overflows
+            },
+            fontSize: 12 // Slightly smaller font to fit better
         }
     }
 });
