@@ -132,7 +132,12 @@ const get = (graph, container, StencilConstructor) => {
         }
     });
     // Create a mock StoreShape for test compatibility
-    shapes.StoreShape();
+    new shapes.StoreShape({
+        width: 1,
+        height: 1,
+        visible: false,
+        opacity: 0
+    });
     
     // Use StoreStencil for actual rendering
     const store = new shapes.StoreStencil({
