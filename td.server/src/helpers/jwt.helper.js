@@ -4,10 +4,11 @@ import jwt from 'jsonwebtoken';
 import loggerHelper from '../helpers/logger.helper.js';
 
 const createAsync = async (providerName, providerOptions, user) => {
-    // Ensure provider name is set in the options
+    // Ensure provider name and keyId are set in the options
     const optionsWithName = {
         ...providerOptions,
-        name: providerName // Ensure name is explicitly set
+        name: providerName, // Ensure name is explicitly set
+        keyId: 0 // Add keyId to prevent warnings
     };
 
     const encryptedProviderOptions = await encryptionHelper.encryptPromise(

@@ -2,8 +2,12 @@ import pkg from 'bitbucket';
 const { Bitbucket } = pkg;
 import env from '../env/Env.js';
 
-const repoRootDirectory = () =>
-    env.get().config.BITBUCKET_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
+const repoRootDirectory = () => {
+    const config = env.get().config;
+    return (
+        config.BITBUCKET_REPO_ROOT_DIRECTORY || config.REPO_ROOT_DIRECTORY || 'ThreatDragonModels'
+    );
+};
 
 export class BitbucketClientWrapper {
     static getClient(clientOptions) {
@@ -230,10 +234,23 @@ export const createBranchAsync = (repoInfo, accessToken) => {
     });
 };
 
-const getRepoFullName = (info) => `${info.repo}`;
-const getModelPath = (modelInfo) =>
-    `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
-const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
+const getRepoFullName = (info) => (info && info.repo ? `${info.repo}` : '');
+
+const getModelPath = (modelInfo) => {
+    if (!modelInfo || !modelInfo.model) {
+        console.error('Invalid model info provided to getModelPath', modelInfo);
+        throw new Error('Invalid model info: model name is required');
+    }
+    return `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
+};
+
+const getModelContent = (modelInfo) => {
+    if (!modelInfo || !modelInfo.body) {
+        console.error('Invalid model info provided to getModelContent', modelInfo);
+        throw new Error('Invalid model info: body is required');
+    }
+    return JSON.stringify(modelInfo.body, null, '  ');
+};
 
 export default {
     branchesAsync,
