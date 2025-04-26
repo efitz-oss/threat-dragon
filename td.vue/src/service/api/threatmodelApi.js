@@ -44,15 +44,6 @@ const extractRepoParts = (fullRepoName) => {
         // This is a simpler approach that doesn't rely on accessing the store
         // which can cause issues in certain contexts
         return { org: 'bitbucket', repo: fullRepoName };
-        } else {
-            const error = new Error(`Invalid repository name format: ${fullRepoName}`);
-            logger.error('Invalid repository name format', {
-                error: error.message,
-                fullRepoName,
-                parts
-            });
-            throw error;
-        }
     }
     
     const org = parts[0];
