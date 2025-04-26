@@ -37,14 +37,43 @@ const extractRepoParts = (fullRepoName) => {
     
     const parts = fullRepoName.split('/');
     
+    // For Bitbucket repositories, the repository name might not include the organization
+    // In this case, we'll use the Bitbucket workspace as the organization
     if (parts.length < 2) {
-        const error = new Error(`Invalid repository name format: ${fullRepoName}`);
-        logger.error('Invalid repository name format', {
-            error: error.message,
-            fullRepoName,
-            parts
-        });
-        throw error;
+        // Get the provider from the store
+        let provider = '';
+        try {
+            // Try to get the provider from the store
+            const store = require('@/store').default;
+            provider = store.state.provider.selected;
+            logger.debug('Got provider from store', { provider });
+        } catch (e) {
+            logger.error('Error getting provider from store', { error: e.message });
+        }
+        
+        // If this is a Bitbucket repository, use the workspace as the organization
+        if (provider === 'bitbucket') {
+            // Get the Bitbucket workspace from localStorage
+            let workspace = '';
+            try {
+                // Try to get the workspace from localStorage
+                workspace = localStorage.getItem('td_bitbucket_workspace') || 'bitbucket';
+                logger.debug('Using Bitbucket workspace as organization', { workspace });
+            } catch (e) {
+                logger.error('Error getting Bitbucket workspace from localStorage', { error: e.message });
+                workspace = 'bitbucket';
+            }
+            
+            return { org: workspace, repo: fullRepoName };
+        } else {
+            const error = new Error(`Invalid repository name format: ${fullRepoName}`);
+            logger.error('Invalid repository name format', {
+                error: error.message,
+                fullRepoName,
+                parts
+            });
+            throw error;
+        }
     }
     
     const org = parts[0];

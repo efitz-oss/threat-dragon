@@ -14,6 +14,13 @@ export const clearState = (state) => {
     state.refreshToken = '';
     state.jwtBody = {};
     state.user = {};
+    
+    // Clear Bitbucket workspace from localStorage
+    try {
+        localStorage.removeItem('td_bitbucket_workspace');
+    } catch (e) {
+        // Ignore errors when clearing localStorage
+    }
 };
 
 export const state = {
@@ -75,6 +82,17 @@ const mutations = {
             state.jwtBody = jwtBody;
             state.user = jwtBody.user;
             state.refreshToken = refreshToken;
+            
+            // Store Bitbucket workspace in localStorage if available
+            if (jwtBody.provider && jwtBody.provider.name === 'bitbucket' && jwtBody.user.workspace) {
+                try {
+                    log.info('Storing Bitbucket workspace in localStorage', { workspace: jwtBody.user.workspace });
+                    localStorage.setItem('td_bitbucket_workspace', jwtBody.user.workspace);
+                } catch (storageError) {
+                    log.error('Error storing Bitbucket workspace in localStorage', { error: storageError.message });
+                }
+            }
+            
             log.info('Auth state updated successfully');
         } catch (e) {
             log.error('Error decoding JWT', { error: e });

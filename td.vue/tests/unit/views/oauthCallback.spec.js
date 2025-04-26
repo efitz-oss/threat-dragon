@@ -138,6 +138,57 @@ describe('views/OAuthCallback.vue', () => {
         });
     });
     
+    describe('provider restoration from localStorage', () => {
+        it('dispatches PROVIDER_SELECTED action when provider is found in localStorage', async () => {
+            // Mock localStorage with provider data
+            Object.defineProperty(window, 'localStorage', {
+                value: {
+                    getItem: jest.fn((key) => {
+                        if (key === 'td_provider') return 'bitbucket';
+                        if (key === 'td_providerUri') return 'https://bitbucket.org';
+                        return null;
+                    }),
+                    setItem: jest.fn(),
+                    removeItem: jest.fn()
+                },
+                writable: true
+            });
+            
+            // Create store without provider in state but with dispatch spy
+            mockStore = createStore({
+                state: {
+                    provider: {
+                        selected: null
+                    }
+                },
+                actions: {
+                    PROVIDER_SELECTED: jest.fn()
+                }
+            });
+            
+            // Spy on the dispatch method
+            jest.spyOn(mockStore, 'dispatch');
+            
+            // Mock API response
+            loginApi.completeLoginAsync.mockResolvedValue({ data: jwt });
+            
+            // Mount the component
+            _wrapper = mount(OAuthCallback, {
+                global: {
+                    plugins: [mockStore]
+                }
+            });
+            
+            // Wait for mounted hook and async operations to complete
+            await nextTick();
+            await nextTick();
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Verify that the PROVIDER_SELECTED action was dispatched with the provider from localStorage
+            expect(mockStore.dispatch).toHaveBeenCalledWith('PROVIDER_SELECTED', 'bitbucket');
+        });
+    });
+    
     describe('hash fragment code extraction', () => {
         const hashCode = 'hash-code-12345';
         

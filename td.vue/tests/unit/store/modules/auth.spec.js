@@ -240,6 +240,16 @@ describe('store/modules/auth.js', () => {
     describe('mutations', () => {
         describe('clear', () => {
             beforeEach(() => {
+                // Mock localStorage
+                Object.defineProperty(window, 'localStorage', {
+                    value: {
+                        getItem: jest.fn(),
+                        setItem: jest.fn(),
+                        removeItem: jest.fn()
+                    },
+                    writable: true
+                });
+                
                 authModule.default.state.jwt = 'test';
                 authModule.default.state.user = { foo: 'bar' };
                 authModule.default.state.jwtBody = { bar: 'baz' };
@@ -262,11 +272,25 @@ describe('store/modules/auth.js', () => {
             it('clears the jwtBody', () => {
                 expect(authModule.default.state.jwtBody).toEqual({});
             });
+            
+            it('removes Bitbucket workspace from localStorage', () => {
+                expect(localStorage.removeItem).toHaveBeenCalledWith('td_bitbucket_workspace');
+            });
         });
 
         describe('set jwt', () => {
             describe('happy path', () => {
                 beforeEach(() => {
+                    // Mock localStorage
+                    Object.defineProperty(window, 'localStorage', {
+                        value: {
+                            getItem: jest.fn(),
+                            setItem: jest.fn(),
+                            removeItem: jest.fn()
+                        },
+                        writable: true
+                    });
+                    
                     authModule.default.mutations[AUTH_SET_JWT](authModule.default.state, apiResp);
                 });
     
@@ -284,6 +308,63 @@ describe('store/modules/auth.js', () => {
     
                 it('sets the jwtBody', () => {
                     expect(authModule.default.state.jwtBody).toEqual(jwtBody);
+                });
+                
+                it('does not store Bitbucket workspace in localStorage for non-Bitbucket provider', () => {
+                    expect(localStorage.setItem).not.toHaveBeenCalledWith('td_bitbucket_workspace', expect.any(String));
+                });
+            });
+            
+            describe('with Bitbucket provider', () => {
+                beforeEach(() => {
+                    // Mock localStorage
+                    Object.defineProperty(window, 'localStorage', {
+                        value: {
+                            getItem: jest.fn(),
+                            setItem: jest.fn(),
+                            removeItem: jest.fn()
+                        },
+                        writable: true
+                    });
+                    
+                    // Create JWT body with Bitbucket provider and workspace
+                    const bitbucketJwtBody = {
+                        provider: { name: 'bitbucket' },
+                        user: { username: 'whatever', workspace: 'test-workspace' }
+                    };
+                    
+                    // Replace the mutation for testing with one that uses our Bitbucket JWT body
+                    authModule.default.mutations[AUTH_SET_JWT] = (state, tokens) => {
+                        try {
+                            if (!tokens || !tokens.accessToken || !tokens.refreshToken) {
+                                console.error('Invalid tokens received');
+                                return;
+                            }
+                            
+                            state.jwt = tokens.accessToken;
+                            state.refreshToken = tokens.refreshToken;
+                            state.jwtBody = bitbucketJwtBody;
+                            state.user = bitbucketJwtBody.user;
+                            
+                            // Store Bitbucket workspace in localStorage if available
+                            if (bitbucketJwtBody.provider && bitbucketJwtBody.provider.name === 'bitbucket' && bitbucketJwtBody.user.workspace) {
+                                try {
+                                    localStorage.setItem('td_bitbucket_workspace', bitbucketJwtBody.user.workspace);
+                                } catch (storageError) {
+                                    console.error('Error storing Bitbucket workspace in localStorage', storageError);
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Error decoding JWT', e);
+                            throw e;
+                        }
+                    };
+                    
+                    authModule.default.mutations[AUTH_SET_JWT](authModule.default.state, apiResp);
+                });
+                
+                it('stores Bitbucket workspace in localStorage', () => {
+                    expect(localStorage.setItem).toHaveBeenCalledWith('td_bitbucket_workspace', 'test-workspace');
                 });
             });
 

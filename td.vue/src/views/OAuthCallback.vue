@@ -148,11 +148,8 @@ export default {
                         
                         if (provider && providerUri) {
                             log(`Found provider in localStorage: ${provider}`);
-                            // Restore provider to store
-                            store.commit('PROVIDER_SELECTED', {
-                                providerName: provider,
-                                providerUri: providerUri
-                            });
+                            // Restore provider to store using the action instead of direct mutation
+                            store.dispatch('PROVIDER_SELECTED', provider);
                         }
                     } catch (e) {
                         log(`Error accessing localStorage: ${e.message}`);

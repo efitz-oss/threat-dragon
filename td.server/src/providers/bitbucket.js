@@ -144,10 +144,15 @@ const completeLoginAsync = async (code) => {
             const fullUser = await repo.userAsync(providerResp.data.access_token);
             console.log(`BitBucket OAuth: User info received for ${fullUser.display_name}`);
 
+            // Get the Bitbucket workspace from environment
+            const workspace = env.get().config.BITBUCKET_WORKSPACE;
+            console.log(`BitBucket OAuth: Using workspace: ${workspace}`);
+
             const user = {
                 username: fullUser.display_name,
                 email: fullUser.email,
-                repos_url: fullUser.repos_url
+                repos_url: fullUser.repos_url,
+                workspace: workspace // Include the workspace in the user object
             };
 
             console.log(`BitBucket OAuth: Created user object with username: ${user.username}`);

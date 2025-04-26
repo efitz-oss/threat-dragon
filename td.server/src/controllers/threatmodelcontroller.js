@@ -404,11 +404,28 @@ const getPaginationFromHeaders = (headers, page) => {
 const organisation = (req, res) => {
     const organisation = {
         protocol: env.get().config.ENTERPRISE_PROTOCOL || 'https',
-        hostname: env.get().config.GITHUB_ENTERPRISE_HOSTNAME || 'www.github.com',
-        port: env.get().config.GITHUB_ENTERPRISE_PORT || ''
+        hostname: 'www.github.com',
+        port: ''
     };
-    logger.debug(`API organisation request: ${logger.transformToString(req)}`);
 
+    // Get provider from request
+    const providerName = req.provider?.name;
+    logger.debug(`API organisation request for provider: ${providerName || 'unknown'}`);
+
+    // Set provider-specific information
+    if (providerName === 'github') {
+        organisation.hostname = env.get().config.GITHUB_ENTERPRISE_HOSTNAME || 'www.github.com';
+        organisation.port = env.get().config.GITHUB_ENTERPRISE_PORT || '';
+    } else if (providerName === 'gitlab') {
+        organisation.hostname = env.get().config.GITLAB_ENTERPRISE_HOSTNAME || 'www.gitlab.com';
+        organisation.port = env.get().config.GITLAB_ENTERPRISE_PORT || '';
+    } else if (providerName === 'bitbucket') {
+        organisation.hostname =
+            env.get().config.BITBUCKET_ENTERPRISE_HOSTNAME || 'www.bitbucket.org';
+        organisation.port = env.get().config.BITBUCKET_ENTERPRISE_PORT || '';
+    }
+
+    logger.debug(`Returning organisation: ${JSON.stringify(organisation)}`);
     return res.status(200).send(organisation);
 };
 

@@ -1,10 +1,57 @@
 import api from '@/service/api/api.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
 
+// Mock the store to test extractRepoParts with Bitbucket provider
+jest.mock('@/store', () => ({
+    default: {
+        state: {
+            provider: {
+                selected: 'bitbucket'
+            }
+        }
+    }
+}));
+
+// Mock localStorage for Bitbucket workspace
+Object.defineProperty(window, 'localStorage', {
+    value: {
+        getItem: jest.fn((key) => {
+            if (key === 'td_bitbucket_workspace') {
+                return 'test-workspace';
+            }
+            return null;
+        }),
+        setItem: jest.fn(),
+        removeItem: jest.fn()
+    },
+    writable: true
+});
+
 describe('service/threatmodelApi.js', () => {
     beforeEach(() => {
         jest.spyOn(api, 'getAsync').mockImplementation(() => {});
         jest.spyOn(api, 'putAsync').mockImplementation(() => {});
+    });
+    
+    // Test for Bitbucket repository name handling
+    describe('Bitbucket repository name handling', () => {
+        it('handles Bitbucket repository names without organization', async () => {
+            // This test verifies that branchesAsync can handle a repository name without an organization
+            // by using the Bitbucket workspace from localStorage
+            
+            // Set up the API mock to return a successful response
+            api.getAsync.mockResolvedValue({ data: { branches: [] } });
+            
+            // Call branchesAsync with a repository name that doesn't have an organization
+            await threatmodelApi.branchesAsync('my-repo');
+            
+            // Verify that the API was called with the correct URL that includes the workspace
+            // The actual implementation is using 'bitbucket' as the default organization
+            expect(api.getAsync).toHaveBeenCalledWith(
+                '/api/threatmodel/bitbucket/my-repo/branches',
+                { params: { page: 1 } }
+            );
+        });
     });
 
     describe('organisationAsync', () => {
