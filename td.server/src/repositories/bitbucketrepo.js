@@ -82,16 +82,31 @@ export const userAsync = async (accessToken) => {
         userData.actual_username =
             userData.nickname || userData.account_id || userData.uuid || userData.display_name;
 
+        // Use a simple string format for logging to avoid colorize issues
         logger.debug(
             `Retrieved Bitbucket user info: display_name=${userData.display_name}, actual_username=${userData.actual_username}`
         );
 
         return userData;
     } catch (error) {
-        logger.error(`Error fetching Bitbucket user info: ${error.message}`);
-        if (error.stack) {
+        // Simplify error logging to avoid colorize issues
+        let errorMessage = 'Error fetching Bitbucket user info: ';
+
+        if (typeof error === 'string') {
+            errorMessage += error;
+        } else if (error && error.message) {
+            errorMessage += error.message;
+        } else {
+            errorMessage += 'Unknown error';
+        }
+
+        logger.error(errorMessage);
+
+        // Log stack trace as a separate, simple string
+        if (error && error.stack) {
             logger.error(`Error stack: ${error.stack}`);
         }
+
         throw error;
     }
 };

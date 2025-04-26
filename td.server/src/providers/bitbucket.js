@@ -161,6 +161,7 @@ const completeLoginAsync = async (code) => {
 
         try {
             const fullUser = await repo.userAsync(providerResp.data.access_token);
+            // Use simple string format for logging to avoid colorize issues
             logger.info(`BitBucket OAuth: User info received for ${fullUser.display_name}`);
 
             // Get the Bitbucket workspace from environment
@@ -179,6 +180,7 @@ const completeLoginAsync = async (code) => {
                 workspace: workspace // Include the workspace in the user object
             };
 
+            // Use simple string logging to avoid colorize issues
             logger.info(`BitBucket OAuth: Created user object with display name: ${user.username}`);
             logger.info(
                 `BitBucket OAuth: Created user object with actual username: ${user.actual_username}`
@@ -200,41 +202,105 @@ const completeLoginAsync = async (code) => {
                 opts: providerResp.data
             };
         } catch (userError) {
-            logger.error(`BitBucket OAuth: Error fetching user info: ${userError.message}`);
-            if (userError.response) {
+            // Simplify error logging to avoid colorize issues
+            let errorMessage = `BitBucket OAuth: Error fetching user info: `;
+
+            if (typeof userError === 'string') {
+                errorMessage += userError;
+            } else if (userError && userError.message) {
+                errorMessage += userError.message;
+            } else {
+                errorMessage += 'Unknown error';
+            }
+
+            logger.error(errorMessage);
+
+            // Log response details as simple strings
+            if (userError && userError.response) {
                 logger.error(
-                    `BitBucket OAuth: User info response status: ${userError.response.status}`
+                    `BitBucket OAuth: User info response status: ${
+                        userError.response.status || 'unknown'
+                    }`
                 );
-                logger.error(
-                    `BitBucket OAuth: User info response data: ${JSON.stringify(
-                        userError.response.data || {}
-                    )}`
-                );
+
+                // Safely stringify response data
+                try {
+                    const responseData = userError.response.data || {};
+                    const safeResponseData =
+                        typeof responseData === 'object'
+                            ? JSON.stringify(responseData)
+                            : String(responseData);
+                    logger.error(`BitBucket OAuth: User info response data: ${safeResponseData}`);
+                } catch (stringifyError) {
+                    logger.error(
+                        `BitBucket OAuth: Could not stringify response data: ${stringifyError.message}`
+                    );
+                }
             }
 
             // Add audit logging for authentication failure
             logger.audit(
-                `Authentication failed: Error fetching BitBucket user info: ${userError.message}`
+                `Authentication failed: Error fetching BitBucket user info: ${
+                    userError.message || 'Unknown error'
+                }`
             );
 
             throw userError;
         }
     } catch (error) {
-        logger.error(`BitBucket OAuth Error: ${error.message}`);
-        logger.error(`BitBucket OAuth Error Stack: ${error.stack}`);
+        // Simplify error logging to avoid colorize issues
+        let errorMessage = `BitBucket OAuth Error: `;
 
-        if (error.response) {
-            logger.error(
-                `BitBucket OAuth Error Response: ${JSON.stringify({
-                    status: error.response.status,
-                    statusText: error.response.statusText,
-                    data: error.response.data
-                })}`
-            );
+        if (typeof error === 'string') {
+            errorMessage += error;
+        } else if (error && error.message) {
+            errorMessage += error.message;
+        } else {
+            errorMessage += 'Unknown error';
+        }
+
+        logger.error(errorMessage);
+
+        // Log stack trace as a separate, simple string
+        if (error && error.stack) {
+            logger.error(`BitBucket OAuth Error Stack: ${error.stack}`);
+        }
+
+        // Safely log response details
+        if (error && error.response) {
+            try {
+                const status = error.response.status || 'unknown';
+                const statusText = error.response.statusText || 'unknown';
+
+                logger.error(`BitBucket OAuth Error Response Status: ${status}`);
+                logger.error(`BitBucket OAuth Error Response Status Text: ${statusText}`);
+
+                // Handle response data carefully
+                if (error.response.data) {
+                    if (typeof error.response.data === 'string') {
+                        logger.error(`BitBucket OAuth Error Response Data: ${error.response.data}`);
+                    } else {
+                        try {
+                            const safeData = JSON.stringify(error.response.data);
+                            logger.error(`BitBucket OAuth Error Response Data: ${safeData}`);
+                        } catch (jsonError) {
+                            logger.error(
+                                `BitBucket OAuth Error Response Data: [Could not stringify data: ${jsonError.message}]`
+                            );
+                        }
+                    }
+                }
+            } catch (responseError) {
+                logger.error(
+                    `BitBucket OAuth Error: Could not log response details: ${responseError.message}`
+                );
+            }
         }
 
         // Add audit logging for authentication failure
-        logger.audit(`Authentication failed: BitBucket OAuth error: ${error.message}`);
+        logger.audit(
+            `Authentication failed: BitBucket OAuth error: ${error.message || 'Unknown error'}`
+        );
 
         logger.error('=========== BITBUCKET OAUTH TOKEN EXCHANGE FAILED ===========');
         throw error;
