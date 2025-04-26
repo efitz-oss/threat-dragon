@@ -257,7 +257,11 @@ const eng = {
             onlyJsonAllowed: 'Only files that end with .json are supported.',
             open: 'Error opening this Threat Model. Check the developer console for more information',
             save: 'Error saving the Threat Model. Check the developer console for more information',
-            googleDriveSave: 'Error saving to Google Drive. Make sure you have proper permissions.'
+            googleDriveSave: 'Error saving to Google Drive. Make sure you have proper permissions.',
+            invalidFormat: 'The selected file is not a valid threat model. Please select a proper threat model file.',
+            fetch: 'Error fetching the threat model. Please try again or select a different file.',
+            fileNotFound: 'The requested threat model file was not found. Please check the file path and try again.',
+            unexpectedFormat: 'Unexpected response format from the repository. Please contact the administrator.'
         },
         localFilePicker: {
             title: 'Select a Threat Model File',

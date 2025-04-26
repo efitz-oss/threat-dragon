@@ -201,19 +201,51 @@ const actions = {
     [THREATMODEL_FETCH]: async ({ commit, dispatch, rootState }, threatModel) => {
         dispatch(THREATMODEL_CLEAR);
         let resp;
-        if (getProviderType(rootState.provider.selected) === providerTypes.google) {
-            log.debug('Fetching Google Drive model', { id: threatModel });
-            resp = await googleDriveApi.modelAsync(threatModel);
-            // Store the fileId for future updates
-            commit(THREATMODEL_UPDATE, { fileId: threatModel });
-        } else {
-            resp = await threatmodelApi.modelAsync(
-                rootState.repo.selected,
-                rootState.branch.selected,
-                threatModel
-            );
+        try {
+            if (getProviderType(rootState.provider.selected) === providerTypes.google) {
+                log.debug('Fetching Google Drive model', { id: threatModel });
+                resp = await googleDriveApi.modelAsync(threatModel);
+                // Store the fileId for future updates
+                commit(THREATMODEL_UPDATE, { fileId: threatModel });
+            } else {
+                resp = await threatmodelApi.modelAsync(
+                    rootState.repo.selected,
+                    rootState.branch.selected,
+                    threatModel
+                );
+            }
+            commit(THREATMODEL_FETCH, resp.data);
+        } catch (error) {
+            log.error('Error fetching threat model', { error, threatModel });
+            
+            // Check if this is our custom error for invalid threat model format
+            if (error.response && error.response.data) {
+                const errorData = error.response.data;
+                
+                switch (errorData.code) {
+                case 'INVALID_THREAT_MODEL_FORMAT':
+                    toast.error(t('threatmodel.errors.invalidFormat'));
+                    break;
+                case 'INVALID_JSON_FORMAT':
+                    toast.error(t('threatmodel.errors.invalidJson'));
+                    break;
+                case 'FILE_NOT_FOUND':
+                    toast.error(t('threatmodel.errors.fileNotFound'));
+                    break;
+                case 'UNEXPECTED_RESPONSE_FORMAT':
+                    toast.error(t('threatmodel.errors.unexpectedFormat'));
+                    break;
+                default:
+                    toast.error(t('threatmodel.errors.fetch'));
+                    break;
+                }
+            } else {
+                toast.error(t('threatmodel.errors.fetch'));
+            }
+            
+            // Rethrow the error to be handled by the component
+            throw error;
         }
-        commit(THREATMODEL_FETCH, resp.data);
     },
     [THREATMODEL_FETCH_ALL]: async ({ commit, rootState }) => {
         if (

@@ -122,17 +122,26 @@ export default {
             // Log what we're using to help with debugging
             console.log('Using model name for fetch:', modelName);
             
-            // Dispatch actions in sequence
-            await store.dispatch(tmActions.fetch, modelName);
-            
-            // Create params with the model name
-            const params = Object.assign({}, route.params, { threatmodel: modelName });
-            
-            // Set the selected model
-            store.dispatch(tmActions.selected, selectedModel.value);
-            
-            // Navigate to the threat model page
-            router.push({ name: `${providerType.value}ThreatModel`, params });
+            try {
+                // Dispatch actions in sequence
+                await store.dispatch(tmActions.fetch, modelName);
+                
+                // Create params with the model name
+                const params = Object.assign({}, route.params, { threatmodel: modelName });
+                
+                // Set the selected model
+                store.dispatch(tmActions.selected, selectedModel.value);
+                
+                // Navigate to the threat model page
+                router.push({ name: `${providerType.value}ThreatModel`, params });
+            } catch (error) {
+                console.error('Error loading threat model:', error);
+                
+                // Don't navigate if there was an error loading the model
+                // The error toast will be shown by the store action
+                
+                // If we need to handle specific errors differently, we can check error.response.data.code here
+            }
         };
 
         // Simplified new threat model handler

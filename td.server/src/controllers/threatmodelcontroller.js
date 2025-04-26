@@ -290,8 +290,88 @@ const model = (req, res) =>
             logger.debug(`Model request info: ${JSON.stringify(modelInfo)}`);
             logger.debug(`API model request: ${logger.transformToString(req)}`);
 
-            const modelResp = await repository.modelAsync(modelInfo, req.provider.access_token);
-            return JSON.parse(Buffer.from(modelResp[0].content, 'base64').toString('utf8'));
+            try {
+                const modelResp = await repository.modelAsync(modelInfo, req.provider.access_token);
+
+                if (!modelResp || !modelResp[0]) {
+                    logger.error('Empty model response received');
+                    return res.status(404).json({
+                        status: 'error',
+                        message: 'The requested threat model file was not found',
+                        code: 'FILE_NOT_FOUND'
+                    });
+                }
+
+                let jsonContent;
+
+                try {
+                    // Handle different repository response formats
+
+                    // For GitHub, GitLab, and Bitbucket repositories that return content in base64
+                    if (modelResp[0].content) {
+                        jsonContent = JSON.parse(
+                            Buffer.from(modelResp[0].content, 'base64').toString('utf8')
+                        );
+                    }
+                    // For Google Drive and other repositories that might return direct JSON
+                    else if (typeof modelResp[0] === 'object') {
+                        // If it's already a JSON object (Google Drive returns parsed JSON)
+                        jsonContent = modelResp[0];
+                    } else {
+                        logger.error(`Unexpected model response format: ${typeof modelResp[0]}`);
+                        return res.status(400).json({
+                            status: 'error',
+                            message: 'Unexpected response format from repository',
+                            code: 'UNEXPECTED_RESPONSE_FORMAT'
+                        });
+                    }
+
+                    // Validate if this is a valid threat model JSON
+                    // A valid threat model should have at least summary and detail properties
+                    // or be in Open Threat Model format with otmVersion
+                    if (
+                        !jsonContent ||
+                        typeof jsonContent !== 'object' ||
+                        (!jsonContent.summary && !jsonContent.otmVersion)
+                    ) {
+                        logger.warn(`Invalid threat model format: ${modelInfo.model}`);
+                        return res.status(400).json({
+                            status: 'error',
+                            message: 'The selected file is not a valid threat model',
+                            code: 'INVALID_THREAT_MODEL_FORMAT'
+                        });
+                    }
+
+                    return jsonContent;
+                } catch (parseError) {
+                    logger.error(`Error parsing JSON content: ${parseError.message}`);
+                    return res.status(400).json({
+                        status: 'error',
+                        message: 'The selected file is not valid JSON',
+                        code: 'INVALID_JSON_FORMAT'
+                    });
+                }
+            } catch (error) {
+                logger.error(`Error fetching model: ${error.message}`);
+                if (error.stack) {
+                    logger.error(`Error stack: ${error.stack}`);
+                }
+
+                // Handle file not found errors with a specific message
+                if (
+                    error.message &&
+                    (error.message.includes('Not Found') || error.message.includes('404'))
+                ) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: 'The requested threat model file was not found',
+                        code: 'FILE_NOT_FOUND'
+                    });
+                }
+
+                // Re-throw other errors to be handled by the response wrapper
+                throw error;
+            }
         },
         req,
         res,
