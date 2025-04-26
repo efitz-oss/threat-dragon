@@ -162,12 +162,39 @@ const branchesAsync = async (repoInfo, accessToken) => {
 
 const modelsAsync = async (branchInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    return fetchGitHub(
-        `/repos/${branchInfo.organisation}/${branchInfo.repo}/contents/${repoRootDirectory()}?ref=${
-            branchInfo.branch
-        }`,
-        accessToken
-    );
+
+    try {
+        const response = await fetchGitHub(
+            `/repos/${branchInfo.organisation}/${
+                branchInfo.repo
+            }/contents/${repoRootDirectory()}?ref=${branchInfo.branch}`,
+            accessToken
+        );
+
+        console.log(`GitHub modelsAsync response type: ${typeof response}`);
+
+        // Ensure we return an array in the expected format [models, headers, pageLinks]
+        if (Array.isArray(response)) {
+            console.log(`GitHub modelsAsync found ${response.length} models`);
+            return [response, {}, {}];
+        } else {
+            console.log(`GitHub modelsAsync response is not an array, converting to array`);
+            console.log(`Response: ${JSON.stringify(response)}`);
+
+            // If response is not an array but has a message property, it might be an error
+            if (response.message) {
+                console.error(`GitHub API error: ${response.message}`);
+                return [[], {}, {}];
+            }
+
+            // If response is an object but not an array, wrap it in an array
+            return [[response], {}, {}];
+        }
+    } catch (error) {
+        console.error(`Error in modelsAsync: ${error.message}`);
+        // Return empty array on error
+        return [[], {}, {}];
+    }
 };
 
 const modelAsync = async (modelInfo, accessToken) => {
