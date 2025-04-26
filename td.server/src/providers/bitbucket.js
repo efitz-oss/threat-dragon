@@ -5,7 +5,10 @@
 import axios from 'axios';
 
 import env from '../env/Env.js';
+import loggerHelper from '../helpers/logger.helper.js';
 import repositories from '../repositories/index.js';
+
+const logger = loggerHelper.get('providers/bitbucket.js');
 
 const name = 'bitbucket';
 
@@ -61,19 +64,23 @@ const getOauthReturnUrl = (code) => {
  * @returns {String} jwt
  */
 const completeLoginAsync = async (code) => {
-    console.log('=========== BITBUCKET OAUTH TOKEN EXCHANGE START ===========');
-    console.log(`Starting BitBucket completeLoginAsync with code length: ${code?.length || 0}`);
-    console.log(`NODE_ENV: ${env.get().config.NODE_ENV}`);
+    logger.info('=========== BITBUCKET OAUTH TOKEN EXCHANGE START ===========');
+    logger.info(`Starting BitBucket completeLoginAsync with code length: ${code?.length || 0}`);
+    logger.debug(`NODE_ENV: ${env.get().config.NODE_ENV}`);
 
     const url = `${getBitbucketUrl()}/site/oauth2/access_token`;
-    console.log(`Token exchange URL: ${url}`);
+    logger.debug(`Token exchange URL: ${url}`);
 
-    console.log(`BitBucket client ID configured: ${Boolean(env.get().config.BITBUCKET_CLIENT_ID)}`);
-    console.log(`BitBucket client ID length: ${env.get().config.BITBUCKET_CLIENT_ID?.length || 0}`);
-    console.log(
+    logger.debug(
+        `BitBucket client ID configured: ${Boolean(env.get().config.BITBUCKET_CLIENT_ID)}`
+    );
+    logger.debug(
+        `BitBucket client ID length: ${env.get().config.BITBUCKET_CLIENT_ID?.length || 0}`
+    );
+    logger.debug(
         `BitBucket client secret configured: ${Boolean(env.get().config.BITBUCKET_CLIENT_SECRET)}`
     );
-    console.log(
+    logger.debug(
         `BitBucket client secret length: ${env.get().config.BITBUCKET_CLIENT_SECRET?.length || 0}`
     );
 
@@ -83,8 +90,8 @@ const completeLoginAsync = async (code) => {
     form.append('client_secret', env.get().config.BITBUCKET_CLIENT_SECRET);
     form.append('code', code);
 
-    console.log(`BitBucket OAuth: Exchanging code for token at ${url}`);
-    console.log(
+    logger.info(`BitBucket OAuth: Exchanging code for token at ${url}`);
+    logger.debug(
         `BitBucket OAuth: Request form data prepared with code length: ${code?.length || 0}`
     );
 
@@ -95,26 +102,34 @@ const completeLoginAsync = async (code) => {
     };
 
     try {
-        console.log(`BitBucket OAuth: Sending token request to BitBucket`);
-        console.log(`BitBucket OAuth: Request URL: ${url}`);
-        console.log(`BitBucket OAuth: Request method: POST`);
+        logger.debug(`BitBucket OAuth: Sending token request to BitBucket`);
+        logger.debug(`BitBucket OAuth: Request URL: ${url}`);
+        logger.debug(`BitBucket OAuth: Request method: POST`);
 
         repositories.set('bitbucketrepo');
         const repo = repositories.get();
         const providerResp = await axios.post(url, form, options);
 
-        console.log(`BitBucket OAuth: Received token response from BitBucket`);
-        console.log(`BitBucket OAuth: Response status: ${providerResp.status}`);
-        console.log(
+        logger.info(`BitBucket OAuth: Received token response from BitBucket`);
+        logger.debug(`BitBucket OAuth: Response status: ${providerResp.status}`);
+        logger.debug(
             `BitBucket OAuth: Response has access_token: ${Boolean(providerResp.data.access_token)}`
         );
-        console.log(`BitBucket OAuth: Response has error: ${Boolean(providerResp.data.error)}`);
+        logger.debug(`BitBucket OAuth: Response has error: ${Boolean(providerResp.data.error)}`);
 
         if (providerResp.data.error) {
-            console.error(`BitBucket OAuth Error: ${providerResp.data.error}`);
-            console.error(
+            logger.error(`BitBucket OAuth Error: ${providerResp.data.error}`);
+            logger.error(
                 `BitBucket OAuth Error Description: ${providerResp.data.error_description}`
             );
+
+            // Add audit logging for authentication failure
+            logger.audit(
+                `Authentication failed: BitBucket OAuth error: ${
+                    providerResp.data.error_description || providerResp.data.error
+                }`
+            );
+
             throw new Error(
                 `BitBucket OAuth Error: ${
                     providerResp.data.error_description || providerResp.data.error
@@ -122,70 +137,94 @@ const completeLoginAsync = async (code) => {
             );
         }
 
-        console.log(
+        logger.debug(
             `BitBucket OAuth: Token exchange successful, received ${Object.keys(
                 providerResp.data
             ).join(', ')}`
         );
 
         if (!providerResp.data.access_token) {
-            console.error(
+            logger.error(
                 `BitBucket OAuth: No access token received. Response: ${JSON.stringify(
                     providerResp.data
                 )}`
             );
+
+            // Add audit logging for authentication failure
+            logger.audit(`Authentication failed: No access token received from BitBucket`);
+
             throw new Error('No access token received from BitBucket');
         }
 
-        console.log(`BitBucket OAuth: Successfully obtained access token, fetching user info`);
-        console.log(`BitBucket OAuth: Getting user info with access token`);
+        logger.info(`BitBucket OAuth: Successfully obtained access token, fetching user info`);
+        logger.debug(`BitBucket OAuth: Getting user info with access token`);
 
         try {
             const fullUser = await repo.userAsync(providerResp.data.access_token);
-            console.log(`BitBucket OAuth: User info received for ${fullUser.display_name}`);
+            logger.info(`BitBucket OAuth: User info received for ${fullUser.display_name}`);
 
             // Get the Bitbucket workspace from environment
             const workspace = env.get().config.BITBUCKET_WORKSPACE;
-            console.log(`BitBucket OAuth: Using workspace: ${workspace}`);
+            logger.debug(`BitBucket OAuth: Using workspace: ${workspace}`);
 
+            // Create user object with both display_name and actual_username
             const user = {
+                // Use display_name for UI display purposes
                 username: fullUser.display_name,
+                // Store the actual username for logging and identification
+                actual_username: fullUser.actual_username || fullUser.nickname || fullUser.uuid,
+                // Include other user information
                 email: fullUser.email,
                 repos_url: fullUser.repos_url,
                 workspace: workspace // Include the workspace in the user object
             };
 
-            console.log(`BitBucket OAuth: Created user object with username: ${user.username}`);
+            logger.info(`BitBucket OAuth: Created user object with display name: ${user.username}`);
+            logger.info(
+                `BitBucket OAuth: Created user object with actual username: ${user.actual_username}`
+            );
             if (user.email) {
-                console.log(`BitBucket OAuth: Created user object with email: ${user.email}`);
+                // Don't log the actual email address
+                logger.debug(`BitBucket OAuth: Created user object with email: [REDACTED]`);
             }
 
-            console.log('=========== BITBUCKET OAUTH TOKEN EXCHANGE COMPLETE ===========');
+            // Add audit logging for successful authentication
+            logger.audit(
+                `Authentication successful: User ${user.username} authenticated via BitBucket OAuth`
+            );
+
+            logger.info('=========== BITBUCKET OAUTH TOKEN EXCHANGE COMPLETE ===========');
 
             return {
                 user,
                 opts: providerResp.data
             };
         } catch (userError) {
-            console.error(`BitBucket OAuth: Error fetching user info: ${userError.message}`);
+            logger.error(`BitBucket OAuth: Error fetching user info: ${userError.message}`);
             if (userError.response) {
-                console.error(
+                logger.error(
                     `BitBucket OAuth: User info response status: ${userError.response.status}`
                 );
-                console.error(
+                logger.error(
                     `BitBucket OAuth: User info response data: ${JSON.stringify(
                         userError.response.data || {}
                     )}`
                 );
             }
+
+            // Add audit logging for authentication failure
+            logger.audit(
+                `Authentication failed: Error fetching BitBucket user info: ${userError.message}`
+            );
+
             throw userError;
         }
     } catch (error) {
-        console.error(`BitBucket OAuth Error: ${error.message}`);
-        console.error(`BitBucket OAuth Error Stack: ${error.stack}`);
+        logger.error(`BitBucket OAuth Error: ${error.message}`);
+        logger.error(`BitBucket OAuth Error Stack: ${error.stack}`);
 
         if (error.response) {
-            console.error(
+            logger.error(
                 `BitBucket OAuth Error Response: ${JSON.stringify({
                     status: error.response.status,
                     statusText: error.response.statusText,
@@ -194,7 +233,10 @@ const completeLoginAsync = async (code) => {
             );
         }
 
-        console.log('=========== BITBUCKET OAUTH TOKEN EXCHANGE FAILED ===========');
+        // Add audit logging for authentication failure
+        logger.audit(`Authentication failed: BitBucket OAuth error: ${error.message}`);
+
+        logger.error('=========== BITBUCKET OAUTH TOKEN EXCHANGE FAILED ===========');
         throw error;
     }
 };

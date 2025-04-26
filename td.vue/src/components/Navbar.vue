@@ -100,6 +100,7 @@ export default {
 
         // Use computed to get values from the store
         const storeUsername = computed(() => store.getters.username);
+        const storeActualUsername = computed(() => store.getters.actualUsername);
         const packageBuildVersion = computed(() => store.state.packageBuildVersion);
         const packageBuildState = computed(() => store.state.packageBuildState);
         const config = computed(() => store.state.config.config);
@@ -161,7 +162,8 @@ export default {
                     // Check if we have auth data in session storage
                     if (state.auth && state.auth.user && state.auth.user.username) {
                         log.info('Found username in session storage:', {
-                            username: state.auth.user.username
+                            username: state.auth.user.username,
+                            actual_username: state.auth.user.actual_username || 'not available'
                         });
                         
                         // Set fallback username
@@ -265,6 +267,7 @@ export default {
         return {
             t,
             username,
+            storeActualUsername, // Make actual username available to the template
             packageBuildVersion,
             packageBuildState,
             googleEnabled,

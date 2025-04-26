@@ -110,10 +110,11 @@ const mutations = {
             
             log.info('Detected provider', { providerName });
             
-            // If this is a Bitbucket user, ensure the username is set
+            // If this is a Bitbucket user, ensure the username and actual_username are set
             if (providerName === 'bitbucket' && jwtBody.user) {
                 log.info('Bitbucket user detected', {
                     hasUsername: Boolean(jwtBody.user.username),
+                    hasActualUsername: Boolean(jwtBody.user.actual_username),
                     userObject: JSON.stringify(jwtBody.user)
                 });
                 
@@ -122,6 +123,11 @@ const mutations = {
                 if (!jwtBody.user.username) {
                     jwtBody.user.username = jwtBody.user.display_name || 'bitbucket-user';
                     log.info('Set username for Bitbucket user', { username: jwtBody.user.username });
+                }
+                
+                // Log the actual username if it exists
+                if (jwtBody.user.actual_username) {
+                    log.info('Bitbucket actual username found', { actual_username: jwtBody.user.actual_username });
                 }
             }
             
@@ -155,7 +161,8 @@ const mutations = {
     }
 };
 const getters = {
-    username: (state) => state.user.username || ''
+    username: (state) => state.user.username || '',
+    actualUsername: (state) => state.user.actual_username || state.user.username || ''
 };
 export default {
     state,

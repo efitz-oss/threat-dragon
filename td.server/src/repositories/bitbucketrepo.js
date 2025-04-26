@@ -1,6 +1,9 @@
 import pkg from 'bitbucket';
 const { Bitbucket } = pkg;
 import env from '../env/Env.js';
+import loggerHelper from '../helpers/logger.helper.js';
+
+const logger = loggerHelper.get('repositories/bitbucketrepo.js');
 
 const repoRootDirectory = () => {
     const config = env.get().config;
@@ -27,7 +30,9 @@ export const getClient = (accessToken) => {
 };
 
 export const reposAsync = async (page, accessToken, searchQuerys = []) => {
-    //Migrated
+    logger.debug(`Bitbucket reposAsync called with page: ${page}`);
+    logger.debug(`Bitbucket reposAsync called with searchQueries:`, searchQuerys);
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
     const repos = await getClient(accessToken).repositories.list({
         workspace: workspace,
@@ -42,6 +47,11 @@ export const reposAsync = async (page, accessToken, searchQuerys = []) => {
         return newX;
     });
 
+    // Add audit logging for successful repository retrieval
+    logger.audit(
+        `Data access: Retrieved ${responseRepos.length} repositories from Bitbucket workspace ${workspace}, page ${page}`
+    );
+
     return [responseRepos, null, { prev: hasPreviousPage(repos), next: hasNextPage(repos) }];
 };
 
@@ -55,9 +65,42 @@ const hasPreviousPage = (response) =>
 export const searchAsync = (page, accessToken, searchQueries) =>
     reposAsync(page, accessToken, searchQueries);
 
-export const userAsync = (accessToken) => getClient(accessToken).users.getAuthedUser();
+export const userAsync = async (accessToken) => {
+    logger.debug('Fetching authenticated user information from Bitbucket');
+
+    try {
+        // Get the basic user information
+        const client = getClient(accessToken);
+        const userResponse = await client.users.getAuthedUser();
+
+        // Extract the user data
+        const userData = userResponse.data;
+
+        // Add the nickname/account_id as the actual username
+        // The nickname is typically closer to what we consider a username
+        // If nickname is not available, we'll use account_id or uuid as fallback
+        userData.actual_username =
+            userData.nickname || userData.account_id || userData.uuid || userData.display_name;
+
+        logger.debug(
+            `Retrieved Bitbucket user info: display_name=${userData.display_name}, actual_username=${userData.actual_username}`
+        );
+
+        return userData;
+    } catch (error) {
+        logger.error(`Error fetching Bitbucket user info: ${error.message}`);
+        if (error.stack) {
+            logger.error(`Error stack: ${error.stack}`);
+        }
+        throw error;
+    }
+};
 
 export const branchesAsync = async (repoInfo, accessToken) => {
+    logger.debug(
+        `Bitbucket branchesAsync called with repo: ${repoInfo.repo}, page: ${repoInfo.page}`
+    );
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
     const client = getClient(accessToken);
     const branches = await client.repositories.listBranches({
@@ -68,6 +111,11 @@ export const branchesAsync = async (repoInfo, accessToken) => {
     });
     const branchesResponse = branches.data.values;
 
+    // Add audit logging for successful branch retrieval
+    logger.audit(
+        `Data access: Retrieved ${branchesResponse.length} branches from ${repoInfo.repo}`
+    );
+
     return [
         branchesResponse,
         null,
@@ -76,6 +124,8 @@ export const branchesAsync = async (repoInfo, accessToken) => {
 };
 
 export const modelsAsync = async (branchInfo, accessToken) => {
+    logger.info(`Fetching models from Bitbucket for ${branchInfo.repo}/${branchInfo.branch}`);
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     try {
@@ -102,10 +152,16 @@ export const modelsAsync = async (branchInfo, accessToken) => {
                     x.name = x.path.replace(`${repoRootDirectory()}/`, '');
                     return x;
                 });
+
+                // Add audit logging for successful model retrieval
+                logger.audit(
+                    `Data access: Retrieved ${tree.data.values.length} threat models from ${branchInfo.repo}/${branchInfo.branch}`
+                );
+
                 return [tree.data.values];
             } else {
                 // No values found, return empty array
-                console.log(
+                logger.info(
                     `No threat models found in ${repoRootDirectory()} for ${branchInfo.repo}/${
                         branchInfo.branch
                     }`
@@ -114,25 +170,32 @@ export const modelsAsync = async (branchInfo, accessToken) => {
             }
         } catch (error) {
             // Handle "file not found" or other errors when reading the directory
-            console.log(`Error reading ${repoRootDirectory()} directory: ${error.message}`);
+            logger.info(`Error reading ${repoRootDirectory()} directory: ${error.message}`);
             if (
                 error.message &&
                 (error.message.includes('Not Found') || error.message.includes('404'))
             ) {
                 // Directory doesn't exist, return empty array
-                console.log(`Directory ${repoRootDirectory()} not found, returning empty array`);
+                logger.info(`Directory ${repoRootDirectory()} not found, returning empty array`);
                 return [[]];
             }
             throw error;
         }
     } catch (error) {
-        console.error(`Error in modelsAsync: ${error.message}`);
+        logger.error(`Error in modelsAsync: ${error.message}`);
+        if (error.stack) {
+            logger.error(`Error stack: ${error.stack}`);
+        }
         // Return empty array instead of throwing
         return [[]];
     }
 };
 
 export const modelAsync = async (modelInfo, accessToken) => {
+    logger.info(
+        `Fetching model from Bitbucket: ${modelInfo.model} from ${modelInfo.repo}/${modelInfo.branch}`
+    );
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     try {
@@ -152,14 +215,24 @@ export const modelAsync = async (modelInfo, accessToken) => {
                 commit: commitId
             });
             tree.content = Buffer.from(tree.data).toString('base64');
+
+            // Add audit logging for successful model retrieval
+            logger.audit(
+                `Data access: Retrieved threat model ${modelInfo.model} from ${modelInfo.repo}/${modelInfo.branch}`
+            );
+
             return [tree];
         } catch (error) {
-            console.error(`Error reading model file: ${error.message}`);
+            logger.error(`Error reading model file: ${error.message}`);
+            if (error.stack) {
+                logger.error(`Error stack: ${error.stack}`);
+            }
+
             if (
                 error.message &&
                 (error.message.includes('Not Found') || error.message.includes('404'))
             ) {
-                console.log(
+                logger.warn(
                     `Model file ${getModelPath(modelInfo)} not found, returning empty object`
                 );
                 return [{ data: {}, content: '' }];
@@ -167,13 +240,18 @@ export const modelAsync = async (modelInfo, accessToken) => {
             throw error;
         }
     } catch (error) {
-        console.error(`Error in modelAsync: ${error.message}`);
+        logger.error(`Error in modelAsync: ${error.message}`);
+        if (error.stack) {
+            logger.error(`Error stack: ${error.stack}`);
+        }
         // Return empty object instead of throwing, similar to how we handle model file not found
         return [{ data: {}, content: '' }];
     }
 };
 
 export const createAsync = async (modelInfo, accessToken) => {
+    logger.info(`Creating model: ${modelInfo.model} in ${modelInfo.repo}/${modelInfo.branch}`);
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
@@ -188,10 +266,18 @@ export const createAsync = async (modelInfo, accessToken) => {
     });
 
     created = created.data.values;
+
+    // Add audit logging for successful model creation
+    logger.audit(
+        `Data modification: Created threat model ${modelInfo.model} in ${modelInfo.repo}/${modelInfo.branch}`
+    );
+
     return [created];
 };
 
 export const updateAsync = async (modelInfo, accessToken) => {
+    logger.info(`Updating model: ${modelInfo.model} in ${modelInfo.repo}/${modelInfo.branch}`);
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
@@ -206,6 +292,12 @@ export const updateAsync = async (modelInfo, accessToken) => {
     });
 
     created = created.data.values;
+
+    // Add audit logging for successful model update
+    logger.audit(
+        `Data modification: Updated threat model ${modelInfo.model} in ${modelInfo.repo}/${modelInfo.branch}`
+    );
+
     return [created];
 };
 
@@ -215,12 +307,15 @@ export const deleteAsync = async (modelInfo, accessToken) => {
     throw new Error(`Bitbucket deleteAsync is not implemented yet`);
 };
 
-export const createBranchAsync = (repoInfo, accessToken) => {
+export const createBranchAsync = async (repoInfo, accessToken) => {
+    logger.info(`Creating branch: ${repoInfo.branch} from ${repoInfo.ref} in ${repoInfo.repo}`);
+
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
     const client = getClient(accessToken);
     const repo = getRepoFullName(repoInfo);
-    return client.refs.createBranch({
+
+    const result = await client.refs.createBranch({
         _body: {
             name: repoInfo.branch,
             target: {
@@ -230,13 +325,20 @@ export const createBranchAsync = (repoInfo, accessToken) => {
         repo_slug: repo,
         workspace: workspace
     });
+
+    // Add audit logging for successful branch creation
+    logger.audit(
+        `Data modification: Created new branch ${repoInfo.branch} from ${repoInfo.ref} in ${repoInfo.repo}`
+    );
+
+    return result;
 };
 
 const getRepoFullName = (info) => (info && info.repo ? `${info.repo}` : '');
 
 const getModelPath = (modelInfo) => {
     if (!modelInfo || !modelInfo.model) {
-        console.error('Invalid model info provided to getModelPath', modelInfo);
+        logger.error('Invalid model info provided to getModelPath', modelInfo);
         throw new Error('Invalid model info: model name is required');
     }
 
@@ -250,7 +352,7 @@ const getModelPath = (modelInfo) => {
 
 const getModelContent = (modelInfo) => {
     if (!modelInfo || !modelInfo.body) {
-        console.error('Invalid model info provided to getModelContent', modelInfo);
+        logger.error('Invalid model info provided to getModelContent', modelInfo);
         throw new Error('Invalid model info: body is required');
     }
     return JSON.stringify(modelInfo.body, null, '  ');

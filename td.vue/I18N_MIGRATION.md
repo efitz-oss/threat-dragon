@@ -20,7 +20,7 @@ export default {
   name: 'ExampleComponent',
   methods: {
     doSomething() {
-      console.log(this.$t('example.message'));
+      logger.info(this.$t('example.message'));
     }
   }
 }
@@ -47,7 +47,7 @@ export default {
     const { t } = useI18n();
     
     const doSomething = () => {
-      console.log(t('example.message'));
+      logger.info(t('example.message'));
     };
     
     return {
@@ -222,7 +222,7 @@ export default {
     
     const handleAction = () => {
       count.value++;
-      console.log(t('component.actionPerformed', { count: count.value }));
+      logger.info(t('component.actionPerformed', { count: count.value }));
     };
     
     return {

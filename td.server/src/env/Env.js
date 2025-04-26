@@ -4,6 +4,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { upDir } from '../helpers/path.helper.js';
+import loggerHelper from '../helpers/logger.helper.js';
+
+const logger = loggerHelper.get('env.js');
 
 export class Env {
     /* eslint no-console: 0 */
@@ -39,7 +42,7 @@ export class Env {
     get properties() {
         const errorMessage =
             'When creating a new Env configuration class, you must override the getter for properties.  See GithubEnv for an example.';
-        console.error(errorMessage);
+        logger.error(errorMessage);
         throw new Error(errorMessage);
     }
 
@@ -51,7 +54,7 @@ export class Env {
     get prefix() {
         const errorMessage =
             'When creating a new Env configuration class, you must override the getter for prefix.  See GithubEnv for an example.';
-        console.error(errorMessage);
+        logger.error(errorMessage);
         throw new Error(errorMessage);
     }
 
@@ -79,7 +82,7 @@ export class Env {
             const filePath = process.env[propertyName];
             if (!fs.existsSync(filePath)) {
                 const errorMessage = `${propertyName} was set, but file ${filePath} does not exist.`;
-                console.error(errorMessage);
+                logger.error(errorMessage);
                 throw new Error(errorMessage);
             }
 
@@ -99,7 +102,7 @@ export class Env {
             const value = process.env[prop] || this.tryReadFromFile(prop) || defaultValue;
             if (!value && required) {
                 const errMsg = `${prop} is a required property, Threat Dragon server cannot start without it. Refer to development/environment.md for more information`;
-                console.error(errMsg);
+                logger.error(errMsg);
                 throw new Error(errMsg);
             }
             config[prop] = value;
@@ -124,9 +127,9 @@ export class Env {
             dotenv.config({
                 path: envFilePath
             });
-            console.log(`Using config file: ${envFilePath}`);
+            logger.info(`Using config file: ${envFilePath}`);
         } else {
-            console.log('Unable to find .env file, falling back to environment variables');
+            logger.info('Unable to find .env file, falling back to environment variables');
         }
     }
 }

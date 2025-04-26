@@ -5,7 +5,10 @@
 import axios from 'axios';
 
 import env from '../env/Env.js';
+import loggerHelper from '../helpers/logger.helper.js';
 import repositories from '../repositories/index.js';
+
+const logger = loggerHelper.get('providers/github.js');
 
 const name = 'github';
 
@@ -61,23 +64,22 @@ const getOauthReturnUrl = (code) => {
  * @returns {String} jwt
  */
 const completeLoginAsync = async (code) => {
-    console.log('=========== GITHUB OAUTH TOKEN EXCHANGE START ===========');
-    console.log(`Starting GitHub completeLoginAsync with code length: ${code?.length || 0}`);
-    console.log(`NODE_ENV: ${env.get().config.NODE_ENV}`);
-
+    logger.info('=========== GITHUB OAUTH TOKEN EXCHANGE START ===========');
+    logger.info(`Starting GitHub completeLoginAsync with code length: ${code?.length || 0}`);
+    logger.debug(`NODE_ENV: ${env.get().config.NODE_ENV}`);
     // Validate GitHub client credentials
     if (!env.get().config.GITHUB_CLIENT_ID) {
-        console.error('GitHub OAuth Error: GITHUB_CLIENT_ID is not configured');
+        logger.error('GitHub OAuth Error: GITHUB_CLIENT_ID is not configured');
         throw new Error('GitHub client ID is not configured');
     }
 
     if (!env.get().config.GITHUB_CLIENT_SECRET) {
-        console.error('GitHub OAuth Error: GITHUB_CLIENT_SECRET is not configured');
+        logger.error('GitHub OAuth Error: GITHUB_CLIENT_SECRET is not configured');
         throw new Error('GitHub client secret is not configured');
     }
 
     const url = `${getGithubUrl()}/login/oauth/access_token`;
-    console.log(`Token exchange URL: ${url}`);
+    logger.debug(`Token exchange URL: ${url}`);
 
     // Get the redirect URI from environment and ensure it uses HTTPS if needed
     let redirectUri = env.get().config.GITHUB_REDIRECT_URI;
@@ -92,17 +94,17 @@ const completeLoginAsync = async (code) => {
             env.get().config.APP_USE_TLS === 'true')
     ) {
         const httpsUri = redirectUri.replace('http://', 'https://');
-        console.log(`GitHub OAuth: Converting redirect URI from ${redirectUri} to ${httpsUri}`);
+        logger.info(`GitHub OAuth: Converting redirect URI from ${redirectUri} to ${httpsUri}`);
         redirectUri = httpsUri;
     }
 
-    console.log(`GitHub OAuth: Using redirect URI: ${redirectUri}`);
-    console.log(`GitHub client ID configured: ${Boolean(env.get().config.GITHUB_CLIENT_ID)}`);
-    console.log(`GitHub client ID length: ${env.get().config.GITHUB_CLIENT_ID?.length || 0}`);
-    console.log(
+    logger.debug(`GitHub OAuth: Using redirect URI: ${redirectUri}`);
+    logger.debug(`GitHub client ID configured: ${Boolean(env.get().config.GITHUB_CLIENT_ID)}`);
+    logger.debug(`GitHub client ID length: ${env.get().config.GITHUB_CLIENT_ID?.length || 0}`);
+    logger.debug(
         `GitHub client secret configured: ${Boolean(env.get().config.GITHUB_CLIENT_SECRET)}`
     );
-    console.log(
+    logger.debug(
         `GitHub client secret length: ${env.get().config.GITHUB_CLIENT_SECRET?.length || 0}`
     );
 
@@ -113,10 +115,10 @@ const completeLoginAsync = async (code) => {
         redirect_uri: redirectUri
     };
 
-    console.log(`GitHub OAuth: Exchanging code for token at ${url}`);
+    logger.info(`GitHub OAuth: Exchanging code for token at ${url}`);
 
     // Log request details without sensitive information
-    console.log(
+    logger.debug(
         `GitHub OAuth: Request body: ${JSON.stringify({
             client_id: '[REDACTED]', // Don't log actual client ID
             code_length: code?.length || 0,
@@ -131,29 +133,29 @@ const completeLoginAsync = async (code) => {
     };
 
     try {
-        console.log(`GitHub OAuth: Sending token request to GitHub`);
-        console.log(`GitHub OAuth: Request URL: ${url}`);
-        console.log(`GitHub OAuth: Request method: POST`);
-        console.log(`GitHub OAuth: Request headers: ${JSON.stringify(options.headers)}`);
+        logger.debug(`GitHub OAuth: Sending token request to GitHub`);
+        logger.debug(`GitHub OAuth: Request URL: ${url}`);
+        logger.debug(`GitHub OAuth: Request method: POST`);
+        logger.debug(`GitHub OAuth: Request headers: ${JSON.stringify(options.headers)}`);
 
         const providerResp = await axios.post(url, body, options);
 
-        console.log(`GitHub OAuth: Received token response from GitHub`);
-        console.log(`GitHub OAuth: Response status: ${providerResp.status}`);
+        logger.info(`GitHub OAuth: Received token response from GitHub`);
+        logger.debug(`GitHub OAuth: Response status: ${providerResp.status}`);
 
         // Log presence of tokens without revealing their values
-        console.log(
+        logger.debug(
             `GitHub OAuth: Response has access_token: ${Boolean(providerResp.data.access_token)}`
         );
-        console.log(
+        logger.debug(
             `GitHub OAuth: Response has refresh_token: ${Boolean(providerResp.data.refresh_token)}`
         );
-        console.log(`GitHub OAuth: Response has error: ${Boolean(providerResp.data.error)}`);
+        logger.debug(`GitHub OAuth: Response has error: ${Boolean(providerResp.data.error)}`);
 
         if (providerResp.data.error) {
             // Log error information (errors are generally safe to log)
-            console.error(`GitHub OAuth Error: ${providerResp.data.error}`);
-            console.error(`GitHub OAuth Error Description: ${providerResp.data.error_description}`);
+            logger.error(`GitHub OAuth Error: ${providerResp.data.error}`);
+            logger.error(`GitHub OAuth Error Description: ${providerResp.data.error_description}`);
             throw new Error(
                 `GitHub OAuth Error: ${
                     providerResp.data.error_description || providerResp.data.error
@@ -162,7 +164,7 @@ const completeLoginAsync = async (code) => {
         }
 
         // Log keys received without revealing their values
-        console.log(
+        logger.debug(
             `GitHub OAuth: Token exchange successful, received keys: ${Object.keys(
                 providerResp.data
             ).join(', ')}`
@@ -170,7 +172,7 @@ const completeLoginAsync = async (code) => {
 
         // Validate access token
         if (!providerResp.data.access_token) {
-            console.error(
+            logger.error(
                 `GitHub OAuth: No access token received. Response: ${JSON.stringify(
                     providerResp.data
                 )}`
@@ -178,14 +180,14 @@ const completeLoginAsync = async (code) => {
             throw new Error('No access token received from GitHub');
         }
 
-        console.log(`GitHub OAuth: Successfully obtained access token, fetching user info`);
+        logger.info(`GitHub OAuth: Successfully obtained access token, fetching user info`);
 
         // Set up GitHub API URL for user info
         const githubApiUrl = env.get().config.GITHUB_ENTERPRISE_HOSTNAME
             ? `${getGithubUrl()}/api/v3/user`
             : 'https://api.github.com/user';
 
-        console.log(`GitHub OAuth: Getting user info from ${githubApiUrl}`);
+        logger.debug(`GitHub OAuth: Getting user info from ${githubApiUrl}`);
 
         try {
             // Make direct API call to GitHub to get user info
@@ -197,29 +199,29 @@ const completeLoginAsync = async (code) => {
             });
 
             if (!userResponse.data || !userResponse.data.login) {
-                console.error('GitHub OAuth: Invalid user data received');
-                console.error(`GitHub OAuth: User response: ${JSON.stringify(userResponse.data)}`);
+                logger.error('GitHub OAuth: Invalid user data received');
+                logger.error(`GitHub OAuth: User response: ${JSON.stringify(userResponse.data)}`);
                 throw new Error('Invalid user data received from GitHub');
             }
 
             const fullUser = userResponse.data;
 
             // Log user info without revealing sensitive data
-            console.log(`GitHub OAuth: User info received for ${fullUser.login || '[UNKNOWN]'}`);
-            console.log(`GitHub OAuth: User info has name: ${Boolean(fullUser.name)}`);
-            console.log(`GitHub OAuth: User info has email: ${Boolean(fullUser.email)}`);
+            logger.info(`GitHub OAuth: User info received for ${fullUser.login || '[UNKNOWN]'}`);
+            logger.debug(`GitHub OAuth: User info has name: ${Boolean(fullUser.name)}`);
+            logger.debug(`GitHub OAuth: User info has email: ${Boolean(fullUser.email)}`);
 
             // Don't log any actual user data that might be sensitive
 
             // Set repository for future use
             try {
-                console.log('Setting repository to githubrepo');
+                logger.debug('Setting repository to githubrepo');
                 repositories.set('githubrepo');
-                console.log('Repository set successfully');
+                logger.debug('Repository set successfully');
             } catch (repoError) {
                 // Log but don't fail if repository setting fails
-                console.error(`Warning - Error setting repository: ${repoError.message}`);
-                console.error(`This may cause issues with future operations`);
+                logger.warn(`Warning - Error setting repository: ${repoError.message}`);
+                logger.warn(`This may cause issues with future operations`);
             }
 
             const user = {
@@ -228,27 +230,30 @@ const completeLoginAsync = async (code) => {
                 repos_url: fullUser.repos_url
             };
 
-            console.log(
+            logger.info(
                 `GitHub OAuth: Created user object with username: ${user.username || '[UNKNOWN]'}`
             );
             if (user.email) {
                 // Don't log the actual email address
-                console.log(`GitHub OAuth: Created user object with email: [REDACTED]`);
+                logger.debug(`GitHub OAuth: Created user object with email: [REDACTED]`);
             }
 
-            console.log('=========== GITHUB OAUTH TOKEN EXCHANGE COMPLETE ===========');
+            // Add audit logging for successful authentication
+            logger.audit(`User ${user.username} authenticated successfully via GitHub OAuth`);
+
+            logger.info('=========== GITHUB OAUTH TOKEN EXCHANGE COMPLETE ===========');
 
             return {
                 user,
                 opts: providerResp.data
             };
         } catch (userError) {
-            console.error(`GitHub OAuth: Error fetching user info: ${userError.message}`);
+            logger.error(`GitHub OAuth: Error fetching user info: ${userError.message}`);
             if (userError.response) {
-                console.error(
+                logger.error(
                     `GitHub OAuth: User info response status: ${userError.response.status}`
                 );
-                console.error(
+                logger.error(
                     `GitHub OAuth: User info response data: ${JSON.stringify(
                         userError.response.data || {}
                     )}`
@@ -257,11 +262,11 @@ const completeLoginAsync = async (code) => {
             throw new Error(`Failed to fetch GitHub user info: ${userError.message}`);
         }
     } catch (error) {
-        console.error(`GitHub OAuth Error: ${error.message}`);
-        console.error(`GitHub OAuth Error Stack: ${error.stack}`);
+        logger.error(`GitHub OAuth Error: ${error.message}`);
+        logger.error(`GitHub OAuth Error Stack: ${error.stack}`);
 
         if (error.response) {
-            console.error(
+            logger.error(
                 `GitHub OAuth Error Response: ${JSON.stringify({
                     status: error.response.status,
                     statusText: error.response.statusText,
@@ -270,7 +275,10 @@ const completeLoginAsync = async (code) => {
             );
         }
 
-        console.log('=========== GITHUB OAUTH TOKEN EXCHANGE FAILED ===========');
+        logger.info('=========== GITHUB OAUTH TOKEN EXCHANGE FAILED ===========');
+        // Add audit logging for authentication failures
+        logger.audit(`GitHub OAuth authentication failed: ${error.message}`);
+        logger.error(`GitHub OAuth authentication failed: ${error.message}`);
         throw error;
     }
 };

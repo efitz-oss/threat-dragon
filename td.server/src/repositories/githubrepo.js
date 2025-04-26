@@ -1,5 +1,8 @@
 import env from '../env/Env.js';
 import fetch from 'node-fetch';
+import loggerHelper from '../helpers/logger.helper.js';
+
+const logger = loggerHelper.get('repositories/githubrepo.js');
 
 const repoRootDirectory = () =>
     env.get().config.GITHUB_REPO_ROOT_DIRECTORY || env.get().config.REPO_ROOT_DIRECTORY;
@@ -23,7 +26,7 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
     const url = `${baseUrl}${path}`;
 
     try {
-        console.log(`GitHub API request to: ${url}`);
+        logger.debug(`GitHub API request to: ${url}`);
         const response = await fetch(url, {
             ...options,
             headers: {
@@ -35,8 +38,11 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`GitHub API error (${response.status}): ${response.statusText}`);
-            console.error(`Error response body: ${errorText}`);
+            logger.error(`GitHub API error (${response.status}): ${response.statusText}`);
+            logger.error(`Error response body: ${errorText}`);
+
+            // Add audit logging for API errors
+            logger.audit(`Data access error: GitHub API error (${response.status}) for ${url}`);
 
             throw new Error(
                 `GitHub API error (${response.status}): ${response.statusText} - ${errorText}`
@@ -45,9 +51,9 @@ const fetchGitHub = async (path, accessToken, options = {}) => {
 
         return response.json();
     } catch (error) {
-        console.error(`Error fetching from GitHub API: ${error.message}`);
+        logger.error(`Error fetching from GitHub API: ${error.message}`);
         if (error.stack) {
-            console.error(`Error stack: ${error.stack}`);
+            logger.error(`Error stack: ${error.stack}`);
         }
         throw error;
     }
@@ -57,13 +63,13 @@ const reposAsync = async (page, accessToken, searchQueries = []) => {
     await Promise.resolve(); // Ensure async function has await expression
 
     // Log the parameters for debugging
-    console.log(`GitHub reposAsync called with page: ${page}`);
-    console.log(`GitHub reposAsync called with searchQueries:`, searchQueries);
+    logger.debug(`GitHub reposAsync called with page: ${page}`);
+    logger.debug(`GitHub reposAsync called with searchQueries:`, searchQueries);
 
     // Construct the URL with pagination
     const url = `/user/repos?page=${page}&per_page=100`;
 
-    console.log(`GitHub reposAsync using URL: ${url}`);
+    logger.debug(`GitHub reposAsync using URL: ${url}`);
 
     try {
         const response = await fetchGitHub(url, accessToken, {
@@ -73,10 +79,13 @@ const reposAsync = async (page, accessToken, searchQueries = []) => {
             }
         });
 
+        // Add audit logging for successful data access
+        logger.audit(`Data access: User repositories retrieved from GitHub, page ${page}`);
+
         // Return the response in the expected format [repos, headers, pageLinks]
         return [response, {}, {}];
     } catch (error) {
-        console.error(`Error in reposAsync: ${error.message}`);
+        logger.error(`Error in reposAsync: ${error.message}`);
         throw error;
     }
 };
@@ -85,8 +94,8 @@ const searchAsync = async (page, accessToken, searchQueries = []) => {
     await Promise.resolve(); // Ensure async function has await expression
 
     // Log the parameters for debugging
-    console.log(`GitHub searchAsync called with page: ${page}`);
-    console.log(`GitHub searchAsync called with searchQueries:`, searchQueries);
+    logger.debug(`GitHub searchAsync called with page: ${page}`);
+    logger.debug(`GitHub searchAsync called with searchQueries:`, searchQueries);
 
     // Filter out empty search queries
     const validQueries = searchQueries.filter((q) => q && typeof q === 'string' && q.trim() !== '');
@@ -97,15 +106,20 @@ const searchAsync = async (page, accessToken, searchQueries = []) => {
         searchQuery = validQueries[0];
     }
 
-    console.log(`GitHub searchAsync using query: ${searchQuery}`);
+    logger.debug(`GitHub searchAsync using query: ${searchQuery}`);
 
     try {
         const url = `/search/repositories?q=${encodeURIComponent(
             searchQuery
         )}&page=${page}&per_page=100`;
-        console.log(`GitHub searchAsync using URL: ${url}`);
+        logger.debug(`GitHub searchAsync using URL: ${url}`);
 
         const data = await fetchGitHub(url, accessToken);
+
+        // Add audit logging for successful search
+        logger.audit(
+            `Data access: GitHub repository search performed with query "${searchQuery}", page ${page}`
+        );
 
         // Return the response in the expected format [repos, headers, pageLinks]
         return [
@@ -117,7 +131,7 @@ const searchAsync = async (page, accessToken, searchQueries = []) => {
             }
         ];
     } catch (error) {
-        console.error(`Error in searchAsync: ${error.message}`);
+        logger.error(`Error in searchAsync: ${error.message}`);
         throw error;
     }
 };
@@ -130,7 +144,7 @@ const userAsync = async (accessToken) => {
 const branchesAsync = async (repoInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
 
-    console.log(
+    logger.debug(
         `GitHub branchesAsync called with repo: ${repoInfo.organisation}/${repoInfo.repo}, page: ${repoInfo.page}`
     );
 
@@ -140,21 +154,27 @@ const branchesAsync = async (repoInfo, accessToken) => {
             accessToken
         );
 
-        console.log(`GitHub branchesAsync response type: ${typeof response}`);
+        logger.debug(`GitHub branchesAsync response type: ${typeof response}`);
 
         // Ensure we return an array
         if (Array.isArray(response)) {
-            console.log(`GitHub branchesAsync found ${response.length} branches`);
+            logger.debug(`GitHub branchesAsync found ${response.length} branches`);
+
+            // Add audit logging for successful branch retrieval
+            logger.audit(
+                `Data access: Retrieved ${response.length} branches from ${repoInfo.organisation}/${repoInfo.repo}`
+            );
+
             return [response, {}, {}];
         } else {
-            console.log(`GitHub branchesAsync response is not an array, converting to array`);
-            console.log(`Response: ${JSON.stringify(response)}`);
+            logger.warn(`GitHub branchesAsync response is not an array, converting to array`);
+            logger.debug(`Response: ${JSON.stringify(response)}`);
 
             // If response is not an array, return an empty array
             return [[], {}, {}];
         }
     } catch (error) {
-        console.error(`Error in branchesAsync: ${error.message}`);
+        logger.error(`Error in branchesAsync: ${error.message}`);
         // Return empty array on error
         return [[], {}, {}];
     }
@@ -164,7 +184,7 @@ const modelsAsync = async (branchInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
 
     try {
-        console.log(
+        logger.info(
             `Fetching models from GitHub for ${branchInfo.organisation}/${
                 branchInfo.repo
             }/${repoRootDirectory()} on branch ${branchInfo.branch}`
@@ -177,13 +197,13 @@ const modelsAsync = async (branchInfo, accessToken) => {
             accessToken
         );
 
-        console.log(`GitHub modelsAsync response type: ${typeof response}`);
+        logger.debug(`GitHub modelsAsync response type: ${typeof response}`);
 
         // Process the response to ensure we have a proper array of model objects
         let models = [];
 
         if (Array.isArray(response)) {
-            console.log(`GitHub modelsAsync found ${response.length} items`);
+            logger.debug(`GitHub modelsAsync found ${response.length} items`);
 
             // Filter for JSON files only
             models = response
@@ -199,19 +219,19 @@ const modelsAsync = async (branchInfo, accessToken) => {
                 .map((item) => {
                     // Ensure the name property is a proper string
                     if (typeof item.name !== 'string') {
-                        console.warn(`Item name is not a string: ${JSON.stringify(item.name)}`);
+                        logger.warn(`Item name is not a string: ${JSON.stringify(item.name)}`);
                         item.name = String(item.name || '');
                     }
                     return item;
                 });
 
-            console.log(`Filtered to ${models.length} JSON model files`);
+            logger.debug(`Filtered to ${models.length} JSON model files`);
         } else if (response && typeof response === 'object') {
-            console.log(`GitHub modelsAsync response is not an array, processing as object`);
+            logger.warn(`GitHub modelsAsync response is not an array, processing as object`);
 
             // If response is not an array but has a message property, it might be an error
             if (response.message) {
-                console.error(`GitHub API error: ${response.message}`);
+                logger.error(`GitHub API error: ${response.message}`);
                 return [[], {}, {}];
             }
 
@@ -227,15 +247,20 @@ const modelsAsync = async (branchInfo, accessToken) => {
         }
 
         // Log the processed models
-        console.log(
+        logger.debug(
             `Returning ${models.length} models with names:`,
             models.map((m) => (typeof m.name === 'string' ? m.name : JSON.stringify(m.name)))
         );
 
+        // Add audit logging for successful model retrieval
+        logger.audit(
+            `Data access: Retrieved ${models.length} threat models from ${branchInfo.organisation}/${branchInfo.repo}/${branchInfo.branch}`
+        );
+
         return [models, {}, {}];
     } catch (error) {
-        console.error(`Error in modelsAsync: ${error.message}`);
-        console.error(`Error stack: ${error.stack}`);
+        logger.error(`Error in modelsAsync: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
         // Return empty array on error
         return [[], {}, {}];
     }
@@ -246,7 +271,7 @@ const modelAsync = async (modelInfo, accessToken) => {
 
     // Ensure modelInfo.model is a string
     if (typeof modelInfo.model !== 'string') {
-        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+        logger.debug(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
 
         // If it's a character-by-character object, convert it to a string
         if (modelInfo.model && typeof modelInfo.model === 'object') {
@@ -255,9 +280,9 @@ const modelAsync = async (modelInfo, accessToken) => {
                 try {
                     const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
                     modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
-                    console.log(`Converted model name to: ${modelInfo.model}`);
+                    logger.debug(`Converted model name to: ${modelInfo.model}`);
                 } catch (err) {
-                    console.error(`Error converting model name: ${err.message}`);
+                    logger.error(`Error converting model name: ${err.message}`);
                     modelInfo.model = String(modelInfo.model);
                 }
             } else {
@@ -268,10 +293,10 @@ const modelAsync = async (modelInfo, accessToken) => {
         }
     }
 
-    console.log(
+    logger.info(
         `Fetching model: ${modelInfo.model} from ${modelInfo.organisation}/${modelInfo.repo}`
     );
-    console.log(`Using path: ${getModelPath(modelInfo)}`);
+    logger.debug(`Using path: ${getModelPath(modelInfo)}`);
 
     try {
         const data = await fetchGitHub(
@@ -280,17 +305,23 @@ const modelAsync = async (modelInfo, accessToken) => {
             )}?ref=${modelInfo.branch}`,
             accessToken
         );
+
+        // Add audit logging for successful model retrieval
+        logger.audit(
+            `Data access: Retrieved threat model ${modelInfo.model} from ${modelInfo.organisation}/${modelInfo.repo}/${modelInfo.branch}`
+        );
+
         return [data];
     } catch (error) {
-        console.error(`Error in modelAsync: ${error.message}`);
-        console.error(`Error stack: ${error.stack}`);
+        logger.error(`Error in modelAsync: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
 
         // Handle "file not found" or other 404 errors
         if (
             error.message &&
             (error.message.includes('Not Found') || error.message.includes('404'))
         ) {
-            console.log(`Model file ${getModelPath(modelInfo)} not found, returning empty object`);
+            logger.warn(`Model file ${getModelPath(modelInfo)} not found, returning empty object`);
             return [{}];
         }
 
@@ -303,7 +334,7 @@ const createAsync = async (modelInfo, accessToken) => {
 
     // Ensure modelInfo.model is a string
     if (typeof modelInfo.model !== 'string') {
-        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+        logger.debug(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
 
         // If it's a character-by-character object, convert it to a string
         if (modelInfo.model && typeof modelInfo.model === 'object') {
@@ -312,9 +343,9 @@ const createAsync = async (modelInfo, accessToken) => {
                 try {
                     const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
                     modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
-                    console.log(`Converted model name to: ${modelInfo.model}`);
+                    logger.debug(`Converted model name to: ${modelInfo.model}`);
                 } catch (err) {
-                    console.error(`Error converting model name: ${err.message}`);
+                    logger.error(`Error converting model name: ${err.message}`);
                     modelInfo.model = String(modelInfo.model);
                 }
             } else {
@@ -328,16 +359,16 @@ const createAsync = async (modelInfo, accessToken) => {
     // Ensure model name ends with .json
     if (!modelInfo.model.toLowerCase().endsWith('.json')) {
         modelInfo.model = `${modelInfo.model}.json`;
-        console.log(`Added .json extension to model name: ${modelInfo.model}`);
+        logger.debug(`Added .json extension to model name: ${modelInfo.model}`);
     }
 
-    console.log(
+    logger.info(
         `Creating model: ${modelInfo.model} in ${modelInfo.organisation}/${modelInfo.repo}`
     );
-    console.log(`Using path: ${getModelPath(modelInfo)}`);
+    logger.debug(`Using path: ${getModelPath(modelInfo)}`);
 
     try {
-        return await fetchGitHub(
+        const result = await fetchGitHub(
             `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
                 modelInfo
             )}`,
@@ -351,9 +382,16 @@ const createAsync = async (modelInfo, accessToken) => {
                 })
             }
         );
+
+        // Add audit logging for successful model creation
+        logger.audit(
+            `Data modification: Created threat model ${modelInfo.model} in ${modelInfo.organisation}/${modelInfo.repo}/${modelInfo.branch}`
+        );
+
+        return result;
     } catch (error) {
-        console.error(`Error in createAsync: ${error.message}`);
-        console.error(`Error stack: ${error.stack}`);
+        logger.error(`Error in createAsync: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
         throw error;
     }
 };
@@ -363,7 +401,7 @@ const updateAsync = async (modelInfo, accessToken) => {
 
     // Ensure modelInfo.model is a string
     if (typeof modelInfo.model !== 'string') {
-        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+        logger.debug(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
 
         // If it's a character-by-character object, convert it to a string
         if (modelInfo.model && typeof modelInfo.model === 'object') {
@@ -372,9 +410,9 @@ const updateAsync = async (modelInfo, accessToken) => {
                 try {
                     const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
                     modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
-                    console.log(`Converted model name to: ${modelInfo.model}`);
+                    logger.debug(`Converted model name to: ${modelInfo.model}`);
                 } catch (err) {
-                    console.error(`Error converting model name: ${err.message}`);
+                    logger.error(`Error converting model name: ${err.message}`);
                     modelInfo.model = String(modelInfo.model);
                 }
             } else {
@@ -388,18 +426,18 @@ const updateAsync = async (modelInfo, accessToken) => {
     // Ensure model name ends with .json
     if (!modelInfo.model.toLowerCase().endsWith('.json')) {
         modelInfo.model = `${modelInfo.model}.json`;
-        console.log(`Added .json extension to model name: ${modelInfo.model}`);
+        logger.debug(`Added .json extension to model name: ${modelInfo.model}`);
     }
 
-    console.log(
+    logger.info(
         `Updating model: ${modelInfo.model} in ${modelInfo.organisation}/${modelInfo.repo}`
     );
-    console.log(`Using path: ${getModelPath(modelInfo)}`);
+    logger.debug(`Using path: ${getModelPath(modelInfo)}`);
 
     try {
         const original = await modelAsync(modelInfo, accessToken);
 
-        return await fetchGitHub(
+        const result = await fetchGitHub(
             `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
                 modelInfo
             )}`,
@@ -414,9 +452,16 @@ const updateAsync = async (modelInfo, accessToken) => {
                 })
             }
         );
+
+        // Add audit logging for successful model update
+        logger.audit(
+            `Data modification: Updated threat model ${modelInfo.model} in ${modelInfo.organisation}/${modelInfo.repo}/${modelInfo.branch}`
+        );
+
+        return result;
     } catch (error) {
-        console.error(`Error in updateAsync: ${error.message}`);
-        console.error(`Error stack: ${error.stack}`);
+        logger.error(`Error in updateAsync: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
         throw error;
     }
 };
@@ -426,7 +471,7 @@ const deleteAsync = async (modelInfo, accessToken) => {
 
     // Ensure modelInfo.model is a string
     if (typeof modelInfo.model !== 'string') {
-        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+        logger.debug(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
 
         // If it's a character-by-character object, convert it to a string
         if (modelInfo.model && typeof modelInfo.model === 'object') {
@@ -435,9 +480,9 @@ const deleteAsync = async (modelInfo, accessToken) => {
                 try {
                     const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
                     modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
-                    console.log(`Converted model name to: ${modelInfo.model}`);
+                    logger.debug(`Converted model name to: ${modelInfo.model}`);
                 } catch (err) {
-                    console.error(`Error converting model name: ${err.message}`);
+                    logger.error(`Error converting model name: ${err.message}`);
                     modelInfo.model = String(modelInfo.model);
                 }
             } else {
@@ -451,18 +496,18 @@ const deleteAsync = async (modelInfo, accessToken) => {
     // Ensure model name ends with .json
     if (!modelInfo.model.toLowerCase().endsWith('.json')) {
         modelInfo.model = `${modelInfo.model}.json`;
-        console.log(`Added .json extension to model name: ${modelInfo.model}`);
+        logger.debug(`Added .json extension to model name: ${modelInfo.model}`);
     }
 
-    console.log(
+    logger.info(
         `Deleting model: ${modelInfo.model} from ${modelInfo.organisation}/${modelInfo.repo}`
     );
-    console.log(`Using path: ${getModelPath(modelInfo)}`);
+    logger.debug(`Using path: ${getModelPath(modelInfo)}`);
 
     try {
         const content = await modelAsync(modelInfo, accessToken);
 
-        return await fetchGitHub(
+        const result = await fetchGitHub(
             `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
                 modelInfo
             )}`,
@@ -476,9 +521,16 @@ const deleteAsync = async (modelInfo, accessToken) => {
                 })
             }
         );
+
+        // Add audit logging for successful model deletion
+        logger.audit(
+            `Data modification: Deleted threat model ${modelInfo.model} from ${modelInfo.organisation}/${modelInfo.repo}/${modelInfo.branch}`
+        );
+
+        return result;
     } catch (error) {
-        console.error(`Error in deleteAsync: ${error.message}`);
-        console.error(`Error stack: ${error.stack}`);
+        logger.error(`Error in deleteAsync: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
         throw error;
     }
 };
@@ -489,7 +541,7 @@ const getModelPath = (modelInfo) => {
 
     // For the model endpoint, we're directly accessing the file in the root directory
     // The GitHub API expects the full path to the file
-    console.log(`Model path: ${repoRootDirectory()}/${modelName}`);
+    logger.debug(`Model path: ${repoRootDirectory()}/${modelName}`);
     return `${repoRootDirectory()}/${modelName}`;
 };
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');

@@ -67,18 +67,21 @@ const validateConfiguration = (logger) => {
     if (!env.get().config.GOOGLE_CLIENT_ID) {
         const error = new Error('Google OAuth client ID is not configured');
         logger.error(error.message);
+        logger.audit(`Authentication failed: Google OAuth client ID is not configured`);
         throw error;
     }
 
     if (!env.get().config.GOOGLE_CLIENT_SECRET) {
         const error = new Error('Google OAuth client secret is not configured');
         logger.error(error.message);
+        logger.audit(`Authentication failed: Google OAuth client secret is not configured`);
         throw error;
     }
 
     if (!env.get().config.GOOGLE_REDIRECT_URI) {
         const error = new Error('Google OAuth redirect URI is not configured');
         logger.error(error.message);
+        logger.audit(`Authentication failed: Google OAuth redirect URI is not configured`);
         throw error;
     }
 };
@@ -129,6 +132,10 @@ const exchangeCodeForToken = async (code, logger) => {
             'No access token in Google response:',
             JSON.stringify(providerResp.data || {})
         );
+
+        // Add audit logging for token validation failure
+        logger.audit(`Authentication failed: No access token received from Google`);
+
         throw new Error('No access token received from Google');
     }
 
@@ -210,6 +217,14 @@ const completeLoginAsync = async (code) => {
         // Redact sensitive information in logs
         googleLogger.info(`Created user object with username: ${user.username || '[UNKNOWN]'}`);
         googleLogger.info(`Created user object with email: [REDACTED]`);
+
+        // Add audit logging for successful authentication
+        googleLogger.audit(
+            `Authentication successful: User ${
+                user.username || '[UNKNOWN]'
+            } authenticated via Google OAuth`
+        );
+
         googleLogger.info('=========== GOOGLE OAUTH TOKEN EXCHANGE COMPLETE ===========');
 
         // Ensure the provider name is explicitly set in the options
@@ -225,6 +240,9 @@ const completeLoginAsync = async (code) => {
     } catch (error) {
         // Log errors from API calls
         logApiError(error, 'https://oauth2.googleapis.com/token', googleLogger);
+
+        // Add audit logging for authentication failure
+        googleLogger.audit(`Authentication failed: Google OAuth error: ${error.message}`);
 
         googleLogger.error('=========== GOOGLE OAUTH TOKEN EXCHANGE FAILED ===========');
         throw error;

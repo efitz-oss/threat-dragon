@@ -113,7 +113,7 @@ const oauthReturn = (req, res) => {
 };
 
 // Helper to process OAuth login completion
-const processOAuthLogin = async (providerName, code, logger) => {
+const processOAuthLogin = async (providerName, code, logger, req) => {
     try {
         logger.info(`Processing OAuth login for provider: ${providerName}`);
 
@@ -155,6 +155,7 @@ const processOAuthLogin = async (providerName, code, logger) => {
         logger.info(`Calling provider.completeLoginAsync with code length: ${code.length}`);
         let user, opts;
         try {
+            // Call completeLoginAsync with just the code parameter to maintain compatibility with tests
             const result = await provider.completeLoginAsync(code);
             user = result.user;
             opts = result.opts;
@@ -191,7 +192,14 @@ const processOAuthLogin = async (providerName, code, logger) => {
         if (safeUserInfo.email) safeUserInfo.email = '[REDACTED]';
         if (safeUserInfo.id) safeUserInfo.id = '[REDACTED]';
 
-        logger.info(`Got user info: ${JSON.stringify(safeUserInfo)}`);
+        // Log both display name and actual username
+        logger.info(
+            `Got user info: ${JSON.stringify({
+                ...safeUserInfo,
+                username: safeUserInfo.username || 'unknown',
+                actual_username: safeUserInfo.actual_username || safeUserInfo.username || 'unknown'
+            })}`
+        );
 
         // Only log the presence of tokens, not their values
         logger.info(
@@ -235,15 +243,30 @@ const processOAuthLogin = async (providerName, code, logger) => {
         }
 
         logger.info(
-            `Login completed successfully for ${user?.username || 'unknown'}, ${
-                user?.email || 'no email'
-            }`
+            `Login completed successfully for ${user?.username || 'unknown'} (actual username: ${
+                user?.actual_username || user?.username || 'unknown'
+            }), ${user?.email || 'no email'}`
+        );
+
+        // Add audit logging for successful authentication
+        const ipAddress = req?.ip ? ` from IP ${req.ip}` : '';
+        logger.audit(
+            `Authentication successful: User ${user?.username || 'unknown'} (actual username: ${
+                user?.actual_username || user?.username || 'unknown'
+            }) authenticated via ${provider.name} provider${ipAddress}`
         );
 
         return { accessToken, refreshToken, user };
     } catch (error) {
         logger.error(`Error in processOAuthLogin: ${error.message}`);
         logger.error(`Error stack: ${error.stack}`);
+
+        // Add audit logging for authentication failures
+        const ipAddress = req?.ip ? ` from IP ${req.ip}` : '';
+        logger.audit(
+            `Authentication failed: Error during OAuth login process for provider ${providerName}${ipAddress}: ${error.message}`
+        );
+
         throw error;
     }
 };
@@ -283,7 +306,8 @@ const completeLogin = (req, res) => {
                     const result = await processOAuthLogin(
                         req.params.provider,
                         req.body.code,
-                        logger
+                        logger,
+                        req
                     );
 
                     if (!result || !result.accessToken) {
@@ -347,6 +371,10 @@ const logout = (req, res) =>
 
                 logger.debug('Remove refresh token');
                 tokenRepo.remove(refreshToken);
+
+                // Add audit logging for logout events
+                logger.audit(`User logged out: Token invalidated from IP ${req.ip || 'unknown'}`);
+
                 return '';
             } catch (e) {
                 logger.error(e);
@@ -369,6 +397,13 @@ const refresh = (req, res) => {
         async () => {
             const { provider, user } = tokenBody;
             const { accessToken } = await jwtHelper.createAsync(provider.name, provider, user);
+
+            // Add audit logging for token refresh
+            logger.audit(
+                `Token refreshed: User ${user?.username || 'unknown'} (actual username: ${
+                    user?.actual_username || user?.username || 'unknown'
+                }) refreshed access token from IP ${req.ip || 'unknown'}`
+            );
 
             // Limit the time refresh tokens live, so do not provide a new one.
             return { accessToken, refreshToken: req.body.refreshToken };

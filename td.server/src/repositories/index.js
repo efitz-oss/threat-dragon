@@ -2,6 +2,9 @@ import bitbucketrepo from './bitbucketrepo.js';
 import githubrepo from './githubrepo.js';
 import gitlabrepo from './gitlabrepo.js';
 import googledrive from './googledrive.js';
+import loggerHelper from '../helpers/logger.helper.js';
+
+const logger = loggerHelper.get('repositories/index.js');
 
 /**
  * An immutable object containing all
@@ -35,7 +38,7 @@ const set = (name) => {
         return;
     }
 
-    console.log(`Setting repository selection to: ${repoName}`);
+    logger.info(`Setting repository selection to: ${repoName}`);
     selection = repoName.toLowerCase();
 };
 

@@ -342,6 +342,15 @@ const model = (req, res) =>
                         });
                     }
 
+                    // Add audit logging for successful threat model access
+                    logger.audit(
+                        `Data access: User ${
+                            req.user?.username || 'unknown'
+                        } accessed threat model ${modelInfo.model} in ${modelInfo.organisation}/${
+                            modelInfo.repo
+                        }/${modelInfo.branch} from IP ${req.ip || 'unknown'}`
+                    );
+
                     return jsonContent;
                 } catch (parseError) {
                     logger.error(`Error parsing JSON content: ${parseError.message}`);
@@ -392,6 +401,16 @@ const create = async (req, res) => {
 
     try {
         const createResp = await repository.createAsync(modelBody, req.provider.access_token);
+
+        // Add audit logging for threat model creation
+        logger.audit(
+            `Data modification: User ${req.user?.username || 'unknown'} created new threat model ${
+                modelBody.model
+            } in ${modelBody.organisation}/${modelBody.repo}/${modelBody.branch} from IP ${
+                req.ip || 'unknown'
+            }`
+        );
+
         return res.status(201).send(createResp);
     } catch (err) {
         logger.error(err);
@@ -413,6 +432,16 @@ const update = async (req, res) => {
 
     try {
         const updateResp = await repository.updateAsync(modelBody, req.provider.access_token);
+
+        // Add audit logging for threat model update
+        logger.audit(
+            `Data modification: User ${req.user?.username || 'unknown'} updated threat model ${
+                modelBody.model
+            } in ${modelBody.organisation}/${modelBody.repo}/${modelBody.branch} from IP ${
+                req.ip || 'unknown'
+            }`
+        );
+
         return res.send(updateResp);
     } catch (err) {
         logger.error(err);
@@ -433,6 +462,16 @@ const deleteModel = async (req, res) => {
 
     try {
         const deleteResp = await repository.deleteAsync(modelInfo, req.provider.access_token);
+
+        // Add audit logging for threat model deletion
+        logger.audit(
+            `Data modification: User ${req.user?.username || 'unknown'} deleted threat model ${
+                modelInfo.model
+            } in ${modelInfo.organisation}/${modelInfo.repo}/${modelInfo.branch} from IP ${
+                req.ip || 'unknown'
+            }`
+        );
+
         return res.send(deleteResp);
     } catch (err) {
         logger.error(err);
@@ -525,6 +564,16 @@ const createBranch = async (req, res) => {
             branchInfo,
             req.provider.access_token
         );
+
+        // Add audit logging for branch creation
+        logger.audit(
+            `Data modification: User ${req.user?.username || 'unknown'} created new branch ${
+                branchInfo.branch
+            } from ${branchInfo.ref} in ${branchInfo.organisation}/${branchInfo.repo} from IP ${
+                req.ip || 'unknown'
+            }`
+        );
+
         return res.status(201).send(createBranchResp);
     } catch (err) {
         logger.error(err);
