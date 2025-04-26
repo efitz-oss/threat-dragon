@@ -94,12 +94,67 @@ export const gitRoutes = [
         meta: { provider: 'gitlab' }
     },
 
-    // For BitBucket (add other routes as needed)
+    // For BitBucket - complete route definitions
     {
         path: `/${providerType}/bitbucket/repository`,
         name: `bitbucket-${providerType}Repository`,
         component: () =>
             import(/* webpackChunkName: "repository-access" */ '../views/git/RepositoryAccess.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/branch`,
+        name: `bitbucket-${providerType}Branch`,
+        component: () =>
+            import(/* webpackChunkName: "branch-access" */ '../views/git/BranchAccess.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/threatmodels`,
+        name: `bitbucket-${providerType}ThreatModelSelect`,
+        component: () =>
+            import(
+                /* webpackChunkName: "threatmodel-select" */ '../views/git/ThreatModelSelect.vue'
+            ),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/:threatmodel`,
+        name: `bitbucket-${providerType}ThreatModel`,
+        component: () => import(/* webpackChunkName: "threatmodel" */ '../views/ThreatModel.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/new`,
+        name: `bitbucket-${providerType}NewThreatModel`,
+        component: () =>
+            import(/* webpackChunkName: "new-threatmodel" */ '../views/NewThreatModel.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/:threatmodel/create`,
+        name: `bitbucket-${providerType}ThreatModelCreate`,
+        component: () =>
+            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/:threatmodel/edit`,
+        name: `bitbucket-${providerType}ThreatModelEdit`,
+        component: () =>
+            import(/* webpackChunkName: "threatmodel-edit" */ '../views/ThreatModelEdit.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/:threatmodel/edit/:diagram`,
+        name: `bitbucket-${providerType}DiagramEdit`,
+        component: () => import(/* webpackChunkName: "diagram-edit" */ '../views/DiagramEdit.vue'),
+        meta: { provider: 'bitbucket' }
+    },
+    {
+        path: `/${providerType}/bitbucket/:repository/:branch/:threatmodel/report`,
+        name: `bitbucket-${providerType}Report`,
+        component: () => import(/* webpackChunkName: "report-model" */ '../views/ReportModel.vue'),
         meta: { provider: 'bitbucket' }
     }
 ];

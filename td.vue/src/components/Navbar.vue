@@ -75,9 +75,10 @@
 </template>
 
 <script>
-import { computed, getCurrentInstance } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
-import { LOGOUT } from '@/store/actions/auth.js';
+import { LOGOUT, AUTH_SET_JWT } from '@/store/actions/auth.js';
+import { PROVIDER_SELECTED } from '@/store/actions/provider.js';
 import { useI18n } from '@/i18n';
 import TdLocaleSelect from './LocaleSelect.vue';
 import { getDisplayName } from '@/service/provider/providers.js';
@@ -94,12 +95,30 @@ export default {
     setup() {
         const store = useStore();
         const { t } = useI18n();
+        const isAuthRestored = ref(false);
+        const fallbackUsername = ref('');
 
         // Use computed to get values from the store
-        const username = computed(() => store.getters.username);
+        const storeUsername = computed(() => store.getters.username);
         const packageBuildVersion = computed(() => store.state.packageBuildVersion);
         const packageBuildState = computed(() => store.state.packageBuildState);
         const config = computed(() => store.state.config.config);
+
+        // Enhanced username computed property with fallback mechanism
+        const username = computed(() => {
+            // If we have a username in the store, use it
+            if (storeUsername.value) {
+                return storeUsername.value;
+            }
+            
+            // If we have a fallback username, use it
+            if (fallbackUsername.value) {
+                return fallbackUsername.value;
+            }
+            
+            // Otherwise, return empty string
+            return '';
+        });
 
         // Get the provider display name for the navbar
         const selectedProvider = computed(() => store.state.provider.selected || 'local');
@@ -115,6 +134,80 @@ export default {
         const googleEnabled = computed(() =>
             config.value && config.value.googleEnabled && !store.getters.isElectronMode
         );
+        
+        // Function to restore auth state from session storage
+        const restoreAuthState = async () => {
+            // If we've already tried to restore auth state, don't try again
+            if (isAuthRestored.value) {
+                return;
+            }
+            
+            // Mark that we've tried to restore auth state
+            isAuthRestored.value = true;
+            
+            // If we already have a username in the store, no need to restore
+            if (storeUsername.value) {
+                return;
+            }
+            
+            log.debug('No username in store, checking session storage');
+            
+            // Try to get auth state from sessionStorage as fallback
+            try {
+                const sessionState = sessionStorage.getItem('td.vuex');
+                if (sessionState) {
+                    const state = JSON.parse(sessionState);
+                    
+                    // Check if we have auth data in session storage
+                    if (state.auth && state.auth.user && state.auth.user.username) {
+                        log.info('Found username in session storage:', {
+                            username: state.auth.user.username
+                        });
+                        
+                        // Set fallback username
+                        fallbackUsername.value = state.auth.user.username;
+                        
+                        // If we have a provider in session storage, restore it too
+                        if (state.provider && state.provider.selected) {
+                            log.info('Restoring provider from session storage:', {
+                                provider: state.provider.selected
+                            });
+                            
+                            // Dispatch action to select provider
+                            try {
+                                await store.dispatch(PROVIDER_SELECTED, state.provider.selected);
+                                log.info('Provider restored successfully');
+                            } catch (err) {
+                                log.error('Error restoring provider:', { error: err });
+                            }
+                        }
+                        
+                        // If we have JWT data, restore it
+                        if (state.auth.jwt && state.auth.refreshToken) {
+                            log.info('Restoring JWT from session storage');
+                            
+                            // Dispatch action to set JWT
+                            try {
+                                await store.dispatch(AUTH_SET_JWT, {
+                                    accessToken: state.auth.jwt,
+                                    refreshToken: state.auth.refreshToken
+                                });
+                                log.info('JWT restored successfully');
+                            } catch (err) {
+                                log.error('Error restoring JWT:', { error: err });
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                log.error('Error accessing session storage:', { error: err });
+            }
+        };
+        
+        // Check auth state on component mount
+        onMounted(() => {
+            restoreAuthState();
+        });
 
         // Method to handle logout
         const onLogOut = async (evt) => {
@@ -176,7 +269,8 @@ export default {
             packageBuildState,
             googleEnabled,
             providerDisplayName,
-            onLogOut
+            onLogOut,
+            restoreAuthState
         };
     }
 };
