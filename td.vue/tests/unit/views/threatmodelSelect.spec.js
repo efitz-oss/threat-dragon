@@ -165,7 +165,17 @@ describe('views/ThreatModelSelect.vue', () => {
                     repository: mockStore.state.repo.selected
                 }
             });
+            
+            // Mock console.log to avoid cluttering test output
+            jest.spyOn(console, 'log').mockImplementation(() => {});
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            
             wrapper.vm.selectRepoClick();
+        });
+        
+        afterEach(() => {
+            console.log.mockRestore();
+            console.error.mockRestore();
         });
 
         it('clears the selected repo', () => {
@@ -185,7 +195,17 @@ describe('views/ThreatModelSelect.vue', () => {
                     repository: mockStore.state.repo.selected
                 }
             });
+            
+            // Mock console.log to avoid cluttering test output
+            jest.spyOn(console, 'log').mockImplementation(() => {});
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            
             wrapper.vm.selectBranchClick();
+        });
+        
+        afterEach(() => {
+            console.log.mockRestore();
+            console.error.mockRestore();
         });
 
         it('clears the selected branch', () => {
@@ -204,30 +224,77 @@ describe('views/ThreatModelSelect.vue', () => {
     });
 
     describe('onThreatModelClick', () => {
-        const tm = 'foobar';
+        describe('with string input', () => {
+            const tm = 'foobar';
 
-        beforeEach(() => {
-            mountComponent({
-                params: {
-                    provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected
-                }
+            beforeEach(async () => {
+                mountComponent({
+                    params: {
+                        provider: mockStore.state.provider.selected,
+                        repository: mockStore.state.repo.selected
+                    }
+                });
+                
+                // Mock console.log to avoid cluttering test output
+                jest.spyOn(console, 'log').mockImplementation(() => {});
+                
+                await wrapper.vm.onThreatmodelClick(tm);
             });
-            wrapper.vm.onThreatmodelClick(tm);
+
+            afterEach(() => {
+                console.log.mockRestore();
+            });
+
+            it('sets the selected threat model', () => {
+                expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_FETCH, tm);
+            });
+
+            it('navigates to the threat model page', () => {
+                expect(mockRouter.push).toHaveBeenCalledWith({
+                    name: 'gitThreatModel',
+                    params: {
+                        provider: mockStore.state.provider.selected,
+                        repository: mockStore.state.repo.selected,
+                        threatmodel: tm
+                    }
+                });
+            });
         });
 
-        it('sets the selected threat model', () => {
-            expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_FETCH, tm);
-        });
+        describe('with object input', () => {
+            const tmObject = { name: 'object-model' };
 
-        it('navigates to the threat model page', () => {
-            expect(mockRouter.push).toHaveBeenCalledWith({
-                name: 'gitThreatModel',
-                params: {
-                    provider: mockStore.state.provider.selected,
-                    repository: mockStore.state.repo.selected,
-                    threatmodel: tm
-                }
+            beforeEach(async () => {
+                mountComponent({
+                    params: {
+                        provider: mockStore.state.provider.selected,
+                        repository: mockStore.state.repo.selected
+                    }
+                });
+                
+                // Mock console.log to avoid cluttering test output
+                jest.spyOn(console, 'log').mockImplementation(() => {});
+                
+                await wrapper.vm.onThreatmodelClick(tmObject);
+            });
+
+            afterEach(() => {
+                console.log.mockRestore();
+            });
+
+            it('extracts the name from the object and uses it for the threat model', () => {
+                expect(mockStore.dispatch).toHaveBeenCalledWith(THREATMODEL_FETCH, 'object-model');
+            });
+
+            it('navigates to the threat model page with the extracted name', () => {
+                expect(mockRouter.push).toHaveBeenCalledWith({
+                    name: 'gitThreatModel',
+                    params: {
+                        provider: mockStore.state.provider.selected,
+                        repository: mockStore.state.repo.selected,
+                        threatmodel: 'object-model'
+                    }
+                });
             });
         });
     });
@@ -240,7 +307,17 @@ describe('views/ThreatModelSelect.vue', () => {
                     repository: mockStore.state.repo.selected
                 }
             });
+            
+            // Mock console.log to avoid cluttering test output
+            jest.spyOn(console, 'log').mockImplementation(() => {});
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            
             wrapper.vm.newThreatModel();
+        });
+        
+        afterEach(() => {
+            console.log.mockRestore();
+            console.error.mockRestore();
         });
 
         it('clears the threat model', () => {
@@ -260,6 +337,19 @@ describe('views/ThreatModelSelect.vue', () => {
                     threatmodel: 'New Threat Model'
                 }
             });
+        });
+        
+        it('creates a threat model with the expected structure', () => {
+            // Get the threat model that was passed to THREATMODEL_CREATE
+            const calls = mockStore.dispatch.mock.calls;
+            const createCall = calls.find(call => call[0] === THREATMODEL_CREATE);
+            const threatModel = createCall[1];
+            
+            // Verify the structure
+            expect(threatModel).toHaveProperty('version', '2.3.0');
+            expect(threatModel).toHaveProperty('summary.title', 'New Threat Model');
+            expect(threatModel).toHaveProperty('detail.contributors');
+            expect(threatModel).toHaveProperty('detail.diagrams');
         });
     });
 });

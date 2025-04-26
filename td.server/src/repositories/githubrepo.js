@@ -290,66 +290,197 @@ const modelAsync = async (modelInfo, accessToken) => {
 
 const createAsync = async (modelInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    return fetchGitHub(
-        `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
-        accessToken,
-        {
-            method: 'PUT',
-            body: JSON.stringify({
-                message: 'Created by OWASP Threat Dragon',
-                content: Buffer.from(getModelContent(modelInfo)).toString('base64'),
-                branch: modelInfo.branch
-            })
+
+    // Ensure modelInfo.model is a string
+    if (typeof modelInfo.model !== 'string') {
+        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+
+        // If it's a character-by-character object, convert it to a string
+        if (modelInfo.model && typeof modelInfo.model === 'object') {
+            const keys = Object.keys(modelInfo.model);
+            if (keys.length > 0 && !isNaN(parseInt(keys[0]))) {
+                try {
+                    const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
+                    modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
+                    console.log(`Converted model name to: ${modelInfo.model}`);
+                } catch (err) {
+                    console.error(`Error converting model name: ${err.message}`);
+                    modelInfo.model = String(modelInfo.model);
+                }
+            } else {
+                modelInfo.model = String(modelInfo.model);
+            }
+        } else {
+            modelInfo.model = String(modelInfo.model || '');
         }
+    }
+
+    // Ensure model name ends with .json
+    if (!modelInfo.model.toLowerCase().endsWith('.json')) {
+        modelInfo.model = `${modelInfo.model}.json`;
+        console.log(`Added .json extension to model name: ${modelInfo.model}`);
+    }
+
+    console.log(
+        `Creating model: ${modelInfo.model} in ${modelInfo.organisation}/${modelInfo.repo}`
     );
+    console.log(`Using path: ${getModelPath(modelInfo)}`);
+
+    try {
+        return await fetchGitHub(
+            `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
+                modelInfo
+            )}`,
+            accessToken,
+            {
+                method: 'PUT',
+                body: JSON.stringify({
+                    message: 'Created by OWASP Threat Dragon',
+                    content: Buffer.from(getModelContent(modelInfo)).toString('base64'),
+                    branch: modelInfo.branch
+                })
+            }
+        );
+    } catch (error) {
+        console.error(`Error in createAsync: ${error.message}`);
+        console.error(`Error stack: ${error.stack}`);
+        throw error;
+    }
 };
 
 const updateAsync = async (modelInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    const original = await modelAsync(modelInfo, accessToken);
-    return fetchGitHub(
-        `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
-        accessToken,
-        {
-            method: 'PUT',
-            body: JSON.stringify({
-                message: 'Updated by OWASP Threat Dragon',
-                content: Buffer.from(getModelContent(modelInfo)).toString('base64'),
-                sha: original[0].sha,
-                branch: modelInfo.branch
-            })
+
+    // Ensure modelInfo.model is a string
+    if (typeof modelInfo.model !== 'string') {
+        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+
+        // If it's a character-by-character object, convert it to a string
+        if (modelInfo.model && typeof modelInfo.model === 'object') {
+            const keys = Object.keys(modelInfo.model);
+            if (keys.length > 0 && !isNaN(parseInt(keys[0]))) {
+                try {
+                    const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
+                    modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
+                    console.log(`Converted model name to: ${modelInfo.model}`);
+                } catch (err) {
+                    console.error(`Error converting model name: ${err.message}`);
+                    modelInfo.model = String(modelInfo.model);
+                }
+            } else {
+                modelInfo.model = String(modelInfo.model);
+            }
+        } else {
+            modelInfo.model = String(modelInfo.model || '');
         }
+    }
+
+    // Ensure model name ends with .json
+    if (!modelInfo.model.toLowerCase().endsWith('.json')) {
+        modelInfo.model = `${modelInfo.model}.json`;
+        console.log(`Added .json extension to model name: ${modelInfo.model}`);
+    }
+
+    console.log(
+        `Updating model: ${modelInfo.model} in ${modelInfo.organisation}/${modelInfo.repo}`
     );
+    console.log(`Using path: ${getModelPath(modelInfo)}`);
+
+    try {
+        const original = await modelAsync(modelInfo, accessToken);
+
+        return await fetchGitHub(
+            `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
+                modelInfo
+            )}`,
+            accessToken,
+            {
+                method: 'PUT',
+                body: JSON.stringify({
+                    message: 'Updated by OWASP Threat Dragon',
+                    content: Buffer.from(getModelContent(modelInfo)).toString('base64'),
+                    sha: original[0].sha,
+                    branch: modelInfo.branch
+                })
+            }
+        );
+    } catch (error) {
+        console.error(`Error in updateAsync: ${error.message}`);
+        console.error(`Error stack: ${error.stack}`);
+        throw error;
+    }
 };
 
 const deleteAsync = async (modelInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    const content = await modelAsync(modelInfo, accessToken);
-    return fetchGitHub(
-        `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(modelInfo)}`,
-        accessToken,
-        {
-            method: 'DELETE',
-            body: JSON.stringify({
-                message: 'Deleted by OWASP Threat Dragon',
-                sha: content[0].sha,
-                branch: modelInfo.branch
-            })
+
+    // Ensure modelInfo.model is a string
+    if (typeof modelInfo.model !== 'string') {
+        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+
+        // If it's a character-by-character object, convert it to a string
+        if (modelInfo.model && typeof modelInfo.model === 'object') {
+            const keys = Object.keys(modelInfo.model);
+            if (keys.length > 0 && !isNaN(parseInt(keys[0]))) {
+                try {
+                    const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
+                    modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
+                    console.log(`Converted model name to: ${modelInfo.model}`);
+                } catch (err) {
+                    console.error(`Error converting model name: ${err.message}`);
+                    modelInfo.model = String(modelInfo.model);
+                }
+            } else {
+                modelInfo.model = String(modelInfo.model);
+            }
+        } else {
+            modelInfo.model = String(modelInfo.model || '');
         }
+    }
+
+    // Ensure model name ends with .json
+    if (!modelInfo.model.toLowerCase().endsWith('.json')) {
+        modelInfo.model = `${modelInfo.model}.json`;
+        console.log(`Added .json extension to model name: ${modelInfo.model}`);
+    }
+
+    console.log(
+        `Deleting model: ${modelInfo.model} from ${modelInfo.organisation}/${modelInfo.repo}`
     );
+    console.log(`Using path: ${getModelPath(modelInfo)}`);
+
+    try {
+        const content = await modelAsync(modelInfo, accessToken);
+
+        return await fetchGitHub(
+            `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
+                modelInfo
+            )}`,
+            accessToken,
+            {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    message: 'Deleted by OWASP Threat Dragon',
+                    sha: content[0].sha,
+                    branch: modelInfo.branch
+                })
+            }
+        );
+    } catch (error) {
+        console.error(`Error in deleteAsync: ${error.message}`);
+        console.error(`Error stack: ${error.stack}`);
+        throw error;
+    }
 };
 
 const getModelPath = (modelInfo) => {
     // Ensure modelInfo.model is a string
     const modelName = String(modelInfo.model || '');
 
-    // Check if the model name already ends with .json
-    const baseName = modelName.toLowerCase().endsWith('.json')
-        ? modelName.substring(0, modelName.length - 5) // Remove .json extension
-        : modelName;
-
-    console.log(`Model path: ${repoRootDirectory()}/${baseName}/${modelName}`);
-    return `${repoRootDirectory()}/${baseName}/${modelName}`;
+    // For the model endpoint, we're directly accessing the file in the root directory
+    // The GitHub API expects the full path to the file
+    console.log(`Model path: ${repoRootDirectory()}/${modelName}`);
+    return `${repoRootDirectory()}/${modelName}`;
 };
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
 

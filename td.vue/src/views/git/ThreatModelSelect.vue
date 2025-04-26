@@ -76,81 +76,122 @@ export default {
 
         // Methods
         const selectBranchClick = () => {
-            store.dispatch(branchActions.clear);
-            router.push({
-                name: 'gitBranch',
-                params: { provider: provider.value, repository: repoName.value }
-            });
+            try {
+                console.log('Branch selection clicked');
+                store.dispatch(branchActions.clear);
+                router.push({
+                    name: 'gitBranch',
+                    params: { provider: provider.value, repository: repoName.value }
+                });
+            } catch (error) {
+                console.error('Error in selectBranchClick:', error);
+            }
         };
 
         const selectRepoClick = () => {
-            store.dispatch(repoActions.clear);
-            router.push({ name: 'gitRepository', params: { provider: provider.value } });
+            try {
+                console.log('Repository selection clicked');
+                store.dispatch(repoActions.clear);
+                router.push({ name: 'gitRepository', params: { provider: provider.value } });
+            } catch (error) {
+                console.error('Error in selectRepoClick:', error);
+            }
         };
 
         const onThreatmodelClick = async (threatmodel) => {
-            // Convert the threatmodel to a proper string, handling various formats
-            let modelName;
-            
-            if (typeof threatmodel === 'string') {
-                // If it's already a string, use it directly
-                modelName = threatmodel;
-            } else if (threatmodel && typeof threatmodel === 'object') {
-                if (threatmodel.name || threatmodel.title) {
-                    // If it has a name or title property, use that
-                    modelName = threatmodel.name || threatmodel.title;
-                } else if (Object.keys(threatmodel).some(key => !isNaN(parseInt(key)))) {
-                    // If it has numeric keys (character-by-character object), join them
-                    try {
-                        // Sort the keys numerically to ensure correct order
-                        const keys = Object.keys(threatmodel).sort((a, b) => parseInt(a) - parseInt(b));
-                        const chars = keys.map(key => threatmodel[key]);
-                        modelName = chars.join('');
-                    } catch (err) {
-                        console.error('Error converting character object to string:', err);
+            try {
+                // Prevent multiple rapid clicks
+                if (store.state.loader && store.state.loader.loading) {
+                    console.log('Already processing a click, ignoring');
+                    return;
+                }
+                
+                // Convert the threatmodel to a proper string, handling various formats
+                let modelName;
+                
+                if (typeof threatmodel === 'string') {
+                    // If it's already a string, use it directly
+                    modelName = threatmodel;
+                } else if (threatmodel && typeof threatmodel === 'object') {
+                    if (threatmodel.name || threatmodel.title) {
+                        // If it has a name or title property, use that
+                        modelName = threatmodel.name || threatmodel.title;
+                    } else if (Object.keys(threatmodel).some(key => !isNaN(parseInt(key)))) {
+                        // If it has numeric keys (character-by-character object), join them
+                        try {
+                            // Sort the keys numerically to ensure correct order
+                            const keys = Object.keys(threatmodel).sort((a, b) => parseInt(a) - parseInt(b));
+                            const chars = keys.map(key => threatmodel[key]);
+                            modelName = chars.join('');
+                        } catch (err) {
+                            console.error('Error converting character object to string:', err);
+                            modelName = String(threatmodel);
+                        }
+                    } else {
+                        // Fallback: convert to string
                         modelName = String(threatmodel);
                     }
                 } else {
-                    // Fallback: convert to string
-                    modelName = String(threatmodel);
+                    // Final fallback
+                    modelName = String(threatmodel || '');
                 }
-            } else {
-                // Final fallback
-                modelName = String(threatmodel || '');
+                
+                // Log what we're using to help with debugging
+                console.log('Using model name for fetch:', modelName);
+                
+                // Dispatch actions in sequence
+                await store.dispatch(tmActions.fetch, modelName);
+                
+                // Create params with the model name
+                const params = Object.assign({}, route.params, { threatmodel: modelName });
+                
+                // Set the selected model
+                store.dispatch(tmActions.selected, selectedModel.value);
+                
+                // Navigate to the threat model page
+                router.push({ name: `${providerType.value}ThreatModel`, params });
+            } catch (error) {
+                console.error('Error in onThreatmodelClick:', error);
+                // You might want to show an error message to the user here
             }
-            
-            // Log what we're using to help with debugging
-            console.log('Using model name for fetch:', modelName);
-            
-            await store.dispatch(tmActions.fetch, modelName);
-            const params = Object.assign({}, route.params, { threatmodel: modelName });
-            store.dispatch(tmActions.selected, selectedModel.value);
-            router.push({ name: `${providerType.value}ThreatModel`, params });
         };
 
         const newThreatModel = () => {
-            store.dispatch(tmActions.clear);
-            const newTm = {
-                version: '2.3.0',
-                summary: {
-                    title: 'New Threat Model',
-                    owner: '',
-                    description: '',
-                    id: 0
-                },
-                detail: {
-                    contributors: [],
-                    diagrams: [],
-                    diagramTop: 0,
-                    reviewer: '',
-                    threatTop: 0
-                }
-            };
-            store.dispatch(tmActions.create, newTm);
-            const params = Object.assign({}, route.params, {
-                threatmodel: newTm.summary.title
-            });
-            router.push({ name: `${providerType.value}ThreatModelEdit`, params });
+            try {
+                console.log('Creating new threat model');
+                
+                // Clear any existing threat model
+                store.dispatch(tmActions.clear);
+                
+                // Create a new threat model template
+                const newTm = {
+                    version: '2.3.0',
+                    summary: {
+                        title: 'New Threat Model',
+                        owner: '',
+                        description: '',
+                        id: 0
+                    },
+                    detail: {
+                        contributors: [],
+                        diagrams: [],
+                        diagramTop: 0,
+                        reviewer: '',
+                        threatTop: 0
+                    }
+                };
+                
+                // Create the threat model
+                store.dispatch(tmActions.create, newTm);
+                
+                // Navigate to the edit page
+                const params = Object.assign({}, route.params, {
+                    threatmodel: newTm.summary.title
+                });
+                router.push({ name: `${providerType.value}ThreatModelEdit`, params });
+            } catch (error) {
+                console.error('Error in newThreatModel:', error);
+            }
         };
 
         return {

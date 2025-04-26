@@ -19,7 +19,7 @@ describe('repositories/githubrepo.js', () => {
     };
     const accessToken = 'test-access-token';
     const _repoFullName = `${info.organisation}/${info.repo}`;
-    const _modelPath = `ThreatDragonModels/${info.model}/${info.model}.json`;
+    const _modelPath = `ThreatDragonModels/${info.model}.json`;
 
     let _githubApiScope;
 

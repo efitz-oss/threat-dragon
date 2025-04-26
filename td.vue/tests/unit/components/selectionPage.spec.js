@@ -68,12 +68,36 @@ describe('components/SelectionPage.vue', () => {
             // Vue 3 Migration: Use more precise element selection
             const firstItem = wrapper.findAll('.list-group-item')[0];
             
+            // Mock console.log to avoid cluttering test output
+            jest.spyOn(console, 'log').mockImplementation(() => {});
+            
             // Trigger click event
             await firstItem.trigger('click');
+            
+            // Wait for nextTick to complete
+            await nextTick();
+            await nextTick(); // Double nextTick to ensure all async operations complete
             
             // Verify event was emitted
             expect(wrapper.emitted('item-click')).toBeTruthy();
             expect(wrapper.emitted('item-click')[0][0]).toBe(items[0]);
+            
+            // Restore console.log
+            console.log.mockRestore();
+        });
+        
+        it('formats items correctly for display', () => {
+            // Test the formatItemForDisplay function directly
+            const stringItem = 'test-string';
+            expect(wrapper.vm.formatItemForDisplay(stringItem)).toBe(stringItem);
+            
+            // Test with an object that has numeric keys (character-by-character object)
+            const charObject = { '0': 't', '1': 'e', '2': 's', '3': 't' };
+            expect(wrapper.vm.formatItemForDisplay(charObject)).toBe('test');
+            
+            // Test with a regular object
+            const regularObject = { name: 'test-name' };
+            expect(wrapper.vm.formatItemForDisplay(regularObject)).toBe(JSON.stringify(regularObject));
         });
         
         it('filters the displayed items when filter value changes', async () => {
@@ -138,12 +162,22 @@ describe('components/SelectionPage.vue', () => {
             // Vue 3 Migration: Use more direct element selection
             const emptyStateElement = wrapper.find('.list-group-item');
             
+            // Mock console.log to avoid cluttering test output
+            jest.spyOn(console, 'log').mockImplementation(() => {});
+            
             // Click empty state
             await emptyStateElement.trigger('click');
+            
+            // Wait for nextTick to complete
+            await nextTick();
+            await nextTick(); // Double nextTick to ensure all async operations complete
             
             // Verify event emission
             expect(wrapper.emitted('empty-state-click')).toBeTruthy();
             expect(wrapper.emitted('empty-state-click')).toHaveLength(1);
+            
+            // Restore console.log
+            console.log.mockRestore();
         });
     });
 
@@ -170,13 +204,23 @@ describe('components/SelectionPage.vue', () => {
             const emptyStateElement = wrapper.find('.list-group-item');
             expect(emptyStateElement.exists()).toBe(true);
             
+            // Mock console.log to avoid cluttering test output
+            jest.spyOn(console, 'log').mockImplementation(() => {});
+            
             // Click empty state
             await emptyStateElement.trigger('click');
+            
+            // Wait for nextTick to complete
+            await nextTick();
+            await nextTick(); // Double nextTick to ensure all async operations complete
             
             // Verify item-click was not emitted (only empty-state-click should be emitted)
             const emitted = wrapper.emitted();
             expect(emitted['item-click']).toBeFalsy();
             expect(emitted['empty-state-click']).toBeTruthy();
+            
+            // Restore console.log
+            console.log.mockRestore();
         });
     });
     

@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { useI18n } from '@/i18n';
 
 export default {
@@ -158,30 +158,47 @@ export default {
         // Handle item click by calling the onItemClick prop function
         // and also emitting the item-click event for backward compatibility
         const handleItemClick = (item) => {
-            // Call the onItemClick prop function
-            if (props.onItemClick) {
-                props.onItemClick(item);
-            }
+            // Ensure we're working with a consistent item format
+            const processedItem = formatItemForDisplay(item);
+            console.log('Item clicked:', processedItem);
             
-            // Also emit the item-click event for backward compatibility
-            emit('item-click', item);
+            // Use nextTick to ensure the UI updates before processing the click
+            nextTick(() => {
+                // Call the onItemClick prop function
+                if (props.onItemClick) {
+                    props.onItemClick(item);
+                }
+                
+                // Also emit the item-click event for backward compatibility
+                emit('item-click', item);
+            });
         };
         
         // Handle back click by calling the onBackClick prop function
         // and also emitting the back-click event for backward compatibility
         const handleBackClick = () => {
-            // Call the onBackClick prop function
-            if (props.onBackClick) {
-                props.onBackClick();
-            }
+            console.log('Back clicked');
             
-            // Also emit the back-click event for backward compatibility
-            emit('back-click');
+            // Use nextTick to ensure the UI updates before processing the click
+            nextTick(() => {
+                // Call the onBackClick prop function
+                if (props.onBackClick) {
+                    props.onBackClick();
+                }
+                
+                // Also emit the back-click event for backward compatibility
+                emit('back-click');
+            });
         };
         
         // Handle empty state click by emitting the empty-state-click event
         const handleEmptyStateClick = () => {
-            emit('empty-state-click');
+            console.log('Empty state clicked');
+            
+            // Use nextTick to ensure the UI updates before processing the click
+            nextTick(() => {
+                emit('empty-state-click');
+            });
         };
         
         // Helper function to format items for display
