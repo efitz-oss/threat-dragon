@@ -89,8 +89,14 @@ export default {
         };
 
         const onThreatmodelClick = async (threatmodel) => {
-            await store.dispatch(tmActions.fetch, threatmodel);
-            const params = Object.assign({}, route.params, { threatmodel });
+            // Ensure we're using the model name (string) rather than the whole object
+            const modelName = typeof threatmodel === 'string' ? threatmodel : threatmodel.name || threatmodel.title || threatmodel;
+            
+            // Log what we're using to help with debugging
+            console.log('Using model name for fetch:', modelName);
+            
+            await store.dispatch(tmActions.fetch, modelName);
+            const params = Object.assign({}, route.params, { threatmodel: modelName });
             store.dispatch(tmActions.selected, selectedModel.value);
             router.push({ name: `${providerType.value}ThreatModel`, params });
         };

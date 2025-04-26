@@ -235,7 +235,30 @@ const models = (req, res) =>
                     return [];
                 }
 
-                return modelsResp[0].map((x) => x.name);
+                // Ensure we return proper string values for model names
+                return modelsResp[0].map((x) => {
+                    // If x.name is already a string, return it directly
+                    if (typeof x.name === 'string') {
+                        return x.name;
+                    }
+
+                    // If x.name is an object that looks like a character-by-character object representation of a string
+                    // (which happens in some serialization scenarios), convert it back to a proper string
+                    if (x.name && typeof x.name === 'object') {
+                        try {
+                            // Check if it's a character-by-character object (has numeric keys)
+                            const keys = Object.keys(x.name);
+                            if (keys.length > 0 && !isNaN(parseInt(keys[0]))) {
+                                return Object.values(x.name).join('');
+                            }
+                        } catch (err) {
+                            logger.error(`Error processing model name: ${err.message}`);
+                        }
+                    }
+
+                    // Fallback: stringify the name if it's not a string
+                    return String(x.name || '');
+                });
             } catch (e) {
                 logger.error(`Error fetching models: ${e.message}`);
                 logger.error(`Error stack: ${e.stack}`);

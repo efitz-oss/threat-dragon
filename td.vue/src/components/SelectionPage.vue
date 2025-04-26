@@ -48,7 +48,7 @@
                         href="#"
                         @click="handleItemClick(item)"
                     >
-                        {{ isGoogleProvider ? item.name : item }}
+                        {{ isGoogleProvider ? item.name : (typeof item === 'string' ? item : JSON.stringify(item)) }}
                     </b-list-group-item>
                 </b-list-group>
             </b-col>
