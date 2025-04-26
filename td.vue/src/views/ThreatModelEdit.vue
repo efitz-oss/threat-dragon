@@ -272,13 +272,19 @@ export default {
         async onCloseClick(evt) {
             evt.preventDefault();
             if (await this.restoreAsync()) {
-                // Ensure all required params are included, but exclude 'provider' as it's handled via meta
-                const params = {
-                    ...this.$route.params,
-                    folder: this.$route.params.folder || 'demo'  // Default to demo if no folder
-                };
-                // Remove provider from params as it's not part of the route definition
+                // Create a clean params object with only the parameters needed for the route
+                const params = { ...this.$route.params };
+                
+                // Remove provider from params as it's handled via meta
                 delete params.provider;
+                
+                // Remove folder parameter for git providers as it's not needed and causes navigation errors
+                if (this.providerType === 'git') {
+                    delete params.folder;
+                } else if (!params.folder && this.providerType === 'local') {
+                    // Only add folder for local provider if it doesn't exist
+                    params.folder = 'demo';
+                }
 
                 this.$router.push({
                     name: `${this.providerType}ThreatModel`,

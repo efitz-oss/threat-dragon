@@ -172,10 +172,19 @@ export default {
             // Create the threat model
             store.dispatch(tmActions.create, newTm);
             
+            // Create a clean params object with only the parameters needed for the route
+            const params = { ...route.params };
+            
+            // Add the threatmodel parameter
+            params.threatmodel = newTm.summary.title;
+            
+            // Remove any parameters that might cause issues
+            if (providerType.value === 'git') {
+                // For git providers, ensure we don't have a folder parameter
+                delete params.folder;
+            }
+            
             // Navigate to the edit page
-            const params = Object.assign({}, route.params, {
-                threatmodel: newTm.summary.title
-            });
             router.push({ name: `${providerType.value}ThreatModelEdit`, params });
         };
 

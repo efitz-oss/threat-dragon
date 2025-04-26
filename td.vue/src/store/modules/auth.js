@@ -76,6 +76,15 @@ const mutations = {
             const decodedBody = window.atob(tokenBody);
             log.debug('Decoded token body', { length: decodedBody.length });
             const jwtBody = JSON.parse(decodedBody);
+            
+            // Handle Bitbucket provider specifically - it uses display_name instead of username
+            if (jwtBody.provider && jwtBody.provider.name === 'bitbucket' && jwtBody.user) {
+                // Ensure username is set for Bitbucket users
+                if (!jwtBody.user.username && jwtBody.user.display_name) {
+                    jwtBody.user.username = jwtBody.user.display_name;
+                }
+            }
+            
             // Log only username, not full user object which might contain sensitive info
             log.info('JWT body parsed', { username: jwtBody.user?.username || 'unknown' });
             state.jwt = accessToken;

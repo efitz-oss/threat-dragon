@@ -35,19 +35,43 @@ const extractRepoParts = (fullRepoName) => {
         throw error;
     }
     
-    const parts = fullRepoName.split('/');
+    // Handle root directory case (empty string or '/')
+    if (fullRepoName === '' || fullRepoName === '/') {
+        logger.debug('Root directory detected, using default organization');
+        return { org: 'bitbucket', repo: '' };
+    }
+    
+    // Remove any leading or trailing slashes
+    const cleanRepoName = fullRepoName.replace(/^\/+|\/+$/g, '');
+    
+    // If after cleaning we have an empty string, treat as root directory
+    if (cleanRepoName === '') {
+        logger.debug('Empty repository name after cleaning, using default organization');
+        return { org: 'bitbucket', repo: '' };
+    }
+    
+    const parts = cleanRepoName.split('/');
     
     // For Bitbucket repositories, the repository name might not include the organization
     // In this case, we'll use the Bitbucket workspace as the organization
     if (parts.length < 2) {
-        // For Bitbucket repositories, use 'bitbucket' as the default organization
-        // This is a simpler approach that doesn't rely on accessing the store
-        // which can cause issues in certain contexts
-        return { org: 'bitbucket', repo: fullRepoName };
+        // Try to get the Bitbucket workspace from localStorage
+        let workspace = 'bitbucket';
+        try {
+            const storedWorkspace = localStorage.getItem('td_bitbucket_workspace');
+            if (storedWorkspace) {
+                workspace = storedWorkspace;
+                logger.debug('Using workspace from localStorage', { workspace });
+            }
+        } catch (e) {
+            logger.error('Error accessing localStorage', { error: e.message });
+        }
+        
+        return { org: workspace, repo: cleanRepoName };
     }
     
     const org = parts[0];
-    const repo = fullRepoName.replace(`${org}/`, '');
+    const repo = cleanRepoName.replace(`${org}/`, '');
     
     logger.debug('Repository parts extracted', { org, repo });
     
