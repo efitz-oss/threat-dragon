@@ -35,7 +35,7 @@ export const TrustBoundaryCurveStencil = Shape.Path.define({
         customBoundary: {
             opacity: 0,
             width: 150,
-            height: 80
+            height: 75
         },
         label: {
             text: tc('threatmodel.shapes.trustBoundary'),
