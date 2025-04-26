@@ -4,9 +4,7 @@ import env from '../env/Env.js';
 
 const repoRootDirectory = () => {
     const config = env.get().config;
-    return (
-        config.BITBUCKET_REPO_ROOT_DIRECTORY || config.REPO_ROOT_DIRECTORY || 'ThreatDragonModels'
-    );
+    return config.BITBUCKET_REPO_ROOT_DIRECTORY || config.REPO_ROOT_DIRECTORY || '';
 };
 
 export class BitbucketClientWrapper {
@@ -241,7 +239,13 @@ const getModelPath = (modelInfo) => {
         console.error('Invalid model info provided to getModelPath', modelInfo);
         throw new Error('Invalid model info: model name is required');
     }
-    return `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
+
+    const rootDir = repoRootDirectory();
+    // If root directory is empty, don't add a leading slash
+    if (rootDir === '') {
+        return `${modelInfo.model}/${modelInfo.model}.json`;
+    }
+    return `${rootDir}/${modelInfo.model}/${modelInfo.model}.json`;
 };
 
 const getModelContent = (modelInfo) => {
