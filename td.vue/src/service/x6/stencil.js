@@ -107,7 +107,7 @@ const get = (graph, container, StencilConstructor) => {
     // Force fresh translations for all shape labels
     const actor = new shapes.ActorShape({
         width: 100,
-        height: 50,
+        height: 75,
         visible: true,
         opacity: 1,  // Full opacity
         label: tc('threatmodel.shapes.actor'),
@@ -142,7 +142,7 @@ const get = (graph, container, StencilConstructor) => {
     // Use StoreStencil for actual rendering
     const store = new shapes.StoreStencil({
         width: 100,
-        height: 50,
+        height: 75,
         visible: true,
         opacity: 1,
         label: tc('threatmodel.shapes.store'),
@@ -169,7 +169,7 @@ const get = (graph, container, StencilConstructor) => {
     });
     const text = new shapes.TextBlock({
         width: 100,
-        height: 25,
+        height: 75,
         visible: true,
         opacity: 1,
         label: tc('threatmodel.shapes.text'),
@@ -184,7 +184,7 @@ const get = (graph, container, StencilConstructor) => {
     // Create boundary nodes
     const boundaryBox = new shapes.TrustBoundaryBox({
         width: 100,
-        height: 50,
+        height: 75,
         visible: true,
         opacity: 1,
         attrs: {
@@ -208,8 +208,8 @@ const get = (graph, container, StencilConstructor) => {
         }
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
-        width: 50,
-        height: 50,
+        width: 75,
+        height: 75,
         visible: true,
         opacity: 1,
         attrs: {
@@ -233,8 +233,8 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create flow
     const flow = new shapes.FlowStencil({
-        width: 50,
-        height: 50,
+        width: 75,
+        height: 75,
         visible: true,
         opacity: 1,
         attrs: {
