@@ -77,11 +77,51 @@ const mutations = {
             log.debug('Decoded token body', { length: decodedBody.length });
             const jwtBody = JSON.parse(decodedBody);
             
-            // Handle Bitbucket provider specifically - it uses display_name instead of username
-            if (jwtBody.provider && jwtBody.provider.name === 'bitbucket' && jwtBody.user) {
-                // Ensure username is set for Bitbucket users
-                if (!jwtBody.user.username && jwtBody.user.display_name) {
-                    jwtBody.user.username = jwtBody.user.display_name;
+            // Add detailed logging to understand the JWT structure
+            log.info('JWT structure', {
+                hasProvider: Boolean(jwtBody.provider),
+                providerKeys: jwtBody.provider ? Object.keys(jwtBody.provider) : [],
+                hasUser: Boolean(jwtBody.user),
+                userKeys: jwtBody.user ? Object.keys(jwtBody.user) : []
+            });
+            
+            // Determine the provider name from the JWT token
+            // The provider can be structured in different ways:
+            // 1. { provider: { name: 'bitbucket', ... } }
+            // 2. { provider: { bitbucket: '...' } }
+            let providerName = null;
+            if (jwtBody.provider) {
+                if (jwtBody.provider.name) {
+                    providerName = jwtBody.provider.name;
+                } else {
+                    // Check if provider is an object with a provider name as a key
+                    const providerKeys = Object.keys(jwtBody.provider);
+                    if (providerKeys.includes('bitbucket')) {
+                        providerName = 'bitbucket';
+                    } else if (providerKeys.includes('github')) {
+                        providerName = 'github';
+                    } else if (providerKeys.includes('gitlab')) {
+                        providerName = 'gitlab';
+                    } else if (providerKeys.includes('google')) {
+                        providerName = 'google';
+                    }
+                }
+            }
+            
+            log.info('Detected provider', { providerName });
+            
+            // If this is a Bitbucket user, ensure the username is set
+            if (providerName === 'bitbucket' && jwtBody.user) {
+                log.info('Bitbucket user detected', {
+                    hasUsername: Boolean(jwtBody.user.username),
+                    userObject: JSON.stringify(jwtBody.user)
+                });
+                
+                // For Bitbucket, the server should have set username to display_name already,
+                // but if not, we'll set it here as a fallback
+                if (!jwtBody.user.username) {
+                    jwtBody.user.username = jwtBody.user.display_name || 'bitbucket-user';
+                    log.info('Set username for Bitbucket user', { username: jwtBody.user.username });
                 }
             }
             
@@ -93,7 +133,7 @@ const mutations = {
             state.refreshToken = refreshToken;
             
             // Store Bitbucket workspace in localStorage if available
-            if (jwtBody.provider && jwtBody.provider.name === 'bitbucket' && jwtBody.user.workspace) {
+            if (providerName === 'bitbucket' && jwtBody.user && jwtBody.user.workspace) {
                 try {
                     log.info('Storing Bitbucket workspace in localStorage', { workspace: jwtBody.user.workspace });
                     localStorage.setItem('td_bitbucket_workspace', jwtBody.user.workspace);
