@@ -83,7 +83,7 @@ describe('repositories/bitbucketrepo.js', () => {
             listBranches: sinon.stub().returns(Promise.resolve({ data: { values: [] } }))
         },
         source: {
-            read: function () {},
+            read: sinon.stub(),
             createFileCommit: sinon.stub().returns(Promise.resolve({ data: { values: [] } }))
         },
         users: {
@@ -188,52 +188,142 @@ describe('repositories/bitbucketrepo.js', () => {
     describe('modelsAsync', () => {
         const branchInfo = { branch: info.branchInfo.name, repo: info.branchInfo.repo_slug };
 
-        beforeEach(async () => {
-            sinon.stub(env, 'get').returns({
-                config: {
-                    BITBUCKET_WORKSPACE: workspace,
-                    BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
-                }
-            });
-            sinon.stub(mockClient.source, 'read').returns(
-                Promise.resolve({
-                    data: {
-                        values: [
-                            { path: 'ThreatDragonModels/model1' },
-                            { path: 'ThreatDragonModels/model2' },
-                            { path: 'ThreatDragonModels/model3' }
-                        ]
+        describe('when directory exists and contains models', () => {
+            beforeEach(async () => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
                     }
-                })
-            );
-            await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                });
+
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+                mockClient.source.read.reset();
+
+                // Set up stubs with expected behavior
+                mockClient.repositories.getBranch.returns(
+                    Promise.resolve({ data: { target: { hash: info.readInfo.commit } } })
+                );
+                mockClient.source.read.returns(
+                    Promise.resolve({
+                        data: {
+                            values: [
+                                { path: 'ThreatDragonModels/model1' },
+                                { path: 'ThreatDragonModels/model2' },
+                                { path: 'ThreatDragonModels/model3' }
+                            ]
+                        }
+                    })
+                );
+                await threatModelRepository.modelsAsync(branchInfo, accessToken);
+            });
+
+            it('creates the client', () => {
+                expect(BitbucketClientWrapper.getClient).to.have.been.calledWith(clientOptions);
+            });
+
+            it('should get the branch', () => {
+                expect(mockClient.repositories.getBranch).to.have.been.calledWith(info.branchInfo);
+            });
+
+            it('should get the contents', () => {
+                expect(mockClient.source.read).to.have.been.calledWith(info.readInfo);
+            });
+
+            it('transforms the models data correctly', async () => {
+                // Call the modelsAsync function
+                const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+
+                // Setup the transformed data
+                const transformedModelsData = [
+                    { name: 'model1', path: 'ThreatDragonModels/model1' },
+                    { name: 'model2', path: 'ThreatDragonModels/model2' },
+                    { name: 'model3', path: 'ThreatDragonModels/model3' }
+                ];
+
+                // Check that the returned data is transformed correctly
+                expect(models).to.deep.equal(transformedModelsData);
+            });
         });
 
-        it('creates the client', () => {
-            expect(BitbucketClientWrapper.getClient).to.have.been.calledWith(clientOptions);
+        describe('when directory does not exist', () => {
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+                    }
+                });
+
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+                mockClient.source.read.reset();
+
+                // Set up stubs with expected behavior
+                mockClient.repositories.getBranch.returns(
+                    Promise.resolve({ data: { target: { hash: info.readInfo.commit } } })
+                );
+                mockClient.source.read.rejects(new Error('Not Found'));
+            });
+
+            it('should return an empty array when directory is not found', async () => {
+                const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                expect(models).to.be.an('array').that.is.empty;
+            });
         });
 
-        it('should get the branch', () => {
-            expect(mockClient.repositories.getBranch).to.have.been.calledWith(info.branchInfo);
+        describe('when directory exists but has no values', () => {
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+                    }
+                });
+
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+                mockClient.source.read.reset();
+
+                // Set up stubs with expected behavior
+                mockClient.repositories.getBranch.returns(
+                    Promise.resolve({ data: { target: { hash: info.readInfo.commit } } })
+                );
+                mockClient.source.read.returns(
+                    Promise.resolve({
+                        data: {}
+                    })
+                );
+            });
+
+            it('should return an empty array when no values are found', async () => {
+                const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                expect(models).to.be.an('array').that.is.empty;
+            });
         });
 
-        it('should get the contents', () => {
-            expect(mockClient.source.read).to.have.been.calledWith(info.readInfo);
-        });
+        describe('when branch does not exist', () => {
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+                    }
+                });
 
-        it('transforms the models data correctly', async () => {
-            // Call the modelsAsync function
-            const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+                mockClient.source.read.reset();
 
-            // Setup the transformed data
-            const transformedModelsData = [
-                { name: 'model1', path: 'ThreatDragonModels/model1' },
-                { name: 'model2', path: 'ThreatDragonModels/model2' },
-                { name: 'model3', path: 'ThreatDragonModels/model3' }
-            ];
+                // Set up stub to reject with an error
+                mockClient.repositories.getBranch.rejects(new Error('Branch not found'));
+            });
 
-            // Check that the returned data is transformed correctly
-            expect(models).to.deep.equal(transformedModelsData);
+            it('should return an empty array when branch is not found', async () => {
+                const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                expect(models).to.be.an('array').that.is.empty;
+            });
         });
     });
 
@@ -244,27 +334,92 @@ describe('repositories/bitbucketrepo.js', () => {
             model: info.modelInfo.model
         };
 
-        beforeEach(async () => {
-            sinon.stub(env, 'get').returns({
-                config: {
-                    BITBUCKET_WORKSPACE: workspace,
-                    BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+        describe('when model exists', () => {
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+                    }
+                });
+
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+                mockClient.source.read.reset();
+
+                // Set up stubs with expected behavior
+                mockClient.repositories.getBranch.returns(
+                    Promise.resolve({ data: { target: { hash: info.readInfo.commit } } })
+                );
+                mockClient.source.read.returns(Promise.resolve({ data: 'm34o1m' }));
+            });
+
+            it('creates the client and gets branch and contents', async () => {
+                await threatModelRepository.modelAsync(modelInfo, accessToken);
+                expect(BitbucketClientWrapper.getClient).to.have.been.calledWith(clientOptions);
+                expect(mockClient.repositories.getBranch).to.have.been.calledWith(info.branchInfo);
+                expect(mockClient.source.read).to.have.been.calledWith(info.modelReadInfo);
+            });
+        });
+
+        describe('when branch does not exist', () => {
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+                    }
+                });
+
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+
+                // Set up stub to reject with an error
+                mockClient.repositories.getBranch.rejects(new Error('Branch not found'));
+            });
+
+            it('should return an empty object when branch is not found', async () => {
+                // We need to use try/catch here because the test is expecting the function to throw
+                try {
+                    const [model] = await threatModelRepository.modelAsync(modelInfo, accessToken);
+                    expect(model).to.be.an('object');
+                    expect(model.data).to.be.an('object').that.is.empty;
+                    expect(model.content).to.equal('');
+                } catch (error) {
+                    // If we get here, the function is still throwing, which is not what we want
+                    expect.fail(
+                        `modelAsync should not throw but return an empty object. Error: ${error.message}`
+                    );
                 }
             });
-            sinon.stub(mockClient.source, 'read').returns(Promise.resolve({ data: 'm34o1m' }));
-            await threatModelRepository.modelAsync(modelInfo, accessToken);
         });
 
-        it('creates the client', () => {
-            expect(BitbucketClientWrapper.getClient).to.have.been.calledWith(clientOptions);
-        });
+        describe('when model file does not exist', () => {
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: {
+                        BITBUCKET_WORKSPACE: workspace,
+                        BITBUCKET_REPO_ROOT_DIRECTORY: repoPath
+                    }
+                });
 
-        it('should get the branch', () => {
-            expect(mockClient.repositories.getBranch).to.have.been.calledWith(info.branchInfo);
-        });
+                // Reset stubs to ensure clean state
+                mockClient.repositories.getBranch.reset();
+                mockClient.source.read.reset();
 
-        it('should get the contents', () => {
-            expect(mockClient.source.read).to.have.been.calledWith(info.modelReadInfo);
+                // Set up stubs with expected behavior
+                mockClient.repositories.getBranch.returns(
+                    Promise.resolve({ data: { target: { hash: info.readInfo.commit } } })
+                );
+                mockClient.source.read.rejects(new Error('Not Found'));
+            });
+
+            it('should return an empty object when model file is not found', async () => {
+                const [model] = await threatModelRepository.modelAsync(modelInfo, accessToken);
+                expect(model).to.be.an('object');
+                expect(model.data).to.be.an('object').that.is.empty;
+                expect(model.content).to.equal('');
+            });
         });
     });
 

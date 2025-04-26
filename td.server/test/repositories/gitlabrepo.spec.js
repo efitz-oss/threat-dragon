@@ -204,24 +204,58 @@ describe('repositories/gitlabrepo.js', () => {
     });
 
     describe('modelsAsync', () => {
-        const branchInfo = { branch: 'main', repo: 'repo' };
+        describe('when directory exists and contains models', () => {
+            const branchInfo = { branch: 'main', repo: 'repo' };
 
-        beforeEach(async () => {
-            sinon.stub(env, 'get').returns({
-                config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+            beforeEach(async () => {
+                sinon.stub(env, 'get').returns({
+                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+                });
+                await threatModelRepository.modelsAsync(branchInfo, accessToken);
             });
-            await threatModelRepository.modelsAsync(branchInfo, accessToken);
+
+            it('creates the client', () => {
+                expect(GitlabClientWrapper.getClient).to.have.been.calledWith(clientOptions.auth);
+            });
+
+            it('should get the branch contents', () => {
+                expect(mockClient.Repositories.allRepositoryTrees).to.have.been.calledWith(
+                    'undefined/repo',
+                    info.branchInfo
+                );
+            });
         });
 
-        it('creates the client', () => {
-            expect(GitlabClientWrapper.getClient).to.have.been.calledWith(clientOptions.auth);
+        describe('when directory does not exist', () => {
+            const branchInfo = { branch: 'main', repo: 'repo' };
+
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+                });
+                mockClient.Repositories.allRepositoryTrees.rejects(new Error('Not Found'));
+            });
+
+            it('should return an empty array when directory is not found', async () => {
+                const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                expect(models).to.be.an('array').that.is.empty;
+            });
         });
 
-        it('should get the branch contents', () => {
-            expect(mockClient.Repositories.allRepositoryTrees).to.have.been.calledWith(
-                'undefined/repo',
-                info.branchInfo
-            );
+        describe('when response is not an array', () => {
+            const branchInfo = { branch: 'main', repo: 'repo' };
+
+            beforeEach(() => {
+                sinon.stub(env, 'get').returns({
+                    config: { GITLAB_WORKSPACE: workspace, GITLAB_REPO_ROOT_DIRECTORY: repoPath }
+                });
+                mockClient.Repositories.allRepositoryTrees.returns(Promise.resolve('not an array'));
+            });
+
+            it('should return an empty array when response is not an array', async () => {
+                const [models] = await threatModelRepository.modelsAsync(branchInfo, accessToken);
+                expect(models).to.be.an('array').that.is.empty;
+            });
         });
     });
 

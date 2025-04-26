@@ -68,20 +68,65 @@ export const branchesAsync = async (repoInfo, accessToken) => {
 };
 
 export const modelsAsync = async (branchInfo, accessToken) => {
-    const models = await getClient(accessToken).Repositories.allRepositoryTrees(
-        getRepoFullName(branchInfo),
-        { path: repoRootDirectory(), ref: branchInfo.branch }
-    );
-    return [models];
+    try {
+        console.log(
+            `Fetching models from GitLab for ${getRepoFullName(
+                branchInfo
+            )}/${repoRootDirectory()} on branch ${branchInfo.branch}`
+        );
+
+        const models = await getClient(accessToken).Repositories.allRepositoryTrees(
+            getRepoFullName(branchInfo),
+            { path: repoRootDirectory(), ref: branchInfo.branch }
+        );
+
+        if (models && Array.isArray(models)) {
+            console.log(`GitLab modelsAsync found ${models.length} items`);
+            return [models];
+        } else {
+            console.log(`GitLab modelsAsync response is not an array, returning empty array`);
+            return [[]];
+        }
+    } catch (error) {
+        console.error(`Error in GitLab modelsAsync: ${error.message}`);
+        if (
+            error.message &&
+            (error.message.includes('Not Found') || error.message.includes('404'))
+        ) {
+            console.log(`Directory ${repoRootDirectory()} not found, returning empty array`);
+        } else {
+            console.error(`Error stack: ${error.stack || 'No stack trace available'}`);
+        }
+        // Return empty array on error
+        return [[]];
+    }
 };
 
 export const modelAsync = async (modelInfo, accessToken) => {
-    const model = await getClient(accessToken).RepositoryFiles.show(
-        getRepoFullName(modelInfo),
-        getModelPath(modelInfo),
-        modelInfo.branch
-    );
-    return [model];
+    try {
+        console.log(
+            `Fetching model from GitLab: ${getRepoFullName(modelInfo)}/${getModelPath(
+                modelInfo
+            )} on branch ${modelInfo.branch}`
+        );
+
+        const model = await getClient(accessToken).RepositoryFiles.show(
+            getRepoFullName(modelInfo),
+            getModelPath(modelInfo),
+            modelInfo.branch
+        );
+        return [model];
+    } catch (error) {
+        console.error(`Error in GitLab modelAsync: ${error.message}`);
+        if (
+            error.message &&
+            (error.message.includes('Not Found') || error.message.includes('404'))
+        ) {
+            console.log(`Model file ${getModelPath(modelInfo)} not found, returning empty object`);
+            return [{}];
+        }
+        throw error;
+    }
 };
 
 export const createAsync = (modelInfo, accessToken) => {

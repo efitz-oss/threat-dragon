@@ -284,6 +284,16 @@ const modelAsync = async (modelInfo, accessToken) => {
     } catch (error) {
         console.error(`Error in modelAsync: ${error.message}`);
         console.error(`Error stack: ${error.stack}`);
+
+        // Handle "file not found" or other 404 errors
+        if (
+            error.message &&
+            (error.message.includes('Not Found') || error.message.includes('404'))
+        ) {
+            console.log(`Model file ${getModelPath(modelInfo)} not found, returning empty object`);
+            return [{}];
+        }
+
         throw error;
     }
 };

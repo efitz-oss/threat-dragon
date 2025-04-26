@@ -76,46 +76,99 @@ export const branchesAsync = async (repoInfo, accessToken) => {
 export const modelsAsync = async (branchInfo, accessToken) => {
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
-    const client = getClient(accessToken);
+    try {
+        const client = getClient(accessToken);
 
-    const { data } = await client.repositories.getBranch({
-        workspace: workspace,
-        repo_slug: branchInfo.repo,
-        name: branchInfo.branch
-    });
-    const commitId = data.target.hash;
-    const tree = await client.source.read({
-        path: repoRootDirectory(),
-        workspace: workspace,
-        repo_slug: branchInfo.repo,
-        commit: commitId
-    });
+        const { data } = await client.repositories.getBranch({
+            workspace: workspace,
+            repo_slug: branchInfo.repo,
+            name: branchInfo.branch
+        });
+        const commitId = data.target.hash;
 
-    tree.data.values.map((x) => {
-        x.name = x.path.replace(`${repoRootDirectory()}/`, '');
-        return x;
-    });
-    return [tree.data.values];
+        try {
+            const tree = await client.source.read({
+                path: repoRootDirectory(),
+                workspace: workspace,
+                repo_slug: branchInfo.repo,
+                commit: commitId
+            });
+
+            // If we have values, process them
+            if (tree.data && tree.data.values && Array.isArray(tree.data.values)) {
+                tree.data.values.map((x) => {
+                    x.name = x.path.replace(`${repoRootDirectory()}/`, '');
+                    return x;
+                });
+                return [tree.data.values];
+            } else {
+                // No values found, return empty array
+                console.log(
+                    `No threat models found in ${repoRootDirectory()} for ${branchInfo.repo}/${
+                        branchInfo.branch
+                    }`
+                );
+                return [[]];
+            }
+        } catch (error) {
+            // Handle "file not found" or other errors when reading the directory
+            console.log(`Error reading ${repoRootDirectory()} directory: ${error.message}`);
+            if (
+                error.message &&
+                (error.message.includes('Not Found') || error.message.includes('404'))
+            ) {
+                // Directory doesn't exist, return empty array
+                console.log(`Directory ${repoRootDirectory()} not found, returning empty array`);
+                return [[]];
+            }
+            throw error;
+        }
+    } catch (error) {
+        console.error(`Error in modelsAsync: ${error.message}`);
+        // Return empty array instead of throwing
+        return [[]];
+    }
 };
 
 export const modelAsync = async (modelInfo, accessToken) => {
     const workspace = env.get().config.BITBUCKET_WORKSPACE;
 
-    const client = getClient(accessToken);
-    const { data } = await client.repositories.getBranch({
-        workspace: workspace,
-        repo_slug: modelInfo.repo,
-        name: modelInfo.branch
-    });
-    const commitId = data.target.hash;
-    const tree = await client.source.read({
-        path: getModelPath(modelInfo),
-        workspace: workspace,
-        repo_slug: modelInfo.repo,
-        commit: commitId
-    });
-    tree.content = Buffer.from(tree.data).toString('base64');
-    return [tree];
+    try {
+        const client = getClient(accessToken);
+        const { data } = await client.repositories.getBranch({
+            workspace: workspace,
+            repo_slug: modelInfo.repo,
+            name: modelInfo.branch
+        });
+        const commitId = data.target.hash;
+
+        try {
+            const tree = await client.source.read({
+                path: getModelPath(modelInfo),
+                workspace: workspace,
+                repo_slug: modelInfo.repo,
+                commit: commitId
+            });
+            tree.content = Buffer.from(tree.data).toString('base64');
+            return [tree];
+        } catch (error) {
+            console.error(`Error reading model file: ${error.message}`);
+            if (
+                error.message &&
+                (error.message.includes('Not Found') || error.message.includes('404'))
+            ) {
+                console.log(
+                    `Model file ${getModelPath(modelInfo)} not found, returning empty object`
+                );
+                return [{ data: {}, content: '' }];
+            }
+            throw error;
+        }
+    } catch (error) {
+        console.error(`Error in modelAsync: ${error.message}`);
+        // Return empty object instead of throwing, similar to how we handle model file not found
+        return [{ data: {}, content: '' }];
+    }
 };
 
 export const createAsync = async (modelInfo, accessToken) => {
