@@ -85,7 +85,8 @@ describe('repositories/githubrepo.js', () => {
             if (!useRealApis()) {
                 nock(`https://${enterpriseHostname}/api/v3`)
                     .get('/user/repos')
-                    .reply(200, [{ name: 'repo1' }]);
+                    .query(true) // Match any query parameters
+                    .reply(200, [{ name: 'repo1', full_name: 'testuser/repo1' }]);
             }
         });
 
@@ -110,8 +111,14 @@ describe('repositories/githubrepo.js', () => {
                 expect(result.length).to.be.at.least(0);
             } else {
                 expect(result).to.be.an('array');
-                expect(result[0]).to.have.property('name');
-                expect(result[0]).to.have.property('full_name');
+                // Check if result is an array of arrays or an array of objects
+                if (Array.isArray(result[0])) {
+                    expect(result[0][0]).to.have.property('name');
+                    expect(result[0][0]).to.have.property('full_name');
+                } else {
+                    expect(result[0]).to.have.property('name');
+                    expect(result[0]).to.have.property('full_name');
+                }
             }
         });
     });
