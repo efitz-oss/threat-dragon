@@ -219,14 +219,33 @@ const models = (req, res) =>
             let modelsResp;
             try {
                 modelsResp = await repository.modelsAsync(branchInfo, req.provider.access_token);
+
+                // Log the response for debugging
+                logger.debug(`Models response received: ${JSON.stringify(modelsResp)}`);
+
+                // Check if modelsResp[0] is an array
+                if (!modelsResp || !modelsResp[0]) {
+                    logger.error('Models response is empty or undefined');
+                    return [];
+                }
+
+                if (!Array.isArray(modelsResp[0])) {
+                    logger.error(`Models response is not an array: ${typeof modelsResp[0]}`);
+                    logger.debug(`Models response: ${JSON.stringify(modelsResp[0])}`);
+                    return [];
+                }
+
+                return modelsResp[0].map((x) => x.name);
             } catch (e) {
+                logger.error(`Error fetching models: ${e.message}`);
+                logger.error(`Error stack: ${e.stack}`);
+
                 if (e.statusCode === 404) {
                     return [];
                 }
 
                 throw e;
             }
-            return modelsResp[0].map((x) => x.name);
         },
         req,
         res,
