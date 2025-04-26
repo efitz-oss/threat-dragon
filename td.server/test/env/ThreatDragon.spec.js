@@ -77,9 +77,9 @@ describe('env/ThreatDragon.js', () => {
         expect(isRequired).to.be.false;
     });
 
-    it('has a default value for property REPO_ROOT_DIRECTORY', () => {
-        const value = tdEnv.properties.find((x) => x.key === 'REPO_ROOT_DIRECTORY').defaultValue;
-        expect(value).to.equal('ThreatDragonModels');
+    it('has no default value for property REPO_ROOT_DIRECTORY', () => {
+        const property = tdEnv.properties.find((x) => x.key === 'REPO_ROOT_DIRECTORY');
+        expect(property.defaultValue).to.be.undefined;
     });
 
     it('has the optional property REPO_USE_SEARCH', () => {
