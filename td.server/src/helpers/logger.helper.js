@@ -47,7 +47,11 @@ const transports = {
         silent: process.env.NODE_ENV === 'test'
     }),
     console: new winston.transports.Console({
-        format: format.combine(format.colorize(), format.simple()),
+        // Use a safer format in production to avoid colorize issues
+        format:
+            process.env.NODE_ENV === 'production'
+                ? format.simple()
+                : format.combine(format.colorize(), format.simple()),
         level: 'info',
         silent: process.env.NODE_ENV === 'test'
     })
@@ -73,31 +77,73 @@ class Logger {
         this.logger = logger || _logger;
     }
 
-    _formatMessage(service, message, level) {
+    _formatMessage(service, message, _level) {
+        // If message is already a string, just prepend the service name
         if (typeof message === 'string') {
             return `${service}: ${message}`;
         }
-        this.logger.log(level, `${service}: `);
-        this.logger.log(level, message);
+
+        // For complex objects, try to safely convert to string
+        try {
+            // Use our transformToString method to safely handle circular references
+            const safeString = this.transformToString(message);
+            return `${service}: ${safeString}`;
+        } catch (err) {
+            // If stringification fails, log a simpler message
+            return `${service}: [Complex object that could not be stringified]`;
+        }
     }
 
     transformToString(complexObject) {
-        const cache = [];
-        const resultString = JSON.stringify(complexObject, function (key, value) {
-            if (typeof value === 'object' && value !== null) {
-                if (cache.indexOf(value) !== -1) {
-                    // Circular reference found
-                    return '[Circular]';
-                }
-                cache.push(value);
+        try {
+            // Handle primitive types directly
+            if (complexObject === null) return 'null';
+            if (complexObject === undefined) return 'undefined';
+            if (typeof complexObject !== 'object') return String(complexObject);
+
+            // For Error objects, extract useful properties
+            if (complexObject instanceof Error) {
+                return `Error: ${complexObject.message || 'Unknown error'} ${
+                    complexObject.stack ? `\nStack: ${complexObject.stack}` : ''
+                }`;
             }
-            return value;
-        });
-        return resultString;
+
+            // For objects, handle circular references
+            const cache = [];
+            const resultString = JSON.stringify(
+                complexObject,
+                function (key, value) {
+                    // Handle special cases that might cause issues
+                    if (value === undefined) return 'undefined';
+                    if (typeof value === 'function') return '[Function]';
+                    if (typeof value === 'symbol') return value.toString();
+
+                    // Handle circular references
+                    if (typeof value === 'object' && value !== null) {
+                        if (cache.indexOf(value) !== -1) {
+                            return '[Circular]';
+                        }
+                        cache.push(value);
+                    }
+                    return value;
+                }
+                // Remove the indentation parameter to match test expectations
+            );
+
+            return resultString || '[Empty object]';
+        } catch (err) {
+            // If all else fails, return a fallback message
+            return `[Object could not be stringified: ${err.message}]`;
+        }
     }
 
     log(level, message) {
-        this.logger.log(level, this._formatMessage(this.service, message));
+        try {
+            this.logger.log(level, this._formatMessage(this.service, message));
+        } catch (err) {
+            // Fallback to a simple string if formatting fails
+            this.logger.log(level, `${this.service}: [Logging error: ${err.message}]`);
+        }
     }
 
     /**
@@ -110,7 +156,12 @@ class Logger {
      * - Low-level operations
      */
     debug(message) {
-        this.logger.debug(this._formatMessage(this.service, message, 'debug'));
+        try {
+            this.logger.debug(this._formatMessage(this.service, message, 'debug'));
+        } catch (err) {
+            // Fallback to a simple string if formatting fails
+            this.logger.debug(`${this.service}: [Logging error: ${err.message}]`);
+        }
     }
 
     /**
@@ -124,7 +175,12 @@ class Logger {
      * - Service status changes
      */
     info(message) {
-        this.logger.info(this._formatMessage(this.service, message, 'info'));
+        try {
+            this.logger.info(this._formatMessage(this.service, message, 'info'));
+        } catch (err) {
+            // Fallback to a simple string if formatting fails
+            this.logger.info(`${this.service}: [Logging error: ${err.message}]`);
+        }
     }
 
     /**
@@ -138,7 +194,12 @@ class Logger {
      * - Configuration inconsistencies
      */
     warn(message) {
-        this.logger.warn(this._formatMessage(this.service, message, 'warn'));
+        try {
+            this.logger.warn(this._formatMessage(this.service, message, 'warn'));
+        } catch (err) {
+            // Fallback to a simple string if formatting fails
+            this.logger.warn(`${this.service}: [Logging error: ${err.message}]`);
+        }
     }
 
     /**
@@ -152,7 +213,12 @@ class Logger {
      * - Data validation errors
      */
     error(message) {
-        this.logger.error(this._formatMessage(this.service, message, 'error'));
+        try {
+            this.logger.error(this._formatMessage(this.service, message, 'error'));
+        } catch (err) {
+            // Fallback to a simple string if formatting fails
+            this.logger.error(`${this.service}: [Logging error: ${err.message}]`);
+        }
     }
 
     /**
@@ -162,7 +228,12 @@ class Logger {
      * authorization, data access, and data modifications
      */
     audit(message) {
-        this.logger.log('audit', this._formatMessage(this.service, message, 'audit'));
+        try {
+            this.logger.log('audit', this._formatMessage(this.service, message, 'audit'));
+        } catch (err) {
+            // Fallback to a simple string if formatting fails
+            this.logger.log('audit', `${this.service}: [Logging error: ${err.message}]`);
+        }
     }
 }
 
