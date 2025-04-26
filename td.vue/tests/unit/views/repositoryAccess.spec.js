@@ -47,7 +47,10 @@ describe('views/RepositoryAccess.vue', () => {
 
     // Vue 3 style mount function
     const mountComponent = (mockRoute) => {
-        mockRouter = { push: jest.fn() };
+        // Mock router.push to return a resolved promise
+        mockRouter = {
+            push: jest.fn().mockReturnValue(Promise.resolve())
+        };
 
         // Setup Vue Router mocks
         const vueRouter = require('vue-router');

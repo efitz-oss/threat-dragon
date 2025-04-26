@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import env from '../../src/env/Env.js';
 import githubProvider from '../../src/providers/github.js';
-import repo from '../../src/repositories/githubrepo.js';
+import repositories from '../../src/repositories/index.js';
 
 describe('providers/github.js', () => {
     describe('isConfigured', () => {
@@ -61,7 +61,7 @@ describe('providers/github.js', () => {
             });
 
             it('gives a relative url when not in development mode', () => {
-                const idx = githubProvider.getOauthReturnUrl(code).indexOf('/#/oauth-return');
+                const idx = githubProvider.getOauthReturnUrl(code).indexOf('/oauth-return');
                 expect(idx).to.eq(0);
             });
 
@@ -94,9 +94,12 @@ describe('providers/github.js', () => {
         const code = 'mycode';
 
         beforeEach(async () => {
-            sinon.stub(axios, 'post').resolves({ data: { access_token: '' } });
+            sinon.stub(axios, 'post').resolves({ data: { access_token: 'test-access-token' } });
+            sinon
+                .stub(axios, 'get')
+                .resolves({ data: { login: 'test-user', email: 'test@example.com' } });
             sinon.stub(env, 'get').returns({ config });
-            sinon.stub(repo, 'userAsync').resolves({});
+            sinon.stub(repositories, 'set').returns({});
 
             await githubProvider.completeLoginAsync(code);
         });
@@ -107,7 +110,8 @@ describe('providers/github.js', () => {
                 {
                     client_id: config.GITHUB_CLIENT_ID,
                     client_secret: config.GITHUB_CLIENT_SECRET,
-                    code
+                    code,
+                    redirect_uri: undefined
                 },
                 {
                     headers: {
@@ -117,8 +121,13 @@ describe('providers/github.js', () => {
             );
         });
 
-        it('gets the user info from the repo', () => {
-            expect(repo.userAsync).to.have.been.calledOnce;
+        it('gets the user info from GitHub API', () => {
+            expect(axios.get).to.have.been.calledWith('https://api.github.com/user', {
+                headers: {
+                    Authorization: 'token test-access-token',
+                    Accept: 'application/vnd.github.v3+json'
+                }
+            });
         });
     });
 });

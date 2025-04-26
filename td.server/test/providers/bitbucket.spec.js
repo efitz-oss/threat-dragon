@@ -61,7 +61,7 @@ describe('providers/bitbucket.js', () => {
             });
 
             it('gives a relative url when not in development mode', () => {
-                const idx = bitbucketProvider.getOauthReturnUrl(code).indexOf('/#/oauth-return');
+                const idx = bitbucketProvider.getOauthReturnUrl(code).indexOf('/oauth-return');
                 expect(idx).to.eq(0);
             });
 
@@ -96,7 +96,7 @@ describe('providers/bitbucket.js', () => {
         const code = 'mycode';
 
         beforeEach(async () => {
-            sinon.stub(axios, 'post').resolves({ data: { access_token: '' } });
+            sinon.stub(axios, 'post').resolves({ data: { access_token: 'test-access-token' } });
             sinon.stub(env, 'get').returns({ config });
             sinon.stub(repo, 'userAsync').resolves({});
 

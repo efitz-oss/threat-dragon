@@ -14,7 +14,15 @@ describe('controllers/auth.js', () => {
     const providerStub = {
         getOauthRedirectUrl: (providerName) => `oauth-redirect&state=${providerName}`,
         getOauthReturnUrl: (code) => `/oauth-return?code=${code}`,
-        completeLoginAsync: () => {},
+        completeLoginAsync: () => {
+            return {
+                user: { username: 'test-user' },
+                opts: {
+                    access_token: 'test-token',
+                    refresh_token: 'test-refresh-token'
+                }
+            };
+        },
         name: 'provider1'
     };
 
@@ -124,7 +132,10 @@ describe('controllers/auth.js', () => {
             const userStub = {
                 name: 'test'
             };
-            const optsStub = { foo: 'bar' };
+            const optsStub = {
+                foo: 'bar',
+                access_token: 'test-access-token'
+            };
             const providerResp = { user: userStub, opts: optsStub };
             const tokensStub = {
                 accessToken: 'foo',

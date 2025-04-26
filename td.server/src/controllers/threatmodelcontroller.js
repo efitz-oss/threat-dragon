@@ -175,7 +175,12 @@ const branches = (req, res) =>
                     protected: x.protected || false
                 }));
 
-                // Code moved inside try-catch block
+                const pagination = getPagination(headers, pageLinks, repoInfo.page);
+
+                return {
+                    branches: branchNames,
+                    pagination: pagination
+                };
             } catch (error) {
                 logger.error(`Error fetching branches: ${error.message}`);
                 logger.error(`Error stack: ${error.stack}`);
@@ -191,13 +196,6 @@ const branches = (req, res) =>
                     pagination: { page: repoInfo.page, next: false, prev: false }
                 };
             }
-
-            const pagination = getPagination(headers, pageLinks, repoInfo.page);
-
-            return {
-                branches: branchNames,
-                pagination: pagination
-            };
         },
         req,
         res,
@@ -208,9 +206,6 @@ const models = (req, res) =>
     responseWrapper.sendResponseAsync(
         async () => {
             const repository = repositories.get();
-
-            // Extract any nested parameters
-            const params = req.query.params || {};
 
             const branchInfo = {
                 organisation: req.params.organisation,
@@ -242,9 +237,6 @@ const model = (req, res) =>
     responseWrapper.sendResponseAsync(
         async () => {
             const repository = repositories.get();
-
-            // Extract any nested parameters
-            const params = req.query.params || {};
 
             const modelInfo = {
                 organisation: req.params.organisation,

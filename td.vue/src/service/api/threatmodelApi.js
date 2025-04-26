@@ -112,7 +112,7 @@ const branchesAsync = async (fullRepoName, page = 1) => {
         
         log.debug('API response received', {
             status: 'success',
-            branchCount: response.data?.branches?.length || 0
+            branchCount: response?.data?.branches?.length || 0
         });
         
         return response;

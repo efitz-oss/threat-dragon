@@ -30,7 +30,7 @@ describe('helpers/jwt.helper.js', () => {
 
         it('encrypts the provider options', () => {
             expect(encryptionHelper.encryptPromise).to.have.been.calledWith(
-                JSON.stringify(providerOpts)
+                JSON.stringify({ ...providerOpts, name: providerName })
             );
         });
 
