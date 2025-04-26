@@ -4,6 +4,7 @@
         :on-item-click="onThreatmodelClick"
         :empty-state-text="t('threatmodelSelect.newThreatModel')"
         :on-empty-state-click="newThreatModel"
+        :page="1"
     >
         {{ t('threatmodelSelect.select') }}
         <!-- Fixme: The href should get the configured hostname from env -->
