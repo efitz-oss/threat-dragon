@@ -39,7 +39,7 @@ describe('env/Gitlab.js', () => {
 
     it('has a default value for property SCOPE', () => {
         const value = gitlabEnv.properties.find((x) => x.key === 'SCOPE').defaultValue;
-        expect(value).to.equal('read_user read_repository');
+        expect(value).to.equal('read_user write_repository profile read_api api');
     });
 
     it('has the optional property HOST', () => {
