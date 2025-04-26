@@ -9,6 +9,8 @@ const name = 'store-stencil';
 // stencil item for store (only top and bottom lines)
 export const StoreStencil = Shape.Path.define({
     constructorName: name,
+    width: 150,
+    height: 75,
     zIndex: 0,
     markup: [
         {

@@ -194,12 +194,16 @@ const get = (graph, container, StencilConstructor) => {
             },
             label: {
                 text: tc('threatmodel.shapes.trustBoundary'),
+                textAnchor: 'middle',
+                textVerticalAnchor: 'middle',
+                refX: 0.5, // Center horizontally
+                refY: 30, // Position from top
                 textWrap: {
-                    width: 80,
-                    height: 40,
-                    ellipsis: true
+                    width: -40, // 80% of width (negative means percentage of width)
+                    height: 40, // Maximum height
+                    ellipsis: true // Show ellipsis when text overflows
                 },
-                fontSize: 12
+                fontSize: 14 // Increased font size to match other shapes
             }
         }
     });

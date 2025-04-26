@@ -46,7 +46,7 @@ export const TrustBoundaryCurveStencil = Shape.Path.define({
                 height: 40, // Maximum height
                 ellipsis: true // Show ellipsis when text overflows
             },
-            fontSize: 10, // Slightly smaller font to fit better
+            fontSize: 14,
             refX: 0.5, // Center horizontally
             refY: 0.5, // Center vertically
             refX2: 0, // No additional offset

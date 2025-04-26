@@ -20,16 +20,16 @@ export const TrustBoundaryBox = Shape.Rect.define({
         },
         label: {
             text: tc('threatmodel.shapes.trustBoundary'),
-            textAnchor: 'bottom',
-            textVerticalAnchor: 'top',
-            refX: '15%',
-            refY: '12',
+            textAnchor: 'middle',
+            textVerticalAnchor: 'middle',
+            refX: 0.5, // Center horizontally
+            refY: 30, // Position from top
             textWrap: {
-                width: 80, // Maximum width before wrapping
+                width: -40, // 80% of width (negative means percentage of width)
                 height: 40, // Maximum height
                 ellipsis: true // Show ellipsis when text overflows
             },
-            fontSize: 12 // Slightly smaller font to fit better
+            fontSize: 14 // Increased font size to match other shapes
         }
     }
 });
