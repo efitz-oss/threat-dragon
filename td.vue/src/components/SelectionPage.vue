@@ -119,6 +119,11 @@ export default {
             required: false,
             default: () => {}
         },
+        onEmptyStateClick: {
+            type: Function,
+            required: false,
+            default: null
+        },
         isGoogleProvider: {
             type: Boolean,
             default: false
@@ -155,49 +160,106 @@ export default {
             }
         };
         
+        // Track if a click is being processed to prevent double-clicks
+        const isProcessingClick = ref(false);
+        
         // Handle item click by calling the onItemClick prop function
-        // and also emitting the item-click event for backward compatibility
+        // OR emitting the item-click event for backward compatibility, but not both
         const handleItemClick = (item) => {
+            // Prevent multiple rapid clicks
+            if (isProcessingClick.value) {
+                console.log('Already processing a click, ignoring');
+                return;
+            }
+            
+            // Set processing flag
+            isProcessingClick.value = true;
+            
             // Ensure we're working with a consistent item format
             const processedItem = formatItemForDisplay(item);
             console.log('Item clicked:', processedItem);
             
             // Use nextTick to ensure the UI updates before processing the click
             nextTick(() => {
-                // Call the onItemClick prop function
-                if (props.onItemClick) {
-                    props.onItemClick(item);
+                try {
+                    // Call the onItemClick prop function if provided
+                    if (props.onItemClick) {
+                        props.onItemClick(item);
+                    } else {
+                        // Only emit the event if no prop function is provided
+                        emit('item-click', item);
+                    }
+                } finally {
+                    // Reset processing flag after a short delay
+                    setTimeout(() => {
+                        isProcessingClick.value = false;
+                    }, 300);
                 }
-                
-                // Also emit the item-click event for backward compatibility
-                emit('item-click', item);
             });
         };
         
         // Handle back click by calling the onBackClick prop function
-        // and also emitting the back-click event for backward compatibility
+        // OR emitting the back-click event for backward compatibility, but not both
         const handleBackClick = () => {
+            // Prevent multiple rapid clicks
+            if (isProcessingClick.value) {
+                console.log('Already processing a back click, ignoring');
+                return;
+            }
+            
+            // Set processing flag
+            isProcessingClick.value = true;
+            
             console.log('Back clicked');
             
             // Use nextTick to ensure the UI updates before processing the click
             nextTick(() => {
-                // Call the onBackClick prop function
-                if (props.onBackClick) {
-                    props.onBackClick();
+                try {
+                    // Call the onBackClick prop function if provided
+                    if (props.onBackClick) {
+                        props.onBackClick();
+                    } else {
+                        // Only emit the event if no prop function is provided
+                        emit('back-click');
+                    }
+                } finally {
+                    // Reset processing flag after a short delay
+                    setTimeout(() => {
+                        isProcessingClick.value = false;
+                    }, 300);
                 }
-                
-                // Also emit the back-click event for backward compatibility
-                emit('back-click');
             });
         };
         
         // Handle empty state click by emitting the empty-state-click event
         const handleEmptyStateClick = () => {
+            // Prevent multiple rapid clicks
+            if (isProcessingClick.value) {
+                console.log('Already processing an empty state click, ignoring');
+                return;
+            }
+            
+            // Set processing flag
+            isProcessingClick.value = true;
+            
             console.log('Empty state clicked');
             
             // Use nextTick to ensure the UI updates before processing the click
             nextTick(() => {
-                emit('empty-state-click');
+                try {
+                    // Call the onEmptyStateClick prop function if provided
+                    if (props.onEmptyStateClick) {
+                        props.onEmptyStateClick();
+                    } else {
+                        // Only emit the event if no prop function is provided
+                        emit('empty-state-click');
+                    }
+                } finally {
+                    // Reset processing flag after a short delay
+                    setTimeout(() => {
+                        isProcessingClick.value = false;
+                    }, 300);
+                }
             });
         };
         

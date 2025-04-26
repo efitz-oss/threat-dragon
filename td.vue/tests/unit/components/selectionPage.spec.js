@@ -64,12 +64,16 @@ describe('components/SelectionPage.vue', () => {
             expect(heading.exists()).toBe(true);
         });
 
-        it('emits item-click event with correct item when clicked', async () => {
+        it('calls onItemClick function when item is clicked', async () => {
             // Vue 3 Migration: Use more precise element selection
             const firstItem = wrapper.findAll('.list-group-item')[0];
             
             // Mock console.log to avoid cluttering test output
             jest.spyOn(console, 'log').mockImplementation(() => {});
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            
+            // Mock setTimeout to execute immediately
+            jest.useFakeTimers();
             
             // Trigger click event
             await firstItem.trigger('click');
@@ -78,12 +82,19 @@ describe('components/SelectionPage.vue', () => {
             await nextTick();
             await nextTick(); // Double nextTick to ensure all async operations complete
             
-            // Verify event was emitted
-            expect(wrapper.emitted('item-click')).toBeTruthy();
-            expect(wrapper.emitted('item-click')[0][0]).toBe(items[0]);
+            // Fast-forward timers
+            jest.runAllTimers();
             
-            // Restore console.log
+            // Verify onItemClick was called with the correct item
+            expect(onItemClick).toHaveBeenCalledWith(items[0]);
+            
+            // Verify item-click event was NOT emitted (we now use either the prop OR the event, not both)
+            expect(wrapper.emitted('item-click')).toBeFalsy();
+            
+            // Restore mocks
             console.log.mockRestore();
+            console.error.mockRestore();
+            jest.useRealTimers();
         });
         
         it('formats items correctly for display', () => {
@@ -158,12 +169,16 @@ describe('components/SelectionPage.vue', () => {
             expect(emptyStateElement.text()).toBe(emptyStateText);
         });
 
-        it('emits empty-state-click event when empty state is clicked', async () => {
+        it('calls onEmptyStateClick function when empty state is clicked', async () => {
             // Vue 3 Migration: Use more direct element selection
             const emptyStateElement = wrapper.find('.list-group-item');
             
             // Mock console.log to avoid cluttering test output
             jest.spyOn(console, 'log').mockImplementation(() => {});
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            
+            // Mock setTimeout to execute immediately
+            jest.useFakeTimers();
             
             // Click empty state
             await emptyStateElement.trigger('click');
@@ -172,12 +187,19 @@ describe('components/SelectionPage.vue', () => {
             await nextTick();
             await nextTick(); // Double nextTick to ensure all async operations complete
             
-            // Verify event emission
-            expect(wrapper.emitted('empty-state-click')).toBeTruthy();
-            expect(wrapper.emitted('empty-state-click')).toHaveLength(1);
+            // Fast-forward timers
+            jest.runAllTimers();
             
-            // Restore console.log
+            // Verify onEmptyStateClick was called
+            expect(onEmptyStateClick).toHaveBeenCalled();
+            
+            // Verify empty-state-click event was NOT emitted (we now use either the prop OR the event, not both)
+            expect(wrapper.emitted('empty-state-click')).toBeFalsy();
+            
+            // Restore mocks
             console.log.mockRestore();
+            console.error.mockRestore();
+            jest.useRealTimers();
         });
     });
 
@@ -199,13 +221,17 @@ describe('components/SelectionPage.vue', () => {
             await nextTick();
         });
 
-        it('does not emit item-click when clicking empty state without callback', async () => {
+        it('emits empty-state-click event when no callback is provided', async () => {
             // Vue 3 Migration: More direct element selection
             const emptyStateElement = wrapper.find('.list-group-item');
             expect(emptyStateElement.exists()).toBe(true);
             
             // Mock console.log to avoid cluttering test output
             jest.spyOn(console, 'log').mockImplementation(() => {});
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+            
+            // Mock setTimeout to execute immediately
+            jest.useFakeTimers();
             
             // Click empty state
             await emptyStateElement.trigger('click');
@@ -214,13 +240,20 @@ describe('components/SelectionPage.vue', () => {
             await nextTick();
             await nextTick(); // Double nextTick to ensure all async operations complete
             
-            // Verify item-click was not emitted (only empty-state-click should be emitted)
-            const emitted = wrapper.emitted();
-            expect(emitted['item-click']).toBeFalsy();
-            expect(emitted['empty-state-click']).toBeTruthy();
+            // Fast-forward timers
+            jest.runAllTimers();
             
-            // Restore console.log
+            // Verify item-click was not emitted
+            expect(wrapper.emitted('item-click')).toBeFalsy();
+            
+            // Verify empty-state-click was emitted (since no callback was provided)
+            expect(wrapper.emitted('empty-state-click')).toBeTruthy();
+            expect(wrapper.emitted('empty-state-click')).toHaveLength(1);
+            
+            // Restore mocks
             console.log.mockRestore();
+            console.error.mockRestore();
+            jest.useRealTimers();
         });
     });
     
