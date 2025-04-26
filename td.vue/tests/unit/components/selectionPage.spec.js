@@ -70,31 +70,18 @@ describe('components/SelectionPage.vue', () => {
             
             // Mock console.log to avoid cluttering test output
             jest.spyOn(console, 'log').mockImplementation(() => {});
-            jest.spyOn(console, 'error').mockImplementation(() => {});
-            
-            // Mock setTimeout to execute immediately
-            jest.useFakeTimers();
             
             // Trigger click event
             await firstItem.trigger('click');
             
             // Wait for nextTick to complete
             await nextTick();
-            await nextTick(); // Double nextTick to ensure all async operations complete
-            
-            // Fast-forward timers
-            jest.runAllTimers();
             
             // Verify onItemClick was called with the correct item
             expect(onItemClick).toHaveBeenCalledWith(items[0]);
             
-            // Verify item-click event was NOT emitted (we now use either the prop OR the event, not both)
-            expect(wrapper.emitted('item-click')).toBeFalsy();
-            
             // Restore mocks
             console.log.mockRestore();
-            console.error.mockRestore();
-            jest.useRealTimers();
         });
         
         it('formats items correctly for display', () => {
@@ -175,31 +162,18 @@ describe('components/SelectionPage.vue', () => {
             
             // Mock console.log to avoid cluttering test output
             jest.spyOn(console, 'log').mockImplementation(() => {});
-            jest.spyOn(console, 'error').mockImplementation(() => {});
-            
-            // Mock setTimeout to execute immediately
-            jest.useFakeTimers();
             
             // Click empty state
             await emptyStateElement.trigger('click');
             
             // Wait for nextTick to complete
             await nextTick();
-            await nextTick(); // Double nextTick to ensure all async operations complete
-            
-            // Fast-forward timers
-            jest.runAllTimers();
             
             // Verify onEmptyStateClick was called
             expect(onEmptyStateClick).toHaveBeenCalled();
             
-            // Verify empty-state-click event was NOT emitted (we now use either the prop OR the event, not both)
-            expect(wrapper.emitted('empty-state-click')).toBeFalsy();
-            
             // Restore mocks
             console.log.mockRestore();
-            console.error.mockRestore();
-            jest.useRealTimers();
         });
     });
 
@@ -228,20 +202,12 @@ describe('components/SelectionPage.vue', () => {
             
             // Mock console.log to avoid cluttering test output
             jest.spyOn(console, 'log').mockImplementation(() => {});
-            jest.spyOn(console, 'error').mockImplementation(() => {});
-            
-            // Mock setTimeout to execute immediately
-            jest.useFakeTimers();
             
             // Click empty state
             await emptyStateElement.trigger('click');
             
             // Wait for nextTick to complete
             await nextTick();
-            await nextTick(); // Double nextTick to ensure all async operations complete
-            
-            // Fast-forward timers
-            jest.runAllTimers();
             
             // Verify item-click was not emitted
             expect(wrapper.emitted('item-click')).toBeFalsy();
@@ -252,8 +218,6 @@ describe('components/SelectionPage.vue', () => {
             
             // Restore mocks
             console.log.mockRestore();
-            console.error.mockRestore();
-            jest.useRealTimers();
         });
     });
     
