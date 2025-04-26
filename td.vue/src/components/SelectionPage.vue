@@ -30,14 +30,14 @@
         <b-row>
             <b-col md="6" offset="3">
                 <b-list-group>
-                    <b-list-group-item v-if="showBackItem" href="#" @click="handleBackClick">
+                    <b-list-group-item v-if="showBackItem" href="#" @click.prevent="handleBackClick">
                         ...
                     </b-list-group-item>
 
                     <b-list-group-item
                         v-if="items.length === 0 && !!emptyStateText"
                         href="#"
-                        @click="handleEmptyStateClick"
+                        @click.prevent="handleEmptyStateClick"
                     >
                         {{ emptyStateText }}
                     </b-list-group-item>
@@ -46,7 +46,7 @@
                         v-for="(item, idx) in displayedItems"
                         :key="idx"
                         href="#"
-                        @click="handleItemClick(item)"
+                        @click.prevent="handleItemClick(item)"
                     >
                         {{ formatItemForDisplay(item) }}
                     </b-list-group-item>
