@@ -3,10 +3,12 @@
         <b-dropdown right :text="getLanguageName(locale)" variant="primary">
             <div class="px-2 py-2">
                 <input
+                    id="locale-search-field"
                     v-model="searchQuery"
                     type="text"
                     class="form-control"
                     placeholder="Search language..."
+                    name="locale-search-field"
                     @click.stop
                     @input="filterLocales"
                 >

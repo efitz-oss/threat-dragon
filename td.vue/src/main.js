@@ -14,11 +14,12 @@ import configActions from './store/actions/config.js';
 import { AUTH_SET_JWT } from './store/actions/auth.js';
 import { PROVIDER_SELECTED } from './store/actions/provider.js';
 import logger from './utils/logger.js';
+import './styles/stencil-custom.css'; // Import custom stencil styles
 
 // Create a context-specific logger
 const log = logger.getLogger('main');
 // Add support for passive event listeners with appropriate options
-import passiveEventsSupport from 'passive-events-support/dist/main.js'; 
+import passiveEventsSupport from 'passive-events-support/dist/main.js';
 // In the web version, the module is imported directly and we need to check if configure exists
 if (passiveEventsSupport && typeof passiveEventsSupport.configure === 'function') {
     passiveEventsSupport.configure({ strict: false, capture: false });
