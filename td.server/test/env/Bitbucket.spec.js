@@ -39,7 +39,7 @@ describe('env/Bitbucket.js', () => {
 
     it('has a default value for property SCOPE', () => {
         const value = bitbucketEnv.properties.find((x) => x.key === 'SCOPE').defaultValue;
-        expect(value).to.equal('repository:read');
+        expect(value).to.equal('repository:write');
     });
 
     it('has the optional property ENTERPRISE_HOSTNAME', () => {
