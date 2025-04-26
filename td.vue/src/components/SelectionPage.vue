@@ -48,7 +48,7 @@
                         href="#"
                         @click="handleItemClick(item)"
                     >
-                        {{ isGoogleProvider ? item.name : (typeof item === 'string' ? item : JSON.stringify(item)) }}
+                        {{ formatItemForDisplay(item) }}
                     </b-list-group-item>
                 </b-list-group>
             </b-col>
@@ -184,6 +184,35 @@ export default {
             emit('empty-state-click');
         };
         
+        // Helper function to format items for display
+        const formatItemForDisplay = (item) => {
+            if (props.isGoogleProvider && item.name) {
+                return item.name;
+            }
+            
+            if (typeof item === 'string') {
+                return item;
+            }
+            
+            // Handle character-by-character object representation
+            if (item && typeof item === 'object') {
+                // Check if it has numeric keys (character-by-character object)
+                const keys = Object.keys(item);
+                if (keys.length > 0 && !isNaN(parseInt(keys[0]))) {
+                    try {
+                        // Sort the keys numerically to ensure correct order
+                        const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
+                        return sortedKeys.map(key => item[key]).join('');
+                    } catch (err) {
+                        console.error('Error formatting item for display:', err);
+                    }
+                }
+            }
+            
+            // Fallback to JSON stringify
+            return JSON.stringify(item);
+        };
+        
         return {
             filter,
             pageRef,
@@ -193,6 +222,7 @@ export default {
             handleItemClick,
             handleBackClick,
             handleEmptyStateClick,
+            formatItemForDisplay,
             t
         };
     }

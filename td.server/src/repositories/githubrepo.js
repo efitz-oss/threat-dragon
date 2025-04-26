@@ -164,6 +164,12 @@ const modelsAsync = async (branchInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
 
     try {
+        console.log(
+            `Fetching models from GitHub for ${branchInfo.organisation}/${
+                branchInfo.repo
+            }/${repoRootDirectory()} on branch ${branchInfo.branch}`
+        );
+
         const response = await fetchGitHub(
             `/repos/${branchInfo.organisation}/${
                 branchInfo.repo
@@ -173,13 +179,35 @@ const modelsAsync = async (branchInfo, accessToken) => {
 
         console.log(`GitHub modelsAsync response type: ${typeof response}`);
 
-        // Ensure we return an array in the expected format [models, headers, pageLinks]
+        // Process the response to ensure we have a proper array of model objects
+        let models = [];
+
         if (Array.isArray(response)) {
-            console.log(`GitHub modelsAsync found ${response.length} models`);
-            return [response, {}, {}];
-        } else {
-            console.log(`GitHub modelsAsync response is not an array, converting to array`);
-            console.log(`Response: ${JSON.stringify(response)}`);
+            console.log(`GitHub modelsAsync found ${response.length} items`);
+
+            // Filter for JSON files only
+            models = response
+                .filter((item) => {
+                    // Check if it's a file and has a .json extension
+                    return (
+                        item.type === 'file' &&
+                        item.name &&
+                        typeof item.name === 'string' &&
+                        item.name.toLowerCase().endsWith('.json')
+                    );
+                })
+                .map((item) => {
+                    // Ensure the name property is a proper string
+                    if (typeof item.name !== 'string') {
+                        console.warn(`Item name is not a string: ${JSON.stringify(item.name)}`);
+                        item.name = String(item.name || '');
+                    }
+                    return item;
+                });
+
+            console.log(`Filtered to ${models.length} JSON model files`);
+        } else if (response && typeof response === 'object') {
+            console.log(`GitHub modelsAsync response is not an array, processing as object`);
 
             // If response is not an array but has a message property, it might be an error
             if (response.message) {
@@ -187,11 +215,27 @@ const modelsAsync = async (branchInfo, accessToken) => {
                 return [[], {}, {}];
             }
 
-            // If response is an object but not an array, wrap it in an array
-            return [[response], {}, {}];
+            // If it's a single file with .json extension, include it
+            if (
+                response.type === 'file' &&
+                response.name &&
+                typeof response.name === 'string' &&
+                response.name.toLowerCase().endsWith('.json')
+            ) {
+                models = [response];
+            }
         }
+
+        // Log the processed models
+        console.log(
+            `Returning ${models.length} models with names:`,
+            models.map((m) => (typeof m.name === 'string' ? m.name : JSON.stringify(m.name)))
+        );
+
+        return [models, {}, {}];
     } catch (error) {
         console.error(`Error in modelsAsync: ${error.message}`);
+        console.error(`Error stack: ${error.stack}`);
         // Return empty array on error
         return [[], {}, {}];
     }
@@ -199,13 +243,49 @@ const modelsAsync = async (branchInfo, accessToken) => {
 
 const modelAsync = async (modelInfo, accessToken) => {
     await Promise.resolve(); // Ensure async function has await expression
-    const data = await fetchGitHub(
-        `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
-            modelInfo
-        )}?ref=${modelInfo.branch}`,
-        accessToken
+
+    // Ensure modelInfo.model is a string
+    if (typeof modelInfo.model !== 'string') {
+        console.log(`Model is not a string, converting: ${JSON.stringify(modelInfo.model)}`);
+
+        // If it's a character-by-character object, convert it to a string
+        if (modelInfo.model && typeof modelInfo.model === 'object') {
+            const keys = Object.keys(modelInfo.model);
+            if (keys.length > 0 && !isNaN(parseInt(keys[0]))) {
+                try {
+                    const sortedKeys = keys.sort((a, b) => parseInt(a) - parseInt(b));
+                    modelInfo.model = sortedKeys.map((key) => modelInfo.model[key]).join('');
+                    console.log(`Converted model name to: ${modelInfo.model}`);
+                } catch (err) {
+                    console.error(`Error converting model name: ${err.message}`);
+                    modelInfo.model = String(modelInfo.model);
+                }
+            } else {
+                modelInfo.model = String(modelInfo.model);
+            }
+        } else {
+            modelInfo.model = String(modelInfo.model || '');
+        }
+    }
+
+    console.log(
+        `Fetching model: ${modelInfo.model} from ${modelInfo.organisation}/${modelInfo.repo}`
     );
-    return [data];
+    console.log(`Using path: ${getModelPath(modelInfo)}`);
+
+    try {
+        const data = await fetchGitHub(
+            `/repos/${modelInfo.organisation}/${modelInfo.repo}/contents/${getModelPath(
+                modelInfo
+            )}?ref=${modelInfo.branch}`,
+            accessToken
+        );
+        return [data];
+    } catch (error) {
+        console.error(`Error in modelAsync: ${error.message}`);
+        console.error(`Error stack: ${error.stack}`);
+        throw error;
+    }
 };
 
 const createAsync = async (modelInfo, accessToken) => {
@@ -259,8 +339,18 @@ const deleteAsync = async (modelInfo, accessToken) => {
     );
 };
 
-const getModelPath = (modelInfo) =>
-    `${repoRootDirectory()}/${modelInfo.model}/${modelInfo.model}.json`;
+const getModelPath = (modelInfo) => {
+    // Ensure modelInfo.model is a string
+    const modelName = String(modelInfo.model || '');
+
+    // Check if the model name already ends with .json
+    const baseName = modelName.toLowerCase().endsWith('.json')
+        ? modelName.substring(0, modelName.length - 5) // Remove .json extension
+        : modelName;
+
+    console.log(`Model path: ${repoRootDirectory()}/${baseName}/${modelName}`);
+    return `${repoRootDirectory()}/${baseName}/${modelName}`;
+};
 const getModelContent = (modelInfo) => JSON.stringify(modelInfo.body, null, '  ');
 
 export default {

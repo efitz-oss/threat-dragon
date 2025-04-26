@@ -89,8 +89,35 @@ export default {
         };
 
         const onThreatmodelClick = async (threatmodel) => {
-            // Ensure we're using the model name (string) rather than the whole object
-            const modelName = typeof threatmodel === 'string' ? threatmodel : threatmodel.name || threatmodel.title || threatmodel;
+            // Convert the threatmodel to a proper string, handling various formats
+            let modelName;
+            
+            if (typeof threatmodel === 'string') {
+                // If it's already a string, use it directly
+                modelName = threatmodel;
+            } else if (threatmodel && typeof threatmodel === 'object') {
+                if (threatmodel.name || threatmodel.title) {
+                    // If it has a name or title property, use that
+                    modelName = threatmodel.name || threatmodel.title;
+                } else if (Object.keys(threatmodel).some(key => !isNaN(parseInt(key)))) {
+                    // If it has numeric keys (character-by-character object), join them
+                    try {
+                        // Sort the keys numerically to ensure correct order
+                        const keys = Object.keys(threatmodel).sort((a, b) => parseInt(a) - parseInt(b));
+                        const chars = keys.map(key => threatmodel[key]);
+                        modelName = chars.join('');
+                    } catch (err) {
+                        console.error('Error converting character object to string:', err);
+                        modelName = String(threatmodel);
+                    }
+                } else {
+                    // Fallback: convert to string
+                    modelName = String(threatmodel);
+                }
+            } else {
+                // Final fallback
+                modelName = String(threatmodel || '');
+            }
             
             // Log what we're using to help with debugging
             console.log('Using model name for fetch:', modelName);
