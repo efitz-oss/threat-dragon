@@ -1,32 +1,6 @@
 import api from '@/service/api/api.js';
 import threatmodelApi from '@/service/api/threatmodelApi.js';
 
-// Mock the store to test extractRepoParts with Bitbucket provider
-jest.mock('@/store', () => ({
-    default: {
-        state: {
-            provider: {
-                selected: 'bitbucket'
-            }
-        }
-    }
-}));
-
-// Mock localStorage for Bitbucket workspace
-Object.defineProperty(window, 'localStorage', {
-    value: {
-        getItem: jest.fn((key) => {
-            if (key === 'td_bitbucket_workspace') {
-                return 'test-workspace';
-            }
-            return null;
-        }),
-        setItem: jest.fn(),
-        removeItem: jest.fn()
-    },
-    writable: true
-});
-
 describe('service/threatmodelApi.js', () => {
     beforeEach(() => {
         jest.spyOn(api, 'getAsync').mockImplementation(() => {});
