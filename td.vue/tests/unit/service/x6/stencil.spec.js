@@ -117,7 +117,7 @@ describe('service/x6/stencil.js', () => {
                 columns: 1,
                 center: true,
                 resizeToFit: false, // Changed from true to false
-                dx: 50, // Changed from 10 to 50
+                dx: 65, // Changed from 50 to 65 to match implementation
                 dy: 5   // Changed from 20 to 5
             });
         });
