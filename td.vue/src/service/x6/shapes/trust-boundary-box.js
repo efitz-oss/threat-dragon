@@ -23,7 +23,7 @@ export const TrustBoundaryBox = Shape.Rect.define({
             textAnchor: 'middle',
             textVerticalAnchor: 'middle',
             refX: 0.5, // Center horizontally
-            refY: 0.2, // Position from top
+            refY: 20, // Position from top
             textWrap: {
                 width: -45, // 90% of width (negative means percentage of width)
                 height: 40, // Maximum height
