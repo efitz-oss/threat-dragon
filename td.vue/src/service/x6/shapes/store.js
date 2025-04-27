@@ -2,8 +2,6 @@ import { Shape } from '@antv/x6';
 
 import { tc } from '@/i18n/index.js';
 
-import defaultProperties from '@/service/entity/default-properties.js';
-
 import { ports } from '../ports.js';
 
 const name = 'store';
@@ -51,8 +49,7 @@ export const StoreShape = Shape.Path.define({
             fillOpacity: 0
         }
     },
-    ports: { ...ports },
-    data: defaultProperties.store
+    ports: { ...ports }
 });
 
 StoreShape.prototype.type = 'tm.Store';

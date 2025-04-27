@@ -25,7 +25,7 @@ export const TrustBoundaryBox = Shape.Rect.define({
             refX: 0.5, // Center horizontally
             refY: 30, // Position from top
             textWrap: {
-                width: -40, // 80% of width (negative means percentage of width)
+                width: -45, // 90% of width (negative means percentage of width)
                 height: 40, // Maximum height
                 ellipsis: true // Show ellipsis when text overflows
             },

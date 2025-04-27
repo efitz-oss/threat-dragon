@@ -5,7 +5,6 @@ import { Flow } from './flow.js';
 import { FlowStencil } from './flow-stencil.js';
 import { ProcessShape } from './process.js';
 import { StoreShape } from './store.js';
-// import { StoreStencil } from './store-stencil.js';
 import { TextBlock } from './text.js';
 import { TrustBoundaryBox } from './trust-boundary-box.js';
 import { TrustBoundaryCurve } from './trust-boundary-curve.js';
@@ -25,7 +24,6 @@ export default {
     FlowStencil,
     ProcessShape,
     StoreShape,
-    // StoreStencil,
     TextBlock,
     TrustBoundaryBox,
     TrustBoundaryCurve,

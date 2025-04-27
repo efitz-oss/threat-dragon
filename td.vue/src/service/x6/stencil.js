@@ -195,7 +195,7 @@ const get = (graph, container, StencilConstructor) => {
                     height: 40, // Maximum height
                     ellipsis: true // Show ellipsis when text overflows
                 },
-                fontSize: 11
+                fontSize: 10
             }
         }
     });
@@ -206,8 +206,8 @@ const get = (graph, container, StencilConstructor) => {
         opacity: 1,
         attrs: {
             body: {
-                refWidth: '100%',
-                refHeight: '100%'
+                refWidth: '90%',
+                refHeight: '90%'
             },
             label: {
                 text: tc('threatmodel.shapes.trustBoundary'),
@@ -216,7 +216,7 @@ const get = (graph, container, StencilConstructor) => {
                     height: 40,
                     ellipsis: true
                 },
-                fontSize: 14,
+                fontSize: 10,
                 refX: 0.5,
                 refY: 0.5
             }
