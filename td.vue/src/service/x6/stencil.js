@@ -91,8 +91,8 @@ const get = (graph, container, StencilConstructor) => {
         layoutOptions: {
             columns: 1,
             center: true,
-            resizeToFit: true, /* true causes shapes to be invisible */
-            dx: 75, // Add horizontal spacing
+            resizeToFit: false, /* true causes shapes to be invisible */
+            dx: 60, // Add horizontal spacing
             dy: 5   // Keep reduced vertical spacing between items
         },
         search: {
