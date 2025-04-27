@@ -12,14 +12,7 @@ export const StoreShape = Shape.Path.define({
     width: 150,
     height: 75,
     zIndex: 0,
-    label: {
-        text: tc('threatmodel.shapes.store'),
-        fill: '#333',
-        textVerticalAnchor: 'middle',
-        textAnchor: 'middle',
-        refX: 0.5,
-        refY: 0.5
-    },
+    label: tc('threatmodel.shapes.store'),
     markup: [
         ...Shape.Rect.getMarkup(),
         {
