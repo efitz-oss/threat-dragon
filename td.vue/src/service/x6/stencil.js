@@ -90,10 +90,10 @@ const get = (graph, container, StencilConstructor) => {
         ],
         layoutOptions: {
             columns: 1,
-            center: true,
-            resizeToFit: false, /* true causes shapes to be invisible */
-            dx: 50, // Add horizontal spacing
-            dy: 5   // Keep reduced vertical spacing between items
+            center: true
+            // resizeToFit: false, /* true causes shapes to be invisible */
+            // dx: 50, // Add horizontal spacing
+            // dy: 5   // Keep reduced vertical spacing between items
         },
         search: {
             placeholder: tc('threatmodel.stencil.search', 'Search shapes')
@@ -107,7 +107,7 @@ const get = (graph, container, StencilConstructor) => {
     // Force fresh translations for all shape labels
     const actor = new shapes.ActorShape({
         width: 100,
-        height: 75,
+        height: 50,
         visible: true,
         opacity: 1,  // Full opacity
         label: tc('threatmodel.shapes.actor'),
@@ -142,7 +142,7 @@ const get = (graph, container, StencilConstructor) => {
     // Use StoreStencil for actual rendering
     const store = new shapes.StoreStencil({
         width: 100,
-        height: 75,
+        height: 50,
         visible: true,
         opacity: 1,
         label: tc('threatmodel.shapes.store'),
@@ -169,7 +169,7 @@ const get = (graph, container, StencilConstructor) => {
     });
     const text = new shapes.TextBlock({
         width: 100,
-        height: 75,
+        height: 50,
         visible: true,
         opacity: 1,
         label: tc('threatmodel.shapes.text'),
@@ -197,13 +197,13 @@ const get = (graph, container, StencilConstructor) => {
                 textAnchor: 'middle',
                 textVerticalAnchor: 'middle',
                 refX: 0.5, // Center horizontally
-                refY: 30, // Position from top
+                refY: 0.2, // Position from top
                 textWrap: {
                     width: -40, // 80% of width (negative means percentage of width)
                     height: 40, // Maximum height
                     ellipsis: true // Show ellipsis when text overflows
                 },
-                fontSize: 14 // Increased font size to match other shapes
+                fontSize: 12 // Increased font size to match other shapes
             }
         }
     });
@@ -224,7 +224,7 @@ const get = (graph, container, StencilConstructor) => {
                     height: 40,
                     ellipsis: true
                 },
-                fontSize: 10,
+                fontSize: 14,
                 refX: 0.5,
                 refY: 0.5
             }
