@@ -90,10 +90,10 @@ const get = (graph, container, StencilConstructor) => {
         ],
         layoutOptions: {
             columns: 1,
-            center: true
-            // resizeToFit: false, /* true causes shapes to be invisible */
-            // dx: 50, // Add horizontal spacing
-            // dy: 5   // Keep reduced vertical spacing between items
+            center: true,
+            resizeToFit: true, /* true causes shapes to be invisible */
+            dx: 75, // Add horizontal spacing
+            dy: 5   // Keep reduced vertical spacing between items
         },
         search: {
             placeholder: tc('threatmodel.stencil.search', 'Search shapes')
