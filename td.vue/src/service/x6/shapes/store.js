@@ -21,7 +21,7 @@ export const StoreShape = Shape.Path.define({
         refY: 0.5
     },
     markup: [
-        // ...Shape.Rect.getMarkup(),
+        ...Shape.Rect.getMarkup(),
         {
             tagName: 'path',
             selector: 'topLine'

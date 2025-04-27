@@ -212,7 +212,7 @@ const get = (graph, container, StencilConstructor) => {
             label: {
                 text: tc('threatmodel.shapes.trustBoundary'),
                 textWrap: {
-                    width: 60,
+                    width: 80,
                     height: 40,
                     ellipsis: true
                 },
