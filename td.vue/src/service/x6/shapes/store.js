@@ -7,14 +7,21 @@ import { ports } from '../ports.js';
 const name = 'store';
 
 // store (parallel lines, white background)
-export const StoreShape = Shape.Rect.define({
+export const StoreShape = Shape.Path.define({
     constructorName: name,
     width: 150,
     height: 75,
     zIndex: 0,
-    label: tc('threatmodel.shapes.store'),
+    label: {
+        text: tc('threatmodel.shapes.store'),
+        fill: '#333',
+        textVerticalAnchor: 'middle',
+        textAnchor: 'middle',
+        refX: 0.5,
+        refY: 0.5
+    },
     markup: [
-        ...Shape.Rect.getMarkup(),
+        // ...Shape.Rect.getMarkup(),
         {
             tagName: 'path',
             selector: 'topLine'

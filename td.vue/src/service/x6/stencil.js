@@ -92,7 +92,7 @@ const get = (graph, container, StencilConstructor) => {
             columns: 1,
             center: true,
             resizeToFit: false, /* true causes shapes to be invisible */
-            dx: 60, // Add horizontal spacing
+            dx: 65, // Add horizontal spacing
             dy: 5   // Keep reduced vertical spacing between items
         },
         search: {
@@ -131,16 +131,8 @@ const get = (graph, container, StencilConstructor) => {
             }
         }
     });
-    // Create a mock StoreShape for test compatibility
-    new shapes.StoreShape({
-        width: 1,
-        height: 1,
-        visible: false,
-        opacity: 0
-    });
-    
-    // Use StoreStencil for actual rendering
-    const store = new shapes.StoreStencil({
+
+    const store = new shapes.StoreShape({
         width: 100,
         height: 50,
         visible: true,
@@ -199,11 +191,11 @@ const get = (graph, container, StencilConstructor) => {
                 refX: 0.5, // Center horizontally
                 refY: 0.2, // Position from top
                 textWrap: {
-                    width: -40, // 80% of width (negative means percentage of width)
+                    width: -45, // 90% of width (negative means percentage of width)
                     height: 40, // Maximum height
                     ellipsis: true // Show ellipsis when text overflows
                 },
-                fontSize: 12 // Increased font size to match other shapes
+                fontSize: 11
             }
         }
     });
