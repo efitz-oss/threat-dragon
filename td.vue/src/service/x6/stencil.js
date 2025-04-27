@@ -190,9 +190,9 @@ const get = (graph, container, StencilConstructor) => {
                 textVerticalAnchor: 'middle',
                 refX: 0.5, // Center horizontally
                 refY: 0.5, // Position from top
-                fontSize: 10,
+                fontSize: 12,
                 textWrap: {
-                    width: -50, // (negative means percentage of width)
+                    width: -45, // (negative means percentage of width)
                     height: 40, // Maximum height
                     ellipsis: true // Show ellipsis when text overflows
                 },
