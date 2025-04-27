@@ -43,7 +43,7 @@ const get = (graph, container, StencilConstructor) => {
     // Calculate group heights (100px per shape + padding)
     const getGroupHeight = (groupName) => {
         const count = shapeCounts[groupName] || 2;
-        return (count * 100) + 50; // 100px per shape + 50px padding
+        return (count * 120);  // 100px per shape + 50px padding
     };
 
     // Force a fresh translation lookup each time the stencil is created
