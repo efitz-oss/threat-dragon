@@ -189,20 +189,25 @@ const get = (graph, container, StencilConstructor) => {
                 textAnchor: 'middle',
                 textVerticalAnchor: 'middle',
                 refX: 0.5, // Center horizontally
-                refY: 0.2, // Position from top
-                fontSize: 10
+                refY: 0.5, // Position from top
+                fontSize: 10,
+                textWrap: {
+                    width: -50, // (negative means percentage of width)
+                    height: 40, // Maximum height
+                    ellipsis: true // Show ellipsis when text overflows
+                },
             }
         }
     });
     const boundaryCurve = new shapes.TrustBoundaryCurveStencil({
-        width: 75,
-        height: 75,
+        width: 50,
+        height: 50,
         visible: true,
         opacity: 1,
         attrs: {
             body: {
-                refWidth: '90%',
-                refHeight: '90%'
+                refWidth: '100%',
+                refHeight: '100%'
             },
             label: {
                 text: tc('threatmodel.shapes.trustBoundary'),
