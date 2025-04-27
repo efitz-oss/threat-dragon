@@ -43,7 +43,7 @@ const get = (graph, container, StencilConstructor) => {
     // Calculate group heights (100px per shape)
     const getGroupHeight = (groupName) => {
         const count = shapeCounts[groupName] || 2;
-        return (count * 100);  // 100px per shape
+        return (count * 90);  // 100px per shape
     };
 
     // Force a fresh translation lookup each time the stencil is created
@@ -225,8 +225,8 @@ const get = (graph, container, StencilConstructor) => {
 
     // Create flow
     const flow = new shapes.FlowStencil({
-        width: 75,
-        height: 75,
+        width: 50,
+        height: 50,
         visible: true,
         opacity: 1,
         attrs: {
