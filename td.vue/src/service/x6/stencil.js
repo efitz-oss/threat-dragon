@@ -176,7 +176,7 @@ const get = (graph, container, StencilConstructor) => {
     // Create boundary nodes
     const boundaryBox = new shapes.TrustBoundaryBox({
         width: 100,
-        height: 75,
+        height: 50,
         visible: true,
         opacity: 1,
         attrs: {
@@ -190,11 +190,6 @@ const get = (graph, container, StencilConstructor) => {
                 textVerticalAnchor: 'middle',
                 refX: 0.5, // Center horizontally
                 refY: 0.2, // Position from top
-                textWrap: {
-                    width: -50, // (negative means percentage of width)
-                    height: 40, // Maximum height
-                    ellipsis: true // Show ellipsis when text overflows
-                },
                 fontSize: 10
             }
         }
